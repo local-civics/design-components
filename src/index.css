@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "ProximaNova";
+  src: url(https://cdn.localcivics.io/fonts/ProximaNova.otf) format("opentype");
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  font-weight: bold;
+  src: url(https://cdn.localcivics.io/fonts/ProximaNovaBold.otf)
+    format("opentype");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
