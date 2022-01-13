@@ -1,20 +1,20 @@
-# js-platform
+# js-hub
 
-React component library for the Local Civics platform
+React component library for Local Civics Hub
 
 ## Install
 
 Components are written in React, and its stories are written in [Component Story Format](https://medium.com/storybookjs/component-story-format-66f4c32366df). It requires Storybook version 6 and up.
 
-Add RC to your project.
+Add js-hub to your project.
 
-`npm install --save @local-civics/js-dashboard`
+`npm install --save @local-civics/js-hub`
 
 ### **Usage**
 
 Import components you want into your UI
 
-`import { Button } from '@local-civics/js-dashboard';`
+`import { Button } from '@local-civics/js-hub';`
 
 and use them like so
 
@@ -24,7 +24,7 @@ const myBtn = () => <Button>Do something</Button>;
 
 ### **Development**
 
-Clone the [js-dashboard GitHub project](https://github.com/local-civics/js-dashboard) then start Storybook.
+Clone the [js-hub GitHub project](https://github.com/local-civics/js-hub) then start Storybook.
 
 `npm install && npm run storybook`
 
@@ -40,6 +40,6 @@ or if want to live updates,
 
 ## Used by
 
-- [Dashboard](https://dashboard.localcivics.io)
+- [Hub](https://hub.localcivics.io)
 
 # todo: fix intro.mdx
