@@ -1,19 +1,20 @@
 import { NavigationBar, NavigationBarProps } from ".";
-import { Story }                             from "@storybook/react";
-import {Icon}                                from "../icon";
+import { Story } from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-    title: "Basics/NavigationBar",
-    component: NavigationBar,
+  title: "Basics/NavigationBar",
+  component: NavigationBar,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<NavigationBarProps> = (args) => <NavigationBar {...args} />;
+const Template: Story<NavigationBarProps> = (args) => (
+  <NavigationBar {...args} />
+);
 
 /**
  * Component stories

@@ -18,7 +18,9 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<IconProps> = (args) => <Icon className="stroke-slate-500 fill-slate-500 w-12 h-12" {...args} />;
+const Template: Story<IconProps> = (args) => (
+  <Icon className="stroke-slate-500 fill-slate-500 w-12 h-12" {...args} />
+);
 
 /**
  * Default icon view

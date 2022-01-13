@@ -10,7 +10,10 @@ module.exports = {
       proxima: ["ProximaNova"],
     },
     minHeight: (theme) => ({
-      ...theme('spacing'),
+      ...theme("spacing"),
+    }),
+    minWidth: (theme) => ({
+      ...theme("spacing"),
     }),
   },
   variants: {
@@ -19,5 +22,5 @@ module.exports = {
       stroke: ["hover", "focus"],
     },
   },
-  plugins: [require('@tailwindcss/line-clamp'),],
+  plugins: [require("@tailwindcss/line-clamp")],
 };

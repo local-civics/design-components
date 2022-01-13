@@ -3,7 +3,11 @@ import React, { FunctionComponent } from "react";
 /**
  * Configurable properties for Logo component
  */
-export interface LogoProps extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
+export interface LogoProps
+  extends React.DetailedHTMLProps<
+    React.ImgHTMLAttributes<HTMLImageElement>,
+    HTMLImageElement
+  > {
   /**
    * Logo form
    */
@@ -15,6 +19,10 @@ export interface LogoProps extends React.DetailedHTMLProps<React.ImgHTMLAttribut
  */
 export const Logo: FunctionComponent<LogoProps> = (props) => {
   return (
-    <img {...props} src={`https://cdn.localcivics.io/brand/${props.variant}.png`} alt="Logo" />
+    <img
+      {...props}
+      src={`https://cdn.localcivics.io/brand/${props.variant}.png`}
+      alt="Logo"
+    />
   );
 };

@@ -17,7 +17,9 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<LogoProps> = (args) => <Logo className="w-48" {...args} />;
+const Template: Story<LogoProps> = (args) => (
+  <Logo className="w-48" {...args} />
+);
 
 /**
  * Component stories

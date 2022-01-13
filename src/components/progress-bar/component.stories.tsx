@@ -20,12 +20,12 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<ProgressBarProps> = (args) => <ProgressBar {...args}/>;
+const Template: Story<ProgressBarProps> = (args) => <ProgressBar {...args} />;
 
 /**
  * Component stories
  */
 export const Default: Story<ProgressBarProps> = Template.bind({});
 Default.args = {
-  className: "h-8"
+  className: "h-8",
 };

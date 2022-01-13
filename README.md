@@ -1,4 +1,5 @@
 # js-platform
+
 React component library for the Local Civics platform
 
 ## Install
@@ -41,5 +42,4 @@ or if want to live updates,
 
 - [Dashboard](https://dashboard.localcivics.io)
 
-
-# todo: fix intro.mdx 
+# todo: fix intro.mdx
