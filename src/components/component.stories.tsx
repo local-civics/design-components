@@ -6,7 +6,7 @@ import { App } from "./App";
  * Storybook component configuration
  */
 export default {
-  title: "Dashboard",
+  title: "Hub/App",
   component: App,
 };
 

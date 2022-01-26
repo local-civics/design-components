@@ -1,31 +1,34 @@
-import {Passport, useClient} from "@local-civics/js-gateway";
-import {useEffect, useState}                    from "react";
+import { useApi } from "@local-civics/js-client";
+import { useEffect, useState } from "react";
 
 /**
  * usePassport hook
- * @param username
+ * @param owner
+ * // todo: passport model
  */
-export const usePassport: (username: string) => [Passport, boolean] = (username: string) => {
-    const client = useClient()
-    const [state, setState] = useState({
+export const usePassport: (owner: string) => [any, boolean] = (
+  owner: string
+) => {
+  const { api } = useApi();
+  const [state, setState] = useState({
+    passport: {
+      data: {} as any,
+      isLoading: true,
+    },
+  });
+
+  useEffect(() => {
+    (async () => {
+      setState({
+        ...state,
         passport: {
-            data: {} as Passport,
-            isLoading: true,
+          ...state.passport,
+          data: await api("GET", `/footprint/v0/${owner}/passport`),
+          isLoading: false,
         },
-    })
+      });
+    })();
+  }, []);
 
-    useEffect(() => {
-        (async () => {
-            setState({
-                ...state,
-                passport: {
-                    ...state.passport,
-                    data: await client.footprint.passport(username),
-                    isLoading: false,
-                }
-            })
-        })()
-    }, [])
-
-    return [state.passport.data, state.passport.isLoading]
-}
+  return [state.passport.data, state.passport.isLoading];
+};

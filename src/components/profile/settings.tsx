@@ -1,10 +1,10 @@
-import {Identity, useClient}        from "@local-civics/js-gateway";
+import { useApi } from "@local-civics/js-client";
 import React, { FunctionComponent } from "react";
-import {useNavigate, useParams}     from "react-router-dom";
-import { Icon }                     from "../icon";
-import {useIdentity}                   from "../identity/hooks";
-import { Loader }                      from "../loader";
-import {useIdentify}             from "./hooks";
+import { useNavigate, useParams } from "react-router-dom";
+import { Icon } from "../icon";
+import { useIdentity } from "../identity/hooks";
+import { Loader } from "../loader";
+import { useIdentify } from "./hooks";
 
 /**
  * Settings
@@ -12,15 +12,16 @@ import {useIdentify}             from "./hooks";
  * todo: validate input
  */
 export const Settings: FunctionComponent = () => {
-  const client = useClient()
-  const navigate = useNavigate()
-  const identify = useIdentify()
-  const params = useParams()
-  const username = params.username || ""
-  const [identity, , isLoading] = useIdentity(username)
-  const [changes, setChanges] = React.useState(undefined as Identity | undefined);
-  const newIdentity = {...identity, ...changes}
-  const avatar = newIdentity.avatar || "https://cdn.localcivics.io/dashboard/avatar.jpg";
+  const { api } = useApi();
+  const navigate = useNavigate();
+  const identify = useIdentify();
+  const params = useParams();
+  const owner = params.owner || "";
+  const [identity, , isLoading] = useIdentity(owner);
+  const [changes, setChanges] = React.useState(undefined as any | undefined);
+  const newIdentity = { ...identity, ...changes };
+  const avatar =
+    newIdentity.avatar || "https://cdn.localcivics.io/dashboard/avatar.jpg";
   const avatarInput = React.useRef<HTMLInputElement>(null);
   const updateProfile = (key: string, value: string) => {
     setChanges({ ...changes, [key]: value });
@@ -28,8 +29,8 @@ export const Settings: FunctionComponent = () => {
 
   const onSave = async () => {
     if (changes) {
-      await client.identity.save("me", newIdentity)
-      identify(newIdentity)
+      await api("PUT", `/identity/v0/users/${owner}`, undefined, newIdentity);
+      identify(newIdentity);
     }
     navigate(-1);
   };
@@ -50,14 +51,10 @@ export const Settings: FunctionComponent = () => {
   };
 
   return (
-    <div
-      className="grid grid-cols-1 justify-items-center content-center transition ease-in-out duration-300 fixed top-0 w-screen h-screen p-5 bg-gray-500/80 z-50"
-    >
+    <div className="grid grid-cols-1 justify-items-center content-center transition ease-in-out duration-300 fixed top-0 w-screen h-screen p-5 bg-gray-500/80 z-50">
       <div className="shadow-md overflow-hidden w-9/12 lg:w-5/12 bg-white rounded-md grid grid-cols-1 justify-items-center">
         <div className="px-5 pt-5 pb-5 grid grid-cols-2 justify-items-end w-full">
-          <p className="w-full font-semibold text-gray-700 text-sm">
-            Settings
-          </p>
+          <p className="w-full font-semibold text-gray-700 text-sm">Settings</p>
           <Icon
             onClick={() => navigate(-1)}
             className="transition ease-in-out cursor-pointer stroke-gray-300 fill-gray-300 hover:stroke-gray-400 hover:fill-gray-400 w-4"
@@ -78,7 +75,9 @@ export const Settings: FunctionComponent = () => {
                   onChange={(e) => onAvatarClick(e)}
                 />
                 <img
-                  onClick={() => avatarInput.current && avatarInput.current.click()}
+                  onClick={() =>
+                    avatarInput.current && avatarInput.current.click()
+                  }
                   src={avatar}
                   alt="avatar"
                   className="cursor-pointer border-4 w-20 h-20 lg:w-36 lg:h-36 rounded-full object-cover"
@@ -90,11 +89,11 @@ export const Settings: FunctionComponent = () => {
                   Username
                 </p>
                 <input
-                    min={6}
-                    max={30}
-                    onChange={(e) => updateProfile("username", e.target.value)}
-                    defaultValue={identity.username}
-                    className="text-xs lg:text-sm text-gray-500 h-full w-full mt-3 rounded-md bg-gray-200 p-3"
+                  min={6}
+                  max={30}
+                  onChange={(e) => updateProfile("owner", e.target.value)}
+                  defaultValue={identity.owner}
+                  className="text-xs lg:text-sm text-gray-500 h-full w-full mt-3 rounded-md bg-gray-200 p-3"
                 />
               </div>
 

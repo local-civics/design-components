@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
-import { Route, Routes }     from "react-router-dom";
-import { NotFound }          from "./errors";
-import {Pathway}             from "./pathway";
-import { Profile }           from "./profile";
-import {Settings}            from "./profile/settings";
+import { Route, Routes } from "react-router-dom";
+import { Badge } from "./badge";
+import { NotFound } from "./errors";
+import { Profile } from "./profile";
+import { Settings } from "./profile/settings";
 
 // todo: detect event video
 // todo: additional registration pop-up
@@ -21,9 +21,9 @@ import {Settings}            from "./profile/settings";
 export const App: FunctionComponent = () => {
   return (
     <Routes>
-      <Route path="/:username" element={<Profile />}>
-          <Route path="settings" element={<Settings />}/>
-          <Route path="pathways/:pathwayId" element={<Pathway />}/>
+      <Route path="/:owner" element={<Profile />}>
+        <Route path="settings" element={<Settings />} />
+        <Route path="badges/:badgeName" element={<Badge />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

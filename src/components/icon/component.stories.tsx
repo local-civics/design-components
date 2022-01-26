@@ -6,7 +6,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Basics/Icon",
+  title: "Library/Icon",
   component: Icon,
   argTypes: {
     icon: {

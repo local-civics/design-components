@@ -5,7 +5,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Basics/ProgressBar",
+  title: "Library/ProgressBar",
   component: ProgressBar,
   argTypes: {
     start: {

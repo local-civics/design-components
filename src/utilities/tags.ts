@@ -1,39 +1,19 @@
-import {icons, Icons} from "../components/icon/icons";
-
-/**
- * Learning area from tags
- * @param fallback
- * @param tags
- */
-export const area = (fallback: string, tags?: string[]) => {
-  let area = fallback;
-  if (tags) {
-    tags.every((tag) => {
-      if (tag.startsWith("area:")) {
-        area = tag.slice("area:".length);
-        return false;
-      }
-      return true;
-    });
-  }
-  return area;
-};
+import { icons, Icons } from "../components/icon/icons";
 
 /**
  * Icon from tags
- * @param fallback
  * @param tags
  * @param space
  */
-export const icon = (fallback: Icons, tags?: string[], space?: string) => {
-  let icon = fallback;
-  let found = false
+export const icon = (space: Icons, tags?: string[]) => {
+  let icon = space;
+  let found = false;
   if (tags) {
     tags.every((tag) => {
       if (tag.startsWith("icon:")) {
-        const name = tag.slice("icon:".length)
-        if(icons.includes(name as Icons)){
-          found = true
+        const name = tag.slice("icon:".length);
+        if (icons.includes(name as Icons)) {
+          found = true;
           icon = tag.slice("icon:".length) as Icons;
           return false;
         }
@@ -42,11 +22,12 @@ export const icon = (fallback: Icons, tags?: string[], space?: string) => {
     });
 
     tags.every((tag) => {
-      if (space && tag.startsWith(space)) {
-        const name = tag.slice(space.length)
-        if(icons.includes(name as Icons)){
-          found = true
-          icon = tag.slice(space.length) as Icons;
+      if (space && tag.startsWith(space + ":")) {
+        const prefix = space + ":";
+        const name = tag.slice(prefix.length);
+        if (icons.includes(name as Icons)) {
+          found = true;
+          icon = tag.slice(prefix.length) as Icons;
           return false;
         }
       }

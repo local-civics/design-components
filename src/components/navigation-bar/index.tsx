@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
  * Configurable properties for NavigationBar component
  */
 export interface NavigationBarProps {
-  username?: string
+  owner?: string;
   page?: "profile" | "explore" | "calendar";
 }
 
@@ -17,7 +17,7 @@ export interface NavigationBarProps {
  */
 export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
   const navigate = useNavigate();
-  const username = props.username || ""
+  const owner = props.owner || "";
 
   // todo: responsive menu
   // todo: logout
@@ -33,7 +33,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
       <div className="w-full block flex items-center w-auto">
         <Icon
           onClick={
-            props.page !== "profile" ? () => navigate(`/${username}`) : undefined
+            props.page !== "profile" ? () => navigate(`/${owner}`) : undefined
           }
           className={`transition ease-in-out w-5 h-5 ${
             props.page == "profile" ? "stroke-slate-800" : "stroke-slate-600"

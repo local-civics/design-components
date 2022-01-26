@@ -14,7 +14,9 @@ interface PathwayTutorialProps {
  * @param props
  * @constructor
  */
-export const PathwayTutorial: FunctionComponent<PathwayTutorialProps> = (props) => {
+export const PathwayTutorial: FunctionComponent<PathwayTutorialProps> = (
+  props
+) => {
   const [page, setPage] = useState(0);
   const next = () => {
     if (page >= 2) {

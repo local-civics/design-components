@@ -1,32 +1,36 @@
-import {Event, EventQuery, useClient} from "@local-civics/js-gateway";
-import {useEffect, useState}          from "react";
+import { useApi } from "@local-civics/js-client";
+import { useEffect, useState } from "react";
 
 /**
  * useEvents hook
- * @param username
+ * @param owner
  * @param query
+ * // todo: any
  */
-export const useEvents: (username: string, query?: EventQuery) => [Event[], boolean] = (username: string, query?: EventQuery) => {
-    const client = useClient()
-    const [state, setState] = useState({
+export const useEvents: (owner: string, query?: any) => [any[], boolean] = (
+  owner: string,
+  query?: any
+) => {
+  const { api } = useApi();
+  const [state, setState] = useState({
+    events: {
+      data: [] as any[],
+      isLoading: true,
+    },
+  });
+
+  useEffect(() => {
+    (async () => {
+      setState({
+        ...state,
         events: {
-            data: [] as Event[],
-            isLoading: true,
-        }
-    })
+          ...state.events,
+          data: await api("GET", `/calendar/v0/${owner}/events`, query),
+          isLoading: false,
+        },
+      });
+    })();
+  }, []);
 
-    useEffect(() => {
-        (async () => {
-            setState({
-                ...state,
-                events: {
-                    ...state.events,
-                    data: await client.calendar.events(username, query),
-                    isLoading: false,
-                }
-            })
-        })()
-    }, [])
-
-    return [state.events.data, state.events.isLoading]
-}
+  return [state.events.data, state.events.isLoading];
+};

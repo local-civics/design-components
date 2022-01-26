@@ -1,14 +1,14 @@
-import {Identity, useClient}                             from "@local-civics/js-gateway";
+import { useApi } from "@local-civics/js-client";
 import React, { FunctionComponent, useEffect, useState } from "react";
-import {Outlet, useNavigate, useParams}                  from "react-router-dom";
-import {EventWidget}                                     from "../event/widget";
-import {IdentityWidget}                                  from "../identity/widget";
-import { Loader }                                        from "../loader";
-import { NavigationBar }                                 from "../navigation-bar";
-import {PassportWidget}                                  from "../passport/widget";
-import {PathwayTutorial}                                 from "../pathway/tutorial";
-import {PathwayWidget}                                   from "../pathway/widget";
-import {EngagementWidget}                                from "./widget";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { EventWidget } from "../event/widget";
+import { IdentityWidget } from "../identity/widget";
+import { Loader } from "../loader";
+import { NavigationBar } from "../navigation-bar";
+import { PassportWidget } from "../passport/widget";
+import { PathwayTutorial } from "../readiness/tutorial";
+import { PathwayWidget } from "../readiness/widget";
+import { EngagementWidget } from "./widget";
 
 /**
  * Profile component
@@ -17,15 +17,17 @@ import {EngagementWidget}                                from "./widget";
  * todo: check identity permissions for expand only
  */
 export const Profile: FunctionComponent = () => {
-  const client = useClient()
-  const navigate = useNavigate()
-  const params = useParams()
-  const [identity, setIdentity] = React.useState({} as Identity);
-  const [subject, setSubject] = React.useState({} as Identity);
-  const username = subject.username || ""
+  const { api } = useApi();
+  const navigate = useNavigate();
+  const params = useParams();
+  const [identity, setIdentity] = React.useState({} as any); // todo: as Resident
+  const [subject, setSubject] = React.useState({} as any); // todo: as Resident
+  const owner = subject.owner || "";
   const [edit, setEdit] = React.useState(false);
-  const [isLoading, setLoading] = React.useState(true)
-  const [tab, setTab] = React.useState("badges" as "milestones" | "activity" | "badges")
+  const [isLoading, setLoading] = React.useState(true);
+  const [tab, setTab] = React.useState(
+    "badges" as "milestones" | "activity" | "badges"
+  );
   const avatar =
     (subject && subject.avatar) ||
     "https://cdn.localcivics.io/dashboard/avatar.jpg";
@@ -39,19 +41,19 @@ export const Profile: FunctionComponent = () => {
   useEffect(() => {
     (async () => {
       // todo: handle not authorized
-      setIdentity(await client.identity.resolve())
+      setIdentity(await api("GET", "/identity/v0/resolve"));
 
       // todo: handle not authorized
-      setSubject(await client.identity.user(params.username || ""))
+      setSubject(await api("GET", `/identity/v0/users/${params.owner}`));
 
-      setEdit(subject.identityId === identity.identityId)
-      setLoading(false)
+      setEdit(subject.identityId === identity.identityId);
+      setLoading(false);
     })();
   }, []);
 
   return (
     <main className="h-screen bg-white font-proxima">
-      <NavigationBar username={username} page="profile" />
+      <NavigationBar owner={owner} page="profile" />
       <Loader isLoading={isLoading}>
         <div className="px-4 lg:px-24">
           {/* Avatar Header */}
@@ -61,13 +63,11 @@ export const Profile: FunctionComponent = () => {
 
               <div className="mt-10 ml-2 lg:ml-40 lg:mt-2">
                 <h4 className="font-semibold capitalize text-2xl text-gray-700">
-                  {subject.givenName}{" "}
-                  {subject.familyName}
+                  {subject.givenName} {subject.familyName}
                 </h4>
                 {subject.createdAt && (
                   <p className="text-gray-400">
-                    Member since{" "}
-                    {new Date(subject.createdAt).getFullYear()}
+                    Member since {new Date(subject.createdAt).getFullYear()}
                   </p>
                 )}
               </div>
@@ -89,13 +89,26 @@ export const Profile: FunctionComponent = () => {
             {/* Left Panel */}
             <div className="lg:flex lg:flex-col w-full lg:w-60">
               {/* About */}
-              <IdentityWidget username={username} title="about me" onEdit={edit ? () => navigate(`/${username}/settings`) : undefined}/>
+              <IdentityWidget
+                owner={owner}
+                title="about me"
+                onEdit={edit ? () => navigate(`/${owner}/settings`) : undefined}
+              />
 
               {/* Pathways */}
-              <PathwayWidget username={username} title="pathways" onHelp={() => setScreen("pathway/tutorial")}/>
+              <PathwayWidget
+                bearerName={owner}
+                title="pathways"
+                onHelp={() => setScreen("pathway/tutorial")}
+              />
 
               {/* Registered */}
-              <EventWidget username={username} title="my events" query={{status: "watched", limit: 3}} onSeeAll={edit ? () => {} : undefined} />
+              <EventWidget
+                owner={owner}
+                title="my events"
+                query={{ status: "watched", limit: 3 }}
+                onSeeAll={edit ? () => {} : undefined}
+              />
 
               <p className="place-self-center inline-block mt-2 mb-2 text-xs text-gray-300">
                 Local Civics © {new Date().getFullYear()}
@@ -104,11 +117,11 @@ export const Profile: FunctionComponent = () => {
 
             {/* Right Panel */}
             <div className="lg:flex-grow lg:flex-col lg:ml-9">
-              <PassportWidget username={username} />
+              <PassportWidget owner={owner} />
 
               {/* Milestones/Activity/Badges */}
               <EngagementWidget
-                  username={username}
+                bearerName={owner}
                 active={tab}
                 setActive={setTab}
               />
@@ -120,7 +133,7 @@ export const Profile: FunctionComponent = () => {
           visible={currentScreen === "pathway/tutorial"}
         />
       </Loader>
-      <Outlet context={setSubject}/>
+      <Outlet context={setSubject} />
     </main>
   );
 };
