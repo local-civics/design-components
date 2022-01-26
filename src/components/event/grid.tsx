@@ -8,7 +8,7 @@ import { useEvents } from "./hooks";
  * EventGrid props
  */
 export interface EventGridProps {
-  owner: string;
+  residentName: string;
   rows?: number;
   columns?: number;
   query?: any;
@@ -37,7 +37,7 @@ const HorizontalGrid: FunctionComponent<EventGridProps> = (props) => {
 };
 
 const VerticalGrid: FunctionComponent<EventGridProps> = (props) => {
-  const [events, isLoading] = useEvents(props.owner, props.query);
+  const [events, isLoading] = useEvents(props.residentName, props.query);
   return (
     <Loader isLoading={isLoading}>
       {!events.length && (
@@ -96,7 +96,7 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
   const rows = props.rows || 2;
   const columns = props.columns || 3;
   const gridSize = rows * columns;
-  const [events, isLoading] = useEvents(props.owner, props.query);
+  const [events, isLoading] = useEvents(props.residentName, props.query);
   return (
     <Loader isLoading={isLoading}>
       {!events.length && (

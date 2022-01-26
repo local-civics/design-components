@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "../icon";
 import { Loader } from "../loader";
 import { Pathway } from "../pathway";
@@ -14,6 +13,7 @@ export interface PathwayWidgetProps {
   title: string;
   bearerName: string;
   onHelp: () => void;
+  onPathwayClick: (pathway: Pathway) => void;
 }
 
 /**
@@ -22,8 +22,6 @@ export interface PathwayWidgetProps {
  * @constructor
  */
 export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const bearerName = props.bearerName;
   const [cc, ccIsLoading] = useReadiness(bearerName, "college & career");
   const [pg, pgIsLoading] = useReadiness(bearerName, "policy & government");
@@ -86,7 +84,8 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
               return (
                 <div key={pathway.name} className="mt-5 flex items-center">
                   <Icon
-                    className="transition ease-in-out w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
+                    onClick={() => props.onPathwayClick(pathway.name)}
+                    className="cursor-pointer transition ease-in-out w-5 h-5 stroke-gray-700 fill-gray-700 hover:stroke-gray-800 hover:fill-gray-800 inline-block"
                     icon={pathway.name}
                   />
                   <div className="flex-grow ml-2">

@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 
 /**
  * usePassport hook
- * @param owner
+ * @param residentName
  * // todo: passport model
  */
-export const usePassport: (owner: string) => [any, boolean] = (
-  owner: string
+export const usePassport: (residentName: string) => [any, boolean] = (
+  residentName: string
 ) => {
   const { api } = useApi();
   const [state, setState] = useState({
@@ -23,7 +23,7 @@ export const usePassport: (owner: string) => [any, boolean] = (
         ...state,
         passport: {
           ...state.passport,
-          data: await api("GET", `/footprint/v0/${owner}/passport`),
+          data: await api("GET", `/footprint/v0/${residentName}/passport`),
           isLoading: false,
         },
       });

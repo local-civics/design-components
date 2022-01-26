@@ -6,9 +6,14 @@ import { IdentityWidget } from "../identity/widget";
 import { Loader } from "../loader";
 import { NavigationBar } from "../navigation-bar";
 import { PassportWidget } from "../passport/widget";
+import { Pathway } from "../pathway";
 import { PathwayTutorial } from "../readiness/tutorial";
 import { PathwayWidget } from "../readiness/widget";
 import { EngagementWidget } from "./widget";
+
+export interface ProfileProps {
+  tab?: "badges" | "milestones" | "activity";
+}
 
 /**
  * Profile component
@@ -16,18 +21,17 @@ import { EngagementWidget } from "./widget";
  * todo: link to explore page for events matching pathways
  * todo: check identity permissions for expand only
  */
-export const Profile: FunctionComponent = () => {
+export const Profile: FunctionComponent<ProfileProps> = (props) => {
   const { api } = useApi();
   const navigate = useNavigate();
   const params = useParams();
   const [identity, setIdentity] = React.useState({} as any); // todo: as Resident
   const [subject, setSubject] = React.useState({} as any); // todo: as Resident
-  const owner = subject.owner || "";
+  const residentName = subject.residentName || "";
+  const communityName = subject.communityName || "";
   const [edit, setEdit] = React.useState(false);
   const [isLoading, setLoading] = React.useState(true);
-  const [tab, setTab] = React.useState(
-    "badges" as "milestones" | "activity" | "badges"
-  );
+  const [tab, setTab] = React.useState(props.tab || "badges");
   const avatar =
     (subject && subject.avatar) ||
     "https://cdn.localcivics.io/dashboard/avatar.jpg";
@@ -37,6 +41,9 @@ export const Profile: FunctionComponent = () => {
     setPreviousScreen(currentScreen);
     setCurrentScreen(cur);
   };
+  const onPathwayClick = (pathway: Pathway) =>
+    navigate(`/communities/${communityName}?pathway=${pathway}`);
+  const onSeeAllClick = () => navigate(`/residents/${residentName}/calendar`);
 
   useEffect(() => {
     (async () => {
@@ -44,7 +51,9 @@ export const Profile: FunctionComponent = () => {
       setIdentity(await api("GET", "/identity/v0/resolve"));
 
       // todo: handle not authorized
-      setSubject(await api("GET", `/identity/v0/users/${params.owner}`));
+      setSubject(
+        await api("GET", `/identity/v0/residents/${params.residentName}`)
+      );
 
       setEdit(subject.identityId === identity.identityId);
       setLoading(false);
@@ -53,7 +62,7 @@ export const Profile: FunctionComponent = () => {
 
   return (
     <main className="h-screen bg-white font-proxima">
-      <NavigationBar owner={owner} page="profile" />
+      <NavigationBar residentName={residentName} page="profile" />
       <Loader isLoading={isLoading}>
         <div className="px-4 lg:px-24">
           {/* Avatar Header */}
@@ -88,26 +97,31 @@ export const Profile: FunctionComponent = () => {
           <div className="lg:flex w-full mt-5">
             {/* Left Panel */}
             <div className="lg:flex lg:flex-col w-full lg:w-60">
-              {/* About */}
+              {/* About Me */}
               <IdentityWidget
-                owner={owner}
+                residentName={residentName}
                 title="about me"
-                onEdit={edit ? () => navigate(`/${owner}/settings`) : undefined}
+                onEdit={
+                  edit
+                    ? () => navigate(`/residents/${residentName}/settings`)
+                    : undefined
+                }
               />
 
               {/* Pathways */}
               <PathwayWidget
-                bearerName={owner}
+                bearerName={residentName}
                 title="pathways"
                 onHelp={() => setScreen("pathway/tutorial")}
+                onPathwayClick={onPathwayClick}
               />
 
               {/* Registered */}
               <EventWidget
-                owner={owner}
+                residentName={residentName}
                 title="my events"
                 query={{ status: "watched", limit: 3 }}
-                onSeeAll={edit ? () => {} : undefined}
+                onSeeAllClick={onSeeAllClick}
               />
 
               <p className="place-self-center inline-block mt-2 mb-2 text-xs text-gray-300">
@@ -117,11 +131,11 @@ export const Profile: FunctionComponent = () => {
 
             {/* Right Panel */}
             <div className="lg:flex-grow lg:flex-col lg:ml-9">
-              <PassportWidget owner={owner} />
+              <PassportWidget residentName={residentName} />
 
               {/* Milestones/Activity/Badges */}
               <EngagementWidget
-                bearerName={owner}
+                bearerName={residentName}
                 active={tab}
                 setActive={setTab}
               />

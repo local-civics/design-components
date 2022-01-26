@@ -60,7 +60,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     case "milestones":
       tab = (
         <EventGrid
-          owner={props.bearerName}
+          residentName={props.bearerName}
           type="milestone"
           query={{ milestone: true, status: "reflection.pending" }}
         />
@@ -69,7 +69,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     case "activity":
       tab = (
         <EventGrid
-          owner={props.bearerName}
+          residentName={props.bearerName}
           columns={1}
           type="reflection"
           query={{ status: "reflection.submitted" }}
@@ -77,7 +77,12 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
       );
       break;
     case "badges":
-      tab = <BadgeGrid owner={props.bearerName} onBadgeClick={onBadgeClick} />;
+      tab = (
+        <BadgeGrid
+          residentName={props.bearerName}
+          onBadgeClick={onBadgeClick}
+        />
+      );
       break;
   }
 

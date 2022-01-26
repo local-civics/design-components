@@ -13,21 +13,29 @@ export const mockApi = () => {
     },
     routes() {
       this.get("/identity/v0/resolve", (schema) => {
-        return schema.db.identities.where({ identityId: "me" })[0];
+        return schema.db.residents.where({ identityId: "me" })[0];
       });
-      this.get("/identity/v0/users/:owner", (schema, request) => {
-        if (request.params.owner === "my" || request.params.owner === "me") {
-          request.params.owner = "andre.carter";
+      this.get("/identity/v0/residents/:residentName", (schema, request) => {
+        if (
+          request.params.residentName === "my" ||
+          request.params.residentName === "me"
+        ) {
+          request.params.residentName = "andre.carter";
         }
-        return schema.db.identities.where({ owner: request.params.owner })[0];
+        return schema.db.residents.where({
+          residentName: request.params.residentName,
+        })[0];
       });
-      this.put("/identity/v0/users/:identityId", (schema, request) => {
-        if (request.params.identityId === "my") {
-          request.params.identityId = "me";
+      this.put("/identity/v0/residents/:residentName", (schema, request) => {
+        if (
+          request.params.residentName === "my" ||
+          request.params.residentName === "me"
+        ) {
+          request.params.residentName = "andre.carter";
         }
         const attrs = JSON.parse(request.requestBody);
-        return schema.db.identities.update(
-          { identityId: request.params.identityId },
+        return schema.db.residents.update(
+          { residentName: request.params.residentName },
           attrs
         );
       });
@@ -64,20 +72,33 @@ export const mockApi = () => {
       this.put("/calendar/v0/:calendarId/events/:eventId/reflection", () => {
         return null;
       });
-      this.get("/caliber/v0/bearers/:actorId/badges", (schema, request) => {
+      this.get("/caliber/v0/bearers/:bearerName/badges", (schema, request) => {
         delete request.queryParams.limit;
+        if (
+          request.params.bearerName === "my" ||
+          request.params.bearerName === "me"
+        ) {
+          request.params.bearerName = "andre.carter";
+        }
         const query = {
-          actorId: request.params.actorId,
+          bearerName: request.params.bearerName,
           ...request.queryParams,
         };
         return schema.db.badges.where(query);
       });
       this.get(
-        "/caliber/v0/bearers/:actorId/badges/:badgeName",
+        "/caliber/v0/bearers/:bearerName/badges/:badgeName",
         (schema, request) => {
           delete request.queryParams.limit;
+          if (
+            request.params.bearerName === "my" ||
+            request.params.bearerName === "me"
+          ) {
+            request.params.bearerName = "andre.carter";
+          }
+
           const query = {
-            actorId: request.params.actorId,
+            bearerName: request.params.bearerName,
             badgeName: request.params.badgeName,
             ...request.queryParams,
           };
@@ -134,7 +155,7 @@ const readiness = [
 const badges = [
   {
     badgeName: "onboarding.badge",
-    actorId: "andre.carter",
+    bearerName: "andre.carter",
     title: "Onboarding Badge",
     summary: "Get on the platform and check things out.",
     imageURL: "https://cdn.localcivics.io/badges/onboarding.png",
@@ -152,14 +173,14 @@ const badges = [
       {
         criterionName: "onboarding.badge.avatar",
         title: "Set your avatar",
-        actionURL: "/my/settings",
+        actionURL: "/residents/me/settings",
       },
     ],
     complete: true,
   },
   {
     badgeName: "participation.badge",
-    actorId: "andre.carter",
+    bearerName: "andre.carter",
     title: "Participation Badge",
     summary: "Get out of your shy shell",
     imageURL: "https://cdn.localcivics.io/badges/participation.png",
@@ -182,7 +203,7 @@ const badges = [
   },
   {
     badgeName: "civic.lens.badge",
-    actorId: "andre.carter",
+    bearerName: "andre.carter",
     title: "Civic Lens Badge",
     summary: "See through the lens of civics.",
     imageURL: "https://cdn.localcivics.io/badges/civic-lens.png",
@@ -205,7 +226,7 @@ const badges = [
   },
   {
     badgeName: "college.explorer.badge",
-    actorId: "andre.carter",
+    bearerName: "andre.carter",
     title: "College Explorer Badge",
     summary: "Learn about the different colleges and their unique offerings.",
     imageURL: "https://cdn.localcivics.io/badges/college-explorer.png",
@@ -228,7 +249,7 @@ const badges = [
   },
   {
     badgeName: "us.history.badge",
-    actorId: "andre.carter",
+    bearerName: "andre.carter",
     title: "U.S History Badge",
     summary: "Learn about the history of the United States.",
     imageURL: "https://cdn.localcivics.io/badges/us-history.png",
@@ -251,7 +272,7 @@ const badges = [
   },
   {
     badgeName: "tech.guru.badge",
-    actorId: "andre.carter",
+    bearerName: "andre.carter",
     summary: "Become a master of technology.",
     title: "Tech Guru Badge",
     criteria: [
@@ -272,7 +293,7 @@ const badges = [
   },
   {
     badgeName: "elected.official.badge",
-    actorId: "andre.carter",
+    bearerName: "andre.carter",
     summary: "Meet your elected official in your community.",
     title: "Elected Official Badge",
     status: "unqualified",
@@ -294,20 +315,23 @@ const badges = [
   },
 ];
 
+const residents = [
+  {
+    residentName: "andre.carter",
+    communityName: "hcz",
+    identityId: "me",
+    givenName: "Andre",
+    familyName: "Carter",
+    statement:
+      "I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure andre.carter community is a place where everyone is welcome.",
+    network: ["hcz"],
+    grade: "7",
+    createdAt: "January 1, 2020",
+  },
+];
+
 const data = {
-  identities: [
-    {
-      owner: "andre.carter",
-      identityId: "me",
-      givenName: "Andre",
-      familyName: "Carter",
-      statement:
-        "I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure andre.carter community is a place where everyone is welcome.",
-      network: ["hcz"],
-      grade: "7",
-      createdAt: "January 1, 2020",
-    },
-  ],
+  residents: residents,
   passports: [
     {
       actorId: "andre.carter",

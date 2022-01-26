@@ -11,7 +11,7 @@ export const BadgeContainer: FunctionComponent = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [badge, isLoading] = useBadge(
-    params.owner || "",
+    params.residentName || "",
     params.badgeName || ""
   );
   const onClose = () => navigate(-1);

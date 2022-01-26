@@ -8,7 +8,7 @@ import { usePassport } from "./hooks";
  * PassportWidget props
  */
 export interface PassportWidgetProps {
-  owner: string;
+  residentName: string;
 }
 
 /**
@@ -19,7 +19,7 @@ export interface PassportWidgetProps {
 export const PassportWidget: FunctionComponent<PassportWidgetProps> = (
   props
 ) => {
-  const [passport, isLoading] = usePassport(props.owner);
+  const [passport, isLoading] = usePassport(props.residentName);
   return (
     <div className="lg:flex lg:h-36 w-full">
       <Loader isLoading={isLoading}>

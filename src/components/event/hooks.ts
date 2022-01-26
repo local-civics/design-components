@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 
 /**
  * useEvents hook
- * @param owner
+ * @param residentName
  * @param query
  * // todo: any
  */
-export const useEvents: (owner: string, query?: any) => [any[], boolean] = (
-  owner: string,
+export const useEvents: (
+  residentName: string,
   query?: any
-) => {
+) => [any[], boolean] = (residentName: string, query?: any) => {
   const { api } = useApi();
   const [state, setState] = useState({
     events: {
@@ -25,7 +25,7 @@ export const useEvents: (owner: string, query?: any) => [any[], boolean] = (
         ...state,
         events: {
           ...state.events,
-          data: await api("GET", `/calendar/v0/${owner}/events`, query),
+          data: await api("GET", `/calendar/v0/${residentName}/events`, query),
           isLoading: false,
         },
       });

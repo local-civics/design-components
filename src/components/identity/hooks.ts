@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
  * useIdentity hook
  * //todo: any
  */
-export const useIdentity: (owner: string) => [any, any, boolean] = (
-  owner: string
+export const useIdentity: (residentName: string) => [any, any, boolean] = (
+  residentName: string
 ) => {
   const { api } = useApi();
   const [state, setState] = useState({
@@ -19,7 +19,7 @@ export const useIdentity: (owner: string) => [any, any, boolean] = (
     (async () => {
       setState({
         ...state,
-        identity: await api("GET", `/identity/v0/users/${owner}`),
+        identity: await api("GET", `/identity/v0/residents/${residentName}`),
       });
     })();
   }, []);

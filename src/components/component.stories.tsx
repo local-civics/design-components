@@ -21,7 +21,7 @@ export const Home = () => <App />;
 export const Profile = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/andre.carter");
+    navigate("/residents/andre.carter");
   }, []);
 
   return <App />;

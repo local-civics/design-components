@@ -4,14 +4,14 @@ import { Badge } from "./model";
 
 /**
  * useBadges hook
- * @param owner
+ * @param residentName
  * @param query
  * // todo: any
  */
-export const useBadges: (owner: string, query?: any) => [Badge[], boolean] = (
-  owner: string,
+export const useBadges: (
+  residentName: string,
   query?: any
-) => {
+) => [Badge[], boolean] = (residentName: string, query?: any) => {
   const { api } = useApi();
   const [state, setState] = useState({
     badges: {
@@ -28,7 +28,7 @@ export const useBadges: (owner: string, query?: any) => [Badge[], boolean] = (
           ...state.badges,
           data: (await api(
             "GET",
-            `/caliber/v0/bearers/${owner}/badges`,
+            `/caliber/v0/bearers/${residentName}/badges`,
             query
           )) as Badge[],
           isLoading: false,
@@ -42,13 +42,13 @@ export const useBadges: (owner: string, query?: any) => [Badge[], boolean] = (
 
 /**
  * useBadge hook
- * @param owner
+ * @param residentName
  * @param badgeName
  */
 export const useBadge: (
-  owner: string,
+  residentName: string,
   badgeName: string
-) => [Badge, boolean] = (owner: string, badgeName: string) => {
+) => [Badge, boolean] = (residentName: string, badgeName: string) => {
   const { api } = useApi();
   const [state, setState] = useState({
     badge: {
@@ -65,7 +65,7 @@ export const useBadge: (
           ...state.badge,
           data: (await api(
             "GET",
-            `/caliber/v0/bearers/${owner}/badges/${badgeName}`
+            `/caliber/v0/bearers/${residentName}/badges/${badgeName}`
           )) as Badge,
           isLoading: false,
         },

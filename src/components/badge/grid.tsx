@@ -7,7 +7,7 @@ import { useBadges } from "./hooks";
  * BadgeGrid props
  */
 export interface BadgeGridProps {
-  owner: string;
+  residentName: string;
   rows?: number;
   columns?: number;
   onBadgeClick: (badgeName: string) => void;
@@ -43,13 +43,13 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
   const rows = props.rows || 2;
   const columns = props.columns || 3;
   const gridSize = rows * columns;
-  const [complete, isCompleteLoading] = useBadges(props.owner, {
+  const [complete, isCompleteLoading] = useBadges(props.residentName, {
     complete: true,
   });
-  const [incomplete, isIncompleteLoading] = useBadges(props.owner, {
+  const [incomplete, isIncompleteLoading] = useBadges(props.residentName, {
     incomplete: true,
   });
-  const [inactive, isInactiveLoading] = useBadges(props.owner, {
+  const [inactive, isInactiveLoading] = useBadges(props.residentName, {
     inactive: true,
   });
   const badges = [...complete, ...incomplete, ...inactive];

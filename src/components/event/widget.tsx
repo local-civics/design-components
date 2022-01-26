@@ -8,10 +8,10 @@ import { useEvents } from "./hooks";
  */
 export interface EventWidgetProps {
   title: string;
-  owner: string;
+  residentName: string;
   // todo: event query
   query?: any;
-  onSeeAll?: () => void;
+  onSeeAllClick?: () => void;
 }
 
 /**
@@ -20,7 +20,7 @@ export interface EventWidgetProps {
  * @constructor
  */
 export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
-  const [events, isLoading] = useEvents(props.owner, props.query);
+  const [events, isLoading] = useEvents(props.residentName, props.query);
   return (
     <div
       className="border-gray-200 border-2 rounded-md h-[20.5rem] lg:w-60 w-full mt-3"
@@ -40,9 +40,9 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
               {props.title}
             </h4>
           </div>
-          {props.onSeeAll && (
+          {props.onSeeAllClick && (
             <p
-              onClick={props.onSeeAll}
+              onClick={props.onSeeAllClick}
               className="text-xs align-middle cursor-pointer text-gray-400 hover:text-gray-600 inline-block"
             >
               See All

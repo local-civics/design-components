@@ -16,8 +16,8 @@ export const Settings: FunctionComponent = () => {
   const navigate = useNavigate();
   const identify = useIdentify();
   const params = useParams();
-  const owner = params.owner || "";
-  const [identity, , isLoading] = useIdentity(owner);
+  const residentName = params.residentName || "";
+  const [identity, , isLoading] = useIdentity(residentName);
   const [changes, setChanges] = React.useState(undefined as any | undefined);
   const newIdentity = { ...identity, ...changes };
   const avatar =
@@ -29,7 +29,12 @@ export const Settings: FunctionComponent = () => {
 
   const onSave = async () => {
     if (changes) {
-      await api("PUT", `/identity/v0/users/${owner}`, undefined, newIdentity);
+      await api(
+        "PUT",
+        `/identity/v0/residents/${residentName}`,
+        undefined,
+        newIdentity
+      );
       identify(newIdentity);
     }
     navigate(-1);
@@ -91,8 +96,10 @@ export const Settings: FunctionComponent = () => {
                 <input
                   min={6}
                   max={30}
-                  onChange={(e) => updateProfile("owner", e.target.value)}
-                  defaultValue={identity.owner}
+                  onChange={(e) =>
+                    updateProfile("residentName", e.target.value)
+                  }
+                  defaultValue={identity.residentName}
                   className="text-xs lg:text-sm text-gray-500 h-full w-full mt-3 rounded-md bg-gray-200 p-3"
                 />
               </div>
