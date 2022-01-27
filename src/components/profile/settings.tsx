@@ -21,7 +21,7 @@ export const Settings: FunctionComponent = () => {
   const [changes, setChanges] = React.useState(undefined as any | undefined);
   const newIdentity = { ...identity, ...changes };
   const avatar =
-    newIdentity.avatar || "https://cdn.localcivics.io/dashboard/avatar.jpg";
+    newIdentity.avatar || "https://cdn.localcivics.io/hub/avatar.jpg";
   const avatarInput = React.useRef<HTMLInputElement>(null);
   const updateProfile = (key: string, value: string) => {
     setChanges({ ...changes, [key]: value });
