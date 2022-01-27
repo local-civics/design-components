@@ -38,7 +38,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
       case "happening":
         return (
           <button className="transition-colors font-semibold rounded-lg max-h-14 py-3 px-12 bg-green-600 text-white mx-2 lg:mt-2">
-            Begin
+            Open
           </button>
         );
       case "went":
@@ -116,9 +116,9 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
                   <div className="text-gray-700 grid grid-cols-1 gap-4">
                     <p className="font-semibold text-lg">Skills</p>
                     <div className="flex gap-2">
-                      {skills.map((skill) => {
+                      {skills.map((skill, i) => {
                         return (
-                          <div className="grow-0 font-medium inline-block rounded-md capitalize bg-gray-200 px-4 py-2 text-sm text-gray-700">
+                          <div key={skill+i} className="grow-0 font-medium inline-block rounded-md capitalize bg-gray-200 px-4 py-2 text-sm text-gray-700">
                             {skill}
                           </div>
                         );

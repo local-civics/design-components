@@ -59,7 +59,7 @@ export const Settings: FunctionComponent = () => {
     <div className="grid grid-cols-1 justify-items-center content-center transition ease-in-out duration-300 fixed top-0 w-screen h-screen p-5 bg-gray-500/80 z-50">
       <div className="shadow-md overflow-hidden w-9/12 lg:w-5/12 bg-white rounded-md grid grid-cols-1 justify-items-center">
         <div className="px-5 pt-5 pb-5 grid grid-cols-2 justify-items-end w-full">
-          <p className="w-full font-semibold text-gray-700 text-sm">Settings</p>
+          <p className="w-full font-semibold text-slate-700 text-sm">Settings</p>
           <Icon
             onClick={() => navigate(-1)}
             className="transition ease-in-out cursor-pointer stroke-gray-300 fill-gray-300 hover:stroke-gray-400 hover:fill-gray-400 w-4"
@@ -90,7 +90,7 @@ export const Settings: FunctionComponent = () => {
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-gray-700 text-xs lg:text-sm">
+                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Username
                 </p>
                 <input
@@ -100,40 +100,56 @@ export const Settings: FunctionComponent = () => {
                     updateProfile("residentName", e.target.value)
                   }
                   defaultValue={identity.residentName}
-                  className="text-xs lg:text-sm text-gray-500 h-full w-full mt-3 rounded-md bg-gray-200 p-3"
+                  className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 />
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-gray-700 text-xs lg:text-sm">
+                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   First Name
                 </p>
                 <input
                   onChange={(e) => updateProfile("givenName", e.target.value)}
                   defaultValue={identity.givenName}
-                  className="text-xs lg:text-sm text-gray-500 h-full w-full mt-3 rounded-md bg-gray-200 p-3"
+                  className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 />
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-gray-700 text-xs lg:text-sm">
+                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Last Name
                 </p>
                 <input
                   onChange={(e) => updateProfile("familyName", e.target.value)}
                   defaultValue={identity.familyName}
-                  className="text-xs lg:text-sm text-gray-500 h-full w-full mt-3 rounded-md bg-gray-200 p-3"
+                  className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 />
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-gray-700 text-xs lg:text-sm">
+                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Grade
                 </p>
                 <select
                   onChange={(e) => updateProfile("grade", e.target.value)}
                   defaultValue={identity.grade}
-                  className="appearance-none text-gray-500 text-xs lg:text-sm h-full w-full mt-3 rounded-md bg-gray-200 p-3"
+                  className="appearance-none mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 >
                   <option>Select a grade</option>
                   <option value="6">6th</option>
@@ -147,24 +163,32 @@ export const Settings: FunctionComponent = () => {
               </div>
 
               <div className="p-5 h-60 w-full">
-                <p className="w-full font-semibold text-gray-700 text-xs lg:text-sm">
+                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Impact Statement
                 </p>
                 <textarea
                   onChange={(e) => updateProfile("statement", e.target.value)}
                   defaultValue={identity.statement}
-                  className="h-full text-sm text-gray-500 w-full mt-3 rounded-md bg-gray-200 p-3"
+                  className="h-full mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 />
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-gray-700 text-xs lg:text-sm">
+                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   API Key
                 </p>
                 <input
-                  readOnly
+                  disabled
                   defaultValue={"todo: implement me"}
-                  className="text-xs lg:text-sm text-gray-500 h-full w-full mt-3 rounded-md bg-gray-200 p-3"
+                  className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
                 />
               </div>
             </Loader>

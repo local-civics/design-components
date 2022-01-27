@@ -17,13 +17,13 @@ export const BadgeModal = () => {
   const onObjectiveClick = (actionURL?: string) =>
     actionURL && navigate(actionURL);
   return (
-    <div className="grid grid-cols-1 justify-items-center content-center transition ease-in-out duration-300 fixed top-0 w-screen h-screen p-5 bg-gray-500/80 z-50">
+    <article className="grid grid-cols-1 justify-items-center content-center transition ease-in-out duration-300 fixed top-0 w-screen h-screen p-5 bg-gray-500/80 z-50">
       <BadgeComponent
         isLoading={isLoading}
         badge={badge}
         onClose={onClose}
         onObjectiveClick={onObjectiveClick}
       />
-    </div>
+    </article>
   );
 };

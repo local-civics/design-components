@@ -1,14 +1,14 @@
 import { FunctionComponent } from "react";
-import { Route, Routes } from "react-router-dom";
-import { BadgeModal } from "./badge";
-import { Calendar } from "./calendar";
-import { NotFound } from "./errors";
-import { EventModal } from "./event/modal";
-import { Explore } from "./explore";
-import { Home } from "./home";
-import { Profile } from "./profile";
-import { Settings } from "./profile/settings";
-import { PathwayHelpModal } from "./readiness/modal";
+import { Route, Routes }     from "react-router-dom";
+import { BadgeModal }        from "./badge";
+import { Calendar }          from "./calendar";
+import { NotFound }          from "./errors";
+import { EventModal }        from "./event/modal";
+import {ExplorePage}         from "./explore/page";
+import { Home }              from "./home";
+import { Profile }           from "./profile";
+import { Settings }          from "./profile/settings";
+import { PathwayHelpModal }  from "./readiness/modal";
 
 // todo: detect event video
 // todo: additional registration pop-up
@@ -46,7 +46,7 @@ export const App: FunctionComponent = () => {
         element={<Profile tab="activity" />}
       />
       <Route path="/residents/:residentName/calendar" element={<Calendar />} />
-      <Route path="/communities/:communityName" element={<Explore />} />
+      <Route path="/communities/:communityName" element={<ExplorePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

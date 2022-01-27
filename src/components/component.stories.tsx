@@ -26,3 +26,15 @@ export const Profile = () => {
 
   return <App />;
 };
+
+/**
+ * Explore
+ */
+export const Explore = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/communities/hcz");
+  }, []);
+
+  return <App />;
+};
