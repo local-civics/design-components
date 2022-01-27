@@ -1,23 +1,24 @@
 /**
  * Background color from name
  * @param name
+ * @param active
  */
-export const background = (name: string) => {
+export const background = (name?: string, active?: boolean) => {
   switch (name) {
     case "college & career":
-      return "bg-red-300 hover:bg-red-400";
+      return active ? "bg-red-300" : "bg-red-200 hover:bg-red-300";
     case "policy & government":
-      return "bg-violet-300 hover:bg-violet-400";
+      return active ? "bg-violet-300" : "bg-violet-200 hover:bg-violet-300";
     case "recreation":
-      return "bg-orange-300 hover:bg-orange-400";
+      return active ? "bg-orange-300" : "bg-orange-200 hover:bg-orange-300";
     case "arts & culture":
-      return "bg-amber-300 hover:bg-amber-400";
+      return active ? "bg-amber-300" : "bg-amber-200 hover:bg-amber-300";
     case "volunteer":
-      return "bg-emerald-300 hover:bg-emerald-400";
+      return active ? "bg-emerald-300" : "bg-emerald-200 hover:bg-emerald-300";
     case "sponsored":
-      return "bg-sky-300 hover:bg-sky-400";
+      return active ? "bg-sky-300" : "bg-sky-200 hover:bg-sky-300";
     default:
-      return "bg-gray-100 hover:bg-gray-200";
+      return active ? "bg-gray-200" : "bg-gray-100 hover:bg-gray-200";
   }
 };
 
@@ -25,7 +26,7 @@ export const background = (name: string) => {
  * Foreground color from name
  * @param name
  */
-export const foreground = (name: string) => {
+export const foreground = (name?: string) => {
   switch (name) {
     case "college & career":
       return "text-red-300 hover:text-red-400 border-red-300 hover:border-red-400 stroke-red-300 fill-red-300 hover:stroke-red-400 hover:stroke-red-400";

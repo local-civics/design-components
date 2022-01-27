@@ -7,7 +7,6 @@ import { Loader } from "../loader";
 import { NavigationBar } from "../navigation-bar";
 import { PassportWidget } from "../passport/widget";
 import { Pathway } from "../pathway";
-import { PathwayTutorial } from "../readiness/tutorial";
 import { PathwayWidget } from "../readiness/widget";
 import { EngagementWidget } from "./widget";
 
@@ -35,15 +34,15 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
   const avatar =
     (subject && subject.avatar) ||
     "https://cdn.localcivics.io/dashboard/avatar.jpg";
-  const [currentScreen, setCurrentScreen] = useState("");
-  const [previousScreen, setPreviousScreen] = useState("");
-  const setScreen = (cur: string) => {
-    setPreviousScreen(currentScreen);
-    setCurrentScreen(cur);
-  };
   const onPathwayClick = (pathway: Pathway) =>
     navigate(`/communities/${communityName}?pathway=${pathway}`);
   const onSeeAllClick = () => navigate(`/residents/${residentName}/calendar`);
+  const onPathwayHelpClick = () =>
+    navigate(`/residents/${residentName}/help/pathway/intro`);
+  const onEventClick = (courseName?: string, eventName?: string) =>
+    navigate(
+      `/residents/${residentName}/courses/${courseName}/events/${eventName}`
+    );
 
   useEffect(() => {
     (async () => {
@@ -112,16 +111,17 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
               <PathwayWidget
                 bearerName={residentName}
                 title="pathways"
-                onHelp={() => setScreen("pathway/tutorial")}
-                onPathwayClick={onPathwayClick}
+                onHelpClick={onPathwayHelpClick}
+                onClick={onPathwayClick}
               />
 
               {/* Registered */}
               <EventWidget
                 residentName={residentName}
                 title="my events"
-                query={{ status: "watched", limit: 3 }}
+                query={{ status: "going", limit: 3 }}
                 onSeeAllClick={onSeeAllClick}
+                onClick={onEventClick}
               />
 
               <p className="place-self-center inline-block mt-2 mb-2 text-xs text-gray-300">
@@ -130,7 +130,7 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
             </div>
 
             {/* Right Panel */}
-            <div className="lg:flex-grow lg:flex-col lg:ml-9">
+            <div className="lg:grow lg:flex-col lg:ml-9">
               <PassportWidget residentName={residentName} />
 
               {/* Milestones/Activity/Badges */}
@@ -138,14 +138,11 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
                 bearerName={residentName}
                 active={tab}
                 setActive={setTab}
+                onEventClick={onEventClick}
               />
             </div>
           </div>
         </div>
-        <PathwayTutorial
-          close={() => setScreen(previousScreen)}
-          visible={currentScreen === "pathway/tutorial"}
-        />
       </Loader>
       <Outlet context={setSubject} />
     </main>

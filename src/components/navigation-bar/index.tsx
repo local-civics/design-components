@@ -26,7 +26,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
   // todo: logout
   return (
     <nav className="flex items-center justify-between flex-wrap sticky top-0 z-50 w-full h-16 border-b md:border-none md:border-monochrome-100 bg-white overflow-hidden px-4 md:px-24 py text-center md:shadow-md">
-      <div className="flex-grow items-center flex-shrink-0 md:mr-6">
+      <div className="grow items-center flex-shrink-0 md:mr-6">
         <Logo
           className={`-ml-2 w-36 ${cursor}`}
           variant="localcivics"
@@ -118,7 +118,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
       )}
       {props.page === "home" && (
         <div className="w-full block flex items-center w-auto">
-          <button className="transition-colors rounded-lg font-semibold py-2 px-8 border-2 border-slate-600 text-slate-600 hover:text-slate-700 hover:border-slate-700 lg:mt-2">
+          <button className="transition-colors rounded-lg font-semibold py-2 px-8 border-2 border-slate-700 text-slate-700 hover:text-slate-800 hover:border-slate-800 lg:mt-2">
             Login
           </button>
         </div>

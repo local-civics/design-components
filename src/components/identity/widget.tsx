@@ -32,7 +32,7 @@ export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
       <div className="grid grid-cols-1 min-h-60">
         <div className="p-2">
           <div className="flex items-center">
-            <div className="flex-grow">
+            <div className="grow">
               <Icon
                 className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
                 icon="user"

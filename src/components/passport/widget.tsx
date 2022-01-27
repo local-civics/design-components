@@ -24,7 +24,7 @@ export const PassportWidget: FunctionComponent<PassportWidgetProps> = (
     <div className="lg:flex lg:h-36 w-full">
       <Loader isLoading={isLoading}>
         {/* Impact Score */}
-        <div className="flex-grow p-3 pt-6 rounded-md bg-sky-100">
+        <div className="grow p-3 pt-6 rounded-md bg-sky-100">
           <div>
             <Icon
               className="w-5 h-5 animate-pulse stroke-gray-700 fill-gray-700 inline-block"
@@ -39,7 +39,7 @@ export const PassportWidget: FunctionComponent<PassportWidgetProps> = (
               end={passport.nextXP || 1}
             />
             <div className="mt-2 flex">
-              <div className="flex-grow">
+              <div className="grow">
                 <p className="font-bold text-gray-700 text-xl inline-block">
                   {Intl.NumberFormat("en-US", {
                     notation: "compact",

@@ -1,1 +1,1 @@
-export { BadgeContainer as Badge } from "./container";
+export { BadgeModal } from "./modal";

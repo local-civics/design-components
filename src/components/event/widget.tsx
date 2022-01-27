@@ -11,7 +11,8 @@ export interface EventWidgetProps {
   residentName: string;
   // todo: event query
   query?: any;
-  onSeeAllClick?: () => void;
+  onClick: (courseName?: string, eventName?: string) => void;
+  onSeeAllClick: () => void;
 }
 
 /**
@@ -31,7 +32,7 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
       <div className="px-2 py-2 bg-gray-200" />
       <div className="p-2">
         <div className="flex items-center">
-          <div className="flex-grow">
+          <div className="grow">
             <Icon
               className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
               icon="calendar"
@@ -60,10 +61,13 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
             {events.map((event) => {
               return (
                 <div
-                  key={event.eventId}
+                  onClick={() =>
+                    props.onClick(event.courseName, event.eventName)
+                  }
+                  key={event.eventName}
                   className="cursor-pointer transition ease-in-out mt-3 bg-gray-100 hover:bg-gray-200  px-2 py-4 rounded-md text-gray-600 w-full"
                 >
-                  <p className="font-semibold text-xs">{event.name}</p>
+                  <p className="font-semibold text-xs">{event.title}</p>
                   {event.notBefore && (
                     <p className="mt-3 text-xs">
                       {new Date(event.notBefore).toLocaleString("default", {

@@ -14,6 +14,7 @@ export interface EngagementWidgetProps {
   bearerName: string;
   active: "milestones" | "activity" | "badges";
   setActive: (active: "milestones" | "activity" | "badges") => void;
+  onEventClick: (courseName?: string, eventName?: string) => void;
 }
 
 /**
@@ -33,6 +34,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     isLoading: true,
   });
   // todo: make this a hook
+  // todo: make this purely presentational
   const { api } = useApi();
   const navigate = useNavigate();
   const location = useLocation();
@@ -62,7 +64,8 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
         <EventGrid
           residentName={props.bearerName}
           type="milestone"
-          query={{ milestone: true, status: "reflection.pending" }}
+          query={{ milestone: true }}
+          onClick={props.onEventClick}
         />
       );
       break;
@@ -72,7 +75,8 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
           residentName={props.bearerName}
           columns={1}
           type="reflection"
-          query={{ status: "reflection.submitted" }}
+          query={{ status: "contributed" }}
+          onClick={props.onEventClick}
         />
       );
       break;

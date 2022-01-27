@@ -12,8 +12,8 @@ import { Readiness } from "./model";
 export interface PathwayWidgetProps {
   title: string;
   bearerName: string;
-  onHelp: () => void;
-  onPathwayClick: (pathway: Pathway) => void;
+  onHelpClick: () => void;
+  onClick: (pathway: Pathway) => void;
 }
 
 /**
@@ -63,7 +63,7 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
       <div className="px-2 py-2 bg-gray-200" />
       <div className="p-2">
         <div className="flex items-center">
-          <div className="flex-grow">
+          <div className="grow">
             <Icon
               className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
               icon="pathway"
@@ -73,7 +73,7 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
             </h4>
           </div>
           <Icon
-            onClick={props.onHelp}
+            onClick={props.onHelpClick}
             className="w-5 h-5 mt-0.5 align-middle cursor-pointer stroke-gray-500 fill-gray-500 hover:stroke-gray-700 hover:fill-gray-700 inline-block"
             icon="help"
           />
@@ -84,11 +84,11 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
               return (
                 <div key={pathway.name} className="mt-5 flex items-center">
                   <Icon
-                    onClick={() => props.onPathwayClick(pathway.name)}
+                    onClick={() => props.onClick(pathway.name)}
                     className="cursor-pointer transition ease-in-out w-5 h-5 stroke-gray-700 fill-gray-700 hover:stroke-gray-800 hover:fill-gray-800 inline-block"
                     icon={pathway.name}
                   />
-                  <div className="flex-grow ml-2">
+                  <div className="grow ml-2">
                     <p className="capitalize text-xs text-gray-400">
                       {pathway.name}
                     </p>

@@ -13,6 +13,7 @@ export interface EventGridProps {
   columns?: number;
   query?: any;
   type: "milestone" | "reflection";
+  onClick: (courseName?: string, eventName?: string) => void;
 }
 
 /**
@@ -53,25 +54,26 @@ const VerticalGrid: FunctionComponent<EventGridProps> = (props) => {
           {events.map((event) => {
             return (
               <div
+                onClick={() => props.onClick(event.courseName, event.eventName)}
                 key={event.eventId}
                 className={`border-2 border-gray-200 rounded-md cursor-pointer transition ease-in-out text-gray-500 h-96`}
               >
                 <div className="w-full py-4 px-4">
                   <Icon
                     className="inline-block w-7 h-7 stroke-gray-700 fill-gray-700"
-                    icon={event.pathway}
+                    icon={event.pathway || "explore"}
                   />
                   <div className="align-middle ml-2 inline-block">
                     <p className="font-semibold capitalize text-gray-700 text-md">
-                      {event.name}
+                      {event.title}
                     </p>
                     <div className="text-xs">
                       <p className="inline-block capitalize text-gray-700">
                         {event.pathway}
                       </p>
-                      {event.points && (
+                      {event.proficiency && (
                         <p className="ml-1 font-semibold inline-block text-green-500">
-                          {event.points} pts
+                          {event.proficiency} pts
                         </p>
                       )}
                     </div>
@@ -79,8 +81,8 @@ const VerticalGrid: FunctionComponent<EventGridProps> = (props) => {
                 </div>
                 <img
                   className="w-full object-cover h-64"
-                  alt={event.name}
-                  src={event.image}
+                  alt={event.title}
+                  src={event.imageURL}
                 />
                 <div className="w-full h-16" />
               </div>
@@ -112,18 +114,28 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
           {events.map((event) => {
             return (
               <div
+                onClick={() => props.onClick(event.courseName, event.eventName)}
                 key={event.eventId}
                 className={`flex flex-col cursor-pointer transition ease-in-out ${background(
-                  event.pathway
+                  event.pathway,
+                  event.status === "contributed"
                 )} p-4 rounded-md text-gray-500 h-48`}
               >
+                {event.status === "contributed" && (
+                  <div className="relative">
+                    <Icon
+                      className="m-auto h-4 w-4 stroke-gray-700 fill-gray-700 absolute right-0"
+                      icon="reflection"
+                    />
+                  </div>
+                )}
                 <Icon
                   className="w-12 h-20 stroke-gray-700 fill-gray-700 mb-5"
-                  icon={event.pathway}
+                  icon={event.pathway || "explore"}
                 />
                 <div className="relative h-full">
                   <p className="font-semibold capitalize text-gray-700 text-md absolute bottom-0">
-                    {event.name}
+                    {event.title}
                   </p>
                 </div>
               </div>

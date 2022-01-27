@@ -1,12 +1,14 @@
 import { FunctionComponent } from "react";
 import { Route, Routes } from "react-router-dom";
-import { Badge } from "./badge";
+import { BadgeModal } from "./badge";
 import { Calendar } from "./calendar";
 import { NotFound } from "./errors";
+import { EventModal } from "./event/modal";
 import { Explore } from "./explore";
 import { Home } from "./home";
 import { Profile } from "./profile";
 import { Settings } from "./profile/settings";
+import { PathwayHelpModal } from "./readiness/modal";
 
 // todo: detect event video
 // todo: additional registration pop-up
@@ -28,7 +30,12 @@ export const App: FunctionComponent = () => {
       <Route path="/" element={<Home />} />
       <Route path="/residents/:residentName" element={<Profile />}>
         <Route path="settings" element={<Settings />} />
-        <Route path="badges/:badgeName" element={<Badge />} />
+        <Route path="badges/:badgeName" element={<BadgeModal />} />
+        <Route path="help/pathway/:stage" element={<PathwayHelpModal />} />
+        <Route
+          path="courses/:courseName/events/:eventName"
+          element={<EventModal />}
+        />
       </Route>
       <Route
         path="/residents/:residentName/milestones"
