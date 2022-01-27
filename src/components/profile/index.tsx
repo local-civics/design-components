@@ -32,8 +32,7 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
   const [isLoading, setLoading] = React.useState(true);
   const [tab, setTab] = React.useState(props.tab || "badges");
   const avatar =
-    (subject && subject.avatar) ||
-    "https://cdn.localcivics.io/hub/avatar.jpg";
+    (subject && subject.avatar) || "https://cdn.localcivics.io/hub/avatar.jpg";
   const onPathwayClick = (pathway: Pathway) =>
     navigate(`/communities/${communityName}?pathway=${pathway}`);
   const onSeeAllClick = () => navigate(`/residents/${residentName}/calendar`);

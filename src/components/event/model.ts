@@ -9,7 +9,6 @@ export interface Event {
   eventName?: string;
   title?: string;
   summary?: string;
-  address?: string;
   imageURL?: string;
   url?: string;
   registrationURL?: string;
@@ -36,6 +35,7 @@ export interface Location {
   state?: string;
   city?: string;
   postalCode?: string;
+  address?: string;
   latitude?: number;
   longitude?: number;
 }
