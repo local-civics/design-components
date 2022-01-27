@@ -78,12 +78,12 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
             <div className="w-full flex mt-5 pl-5 pr-10 pb-5 border-b border-gray-200">
               <div className="flex items-start grow">
                 <Icon
-                  className="grow inline-block min-w-6 w-6 h-6 stroke-gray-700 fill-gray-700"
+                  className="inline-block min-w-6 w-6 h-6 stroke-gray-700 fill-gray-700"
                   icon={event.pathway || "explore"}
                 />
 
                 <div className="grow align-top ml-2 inline-block">
-                  <p className="font-semibold capitalize text-gray-700 text-lg -mt-0.5">
+                  <p className="font-semibold capitalize text-gray-700 text-lg -mt-1.5">
                     {event.title}
                   </p>
                   <div>
