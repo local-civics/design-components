@@ -457,6 +457,12 @@ const events = [
     title: "Exploring Careers in Technology",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/college-and-career.jpg",
     pathway: "college & career",
@@ -471,6 +477,12 @@ const events = [
     eventName: "hcz.event.7",
     calendarId: "andre.carter",
     title: "Graphic Novel Open Book Discussion",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
     url: "https://www.localcivics.io",
@@ -487,6 +499,12 @@ const events = [
     eventName: "hcz.event.8",
     calendarId: "andre.carter",
     title: "YA Anime Club",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
     url: "https://www.localcivics.io",

@@ -151,7 +151,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
                             className="grow-0 w-6 h-6 min-w-6 stroke-gray-700 fill-gray-700"
                             icon="clock"
                           />
-                          <div className="grow font-medium inline-block capitalize px-4 py-2 text-sm text-gray-700">
+                          <div className="grow font-medium inline-block px-4 py-2 text-sm text-gray-700">
                             {new Intl.DateTimeFormat("en-US", {
                               dateStyle: "full",
                               timeStyle: "long",
