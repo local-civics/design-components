@@ -23,7 +23,7 @@ export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
   const [identity, community, isLoading] = useIdentity(props.residentName);
   return (
     <div
-      className="border-gray-200 border-2 rounded-md min-h-48 lg:w-60 w-full"
+      className="border rounded-md shadow-sm min-h-48 lg:w-60 w-full overflow-hidden"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -37,7 +37,7 @@ export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
                 className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
                 icon="user"
               />
-              <h4 className="ml-2 capitalize align-middle font-semibold text-gray-700 inline-block">
+              <h4 className="ml-2 capitalize align-middle font-semibold text-slate-700 inline-block">
                 {props.title}
               </h4>
             </div>
@@ -51,16 +51,16 @@ export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
           </div>
 
           <Loader isLoading={isLoading}>
-            <p className="line-clamp-10 mt-3 text-sm text-gray-400">
+            <p className="line-clamp-10 mt-3 text-sm text-slate-400">
               {identity.statement}
             </p>
             {community.city && community.state && (
               <div className="mt-2">
                 <Icon
-                  className="w-4 h-4 stroke-gray-700 fill-gray-700 inline-block"
+                  className="w-4 h-4 stroke-slate-700 fill-slate-700 inline-block"
                   icon="pin"
                 />
-                <h4 className="ml-2 capitalize text-xs align-middle text-gray-500 inline-block">
+                <h4 className="ml-2 capitalize text-xs align-middle text-slate-500 inline-block">
                   {community.city}, {community.state}
                 </h4>
               </div>
@@ -68,10 +68,10 @@ export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
             {community.name && (
               <div className="mt-2">
                 <Icon
-                  className="w-4 h-4 stroke-gray-700 fill-gray-700 inline-block"
+                  className="w-4 h-4 stroke-slate-700 fill-slate-700 inline-block"
                   icon="college & career"
                 />
-                <h4 className="ml-2 capitalize text-xs align-middle text-gray-500 inline-block">
+                <h4 className="ml-2 capitalize text-xs align-middle text-slate-500 inline-block">
                   {community.name}
                 </h4>
               </div>

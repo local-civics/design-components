@@ -5,8 +5,8 @@ import {Pathway}                  from "../pathway";
 /**
  * PathwayWidget props
  */
-export interface PathwayFilterWidgetProps {
-    onPathwayClick: (pathway: Pathway) => void;
+export interface PathwayWidgetProps {
+    onPathwayClick: (pathway: Pathway[]) => void;
 }
 
 /**
@@ -14,7 +14,7 @@ export interface PathwayFilterWidgetProps {
  * @param props
  * @constructor
  */
-export const PathwayFilterWidget: FunctionComponent<PathwayFilterWidgetProps> = (
+export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (
     props
 ) => {
     /**
@@ -26,12 +26,25 @@ export const PathwayFilterWidget: FunctionComponent<PathwayFilterWidgetProps> = 
         "recreation",
         "arts & culture",
         "college & career",
-    ]
+    ];
 
+    const [active, setActive] = React.useState({} as Record<Pathway, boolean>)
+    const onPathwayClick = (pathway: Pathway) => {
+        if(active[pathway]){
+            setActive({...active, [pathway]: false})
+        } else {
+            setActive({...active, [pathway]: true})
+        }
+    }
+
+    React.useEffect(() => {
+        const pathways = Object.entries(active).filter(([, active]) => active).map(([pathway, ]) => pathway as Pathway)
+        props.onPathwayClick(pathways)
+    }, [active])
 
     return (
         <div
-            className="border-gray-200 border-2 rounded-md min-h-48 lg:w-60 w-full"
+            className="border-gray-200 border shadow-sm rounded-md min-h-48 lg:w-60 w-full overflow-hidden"
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true"
@@ -50,8 +63,11 @@ export const PathwayFilterWidget: FunctionComponent<PathwayFilterWidgetProps> = 
 
                 <div className="grid grid-cols-1">
                     {
-                        pathways.map((pathway) => {
-                            return <button className="px-2 py-4 text-left cursor-pointer bg-gray-100 hover:bg-white active:bg-white focus:bg-white">
+                        pathways.map((pathway, i) => {
+                            const base = "px-2 py-4 text-left cursor-pointer hover:bg-white active:bg-white"
+                            const bg = active[pathway] ? "bg-white" : "bg-gray-50"
+                            const className = [base, bg].join(" ")
+                            return <button onClick={() => onPathwayClick(pathway)} key={pathway + i} className={className}>
                                 <Icon className="inline-block w-4 h-4 min-w-4 stroke-gray-700 fill-gray-700" icon={pathway}/>
                                 <span className="ml-2 capitalize font-semibold text-sm text-gray-700"> {pathway} </span>
                             </button>

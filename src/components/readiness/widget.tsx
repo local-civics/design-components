@@ -55,7 +55,7 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
 
   return (
     <div
-      className="border-gray-200 border-2 rounded-md pb-2 lg:w-60 w-full mt-3"
+      className="border-gray-200 border shadow-sm rounded-md pb-2 lg:w-60 w-full mt-3"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -65,16 +65,16 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
         <div className="flex items-center">
           <div className="grow">
             <Icon
-              className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
+              className="w-5 h-5 stroke-slate-700 fill-slate-700 inline-block"
               icon="pathway"
             />
-            <h4 className="ml-2 capitalize align-middle font-semibold text-gray-700 inline-block">
+            <h4 className="ml-2 capitalize align-middle font-semibold text-slate-700 inline-block">
               {props.title}
             </h4>
           </div>
           <Icon
             onClick={props.onHelpClick}
-            className="w-5 h-5 mt-0.5 align-middle cursor-pointer stroke-gray-500 fill-gray-500 hover:stroke-gray-700 hover:fill-gray-700 inline-block"
+            className="w-5 h-5 mt-0.5 align-middle cursor-pointer stroke-slate-400 fill-slate-400 hover:stroke-slate-700 hover:fill-slate-700 inline-block"
             icon="help"
           />
         </div>
@@ -85,11 +85,11 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
                 <div key={pathway.name} className="mt-5 flex items-center">
                   <Icon
                     onClick={() => props.onClick(pathway.name)}
-                    className="cursor-pointer transition ease-in-out w-5 h-5 stroke-gray-700 fill-gray-700 hover:stroke-gray-800 hover:fill-gray-800 inline-block"
+                    className="cursor-pointer transition ease-in-out w-5 h-5 stroke-slate-500 fill-slate-500 hover:stroke-slate-700 hover:fill-slate-700 inline-block"
                     icon={pathway.name}
                   />
                   <div className="grow ml-2">
-                    <p className="capitalize text-xs text-gray-400">
+                    <p className="capitalize text-xs text-slate-400">
                       {pathway.name}
                     </p>
                     <ProgressBar

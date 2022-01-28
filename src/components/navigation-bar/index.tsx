@@ -42,20 +42,20 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
                   ? () => navigate(`/residents/${residentName}`)
                   : undefined
               }
-              className={`transition ease-in-out w-5 h-5 ${
+              className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${
                 props.page == "profile"
-                  ? "stroke-slate-800"
-                  : "stroke-slate-600"
+                  ? "stroke-slate-600"
+                  : "stroke-slate-400"
               } ${
-                props.page == "profile" ? "fill-slate-800" : "fill-slate-600"
-              } hover:stroke-slate-800 hover:fill-slate-800 mr-8 ${
+                props.page == "profile" ? "fill-slate-600" : "fill-slate-400"
+              } hover:stroke-slate-600 hover:fill-slate-600 mr-8 ${
                 props.page !== "profile" && "cursor-pointer"
               }`}
               icon="user"
             />
             {props.page === "profile" && (
               <Icon
-                className="h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-700 fill-slate-700"
+                className="drop-shadow-sm h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-700 fill-slate-700"
                 icon="circle"
               />
             )}
@@ -68,20 +68,20 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
                   ? () => navigate(`/communities/${communityName}`)
                   : undefined
               }
-              className={`transition ease-in-out w-5 h-5 ${
+              className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${
                 props.page == "explore"
-                  ? "stroke-slate-800"
-                  : "stroke-slate-600"
+                  ? "stroke-slate-600"
+                  : "stroke-slate-400"
               } ${
-                props.page == "explore" ? "fill-slate-800" : "fill-slate-600"
-              } hover:stroke-slate-800 hover:fill-slate-800 mr-8 ${
+                props.page == "explore" ? "fill-slate-600" : "fill-slate-400"
+              } hover:stroke-slate-600 hover:fill-slate-600 mr-8 ${
                 props.page !== "explore" && "cursor-pointer"
               }`}
               icon="explore"
             />
             {props.page === "explore" && (
               <Icon
-                className="h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-700 fill-slate-700"
+                className="drop-shadow-sm h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-600 fill-slate-600"
                 icon="circle"
               />
             )}
@@ -93,32 +93,32 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
                   ? () => navigate(`/residents/${residentName}/calendar`)
                   : undefined
               }
-              className={`transition ease-in-out w-5 h-5 ${
+              className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${
                 props.page == "calendar"
-                  ? "stroke-slate-800"
-                  : "stroke-slate-600"
+                  ? "stroke-slate-600"
+                  : "stroke-slate-400"
               } ${
-                props.page == "calendar" ? "fill-slate-800" : "fill-slate-600"
-              } hover:stroke-slate-800 hover:fill-slate-800 ${
+                props.page == "calendar" ? "fill-slate-600" : "fill-slate-400"
+              } hover:stroke-slate-600 hover:fill-slate-400 ${
                 props.page !== "calendar" && "cursor-pointer"
               }`}
               icon="calendar"
             />
             {props.page === "calendar" && (
               <Icon
-                className="h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-700 fill-slate-700"
+                className="drop-shadow-sm h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-600 fill-slate-600"
                 icon="circle"
               />
             )}
           </div>
-          <p className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 ml-8">
+          <p className="cursor-pointer text-sm text-slate-400 hover:text-slate-600 ml-8">
             Logout
           </p>
         </div>
       )}
       {props.page === "home" && (
         <div className="w-full block flex items-center w-auto">
-          <button className="transition-colors rounded-lg font-semibold py-2 px-8 border-2 border-slate-700 text-slate-700 hover:text-slate-800 hover:border-slate-800 lg:mt-2">
+          <button className="transition-colors rounded-lg font-semibold py-2 px-8 border-2 shadow-md border-slate-700 text-slate-700 hover:text-slate-800 hover:border-slate-800 lg:mt-2">
             Login
           </button>
         </div>

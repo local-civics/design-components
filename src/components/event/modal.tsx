@@ -10,7 +10,7 @@ export const EventModal = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [event, isLoading] = useEvent(
-    params.courseName || "",
+    params.communityName || "",
     params.eventName || ""
   );
   const onClose = () => navigate(-1);

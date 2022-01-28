@@ -52,6 +52,12 @@ export const mockApi = () => {
       this.get(
         "/curriculum/v0/courses/:courseName/events/:eventName",
         (schema, request) => {
+          if (
+              request.params.courseName === "my" ||
+              request.params.courseName === "me"
+          ) {
+            request.params.courseName = "hcz";
+          }
           const query = {
             courseName: request.params.courseName,
             eventName: request.params.eventName,
@@ -59,14 +65,44 @@ export const mockApi = () => {
           return schema.db.events.where(query)[0];
         }
       );
-      this.get("/calendar/v0/:calendarId/events", (schema, request) => {
-        delete request.queryParams.limit;
-        const query = {
-          calendarId: request.params.calendarId,
-          ...request.queryParams,
-        };
-        return schema.db.events.where(query);
+
+      this.get("/curriculum/v0/courses/:courseName/events", (schema, request) => {
+        let events = schema.db.events.where({})
+        const query = request.queryParams
+        events = events.filter((event) => {
+            let match = true
+            if(query.eventName){
+              match = match && event.eventName.toLowerCase().startsWith(query.eventName.toLowerCase())
+            }
+
+            if(query.tags){
+              match = match && query.tags.filter(tag => event.tags.includes(tag)).length > 0
+            }
+
+            if(query.pathways){
+              match = match && query.pathways.contains(event.pathway)
+            }
+
+            if(query.status){
+                match = match && event.status === query.status
+            }
+
+            if(query.timePeriod){
+              match = match && event.timePeriod === query.timePeriod
+            }
+
+            if(query.order){
+              match = match && event.order === query.order
+            }
+
+            return match
+        })
+
+        const limit = query.limit || 10
+        const page = query.page || 0
+        return events.slice(page * limit, (page * limit) + limit)
       });
+
       this.post("/calendar/v0/:calendarId", () => {
         return null;
       });
@@ -343,9 +379,106 @@ const residents = [
 const events = [
   {
     courseName: "hcz",
+    eventName: "hcz.event.0.top",
+    residentName: "andre.carter",
+    eventId: "hcz.event.0.top",
+    title: "Voter Registration 101",
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    url: "https://www.localcivics.io",
+    notBefore: new Date(),
+    imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
+    pathway: "policy & government",
+    tags: [
+      "area:policy & government",
+      "skill:leadership",
+      "skill:public speaking",
+      "skill:group work",
+    ],
+    status: "opportunity",
+    proficiency: 250,
+    order: "top",
+  },
+  {
+    courseName: "hcz",
+    eventId: "hcz.event.1.top",
+    eventName: "hcz.event.1.top",
+    residentName: "andre.carter",
+    title: "Guess the Odd One Out",
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    notBefore: new Date(),
+    url: "https://www.localcivics.io",
+    imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
+    pathway: "arts & culture",
+    tags: ["area:arts & culture"],
+    status: "going",
+    proficiency: 250,
+    order: "top",
+  },
+  {
+    courseName: "hcz",
+    eventId: "hcz.event.2.top",
+    eventName: "hcz.event.2.top",
+    residentName: "andre.carter",
+    title: "Explore NYC Public Data - Your School",
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    notBefore: new Date(),
+    url: "https://www.localcivics.io",
+    imageURL: "https://cdn.localcivics.io/area/volunteer.jpg",
+    pathway: "volunteer",
+    tags: ["area:volunteer"],
+    status: "opportunity",
+    proficiency: 250,
+    order: "top",
+  },
+  {
+    courseName: "hcz",
+    eventId: "hcz.event.3.top",
+    eventName: "hcz.event.3.top",
+    residentName: "andre.carter",
+    title: "YA Anime Club",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    url: "https://www.localcivics.io",
+    imageURL: "https://cdn.localcivics.io/area/recreation.jpg",
+    pathway: "recreation",
+    tags: ["area:recreation"],
+    status: "going",
+    notBefore: new Date(),
+    proficiency: 250,
+    order: "top",
+  },
+  {
+    courseName: "hcz",
     eventName: "hcz.event.0",
+    residentName: "andre.carter",
     eventId: "andre.carter.milestone.event.0",
-    calendarId: "andre.carter",
     title: "Dive into the Constitution I",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
@@ -356,7 +489,7 @@ const events = [
       postalCode: "11205",
     },
     url: "https://www.localcivics.io",
-    milestone: true,
+    timePeriod: "milestone",
     imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
     tags: [
@@ -372,11 +505,11 @@ const events = [
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.1",
     eventName: "hcz.event.1",
-    calendarId: "andre.carter",
+    residentName: "andre.carter",
     title: "Annual Conference on Civics Education",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
-    milestone: true,
+    timePeriod: "milestone",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "policy & government",
@@ -388,11 +521,11 @@ const events = [
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.2",
     eventName: "hcz.event.2",
-    calendarId: "andre.carter",
+    residentName: "andre.carter",
     title: "Explore NYC Public Data - Your School",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
-    milestone: true,
+    timePeriod: "milestone",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/volunteer.jpg",
     pathway: "volunteer",
@@ -403,13 +536,13 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.3",
-    calendarId: "andre.carter",
     eventName: "hcz.event.3",
+    residentName: "andre.carter",
     title:
       "Tech Event REWIND: Careers in Philanthropy & the Arts with Obi Asiama",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
-    milestone: true,
+    timePeriod: "milestone",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/college-and-career.jpg",
     pathway: "college & career",
@@ -421,11 +554,11 @@ const events = [
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.4",
     eventName: "hcz.event.4",
-    calendarId: "andre.carter",
+    residentName: "andre.carter",
     title: "Guess the Odd One Out",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
-    milestone: true,
+    timePeriod: "milestone",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
     pathway: "arts & culture",
@@ -437,11 +570,11 @@ const events = [
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.5",
     eventName: "hcz.event.5",
-    calendarId: "andre.carter",
+    residentName: "andre.carter",
     title: "Dive into the Constitution II",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
-    milestone: true,
+    timePeriod: "milestone",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
@@ -453,7 +586,7 @@ const events = [
     courseName: "hcz",
     eventId: "andre.carter.watched.event.0",
     eventName: "hcz.event.6",
-    calendarId: "andre.carter",
+    residentName: "andre.carter",
     title: "Exploring Careers in Technology",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
@@ -475,7 +608,7 @@ const events = [
     courseName: "hcz",
     eventId: "andre.carter.watched.event.1",
     eventName: "hcz.event.7",
-    calendarId: "andre.carter",
+    residentName: "andre.carter",
     title: "Graphic Novel Open Book Discussion",
     location: {
       address: "200 Willoughby Ave",
@@ -497,7 +630,7 @@ const events = [
     courseName: "hcz",
     eventId: "andre.carter.watched.event.2",
     eventName: "hcz.event.8",
-    calendarId: "andre.carter",
+    residentName: "andre.carter",
     title: "YA Anime Club",
     location: {
       address: "200 Willoughby Ave",

@@ -1,4 +1,4 @@
-import { Pathway } from "../pathway";
+import { Pathway } from "./pathway";
 
 /**
  * Event data model

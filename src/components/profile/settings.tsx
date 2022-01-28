@@ -85,12 +85,12 @@ export const Settings: FunctionComponent = () => {
                   }
                   src={avatar}
                   alt="avatar"
-                  className="cursor-pointer border-4 w-20 h-20 lg:w-36 lg:h-36 rounded-full object-cover"
+                  className="cursor-pointer border-2 shadow-sm w-20 h-20 lg:w-36 lg:h-36 rounded-full object-cover"
                 />
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
+                <p className="mb-2 w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Username
                 </p>
                 <input
@@ -109,7 +109,7 @@ export const Settings: FunctionComponent = () => {
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
+                <p className="mb-2 w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   First Name
                 </p>
                 <input
@@ -124,7 +124,7 @@ export const Settings: FunctionComponent = () => {
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
+                <p className="mb-2 w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Last Name
                 </p>
                 <input
@@ -139,7 +139,7 @@ export const Settings: FunctionComponent = () => {
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
+                <p className="mb-2 w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Grade
                 </p>
                 <select
@@ -163,13 +163,13 @@ export const Settings: FunctionComponent = () => {
               </div>
 
               <div className="p-5 h-60 w-full">
-                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
+                <p className="mb-2 w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   Impact Statement
                 </p>
                 <textarea
                   onChange={(e) => updateProfile("statement", e.target.value)}
                   defaultValue={identity.statement}
-                  className="h-full mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                  className="h-full resize-none mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
       invalid:border-pink-500 invalid:text-pink-600
@@ -178,7 +178,7 @@ export const Settings: FunctionComponent = () => {
               </div>
 
               <div className="p-5 w-full">
-                <p className="w-full font-semibold text-slate-700 text-xs lg:text-sm">
+                <p className="mb-2 w-full font-semibold text-slate-700 text-xs lg:text-sm">
                   API Key
                 </p>
                 <input

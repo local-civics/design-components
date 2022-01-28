@@ -72,16 +72,14 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
             return (
               <div
                 key={badge.badgeName}
-                className={`flex flex-col cursor-pointer bg-gray-100 hover:bg-gray-200 transition ease-in-out p-4 rounded-md text-gray-500 h-48`}
+                className={`flex flex-col cursor-pointer shadow-md bg-gray-100 hover:bg-gray-50 transition ease-in-out p-4 rounded-md text-gray-500 h-48`}
                 onClick={() => props.onBadgeClick(badge.badgeName || "")}
               >
-                <div className="h-48 w-48 m-auto overflow-hidden">
-                  <img
-                    className="h-full w-full object-contain"
+                <img
+                    className="h-[8rem] w-[8rem] max-w-[8rem] max-h-[8rem] m-auto drop-shadow-lg object-contain"
                     alt={badge.title}
                     src={badge.imageURL}
-                  />
-                </div>
+                />
                 <p className="font-semibold capitalize text-center text-gray-600 text-sm mt-3">
                   {badge.title}
                 </p>
@@ -93,7 +91,7 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
             return (
               <div
                 key={badge.badgeName}
-                className={`flex flex-col cursor-pointer bg-gray-100 hover:bg-gray-200 transition ease-in-out p-4 rounded-md text-gray-500 h-48`}
+                className={`flex flex-col cursor-pointer shadow-md bg-gray-100 hover:bg-gray-50 transition ease-in-out p-4 rounded-md text-gray-500 h-48`}
                 onClick={() => props.onBadgeClick(badge.badgeName || "")}
               >
                 <div className="relative">
@@ -102,12 +100,10 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
                     icon="unlock"
                   />
                 </div>
-                <div className="h-48 w-48 m-auto overflow-hidden">
-                  <Icon
-                    className="h-full w-full stroke-gray-500 fill-gray-500"
+                <Icon
+                    className="h-48 w-48 max-w-48 m-auto drop-shadow-lg stroke-gray-500 fill-gray-500"
                     icon="badge"
-                  />
-                </div>
+                />
                 <p className="font-semibold capitalize text-center text-gray-600 text-sm mt-3">
                   {badge.title}
                 </p>
@@ -119,7 +115,7 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
             return (
               <div
                 key={badge.badgeName}
-                className={`flex flex-col cursor-pointer bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500 h-48`}
+                className={`flex flex-col cursor-pointer shadow-md bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500 h-48`}
                 onClick={() => props.onBadgeClick(badge.badgeName || "")}
               >
                 <div className="relative">
@@ -128,12 +124,10 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
                     icon="lock"
                   />
                 </div>
-                <div className="h-48 w-48 m-auto overflow-hidden">
-                  <Icon
-                    className="h-full w-full stroke-gray-300 fill-gray-300"
+                <Icon
+                    className="h-48 w-48 max-w-48 m-auto drop-shadow-lg stroke-gray-300 fill-gray-300"
                     icon="badge"
-                  />
-                </div>
+                />
                 <p className="font-semibold capitalize text-center text-gray-300 text-sm mt-3">
                   {badge.title}
                 </p>
@@ -146,7 +140,7 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
               return (
                 <div
                   key={"missing.badge." + k}
-                  className="bg-gray-100 px-2 py-4 rounded-md text-gray-500 h-48"
+                  className="bg-gray-100 px-2 py-4 shadow-md rounded-md text-gray-500 h-48"
                 />
               );
             })}

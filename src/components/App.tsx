@@ -33,7 +33,7 @@ export const App: FunctionComponent = () => {
         <Route path="badges/:badgeName" element={<BadgeModal />} />
         <Route path="help/pathway/:stage" element={<PathwayHelpModal />} />
         <Route
-          path="courses/:courseName/events/:eventName"
+          path="communities/:communityName/events/:eventName"
           element={<EventModal />}
         />
       </Route>
@@ -46,7 +46,12 @@ export const App: FunctionComponent = () => {
         element={<Profile tab="activity" />}
       />
       <Route path="/residents/:residentName/calendar" element={<Calendar />} />
-      <Route path="/communities/:communityName" element={<ExplorePage />} />
+      <Route path="/communities/:communityName" element={<ExplorePage />} >
+          <Route
+              path="events/:eventName"
+              element={<EventModal />}
+          />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

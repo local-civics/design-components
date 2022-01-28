@@ -1,19 +1,20 @@
 import React, { FunctionComponent } from "react";
-import { background } from "../../utilities/colors";
-import { Icon } from "../icon";
-import { Loader } from "../loader";
-import { useEvents } from "./hooks";
+import { background }               from "../../utilities/colors";
+import { Icon }                     from "../icon";
+import { Loader }                   from "../loader";
+import { useEvents }                from "./hooks";
+import {EventQuery}                 from "./model";
 
 /**
  * EventGrid props
  */
 export interface EventGridProps {
-  residentName: string;
+  communityName: string
   rows?: number;
   columns?: number;
-  query?: any;
+  query?: EventQuery;
   type: "milestone" | "reflection";
-  onClick: (courseName?: string, eventName?: string) => void;
+  onClick: (communityName?: string, eventName?: string) => void;
 }
 
 /**
@@ -38,7 +39,7 @@ const HorizontalGrid: FunctionComponent<EventGridProps> = (props) => {
 };
 
 const VerticalGrid: FunctionComponent<EventGridProps> = (props) => {
-  const [events, isLoading] = useEvents(props.residentName, props.query);
+  const [events, isLoading] = useEvents(props.communityName, props.query);
   return (
     <Loader isLoading={isLoading}>
       {!events.length && (
@@ -56,7 +57,7 @@ const VerticalGrid: FunctionComponent<EventGridProps> = (props) => {
               <div
                 onClick={() => props.onClick(event.courseName, event.eventName)}
                 key={event.eventId}
-                className={`border-2 border-gray-200 rounded-md cursor-pointer transition ease-in-out text-gray-500 h-96`}
+                className={`border shadow-sm border-slate-300 rounded-md cursor-pointer transition ease-in-out text-gray-500 h-96`}
               >
                 <div className="w-full py-4 px-4">
                   <Icon
@@ -98,7 +99,7 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
   const rows = props.rows || 2;
   const columns = props.columns || 3;
   const gridSize = rows * columns;
-  const [events, isLoading] = useEvents(props.residentName, props.query);
+  const [events, isLoading] = useEvents(props.communityName, props.query);
   return (
     <Loader isLoading={isLoading}>
       {!events.length && (
@@ -116,7 +117,7 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
               <div
                 onClick={() => props.onClick(event.courseName, event.eventName)}
                 key={event.eventId}
-                className={`flex flex-col cursor-pointer transition ease-in-out ${background(
+                className={`flex flex-col shadow-md cursor-pointer transition ease-in-out ${background(
                   event.pathway,
                   event.status === "contributed"
                 )} p-4 rounded-md text-gray-500 h-48`}
@@ -130,7 +131,7 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
                   </div>
                 )}
                 <Icon
-                  className="w-12 h-20 stroke-gray-700 fill-gray-700 mb-5"
+                  className="w-12 h-20 drop-shadow-md stroke-gray-700 fill-gray-700 mb-5"
                   icon={event.pathway || "explore"}
                 />
                 <div className="relative h-full">
@@ -146,7 +147,7 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
               return (
                 <div
                   key={"missing.event." + k}
-                  className="bg-gray-100 px-2 py-4 rounded-md text-gray-500 h-48"
+                  className="bg-gray-100 px-2 py-4 shadow-md rounded-md text-gray-500 h-48"
                 />
               );
             })}

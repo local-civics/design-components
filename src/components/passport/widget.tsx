@@ -13,6 +13,7 @@ export interface PassportWidgetProps {
 
 /**
  * PassportWidget
+ * // todo: presentational
  * @param props
  * @constructor
  */
@@ -24,7 +25,7 @@ export const PassportWidget: FunctionComponent<PassportWidgetProps> = (
     <div className="lg:flex lg:h-36 w-full">
       <Loader isLoading={isLoading}>
         {/* Impact Score */}
-        <div className="grow p-3 pt-6 rounded-md bg-sky-100">
+        <div className="grow p-3 pt-6 shadow-sm rounded-md bg-sky-100">
           <div>
             <Icon
               className="w-5 h-5 animate-pulse stroke-gray-700 fill-gray-700 inline-block"
@@ -63,7 +64,7 @@ export const PassportWidget: FunctionComponent<PassportWidgetProps> = (
 
         {/* Achievements */}
         <div
-          className="border-gray-200 border-2 rounded-md mt-5 lg:mt-0 lg:ml-3 lg:w-5/12"
+          className="border-gray-200 border shadow-sm overflow-hidden rounded-md mt-5 lg:mt-0 lg:ml-3 lg:w-5/12"
           aria-labelledby="modal-title"
           role="dialog"
           aria-modal="true"

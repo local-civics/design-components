@@ -1,17 +1,17 @@
 import React, { FunctionComponent } from "react";
-import { Icon } from "../icon";
-import { Loader } from "../loader";
-import { useEvents } from "./hooks";
+import { Icon }                     from "../icon";
+import { Loader }                   from "../loader";
+import { useEvents }                from "./hooks";
+import {EventQuery}                 from "./model";
 
 /**
  * EventWidget properties
  */
 export interface EventWidgetProps {
   title: string;
-  residentName: string;
-  // todo: event query
-  query?: any;
-  onClick: (courseName?: string, eventName?: string) => void;
+  communityName: string;
+  query?: EventQuery;
+  onClick: (communityName?: string, eventName?: string) => void;
   onSeeAllClick: () => void;
 }
 
@@ -21,10 +21,10 @@ export interface EventWidgetProps {
  * @constructor
  */
 export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
-  const [events, isLoading] = useEvents(props.residentName, props.query);
+  const [events, isLoading] = useEvents(props.communityName, props.query);
   return (
     <div
-      className="border-gray-200 border-2 rounded-md h-[20.5rem] lg:w-60 w-full mt-3"
+      className="border-gray-200 border shadow-sm rounded-md h-[20.5rem] lg:w-60 w-full mt-3 overflow-hidden"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -34,17 +34,17 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
         <div className="flex items-center">
           <div className="grow">
             <Icon
-              className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
+              className="w-5 h-5 stroke-slate-700 fill-slate-700 inline-block"
               icon="calendar"
             />
-            <h4 className="ml-2 capitalize align-middle font-semibold text-gray-700 inline-block">
+            <h4 className="ml-2 capitalize align-middle font-semibold text-slate-700 inline-block">
               {props.title}
             </h4>
           </div>
           {props.onSeeAllClick && (
             <p
               onClick={props.onSeeAllClick}
-              className="text-xs align-middle cursor-pointer text-gray-400 hover:text-gray-600 inline-block"
+              className="text-xs align-middle cursor-pointer text-slate-400 hover:text-slate-600 inline-block"
             >
               See All
             </p>
@@ -65,7 +65,7 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
                     props.onClick(event.courseName, event.eventName)
                   }
                   key={event.eventName}
-                  className="cursor-pointer transition ease-in-out mt-3 bg-gray-100 hover:bg-gray-200  px-2 py-4 rounded-md text-gray-600 w-full"
+                  className="cursor-pointer transition shadow-md ease-in-out mt-3 bg-gray-100 hover:bg-gray-50  px-2 py-4 rounded-md text-gray-600 w-full"
                 >
                   <p className="font-semibold text-xs">{event.title}</p>
                   {event.notBefore && (

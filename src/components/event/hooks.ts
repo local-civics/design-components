@@ -1,6 +1,6 @@
 import { useApi } from "@local-civics/js-client";
 import { useEffect, useState } from "react";
-import { Event } from "./model";
+import {Event, EventQuery}     from "./model";
 
 /**
  * useEvent hook
@@ -40,29 +40,34 @@ export const useEvent: (
 
 /**
  * useEvents hook
- * @param residentName
+ * @param courseName
  * @param query
- * // todo: any
+ * @param isFiltering
  */
 export const useEvents: (
-  residentName: string,
-  query?: any
-) => [Event[], boolean] = (residentName: string, query?: any) => {
+  courseName: string,
+  query?: EventQuery,
+  isFiltering?: boolean,
+) => [Event[], boolean] = (courseName: string, query?: EventQuery, isFiltering: boolean = true) => {
   const { api } = useApi();
   const [state, setState] = useState({
     events: {
       data: [] as Event[],
-      isLoading: true,
+      isLoading: isFiltering && !!courseName,
     },
   });
 
   useEffect(() => {
+    if(!state.events.isLoading){
+      return
+    }
+
     (async () => {
       setState({
         ...state,
         events: {
           ...state.events,
-          data: await api("GET", `/calendar/v0/${residentName}/events`, query),
+          data: await api("GET", `/curriculum/v0/courses/${courseName}/events`, query),
           isLoading: false,
         },
       });

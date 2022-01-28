@@ -11,7 +11,8 @@ import { EventGrid } from "../event/grid";
  * EngagementWidget props
  */
 export interface EngagementWidgetProps {
-  bearerName: string;
+  communityName: string;
+  residentName: string;
   active: "milestones" | "activity" | "badges";
   setActive: (active: "milestones" | "activity" | "badges") => void;
   onEventClick: (courseName?: string, eventName?: string) => void;
@@ -49,7 +50,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
           ...state.badges,
           data: (await api(
             "GET",
-            `/caliber/v0/bearers/${props.bearerName}/badges`
+            `/caliber/v0/bearers/${props.residentName}/badges`
           )) as Badge[],
         },
         isLoading: false,
@@ -62,9 +63,9 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     case "milestones":
       tab = (
         <EventGrid
-          residentName={props.bearerName}
+          communityName={props.communityName}
           type="milestone"
-          query={{ milestone: true }}
+          query={{ residentName: props.residentName, timePeriod: "milestone" }}
           onClick={props.onEventClick}
         />
       );
@@ -72,10 +73,10 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     case "activity":
       tab = (
         <EventGrid
-          residentName={props.bearerName}
+          communityName={props.communityName}
           columns={1}
           type="reflection"
-          query={{ status: "contributed" }}
+          query={{ residentName: props.residentName, status: "contributed" }}
           onClick={props.onEventClick}
         />
       );
@@ -83,7 +84,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     case "badges":
       tab = (
         <BadgeGrid
-          residentName={props.bearerName}
+          residentName={props.residentName}
           onBadgeClick={onBadgeClick}
         />
       );
@@ -100,7 +101,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
 
   return (
     <div
-      className="border-gray-200 border-2 rounded-md w-full mt-5"
+      className="border-gray-200 shadow-sm border overflow-hidden rounded-md w-full mt-5"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"

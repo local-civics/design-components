@@ -38,9 +38,9 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
   const onSeeAllClick = () => navigate(`/residents/${residentName}/calendar`);
   const onPathwayHelpClick = () =>
     navigate(`/residents/${residentName}/help/pathway/intro`);
-  const onEventClick = (courseName?: string, eventName?: string) =>
+  const onEventClick = (communityName?: string, eventName?: string) =>
     navigate(
-      `/residents/${residentName}/courses/${courseName}/events/${eventName}`
+      `/residents/${residentName}/communities/${communityName}/events/${eventName}`
     );
 
   useEffect(() => {
@@ -65,15 +65,15 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
         <div className="px-4 lg:px-24">
           {/* Avatar Header */}
           <div className="flex w-full">
-            <div className="h-48 w-full border-l-2 border-r-2 border-b-2 rounded-b-md">
+            <div className="h-48 w-full border-gray-200 shadow-sm border-l border-r border-b rounded-b-md">
               <div className="h-2/5 lg:h-3/5 w-full bg-gray-200" />
 
               <div className="mt-10 ml-2 lg:ml-40 lg:mt-2">
-                <h4 className="font-semibold capitalize text-2xl text-gray-700">
+                <h4 className="font-semibold capitalize text-2xl text-slate-700">
                   {subject.givenName} {subject.familyName}
                 </h4>
                 {subject.createdAt && (
-                  <p className="text-gray-400">
+                  <p className="text-slate-400">
                     Member since {new Date(subject.createdAt).getFullYear()}
                   </p>
                 )}
@@ -84,7 +84,7 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
                 <img
                   src={avatar}
                   alt="avatar"
-                  className="border-4 w-24 h-24 lg:w-36 lg:h-36 rounded-full object-cover"
+                  className="border border-gray-200 shadow-sm w-24 h-24 lg:w-36 lg:h-36 rounded-full object-cover"
                 />
                 <span className="absolute h-5 w-5 top-3 right-3 rounded-full bg-green-500 border-4 border-white top-0 right-0" />
               </div>
@@ -116,14 +116,14 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
 
               {/* Registered */}
               <EventWidget
-                residentName={residentName}
+                communityName={subject.communityName}
                 title="my events"
-                query={{ status: "going", limit: 3 }}
+                query={{ residentName: subject.residentName, status: "going", limit: 3 }}
                 onSeeAllClick={onSeeAllClick}
                 onClick={onEventClick}
               />
 
-              <p className="place-self-center inline-block mt-2 mb-2 text-xs text-gray-300">
+              <p className="place-self-center inline-block mt-2 mb-2 text-xs text-slate-300">
                 Local Civics © {new Date().getFullYear()}
               </p>
             </div>
@@ -134,7 +134,8 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
 
               {/* Milestones/Activity/Badges */}
               <EngagementWidget
-                bearerName={residentName}
+                communityName={communityName}
+                residentName={residentName}
                 active={tab}
                 setActive={setTab}
                 onEventClick={onEventClick}
