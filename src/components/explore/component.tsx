@@ -65,7 +65,7 @@ export const ExploreComponent = (props: ExploreComponentProps) => {
 
       { hasFiltered && <label className="mt-5 relative block">
           <p className="text-gray-600 font-semibold">Events</p>
-          <p className="text-gray-600 text-sm"> We found {filtered?.length > 10 ? "10+" : filtered?.length} events </p>
+          <p className="text-gray-600 text-sm"> We found {filtered?.length >= 10 ? "10+" : filtered?.length} events </p>
           <EventGallery className="mt-5 overflow-x-scroll" events={filtered} onClick={props.onEventClick}/>
       </label> }
 

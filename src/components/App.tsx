@@ -32,25 +32,13 @@ export const App: FunctionComponent = () => {
         <Route path="settings" element={<Settings />} />
         <Route path="badges/:badgeName" element={<BadgeModal />} />
         <Route path="help/pathway/:stage" element={<PathwayHelpModal />} />
-        <Route
-          path="communities/:communityName/events/:eventName"
-          element={<EventModal />}
-        />
+        <Route path="communities/:communityName/events/:eventName" element={<EventModal />}/>
       </Route>
-      <Route
-        path="/residents/:residentName/milestones"
-        element={<Profile tab="milestones" />}
-      />
-      <Route
-        path="/residents/:residentName/activity"
-        element={<Profile tab="activity" />}
-      />
+      <Route path="/residents/:residentName/milestones" element={<Profile tab="milestones" />}/>
+      <Route path="/residents/:residentName/activity" element={<Profile tab="activity" />}/>
       <Route path="/residents/:residentName/calendar" element={<Calendar />} />
-      <Route path="/communities/:communityName/events" element={<ExplorePage />} >
-          <Route
-              path=":eventName"
-              element={<EventModal />}
-          />
+      <Route path="/communities/:communityName/events" element={<ExplorePage />}>
+          <Route path=":eventName" element={<EventModal />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

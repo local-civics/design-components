@@ -68,7 +68,7 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (
                     {
                         pathways.map((pathway, i) => {
                             const base = "px-2 py-4 text-left cursor-pointer hover:bg-white active:bg-white"
-                            const bg = active[pathway] ? "bg-white" : "bg-gray-50"
+                            const bg = active[pathway] ? "bg-sky-100" : "bg-gray-50"
                             const className = [base, bg].join(" ")
                             return <button onClick={() => onPathwayClick(pathway)} key={pathway + i} className={className}>
                                 <Icon className="inline-block w-4 h-4 min-w-4 stroke-gray-700 fill-gray-700" icon={pathway}/>
