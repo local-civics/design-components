@@ -33,7 +33,7 @@ export const Profile = () => {
 export const Explore = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/communities/hcz");
+    navigate("/communities/hcz/events");
   }, []);
 
   return <App />;

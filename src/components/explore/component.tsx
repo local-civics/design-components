@@ -16,11 +16,14 @@ export interface ExploreComponentProps{
     resident: Resident | null
     top: Event[] | null
     soonest: Event[] | null
+    sponsored: Event[] | null
     filtered: Event[] | null
+    pathways: Pathway[] | null
+    tags: string[] | null
     onPathwayClick: (pathways: Pathway[]) => void;
     onTagClick: (tags: string[]) => void;
     onEventClick: (eventName?: string) => void;
-    onEventSearch: (eventName: string) => void;
+    onEventSearch: (title: string) => void;
 }
 
 /**
@@ -37,18 +40,22 @@ export const ExploreComponent = (props: ExploreComponentProps) => {
   const recommended = props.top?.slice(1);
   const hasRecommended = !hasFiltered && recommended && recommended.length > 0
 
+  const sponsored = props.sponsored;
+  const hasSponsored = !hasFiltered && sponsored && sponsored.length > 0
+
   const soonest = props.soonest;
   const hasSoonest = !hasFiltered && soonest && soonest.length > 0
-  const hasEvents = hasFiltered || hasMostRecommended || hasRecommended || hasSoonest
+  const hasEvents = hasFiltered || hasMostRecommended || hasRecommended || hasSponsored || hasSoonest
   const body = <>
       { hasMostRecommended && <label className="mt-5 relative block">
-          <p className="text-gray-600 font-semibold">Events</p>
+          <p className="text-gray-600 font-semibold">Trending</p>
           <EventArtifact className="mt-5 overflow-x-scroll" event={mostRecommended} onClick={props.onEventClick}/>
+          {hasRecommended && <EventGallery className="mt-5 overflow-x-scroll" events={recommended} onClick={props.onEventClick}/>}
       </label> }
 
-      { hasRecommended && <label className="mt-5 relative block">
-          <p className="text-gray-600 font-semibold">Trending</p>
-          <EventGallery className="mt-5 overflow-x-scroll" events={recommended} onClick={props.onEventClick}/>
+      { hasSponsored && <label className="mt-5 relative block">
+          <p className="text-gray-600 font-semibold">Sponsored</p>
+          <EventGallery className="mt-5 overflow-x-scroll" events={sponsored} onClick={props.onEventClick}/>
       </label> }
 
       { hasSoonest && <label className="mt-5 relative block">
@@ -75,14 +82,14 @@ export const ExploreComponent = (props: ExploreComponentProps) => {
               <div className="lg:flex w-full mt-5">
                   {/* Left Panel */}
                   <div className="lg:flex lg:flex-col w-full lg:w-60">
-                      <PathwayWidget onPathwayClick={props.onPathwayClick} />
+                      <PathwayWidget pathways={props.pathways} onPathwayClick={props.onPathwayClick} />
                       <p className="place-self-center inline-block mt-2 mb-2 text-xs text-slate-300">
                           Local Civics © {new Date().getFullYear()}
                       </p>
                   </div>
 
                   {/* Right Panel */}
-                  <div className="lg:flex lg:flex-col lg:ml-9 w-full max-w-full overflow-x-hidden">
+                  <div className="lg:flex lg:flex-col lg:ml-9 w-full max-w-full lg:px-2 overflow-x-hidden">
                       {/* Search bar */}
                       <label className="relative block">
                           <p className="mb-3 text-gray-700 font-semibold text-md">
@@ -94,7 +101,7 @@ export const ExploreComponent = (props: ExploreComponentProps) => {
                           <input onChange={(e) => props.onEventSearch(e.target.value)} className="placeholder:italic placeholder:text-slate-400 text-slate-500 block bg-white w-full border border-slate-300 rounded-md py-2 pl-8 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" type="text" name="search" placeholder="Search for community events..." />
                       </label>
 
-                      <TagWidget onTagClick={props.onTagClick} className="mt-5"/>
+                      <TagWidget tags={props.tags} onTagClick={props.onTagClick} className="mt-5"/>
 
                       <Loader isLoading={props.top === null || props.soonest === null || props.filtered === null}>
                           {body}

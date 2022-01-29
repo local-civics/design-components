@@ -57,5 +57,5 @@ export interface EventQuery{
   residentName?: string;
   tags?: string[],
   pathways?: Pathway[],
-  eventName?: string;
+  title?: string;
 }

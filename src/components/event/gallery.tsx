@@ -1,5 +1,5 @@
 import {Icon}  from "../icon";
-import {Event} from "./model"
+import {Event} from "../../models/event"
 
 export interface EventGalleryProps{
     events: Event[]
@@ -8,9 +8,10 @@ export interface EventGalleryProps{
 }
 
 export const EventGallery = (props: EventGalleryProps) => {
+    // todo: scroll pagination
     return <article className={["grid grid-cols-1 md:flex gap-2", props.className || ""].join(" ")}>
         { props.events.map((event) => {
-            return <div onClick={() => props.onClick(event.eventName)} key={event.eventName} className="cursor-pointer relative rounded-md min-w-64 h-[22rem] overflow-hidden">
+            return <div onClick={() => props.onClick(event.eventName)} key={event.eventName} className="grow cursor-pointer relative rounded-md min-w-64 h-[22rem] overflow-hidden">
                 <img className="h-full w-full object-cover" alt={event.title} src={event.imageURL}/>
                 <div className="absolute bottom-0 w-full">
                     <div className="p-5 bg-gray-800/75 w-full">

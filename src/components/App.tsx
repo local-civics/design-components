@@ -46,9 +46,9 @@ export const App: FunctionComponent = () => {
         element={<Profile tab="activity" />}
       />
       <Route path="/residents/:residentName/calendar" element={<Calendar />} />
-      <Route path="/communities/:communityName" element={<ExplorePage />} >
+      <Route path="/communities/:communityName/events" element={<ExplorePage />} >
           <Route
-              path="events/:eventName"
+              path=":eventName"
               element={<EventModal />}
           />
       </Route>

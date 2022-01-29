@@ -71,8 +71,8 @@ export const mockApi = () => {
         const query = request.queryParams
         events = events.filter((event) => {
             let match = true
-            if(query.eventName){
-              match = match && event.eventName.toLowerCase().startsWith(query.eventName.toLowerCase())
+            if(query.title){
+              match = match && event.title.toLowerCase().startsWith(query.title.toLowerCase())
             }
 
             if(query.tags){
@@ -80,7 +80,7 @@ export const mockApi = () => {
             }
 
             if(query.pathways){
-              match = match && query.pathways.contains(event.pathway)
+              match = match && query.pathways.includes(event.pathway)
             }
 
             if(query.status){
@@ -169,6 +169,10 @@ export const mockApi = () => {
     },
   });
 };
+
+const randomName = () => {
+  return (Math.random() + 1).toString(36).substring(7)
+}
 
 const readiness = [
   {
@@ -379,7 +383,7 @@ const residents = [
 const events = [
   {
     courseName: "hcz",
-    eventName: "hcz.event.0.top",
+    eventName: randomName(),
     residentName: "andre.carter",
     eventId: "hcz.event.0.top",
     title: "Voter Registration 101",
@@ -398,8 +402,8 @@ const events = [
     tags: [
       "area:policy & government",
       "skill:leadership",
-      "skill:public speaking",
-      "skill:group work",
+      "skill:speaking",
+      "skill:group",
     ],
     status: "opportunity",
     proficiency: 250,
@@ -408,7 +412,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "hcz.event.1.top",
-    eventName: "hcz.event.1.top",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "Guess the Odd One Out",
     summary:
@@ -431,7 +435,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "hcz.event.2.top",
-    eventName: "hcz.event.2.top",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "Explore NYC Public Data - Your School",
     summary:
@@ -451,10 +455,11 @@ const events = [
     proficiency: 250,
     order: "top",
   },
+
   {
     courseName: "hcz",
     eventId: "hcz.event.3.top",
-    eventName: "hcz.event.3.top",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "YA Anime Club",
     location: {
@@ -476,7 +481,155 @@ const events = [
   },
   {
     courseName: "hcz",
-    eventName: "hcz.event.0",
+    eventName: randomName(),
+    residentName: "andre.carter",
+    eventId: "hcz.event.0.top",
+    title: "Voter Registration 101 (Breakout I)",
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    url: "https://www.localcivics.io",
+    notBefore: new Date(),
+    imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
+    pathway: "policy & government",
+    tags: [
+      "area:policy & government",
+      "skill:leadership",
+      "skill:speaking",
+      "skill:group",
+    ],
+    status: "opportunity",
+    proficiency: 250,
+    order: "sponsored",
+  },
+  {
+    courseName: "hcz",
+    eventId: "hcz.event.1.top",
+    eventName: randomName(),
+    residentName: "andre.carter",
+    title: "Guess the Odd One Out (Breakout I)",
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    notBefore: new Date(),
+    url: "https://www.localcivics.io",
+    imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
+    pathway: "arts & culture",
+    tags: ["area:arts & culture"],
+    status: "going",
+    proficiency: 250,
+    order: "sponsored",
+  },
+  {
+    courseName: "hcz",
+    eventId: "hcz.event.3.top",
+    eventName: randomName(),
+    residentName: "andre.carter",
+    title: "YA Anime Club (Breakout I)",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    url: "https://www.localcivics.io",
+    imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
+    pathway: "recreation",
+    tags: ["area:recreation"],
+    status: "going",
+    notBefore: new Date(),
+    proficiency: 250,
+    order: "sponsored",
+  },
+  {
+    courseName: "hcz",
+    eventName: randomName(),
+    residentName: "andre.carter",
+    eventId: "hcz.event.0.top",
+    title: "Voter Registration 101 (Prep)",
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    url: "https://www.localcivics.io",
+    notBefore: new Date(),
+    imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
+    pathway: "policy & government",
+    tags: [
+      "area:policy & government",
+      "skill:leadership",
+      "skill:speaking",
+      "skill:group",
+    ],
+    status: "opportunity",
+    proficiency: 250,
+    order: "soonest",
+  },
+  {
+    courseName: "hcz",
+    eventId: "hcz.event.1.top",
+    eventName: randomName(),
+    residentName: "andre.carter",
+    title: "Guess the Odd One Out (Prep)",
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    notBefore: new Date(),
+    url: "https://www.localcivics.io",
+    imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
+    pathway: "arts & culture",
+    tags: ["area:arts & culture"],
+    status: "going",
+    proficiency: 250,
+    order: "soonest",
+  },
+  {
+    courseName: "hcz",
+    eventId: "hcz.event.3.top",
+    eventName: randomName(),
+    residentName: "andre.carter",
+    title: "YA Anime Club (Prep)",
+    location: {
+      address: "200 Willoughby Ave",
+      city: "Brooklyn",
+      state: "NY",
+      postalCode: "11205",
+    },
+    summary:
+        "An opportunity to engage on the platform and find new ways to impact your community.",
+    url: "https://www.localcivics.io",
+    imageURL: "https://cdn.localcivics.io/area/recreation.jpg",
+    pathway: "recreation",
+    tags: ["area:recreation"],
+    status: "going",
+    notBefore: new Date(),
+    proficiency: 250,
+    order: "soonest",
+  },
+  {
+    courseName: "hcz",
+    eventName: randomName(),
     residentName: "andre.carter",
     eventId: "andre.carter.milestone.event.0",
     title: "Dive into the Constitution I",
@@ -495,8 +648,8 @@ const events = [
     tags: [
       "area:policy & government",
       "skill:leadership",
-      "skill:public speaking",
-      "skill:group work",
+      "skill:speaking",
+      "skill:group",
     ],
     status: "contributed",
     proficiency: 250,
@@ -504,14 +657,14 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.1",
-    eventName: "hcz.event.1",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "Annual Conference on Civics Education",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
     timePeriod: "milestone",
     url: "https://www.localcivics.io",
-    imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
+    imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
     tags: ["area:sponsored"],
     status: "contributed",
@@ -520,7 +673,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.2",
-    eventName: "hcz.event.2",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "Explore NYC Public Data - Your School",
     summary:
@@ -536,7 +689,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.3",
-    eventName: "hcz.event.3",
+    eventName: randomName(),
     residentName: "andre.carter",
     title:
       "Tech Event REWIND: Careers in Philanthropy & the Arts with Obi Asiama",
@@ -553,9 +706,9 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.4",
-    eventName: "hcz.event.4",
+    eventName: randomName(),
     residentName: "andre.carter",
-    title: "Guess the Odd One Out",
+    title: "Guess the Odd One Out II",
     summary:
       "An opportunity to engage on the platform and find new ways to impact your community.",
     timePeriod: "milestone",
@@ -569,7 +722,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.milestone.event.5",
-    eventName: "hcz.event.5",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "Dive into the Constitution II",
     summary:
@@ -585,7 +738,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.watched.event.0",
-    eventName: "hcz.event.6",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "Exploring Careers in Technology",
     summary:
@@ -607,7 +760,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.watched.event.1",
-    eventName: "hcz.event.7",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "Graphic Novel Open Book Discussion",
     location: {
@@ -629,7 +782,7 @@ const events = [
   {
     courseName: "hcz",
     eventId: "andre.carter.watched.event.2",
-    eventName: "hcz.event.8",
+    eventName: randomName(),
     residentName: "andre.carter",
     title: "YA Anime Club",
     location: {

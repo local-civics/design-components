@@ -34,7 +34,7 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
   const avatar =
     (subject && subject.avatar) || "https://cdn.localcivics.io/hub/avatar.jpg";
   const onPathwayClick = (pathway: Pathway) =>
-    navigate(`/communities/${communityName}?pathway=${pathway}`);
+    navigate(`/communities/${communityName}/events?pathways=${encodeURIComponent(pathway)}`);
   const onSeeAllClick = () => navigate(`/residents/${residentName}/calendar`);
   const onPathwayHelpClick = () =>
     navigate(`/residents/${residentName}/help/pathway/intro`);

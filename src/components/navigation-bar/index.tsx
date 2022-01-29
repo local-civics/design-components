@@ -65,7 +65,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
             <Icon
               onClick={
                 props.page !== "explore"
-                  ? () => navigate(`/communities/${communityName}`)
+                  ? () => navigate(`/communities/${communityName}/events`)
                   : undefined
               }
               className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${

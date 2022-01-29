@@ -1,4 +1,5 @@
 import React, {FunctionComponent} from "react";
+import {pathways}                 from "../../models/pathway";
 import {Icon}                     from "../icon";
 import {Pathway}                  from "../pathway";
 
@@ -6,6 +7,7 @@ import {Pathway}                  from "../pathway";
  * PathwayWidget props
  */
 export interface PathwayWidgetProps {
+    pathways: Pathway[] | null
     onPathwayClick: (pathway: Pathway[]) => void;
 }
 
@@ -17,18 +19,19 @@ export interface PathwayWidgetProps {
 export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (
     props
 ) => {
-    /**
-     * Pathways
-     */
-    const pathways: Pathway[] = [
-        "policy & government",
-        "volunteer",
-        "recreation",
-        "arts & culture",
-        "college & career",
-    ];
+    const init: Record<Pathway, boolean> = {
+        "arts & culture": false,
+        "college & career": false,
+        "policy & government": false,
+        recreation: false,
+        volunteer: false
 
-    const [active, setActive] = React.useState({} as Record<Pathway, boolean>)
+    }
+    props.pathways?.map((pathway) => {
+        init[pathway] = true
+    })
+
+    const [active, setActive] = React.useState(init)
     const onPathwayClick = (pathway: Pathway) => {
         if(active[pathway]){
             setActive({...active, [pathway]: false})
