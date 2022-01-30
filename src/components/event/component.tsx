@@ -1,14 +1,13 @@
 import React, { FunctionComponent } from "react";
 import { Icon } from "../icon";
 import { Loader } from "../loader";
-import { Event } from "./model";
+import { Event } from "../../models/event";
 
 /**
  * Properties for the event
  */
 export interface EventComponentProps {
-  isLoading?: boolean;
-  event?: Event;
+  event: Event | null;
   onClose: () => void;
 }
 
@@ -20,7 +19,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
   props
 ) => {
   const event = props.event || {};
-  const isLoading = props.isLoading;
+  const isLoading = props.event === null;
   const cta = (() => {
     switch (event.status) {
       case "opportunity":
@@ -69,7 +68,8 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
             icon="close"
           />
         </div>
-        <div className="w-full">
+        {/* todo: fix margin for loader */}
+        <div className="w-full min-h-60 justify-items-center content-center">
           <Loader isLoading={isLoading}>
             <img
               className="w-full h-60 object-cover"
@@ -79,16 +79,16 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
             <div className="w-full flex p-5 border-b border-gray-200">
               <div className="flex items-start grow">
                 <Icon
-                  className="inline-block min-w-6 w-6 h-6 stroke-slate-700 fill-slate-700"
+                  className="inline-block min-w-6 w-6 h-6 stroke-slate-600 fill-slate-600"
                   icon={event.pathway || "explore"}
                 />
 
                 <div className="grow align-top ml-2 inline-block leading-none">
-                  <p className="font-semibold capitalize text-slate-700 text-lg -mt-1.5">
+                  <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">
                     {event.title}
                   </p>
                   <div>
-                    <p className="text-xs inline-block capitalize text-slate-700">
+                    <p className="text-xs inline-block capitalize text-slate-600">
                       {event.pathway}
                     </p>
                     {event.proficiency && (
@@ -106,7 +106,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
             <div className="w-full max-h-[20rem] overflow-scroll">
               <div className="w-full p-5 border-b border-gray-200 grid grid-cols-1 gap-4">
                 {event.summary && (
-                  <div className="text-slate-700 grid grid-cols-1 gap-4">
+                  <div className="text-slate-600 grid grid-cols-1 gap-4">
                     <p className="font-semibold text-lg">Summary</p>
                     <p className="text-sm">{event.summary}</p>
                   </div>
@@ -114,7 +114,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
 
                 {skills && skills.length > 0 && (
                   <div className="grid grid-cols-1 gap-4">
-                    <p className="text-slate-700 font-semibold text-lg">Skills</p>
+                    <p className="text-slate-600 font-semibold text-lg">Skills</p>
                     <div className="flex gap-2">
                       {skills.map((skill, i) => {
                         return (
@@ -129,16 +129,16 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
               </div>
               <div className="w-full p-5 border-b border-gray-200 grid grid-cols-1 gap-4">
                 {(event.location || event.url || event.notBefore) && (
-                  <div className="text-slate-700 grid grid-cols-1 gap-4">
+                  <div className="text-slate-600 grid grid-cols-1 gap-4">
                     <p className="font-semibold text-lg">Details</p>
                     <div className="grid grid-cols-1 gap-8">
                       {event.location && (
                         <div className="flex gap-1 items-center">
                           <Icon
-                            className="grow-0 w-6 h-6 min-w-6 stroke-slate-700 fill-slate-700"
+                            className="grow-0 w-6 h-6 min-w-6 stroke-slate-600 fill-slate-600"
                             icon="pin"
                           />
-                          <div className="grow font-medium inline-block capitalize px-4 py-2 text-sm text-slate-700">
+                          <div className="grow font-medium inline-block capitalize px-4 py-2 text-sm text-slate-600">
                             {event.location.address}, {event.location.city},{" "}
                             {event.location.state} {event.location.postalCode}
                           </div>
@@ -148,10 +148,10 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
                       {event.notBefore && (
                         <div className="flex gap-1 items-center">
                           <Icon
-                            className="grow-0 w-6 h-6 min-w-6 stroke-slate-700 fill-slate-700"
+                            className="grow-0 w-6 h-6 min-w-6 stroke-slate-600 fill-slate-600"
                             icon="clock"
                           />
-                          <div className="grow font-medium inline-block px-4 py-2 text-sm text-slate-700">
+                          <div className="grow font-medium inline-block px-4 py-2 text-sm text-slate-600">
                             {new Intl.DateTimeFormat("en-US", {
                               dateStyle: "full",
                               timeStyle: "long",
@@ -163,10 +163,10 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
                       {event.url && (
                         <div className="flex gap-1 items-center">
                           <Icon
-                            className="grow-0 w-6 h-6 min-w-6 stroke-slate-700 fill-slate-700"
+                            className="grow-0 w-6 h-6 min-w-6 stroke-slate-600 fill-slate-600"
                             icon="globe"
                           />
-                          <div className="grow font-medium inline-block px-4 py-2 text-sm text-slate-700 hover:underline">
+                          <div className="grow font-medium inline-block px-4 py-2 text-sm text-slate-600 hover:underline">
                             <a href={event.url}>{event.url}</a>
                           </div>
                         </div>

@@ -1,18 +1,18 @@
-import { useApi } from "@local-civics/js-client";
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { BadgeGrid } from "../badge/grid";
-import { Badge } from "../badge/model";
-import { Icon } from "../icon";
-import { Loader } from "../loader";
-import { EventGrid } from "../event/grid";
+import React, { FunctionComponent } from "react";
+import { useLocation, useNavigate }                      from "react-router-dom";
+import {Community}                                       from "../../models/community";
+import {Resident}                                        from "../../models/resident";
+import { BadgeGrid }                                     from "../badge/grid";
+import { Icon }                                          from "../icon";
+import { Loader }                                        from "../loader";
+import { EventGrid }                                     from "../event/grid";
 
 /**
  * EngagementWidget props
  */
 export interface EngagementWidgetProps {
-  communityName: string;
-  residentName: string;
+  community: Community | null
+  resident: Resident | null
   active: "milestones" | "activity" | "badges";
   setActive: (active: "milestones" | "activity" | "badges") => void;
   onEventClick: (courseName?: string, eventName?: string) => void;
@@ -28,44 +28,23 @@ export interface EngagementWidgetProps {
 export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
   props
 ) => {
-  const [state, setState] = useState({
-    badges: {
-      data: [] as Badge[],
-    },
-    isLoading: true,
-  });
+
   // todo: make this a hook
   // todo: make this purely presentational
-  const { api } = useApi();
   const navigate = useNavigate();
   const location = useLocation();
   const onBadgeClick = (badgeName: string) =>
     navigate(`${location.pathname}/badges/${badgeName}`);
 
-  useEffect(() => {
-    (async () => {
-      setState({
-        ...state,
-        badges: {
-          ...state.badges,
-          data: (await api(
-            "GET",
-            `/caliber/v0/bearers/${props.residentName}/badges`
-          )) as Badge[],
-        },
-        isLoading: false,
-      });
-    })();
-  }, []);
 
   let tab = null;
   switch (props.active) {
     case "milestones":
       tab = (
         <EventGrid
-          communityName={props.communityName}
+          community={props.community}
           type="milestone"
-          query={{ residentName: props.residentName, timePeriod: "milestone" }}
+          query={{ residentName: props.resident?.residentName, timePeriod: "milestone" }}
           onClick={props.onEventClick}
         />
       );
@@ -73,10 +52,10 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     case "activity":
       tab = (
         <EventGrid
-          communityName={props.communityName}
+          community={props.community}
           columns={1}
           type="reflection"
-          query={{ residentName: props.residentName, status: "contributed" }}
+          query={{ residentName: props.resident?.residentName, status: "contributed" }}
           onClick={props.onEventClick}
         />
       );
@@ -84,7 +63,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
     case "badges":
       tab = (
         <BadgeGrid
-          residentName={props.residentName}
+          resident={props.resident}
           onBadgeClick={onBadgeClick}
         />
       );
@@ -118,10 +97,10 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
           >
             <div className="lg:m-auto w-max">
               <Icon
-                className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
+                className="w-5 h-5 stroke-slate-600 fill-slate-600 inline-block"
                 icon="badges"
               />
-              <h4 className="ml-1 capitalize text-sm font-semibold align-middle text-gray-700 inline-block">
+              <h4 className="ml-1 capitalize text-sm font-semibold align-middle text-slate-600 inline-block">
                 Badges
               </h4>
             </div>
@@ -136,10 +115,10 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
           >
             <div className="lg:m-auto w-max">
               <Icon
-                className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
+                className="w-5 h-5 stroke-slate-600 fill-slate-600 inline-block"
                 icon="milestones"
               />
-              <h4 className="ml-1 capitalize text-sm font-semibold align-middle text-gray-700 inline-block">
+              <h4 className="ml-1 capitalize text-sm font-semibold align-middle text-slate-600 inline-block">
                 Milestones
               </h4>
             </div>
@@ -154,10 +133,10 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
           >
             <div className="lg:m-auto w-max">
               <Icon
-                className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
+                className="w-5 h-5 stroke-slate-600 fill-slate-600 inline-block"
                 icon="activity"
               />
-              <h4 className="ml-2 capitalize text-sm font-semibold align-middle text-gray-700 inline-block">
+              <h4 className="ml-2 capitalize text-sm font-semibold align-middle text-slate-600 inline-block">
                 Activity
               </h4>
             </div>
@@ -166,7 +145,7 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
       </div>
       <div className="p-2 h-full">
         <div className="h-[25rem] overflow-scroll">
-          <Loader isLoading={state.isLoading}>{tab}</Loader>
+          <Loader isLoading={props.resident === null || props.community === null}>{tab}</Loader>
         </div>
       </div>
     </div>

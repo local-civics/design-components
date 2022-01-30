@@ -1,13 +1,14 @@
 import React, { FunctionComponent } from "react";
-import { Icon } from "../icon";
-import { Loader } from "../loader";
-import { useBadges } from "./hooks";
+import {Resident}                   from "../../models/resident";
+import { Icon }                     from "../icon";
+import { Loader }                   from "../loader";
+import { useBadges }                from "../../hooks/badge";
 
 /**
  * BadgeGrid props
  */
 export interface BadgeGridProps {
-  residentName: string;
+  resident: Resident | null
   rows?: number;
   columns?: number;
   onBadgeClick: (badgeName: string) => void;
@@ -43,24 +44,27 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
   const rows = props.rows || 2;
   const columns = props.columns || 3;
   const gridSize = rows * columns;
-  const [complete, isCompleteLoading] = useBadges(props.residentName, {
-    complete: true,
-  });
-  const [incomplete, isIncompleteLoading] = useBadges(props.residentName, {
-    incomplete: true,
-  });
-  const [inactive, isInactiveLoading] = useBadges(props.residentName, {
-    inactive: true,
-  });
-  const badges = [...complete, ...incomplete, ...inactive];
-  const isLoading =
-    isCompleteLoading || isIncompleteLoading || isInactiveLoading;
+
+  const bearing = useBadges(props.resident?.residentName, {
+    status: "bearing"
+  })
+
+  const contingent = useBadges(props.resident?.residentName, {
+    status: "contingent"
+  })
+
+  const unqualified = useBadges(props.resident?.residentName, {
+    status: "unqualified"
+  })
+
+  const isLoading = bearing === null || contingent === null || unqualified === null;
+  const badges = isLoading ? [] : [...bearing, ...contingent, ...unqualified];
 
   return (
     <Loader isLoading={isLoading}>
       {!badges.length && (
         <div className="h-full grid justify-items-center content-center">
-          <p className="text-xs text-center align-middle leading-6 font-semibold text-gray-700">
+          <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-600">
             {" "}
             No badges currently, check back later!{" "}
           </p>
@@ -68,7 +72,7 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
       )}
       {badges.length > 0 && (
         <div className={`grid lg:grid-cols-${columns} gap-3`}>
-          {complete.map((badge) => {
+          {bearing?.map((badge) => {
             return (
               <div
                 key={badge.badgeName}
@@ -87,7 +91,7 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
             );
           })}
 
-          {incomplete.map((badge) => {
+          {contingent?.map((badge) => {
             return (
               <div
                 key={badge.badgeName}
@@ -111,7 +115,7 @@ const CoordinateGrid: FunctionComponent<BadgeGridProps> = (props) => {
             );
           })}
 
-          {inactive.map((badge) => {
+          {unqualified?.map((badge) => {
             return (
               <div
                 key={badge.badgeName}

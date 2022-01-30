@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Icon } from "../icon";
 import { Icons } from "../icon/icons";
 import { Loader } from "../loader";
-import { Badge } from "./model";
+import { Badge } from "../../models/badge";
 
 /**
  * Properties for the badge
@@ -38,15 +38,15 @@ export const BadgeComponent: FunctionComponent<BadgeComponentProps> = (
           <Loader isLoading={isLoading}>
             <div className="w-full pl-5 pr-10 pb-5 border-b border-gray-200">
               <Icon
-                className="inline-block w-7 h-7 stroke-gray-700 fill-gray-700"
+                className="inline-block w-7 h-7 stroke-slate-600 fill-slate-600"
                 icon="shield"
               />
               <div className="align-middle ml-2 inline-block">
-                <p className="font-semibold capitalize text-gray-700 text-lg">
+                <p className="font-semibold capitalize text-slate-600 text-lg">
                   {badge.title}
                 </p>
                 <div className="text-xs">
-                  <p className="inline-block text-gray-700">{badge.summary}</p>
+                  <p className="inline-block text-slate-600">{badge.summary}</p>
                   {badge.proficiency && (
                     <p className="ml-1 font-semibold inline-block text-blue-500">
                       {badge.proficiency} pts

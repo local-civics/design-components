@@ -92,7 +92,7 @@ export const ExploreComponent = (props: ExploreComponentProps) => {
                   <div className="lg:flex lg:flex-col lg:ml-9 w-full max-w-full lg:px-2 overflow-x-hidden">
                       {/* Search bar */}
                       <label className="relative block">
-                          <p className="mb-3 text-gray-700 font-semibold text-md">
+                          <p className="mb-3 text-slate-600 font-semibold text-md">
                               Find Events
                           </p>
                           <span className="absolute inset-y-0 left-0 top-[2.2rem] flex items-center pl-2">

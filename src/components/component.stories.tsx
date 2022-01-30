@@ -28,12 +28,24 @@ export const Profile = () => {
 };
 
 /**
+ * Calendar
+ */
+export const Calendar = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/communities/hcz/calendar/events");
+  }, []);
+
+  return <App />;
+};
+
+/**
  * Explore
  */
 export const Explore = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate("/communities/hcz/events");
+    navigate("/communities/hcz/explore/events");
   }, []);
 
   return <App />;

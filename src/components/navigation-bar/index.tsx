@@ -1,15 +1,17 @@
-import { Logo } from "../logo";
+import {useNavigate} from "react-router-dom";
+import {Community}   from "../../models/community";
+import {Resident}    from "../../models/resident";
+import { Logo }      from "../logo";
 
 import React, { FunctionComponent } from "react";
 import { Icon } from "../icon";
-import { useNavigate } from "react-router-dom";
 
 /**
  * Configurable properties for NavigationBar component
  */
 export interface NavigationBarProps {
-  communityName?: string;
-  residentName?: string;
+  community: Community | null
+  resident: Resident | null
   page?: "home" | "profile" | "explore" | "calendar";
 }
 
@@ -17,9 +19,7 @@ export interface NavigationBarProps {
  * NavigationBar component
  */
 export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
-  const navigate = useNavigate();
-  const residentName = props.residentName || "me";
-  const communityName = props.communityName || "my";
+  const navigate = useNavigate()
   const cursor = props.page === "home" ? "" : "cursor-pointer";
 
   // todo: responsive menu
@@ -39,7 +39,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
             <Icon
               onClick={
                 props.page !== "profile"
-                  ? () => navigate(`/residents/${residentName}`)
+                  ? () => navigate(`/residents/${props.resident?.residentName}`)
                   : undefined
               }
               className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${
@@ -55,7 +55,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
             />
             {props.page === "profile" && (
               <Icon
-                className="drop-shadow-sm h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-700 fill-slate-700"
+                className="drop-shadow-sm h-1 w-1 left-2 mt-1 absolute bottom m-auto stroke-slate-600 fill-slate-600"
                 icon="circle"
               />
             )}
@@ -65,7 +65,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
             <Icon
               onClick={
                 props.page !== "explore"
-                  ? () => navigate(`/communities/${communityName}/events`)
+                  ? () => navigate(`/communities/${props.community?.communityName}/explore/events`)
                   : undefined
               }
               className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${
@@ -90,7 +90,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
             <Icon
               onClick={
                 props.page !== "calendar"
-                  ? () => navigate(`/residents/${residentName}/calendar`)
+                  ? () => navigate(`/communities/${props.community?.communityName}/calendar/events`)
                   : undefined
               }
               className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${
@@ -118,7 +118,7 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
       )}
       {props.page === "home" && (
         <div className="w-full block flex items-center w-auto">
-          <button className="transition-colors rounded-lg font-semibold py-2 px-8 border-2 shadow-md border-slate-700 text-slate-700 hover:text-slate-800 hover:border-slate-800 lg:mt-2">
+          <button className="transition-colors rounded-lg font-semibold py-2 px-8 border-2 shadow-md border-slate-700 text-slate-600 hover:text-slate-800 hover:border-slate-800 lg:mt-2">
             Login
           </button>
         </div>

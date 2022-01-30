@@ -156,7 +156,7 @@ export const mockApi = () => {
         (schema, request) => {
           delete request.queryParams.limit;
           const query = {
-            pathway: request.queryParams.pathway,
+            pathway: request.queryParams.pathway || "sum",
           };
           return schema.db.readiness.where(query)[0];
         }
@@ -200,6 +200,15 @@ const readiness = [
     proficiency: 400,
     nextProficiency: 500,
   },
+  {
+    pathway: "sum",
+    proficiency: 3475,
+    magnitude: 2,
+    reflections: 12,
+    badges: 3,
+    milestones: 7,
+    nextProficiency: 3975,
+  },
 ];
 
 const badges = [
@@ -226,7 +235,7 @@ const badges = [
         actionURL: "/residents/me/settings",
       },
     ],
-    complete: true,
+    status: "bearing",
   },
   {
     badgeName: "participation.badge",
@@ -249,7 +258,7 @@ const badges = [
         title: "Attend two guest speaker events",
       },
     ],
-    complete: true,
+    status: "bearing",
   },
   {
     badgeName: "civic.lens.badge",
@@ -272,7 +281,7 @@ const badges = [
         title: "Attend two guest speaker events",
       },
     ],
-    complete: true,
+    status: "bearing",
   },
   {
     badgeName: "college.explorer.badge",
@@ -295,7 +304,7 @@ const badges = [
         title: "Attend two guest speaker events",
       },
     ],
-    complete: true,
+    status: "bearing",
   },
   {
     badgeName: "us.history.badge",
@@ -318,7 +327,7 @@ const badges = [
         title: "Attend two guest speaker events",
       },
     ],
-    complete: true,
+    status: "bearing",
   },
   {
     badgeName: "tech.guru.badge",
@@ -339,14 +348,13 @@ const badges = [
         title: "Attend two guest speaker events",
       },
     ],
-    incomplete: true,
+    status: "contingent",
   },
   {
     badgeName: "elected.official.badge",
     bearerName: "andre.carter",
     summary: "Meet your elected official in your community.",
     title: "Elected Official Badge",
-    status: "unqualified",
     criteria: [
       {
         criterionName: "objective.1",
@@ -361,7 +369,7 @@ const badges = [
         title: "Attend two guest speaker events",
       },
     ],
-    inactive: true,
+    status: "unqualified",
   },
 ];
 
@@ -372,7 +380,7 @@ const residents = [
     identityId: "me",
     givenName: "Andre",
     familyName: "Carter",
-    statement:
+    impactStatement:
       "I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure andre.carter community is a place where everyone is welcome.",
     network: ["hcz"],
     grade: "7",
@@ -819,9 +827,9 @@ const data = {
   communities: [
     {
       communityId: "hcz",
-      name: "Harlem Children Zone",
-      city: "Harlem",
-      state: "NY",
+      communityName: "hcz",
+      placeName: "Harlem, NY",
+      trueName: "Harlem Children Zone",
     },
   ],
   events: events,

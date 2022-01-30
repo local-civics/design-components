@@ -1,17 +1,18 @@
 import React, { FunctionComponent } from "react";
-import { Icon } from "../icon";
-import { Loader } from "../loader";
-import { Pathway } from "../pathway";
-import { ProgressBar } from "../progress-bar";
-import { useReadiness } from "./hooks";
-import { Readiness } from "./model";
+import {Resident}                   from "../../models/resident";
+import { Icon }                     from "../icon";
+import { Loader }                   from "../loader";
+import { Pathway }                  from "../pathway";
+import { ProgressBar }              from "../progress-bar";
+import { useReadiness }             from "../../hooks/readiness";
+import { Readiness }                from "../../models/readiness";
 
 /**
  * PathwayWidget props
  */
 export interface PathwayWidgetProps {
   title: string;
-  bearerName: string;
+  resident: Resident | null
   onHelpClick: () => void;
   onClick: (pathway: Pathway) => void;
 }
@@ -22,15 +23,13 @@ export interface PathwayWidgetProps {
  * @constructor
  */
 export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
-  const bearerName = props.bearerName;
-  const [cc, ccIsLoading] = useReadiness(bearerName, "college & career");
-  const [pg, pgIsLoading] = useReadiness(bearerName, "policy & government");
-  const [ac, acIsLoading] = useReadiness(bearerName, "arts & culture");
-  const [vt, vtIsLoading] = useReadiness(bearerName, "volunteer");
-  const [rc, rcIsLoading] = useReadiness(bearerName, "recreation");
-  const isLoading =
-    ccIsLoading || pgIsLoading || acIsLoading || vtIsLoading || rcIsLoading;
-  const pathways: { name: Pathway; readiness: Readiness }[] = [
+  const cc = useReadiness(props.resident?.residentName, {pathways: ["college & career"]});
+  const pg = useReadiness(props.resident?.residentName, {pathways: ["policy & government"]});
+  const ac = useReadiness(props.resident?.residentName, {pathways: ["arts & culture"]});
+  const vt = useReadiness(props.resident?.residentName, {pathways: ["volunteer"]});
+  const rc = useReadiness(props.resident?.residentName, {pathways: ["recreation"]});
+  const isLoading = cc === null || pg === null || ac === null || vt === null || rc === null;
+  const pathways: { name: Pathway; readiness: Readiness | null }[] = [
     {
       name: "policy & government",
       readiness: pg,
@@ -65,16 +64,16 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
         <div className="flex items-center">
           <div className="grow">
             <Icon
-              className="w-5 h-5 stroke-slate-700 fill-slate-700 inline-block"
+              className="w-5 h-5 stroke-slate-600 fill-slate-600 inline-block"
               icon="pathway"
             />
-            <h4 className="ml-2 capitalize align-middle font-semibold text-slate-700 inline-block">
+            <h4 className="ml-2 capitalize align-middle font-semibold text-slate-600 inline-block">
               {props.title}
             </h4>
           </div>
           <Icon
             onClick={props.onHelpClick}
-            className="w-5 h-5 mt-0.5 align-middle cursor-pointer stroke-slate-400 fill-slate-400 hover:stroke-slate-700 hover:fill-slate-700 inline-block"
+            className="w-5 h-5 mt-0.5 align-middle cursor-pointer stroke-slate-400 fill-slate-400 hover:stroke-slate-600 hover:fill-slate-600 inline-block"
             icon="help"
           />
         </div>
@@ -85,7 +84,7 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
                 <div key={pathway.name} className="mt-5 flex items-center">
                   <Icon
                     onClick={() => props.onClick(pathway.name)}
-                    className="cursor-pointer transition ease-in-out w-5 h-5 stroke-slate-500 fill-slate-500 hover:stroke-slate-700 hover:fill-slate-700 inline-block"
+                    className="cursor-pointer transition ease-in-out w-5 h-5 stroke-slate-500 fill-slate-500 hover:stroke-slate-600 hover:fill-slate-600 inline-block"
                     icon={pathway.name}
                   />
                   <div className="grow ml-2">
@@ -94,8 +93,8 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
                     </p>
                     <ProgressBar
                       className="h-3"
-                      start={pathway.readiness.proficiency || 0}
-                      end={pathway.readiness.nextProficiency || 1}
+                      start={pathway.readiness?.proficiency || 0}
+                      end={pathway.readiness?.nextProficiency || 1}
                     />
                   </div>
                 </div>

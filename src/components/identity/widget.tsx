@@ -1,13 +1,15 @@
 import React, { FunctionComponent } from "react";
-import { Icon } from "../icon";
-import { Loader } from "../loader";
-import { useIdentity } from "./hooks";
+import {Community}                  from "../../models/community";
+import {Resident}                   from "../../models/resident";
+import { Icon }                     from "../icon";
+import { Loader }                   from "../loader";
 
 /**
  * IdentityWidget props
  */
 export interface IdentityWidgetProps {
-  residentName: string;
+  community: Community | null
+  resident: Resident | null;
   title: string;
   onEdit?: () => void;
 }
@@ -18,9 +20,8 @@ export interface IdentityWidgetProps {
  * @constructor
  */
 export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
-  props
+    {community, resident, title, onEdit}
 ) => {
-  const [identity, community, isLoading] = useIdentity(props.residentName);
   return (
     <div
       className="border rounded-md shadow-sm min-h-48 lg:w-60 w-full overflow-hidden"
@@ -34,45 +35,45 @@ export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
           <div className="flex items-center">
             <div className="grow">
               <Icon
-                className="w-5 h-5 stroke-gray-700 fill-gray-700 inline-block"
+                className="w-5 h-5 stroke-slate-600 fill-slate-600 inline-block"
                 icon="user"
               />
-              <h4 className="ml-2 capitalize align-middle font-semibold text-slate-700 inline-block">
-                {props.title}
+              <h4 className="ml-2 capitalize align-middle font-semibold text-slate-600 inline-block">
+                {title}
               </h4>
             </div>
-            {props.onEdit && (
+            {onEdit && (
               <Icon
-                onClick={props.onEdit}
-                className="w-4 h-4 -mt-0.5 align-middle cursor-pointer stroke-gray-500 fill-gray-500 hover:stroke-gray-700 hover:fill-gray-700 inline-block"
+                onClick={onEdit}
+                className="w-4 h-4 -mt-0.5 align-middle cursor-pointer stroke-gray-500 fill-gray-500 hover:stroke-slate-600 hover:fill-slate-600 inline-block"
                 icon="edit"
               />
             )}
           </div>
 
-          <Loader isLoading={isLoading}>
+          <Loader isLoading={resident === null}>
             <p className="line-clamp-10 mt-3 text-sm text-slate-400">
-              {identity.statement}
+              {resident?.impactStatement}
             </p>
-            {community.city && community.state && (
+            {community?.placeName && (
               <div className="mt-2">
                 <Icon
-                  className="w-4 h-4 stroke-slate-700 fill-slate-700 inline-block"
+                  className="w-4 h-4 stroke-slate-600 fill-slate-600 inline-block"
                   icon="pin"
                 />
                 <h4 className="ml-2 capitalize text-xs align-middle text-slate-500 inline-block">
-                  {community.city}, {community.state}
+                  {community?.placeName}
                 </h4>
               </div>
             )}
-            {community.name && (
+            {community?.trueName && (
               <div className="mt-2">
                 <Icon
-                  className="w-4 h-4 stroke-slate-700 fill-slate-700 inline-block"
+                  className="w-4 h-4 stroke-slate-600 fill-slate-600 inline-block"
                   icon="college & career"
                 />
                 <h4 className="ml-2 capitalize text-xs align-middle text-slate-500 inline-block">
-                  {community.name}
+                  {community.trueName}
                 </h4>
               </div>
             )}

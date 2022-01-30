@@ -57,7 +57,7 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (
                 <div className="p-2 border-b border-gray-200">
                     <div className="flex items-center">
                         <div className="grow">
-                            <h4 className="capitalize align-middle font-semibold text-gray-700 inline-block">
+                            <h4 className="capitalize align-middle font-semibold text-slate-600 inline-block">
                                 Explore
                             </h4>
                         </div>
@@ -71,8 +71,8 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (
                             const bg = active[pathway] ? "bg-sky-100" : "bg-gray-50"
                             const className = [base, bg].join(" ")
                             return <button onClick={() => onPathwayClick(pathway)} key={pathway + i} className={className}>
-                                <Icon className="inline-block w-4 h-4 min-w-4 stroke-gray-700 fill-gray-700" icon={pathway}/>
-                                <span className="ml-2 capitalize font-semibold text-sm text-gray-700"> {pathway} </span>
+                                <Icon className="inline-block w-4 h-4 min-w-4 stroke-slate-600 fill-slate-600" icon={pathway}/>
+                                <span className="ml-2 capitalize font-semibold text-sm text-slate-600"> {pathway} </span>
                             </button>
                         })
                     }

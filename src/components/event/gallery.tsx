@@ -21,7 +21,7 @@ export const EventGallery = (props: EventGalleryProps) => {
                             <span className="grow">
                             <div className="text-xs font-light capitalize text-white w-full">{event.pathway}</div>
                         </span>
-                            <div className="text-gray-700 shadow-md whitespace-nowrap font-semibold rounded-md text-xs px-5 py-2 bg-cyan-400">
+                            <div className="text-slate-600 shadow-md whitespace-nowrap font-semibold rounded-md text-xs px-5 py-2 bg-cyan-400">
                                 {event.proficiency} pts
                             </div>
                         </div>

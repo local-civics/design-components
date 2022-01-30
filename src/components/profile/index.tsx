@@ -1,14 +1,15 @@
-import { useApi } from "@local-civics/js-client";
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { EventWidget } from "../event/widget";
-import { IdentityWidget } from "../identity/widget";
-import { Loader } from "../loader";
-import { NavigationBar } from "../navigation-bar";
-import { PassportWidget } from "../passport/widget";
-import { Pathway } from "../pathway";
-import { PathwayWidget } from "../readiness/widget";
-import { EngagementWidget } from "./widget";
+import React, { FunctionComponent } from "react";
+import { Outlet }                from "react-router-dom";
+import {useRequest}                                      from "../../hooks/request";
+import { EventWidget }                                   from "../event/widget";
+import { IdentityWidget }                                from "../identity/widget";
+import { Loader }                                        from "../loader";
+import { NavigationBar }                                 from "../navigation-bar";
+import { PassportWidget }                                from "../passport/widget";
+import { Pathway }                                       from "../pathway";
+import {PathwayHelpComponent}                            from "../readiness/component";
+import { PathwayWidget }                                 from "../readiness/widget";
+import { EngagementWidget }                              from "./widget";
 
 export interface ProfileProps {
   tab?: "badges" | "milestones" | "activity";
@@ -21,47 +22,24 @@ export interface ProfileProps {
  * todo: check identity permissions for expand only
  */
 export const Profile: FunctionComponent<ProfileProps> = (props) => {
-  const { api } = useApi();
-  const navigate = useNavigate();
-  const params = useParams();
-  const [identity, setIdentity] = React.useState({} as any); // todo: as Resident
-  const [subject, setSubject] = React.useState({} as any); // todo: as Resident
-  const residentName = subject.residentName || "";
-  const communityName = subject.communityName || "";
-  const [edit, setEdit] = React.useState(false);
-  const [isLoading, setLoading] = React.useState(true);
+  const req = useRequest()
   const [tab, setTab] = React.useState(props.tab || "badges");
   const avatar =
-    (subject && subject.avatar) || "https://cdn.localcivics.io/hub/avatar.jpg";
+    (req.resident && req.resident.avatarURL) || "https://cdn.localcivics.io/hub/avatar.jpg";
   const onPathwayClick = (pathway: Pathway) =>
-    navigate(`/communities/${communityName}/events?pathways=${encodeURIComponent(pathway)}`);
-  const onSeeAllClick = () => navigate(`/residents/${residentName}/calendar`);
-  const onPathwayHelpClick = () =>
-    navigate(`/residents/${residentName}/help/pathway/intro`);
+    req.navigate(`/communities/${req.community?.communityName}/explore/events?pathways=${encodeURIComponent(pathway)}`);
+  const onSeeAllClick = () => req.navigate(`/communities/${req.community?.communityName}/calendar/events`);
+  const onPathwayHelpClick = () => setPathwayHelpVisible(true);
   const onEventClick = (communityName?: string, eventName?: string) =>
-    navigate(
-      `/residents/${residentName}/communities/${communityName}/events/${eventName}`
+    req.navigate(
+      `/residents/${req.resident?.residentName}/events/${eventName}`
     );
-
-  useEffect(() => {
-    (async () => {
-      // todo: handle not authorized
-      setIdentity(await api("GET", "/identity/v0/resolve"));
-
-      // todo: handle not authorized
-      setSubject(
-        await api("GET", `/identity/v0/residents/${params.residentName}`)
-      );
-
-      setEdit(subject.identityId === identity.identityId);
-      setLoading(false);
-    })();
-  }, []);
+  const [pathwayHelpVisible,  setPathwayHelpVisible] = React.useState(false)
 
   return (
     <main className="h-screen bg-white font-proxima">
-      <NavigationBar residentName={residentName} page="profile" />
-      <Loader isLoading={isLoading}>
+      <NavigationBar community={req.community} resident={req.resident} page="profile" />
+      <Loader isLoading={req.resident === null}>
         <div className="px-4 lg:px-24">
           {/* Avatar Header */}
           <div className="flex w-full">
@@ -69,12 +47,12 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
               <div className="h-2/5 lg:h-3/5 w-full bg-gray-200" />
 
               <div className="mt-10 ml-2 lg:ml-40 lg:mt-2">
-                <h4 className="font-semibold capitalize text-2xl text-slate-700">
-                  {subject.givenName} {subject.familyName}
+                <h4 className="font-semibold capitalize text-2xl text-slate-600">
+                  {req.resident?.givenName} {req.resident?.familyName}
                 </h4>
-                {subject.createdAt && (
+                {req.resident?.createdAt && (
                   <p className="text-slate-400">
-                    Member since {new Date(subject.createdAt).getFullYear()}
+                    Member since {new Date(req.resident?.createdAt).getFullYear()}
                   </p>
                 )}
               </div>
@@ -97,18 +75,15 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
             <div className="lg:flex lg:flex-col w-full lg:w-60">
               {/* About Me */}
               <IdentityWidget
-                residentName={residentName}
+                community={req.community}
+                resident={req.resident}
                 title="about me"
-                onEdit={
-                  edit
-                    ? () => navigate(`/residents/${residentName}/settings`)
-                    : undefined
-                }
+                onEdit={() => req.navigate(`/residents/${req.resident?.residentName}/settings`)}
               />
 
               {/* Pathways */}
               <PathwayWidget
-                bearerName={residentName}
+                resident={req.resident}
                 title="pathways"
                 onHelpClick={onPathwayHelpClick}
                 onClick={onPathwayClick}
@@ -116,9 +91,9 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
 
               {/* Registered */}
               <EventWidget
-                communityName={subject.communityName}
+                community={req.community}
                 title="my events"
-                query={{ residentName: subject.residentName, status: "going", limit: 3 }}
+                query={{ residentName: req.resident?.residentName, status: "going", limit: 3 }}
                 onSeeAllClick={onSeeAllClick}
                 onClick={onEventClick}
               />
@@ -130,12 +105,12 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
 
             {/* Right Panel */}
             <div className="lg:grow lg:flex-col lg:ml-9">
-              <PassportWidget residentName={residentName} />
+              <PassportWidget resident={req.resident} />
 
               {/* Milestones/Activity/Badges */}
               <EngagementWidget
-                communityName={communityName}
-                residentName={residentName}
+                community={req.community}
+                resident={req.resident}
                 active={tab}
                 setActive={setTab}
                 onEventClick={onEventClick}
@@ -144,7 +119,8 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
           </div>
         </div>
       </Loader>
-      <Outlet context={setSubject} />
+      { pathwayHelpVisible && <PathwayHelpComponent onClose={() => setPathwayHelpVisible(false)}/>}
+      <Outlet context={req} />
     </main>
   );
 };

@@ -1,15 +1,16 @@
 import React, { FunctionComponent } from "react";
+import {Community}                  from "../../models/community";
 import { Icon }                     from "../icon";
 import { Loader }                   from "../loader";
-import { useEvents }                from "./hooks";
-import {EventQuery}                 from "./model";
+import { useEvents }                from "../../hooks/event";
+import {EventQuery}                 from "../../models/event";
 
 /**
  * EventWidget properties
  */
 export interface EventWidgetProps {
   title: string;
-  communityName: string;
+  community: Community | null
   query?: EventQuery;
   onClick: (communityName?: string, eventName?: string) => void;
   onSeeAllClick: () => void;
@@ -21,7 +22,7 @@ export interface EventWidgetProps {
  * @constructor
  */
 export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
-  const [events, isLoading] = useEvents(props.communityName, props.query);
+  const events = useEvents(props.community?.communityName, props.query)
   return (
     <div
       className="border-gray-200 border shadow-sm rounded-md h-[20.5rem] lg:w-60 w-full mt-3 overflow-hidden"
@@ -34,10 +35,10 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
         <div className="flex items-center">
           <div className="grow">
             <Icon
-              className="w-5 h-5 stroke-slate-700 fill-slate-700 inline-block"
+              className="w-5 h-5 stroke-slate-600 fill-slate-600 inline-block"
               icon="calendar"
             />
-            <h4 className="ml-2 capitalize align-middle font-semibold text-slate-700 inline-block">
+            <h4 className="ml-2 capitalize align-middle font-semibold text-slate-600 inline-block">
               {props.title}
             </h4>
           </div>
@@ -51,14 +52,14 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
           )}
         </div>
         <div className="grid grid-cols-1 overflow-hidden justify-items-center content-center min-h-60">
-          <Loader isLoading={isLoading}>
-            {!events.length && (
-              <p className="text-xs text-center align-middle leading-6 font-semibold text-gray-700">
+          <Loader isLoading={events === null}>
+            {!events?.length && (
+              <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-600">
                 {" "}
                 No events, go and explore!{" "}
               </p>
             )}
-            {events.map((event) => {
+            {events?.map((event) => {
               return (
                 <div
                   onClick={() =>

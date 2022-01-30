@@ -1,18 +1,19 @@
 import React, { FunctionComponent } from "react";
+import {Community}                  from "../../models/community";
 import { background }               from "../../utilities/colors";
 import { Icon }                     from "../icon";
 import { Loader }                   from "../loader";
-import { useEvents }                from "./hooks";
-import {EventQuery}                 from "./model";
+import { useEvents }                from "../../hooks/event";
+import {EventQuery}                 from "../../models/event";
 
 /**
  * EventGrid props
  */
 export interface EventGridProps {
-  communityName: string
+  community: Community | null
   rows?: number;
   columns?: number;
-  query?: EventQuery;
+  query?: EventQuery | null;
   type: "milestone" | "reflection";
   onClick: (communityName?: string, eventName?: string) => void;
 }
@@ -39,18 +40,18 @@ const HorizontalGrid: FunctionComponent<EventGridProps> = (props) => {
 };
 
 const VerticalGrid: FunctionComponent<EventGridProps> = (props) => {
-  const [events, isLoading] = useEvents(props.communityName, props.query);
+  const events = useEvents(props.community?.communityName, props.query)
   return (
-    <Loader isLoading={isLoading}>
-      {!events.length && (
+    <Loader isLoading={events === null}>
+      {!events?.length && (
         <div className="h-full grid justify-items-center content-center">
-          <p className="text-xs text-center align-middle leading-6 font-semibold text-gray-700">
+          <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-600">
             {" "}
             No events currently, check back later!{" "}
           </p>
         </div>
       )}
-      {events.length > 0 && (
+      {events?.length && events?.length > 0 && (
         <div className={`m-auto grid lg:grid-cols-1 gap-3 lg:max-w-[48rem]`}>
           {events.map((event) => {
             return (
@@ -61,15 +62,15 @@ const VerticalGrid: FunctionComponent<EventGridProps> = (props) => {
               >
                 <div className="w-full py-4 px-4">
                   <Icon
-                    className="inline-block w-7 h-7 stroke-gray-700 fill-gray-700"
+                    className="inline-block w-7 h-7 stroke-slate-600 fill-slate-600"
                     icon={event.pathway || "explore"}
                   />
                   <div className="align-middle ml-2 inline-block">
-                    <p className="font-semibold capitalize text-gray-700 text-md">
+                    <p className="font-semibold capitalize text-slate-600 text-md">
                       {event.title}
                     </p>
                     <div className="text-xs">
-                      <p className="inline-block capitalize text-gray-700">
+                      <p className="inline-block capitalize text-slate-600">
                         {event.pathway}
                       </p>
                       {event.proficiency && (
@@ -99,18 +100,18 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
   const rows = props.rows || 2;
   const columns = props.columns || 3;
   const gridSize = rows * columns;
-  const [events, isLoading] = useEvents(props.communityName, props.query);
+  const events = useEvents(props.community?.communityName, props.query)
   return (
-    <Loader isLoading={isLoading}>
-      {!events.length && (
+    <Loader isLoading={events === null}>
+      {!events?.length && (
         <div className="h-full grid justify-items-center content-center">
-          <p className="text-xs text-center align-middle leading-6 font-semibold text-gray-700">
+          <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-600">
             {" "}
             No events currently, check back later!{" "}
           </p>
         </div>
       )}
-      {events.length > 0 && (
+      {events?.length && events?.length > 0 && (
         <div className={`grid lg:grid-cols-${columns} gap-3`}>
           {events.map((event) => {
             return (
@@ -125,17 +126,17 @@ const CoordinateGrid: FunctionComponent<EventGridProps> = (props) => {
                 {event.status === "contributed" && (
                   <div className="relative">
                     <Icon
-                      className="m-auto h-4 w-4 stroke-gray-700 fill-gray-700 absolute right-0"
+                      className="m-auto h-4 w-4 stroke-slate-600 fill-slate-600 absolute right-0"
                       icon="reflection"
                     />
                   </div>
                 )}
                 <Icon
-                  className="w-12 h-20 drop-shadow-md stroke-gray-700 fill-gray-700 mb-5"
+                  className="w-12 h-20 drop-shadow-md stroke-slate-600 fill-slate-600 mb-5"
                   icon={event.pathway || "explore"}
                 />
                 <div className="relative h-full">
-                  <p className="font-semibold capitalize text-gray-700 text-md absolute bottom-0">
+                  <p className="font-semibold capitalize text-slate-600 text-md absolute bottom-0">
                     {event.title}
                   </p>
                 </div>

@@ -65,8 +65,8 @@ export const TagWidget = (props: TagWidgetProps) => {
                     <div className="mt-5 grid grid-cols-2 gap-3">
                         {
                             timeTags.map((tag, i) => {
-                                const base = "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs text-gray-600"
-                                const bg = active[tag] ? "bg-gray-50" : "bg-gray-100"
+                                const base = "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs"
+                                const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600"
                                 const className = [base, bg].join(" ")
                                 return <button onClick={() => onTagClick(tag)} key={tag + i} className={className}> {tag.replace("time:", "")} </button>
                             })
@@ -80,8 +80,8 @@ export const TagWidget = (props: TagWidgetProps) => {
                     <div className="mt-5 grid grid-cols-2 gap-3">
                         {
                             skillTags.map((tag, i) => {
-                                const base = "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs text-gray-600"
-                                const bg = active[tag] ? "bg-gray-50" : "bg-gray-100"
+                                const base = "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs"
+                                const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600"
                                 const className = [base, bg].join(" ")
                                 return <button onClick={() => onTagClick(tag)} key={tag + i} className={className}> {tag.replace("skill:", "")} </button>
                             })
@@ -95,8 +95,8 @@ export const TagWidget = (props: TagWidgetProps) => {
                     <div className="mt-5 grid grid-cols-2 gap-3">
                         {
                             locationTags.map((tag, i) => {
-                                const base = "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs text-gray-600"
-                                const bg = active[tag] ? "bg-gray-50" : "bg-gray-100"
+                                const base = "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs"
+                                const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600"
                                 const className = [base, bg].join(" ")
                                 return <button onClick={() => onTagClick(tag)} key={tag + i} className={className}> {tag.replace("location:", "")} </button>
                             })
