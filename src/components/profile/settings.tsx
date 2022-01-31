@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from "react";
-import {useRequestContext}          from "../../hooks/request";
-import {Resident}                   from "../../models/resident";
-import { Icon }                     from "../icon";
-import { Loader }                   from "../loader";
+import { useRequestContext } from "../../hooks/request";
+import { Resident } from "../../models/resident";
+import { Icon } from "../icon";
+import { Loader } from "../loader";
 
 /**
  * Settings
@@ -11,10 +11,11 @@ import { Loader }                   from "../loader";
  * todo: this is a modal, name it as such
  */
 export const Settings: FunctionComponent = () => {
-  const req = useRequestContext()
+  const req = useRequestContext();
   const [changes, setChanges] = React.useState({} as Resident);
   const newIdentity: Resident = { ...req.resident, ...changes };
-  const avatar = newIdentity.avatarURL || "https://cdn.localcivics.io/hub/avatar.jpg";
+  const avatar =
+    newIdentity.avatarURL || "https://cdn.localcivics.io/hub/avatar.jpg";
   const avatarInput = React.useRef<HTMLInputElement>(null);
   const updateProfile = (key: string, value: string) => {
     setChanges({ ...changes, [key]: value });
@@ -22,7 +23,7 @@ export const Settings: FunctionComponent = () => {
 
   const onSave = async () => {
     if (changes) {
-      await req.updateResident(newIdentity)
+      await req.updateResident(newIdentity);
     }
     req.navigate(-1);
   };
@@ -46,7 +47,9 @@ export const Settings: FunctionComponent = () => {
     <div className="grid grid-cols-1 justify-items-center content-center transition ease-in-out duration-300 fixed top-0 w-screen h-screen p-5 bg-gray-500/80 z-50">
       <div className="shadow-md overflow-hidden w-9/12 lg:w-5/12 bg-white rounded-md grid grid-cols-1 justify-items-center">
         <div className="px-5 pt-5 pb-5 grid grid-cols-2 justify-items-end w-full">
-          <p className="w-full font-semibold text-slate-600 text-sm">Settings</p>
+          <p className="w-full font-semibold text-slate-600 text-sm">
+            Settings
+          </p>
           <Icon
             onClick={() => req.navigate(-1)}
             className="transition ease-in-out cursor-pointer stroke-gray-300 fill-gray-300 hover:stroke-gray-400 hover:fill-gray-400 w-4"
@@ -154,7 +157,9 @@ export const Settings: FunctionComponent = () => {
                   Impact Statement
                 </p>
                 <textarea
-                  onChange={(e) => updateProfile("impactStatement", e.target.value)}
+                  onChange={(e) =>
+                    updateProfile("impactStatement", e.target.value)
+                  }
                   defaultValue={req.resident?.impactStatement}
                   className="h-full resize-none mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500

@@ -1,18 +1,26 @@
 import React, { FunctionComponent } from "react";
-import { useLocation, useNavigate }                      from "react-router-dom";
-import {Community}                                       from "../../models/community";
-import {Resident}                                        from "../../models/resident";
-import { BadgeGrid }                                     from "../badge/grid";
-import { Icon }                                          from "../icon";
-import { Loader }                                        from "../loader";
-import { EventGrid }                                     from "../event/grid";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Badge } from "../../models/badge";
+import { Community } from "../../models/community";
+import { Resident } from "../../models/resident";
+import { Icon } from "../icon";
+import { Loader } from "../loader";
+import { Event } from "../../models/event";
+import { ActivityTab } from "./activity.tab";
+import { BadgeTab } from "./badge.tab";
+import { MilestoneTab } from "./milestone.tab";
 
 /**
  * EngagementWidget props
  */
 export interface EngagementWidgetProps {
-  community: Community | null
-  resident: Resident | null
+  community: Community | null;
+  resident: Resident | null;
+  milestones: Event[] | null;
+  activity: Event[] | null;
+  bearing: Badge[] | null;
+  contingent: Badge[] | null;
+  unqualified: Badge[] | null;
   active: "milestones" | "activity" | "badges";
   setActive: (active: "milestones" | "activity" | "badges") => void;
   onEventClick: (courseName?: string, eventName?: string) => void;
@@ -28,7 +36,6 @@ export interface EngagementWidgetProps {
 export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
   props
 ) => {
-
   // todo: make this a hook
   // todo: make this purely presentational
   const navigate = useNavigate();
@@ -36,34 +43,33 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
   const onBadgeClick = (badgeName: string) =>
     navigate(`${location.pathname}/badges/${badgeName}`);
 
-
   let tab = null;
   switch (props.active) {
     case "milestones":
       tab = (
-        <EventGrid
+        <MilestoneTab
           community={props.community}
-          type="milestone"
-          query={{ residentName: props.resident?.residentName, timePeriod: "milestone" }}
+          events={props.milestones}
           onClick={props.onEventClick}
         />
       );
       break;
     case "activity":
       tab = (
-        <EventGrid
+        <ActivityTab
           community={props.community}
-          columns={1}
-          type="reflection"
-          query={{ residentName: props.resident?.residentName, status: "contributed" }}
+          events={props.activity}
           onClick={props.onEventClick}
         />
       );
       break;
     case "badges":
       tab = (
-        <BadgeGrid
+        <BadgeTab
           resident={props.resident}
+          bearing={props.bearing}
+          contingent={props.contingent}
+          unqualified={props.unqualified}
           onBadgeClick={onBadgeClick}
         />
       );
@@ -145,7 +151,11 @@ export const EngagementWidget: FunctionComponent<EngagementWidgetProps> = (
       </div>
       <div className="p-2 h-full">
         <div className="h-[25rem] overflow-scroll">
-          <Loader isLoading={props.resident === null || props.community === null}>{tab}</Loader>
+          <Loader
+            isLoading={props.resident === null || props.community === null}
+          >
+            {tab}
+          </Loader>
         </div>
       </div>
     </div>

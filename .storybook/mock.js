@@ -53,8 +53,8 @@ export const mockApi = () => {
         "/curriculum/v0/courses/:courseName/events/:eventName",
         (schema, request) => {
           if (
-              request.params.courseName === "my" ||
-              request.params.courseName === "me"
+            request.params.courseName === "my" ||
+            request.params.courseName === "me"
           ) {
             request.params.courseName = "hcz";
           }
@@ -66,47 +66,59 @@ export const mockApi = () => {
         }
       );
 
-      this.get("/curriculum/v0/courses/:courseName/events", (schema, request) => {
-        let events = schema.db.events.where({})
-        const query = request.queryParams
-        events = events.filter((event) => {
-            let match = true
-            if(query.title){
-              match = match && event.title.toLowerCase().startsWith(query.title.toLowerCase())
+      this.get(
+        "/curriculum/v0/courses/:courseName/events",
+        (schema, request) => {
+          let events = schema.db.events.where({});
+          const query = request.queryParams;
+          events = events.filter((event) => {
+            let match = true;
+            if (query.title) {
+              match =
+                match &&
+                event.title.toLowerCase().startsWith(query.title.toLowerCase());
             }
 
-            if(query.tags){
-              match = match && query.tags.filter(tag => event.tags.includes(tag)).length > 0
+            if (query.tags) {
+              match =
+                match &&
+                query.tags.filter((tag) => event.tags.includes(tag)).length > 0;
             }
 
-            if(query.pathways){
-              match = match && query.pathways.includes(event.pathway)
+            if (query.pathways) {
+              match = match && query.pathways.includes(event.pathway);
             }
 
-            if(query.status){
-                const status = query.status === "survey" ? "contributed" : query.status
-                match = match && event.status === status
+            if (query.status) {
+              const status =
+                query.status === "survey" ? "contributed" : query.status;
+              match = match && event.status === status;
             }
 
-            if(query.timePeriod === "milestone"){
-              match = match && !event.notBefore
+            if (query.timePeriod === "milestone") {
+              match = match && !event.notBefore;
             }
 
-            if(query.day){
-                match = match && event.notBefore && new Date(event.notBefore).toISOString().substring(0, 10) === query.day
+            if (query.day) {
+              match =
+                match &&
+                event.notBefore &&
+                new Date(event.notBefore).toISOString().substring(0, 10) ===
+                  query.day;
             }
 
-            if(query.order){
-              match = match && event.order === query.order
+            if (query.order) {
+              match = match && event.order === query.order;
             }
 
-            return match
-        })
+            return match;
+          });
 
-        const limit = query.limit || 10
-        const page = query.page || 0
-        return events.slice(page * limit, (page * limit) + limit)
-      });
+          const limit = query.limit || 10;
+          const page = query.page || 0;
+          return events.slice(page * limit, page * limit + limit);
+        }
+      );
 
       this.post("/calendar/v0/:calendarId", () => {
         return null;
@@ -176,8 +188,8 @@ export const mockApi = () => {
 };
 
 const randomName = () => {
-  return (Math.random() + 1).toString(36).substring(7)
-}
+  return (Math.random() + 1).toString(36).substring(7);
+};
 
 const readiness = [
   {
@@ -401,7 +413,7 @@ const events = [
     eventId: "hcz.event.0.top",
     title: "Voter Registration 101",
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -429,7 +441,7 @@ const events = [
     residentName: "andre.carter",
     title: "Guess the Odd One Out",
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -452,7 +464,7 @@ const events = [
     residentName: "andre.carter",
     title: "Explore NYC Public Data - Your School",
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -482,13 +494,17 @@ const events = [
       postalCode: "11205",
     },
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/recreation.jpg",
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 1),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 1
+    ),
     proficiency: 250,
     order: "top",
   },
@@ -499,7 +515,7 @@ const events = [
     eventId: "hcz.event.0.top",
     title: "Voter Registration 101 (Breakout I)",
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -507,7 +523,11 @@ const events = [
       postalCode: "11205",
     },
     url: "https://www.localcivics.io",
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 1),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 1
+    ),
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "policy & government",
     tags: [
@@ -527,14 +547,18 @@ const events = [
     residentName: "andre.carter",
     title: "Guess the Odd One Out (Breakout I)",
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 2),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 2
+    ),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "arts & culture",
@@ -556,13 +580,17 @@ const events = [
       postalCode: "11205",
     },
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 2),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 2
+    ),
     proficiency: 250,
     order: "sponsored",
   },
@@ -573,7 +601,7 @@ const events = [
     eventId: "hcz.event.0.top",
     title: "Voter Registration 101 (Prep)",
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -581,7 +609,11 @@ const events = [
       postalCode: "11205",
     },
     url: "https://www.localcivics.io",
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 3),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 3
+    ),
     imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
     tags: [
@@ -601,14 +633,18 @@ const events = [
     residentName: "andre.carter",
     title: "Guess the Odd One Out (Prep)",
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 3),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 3
+    ),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
     pathway: "arts & culture",
@@ -630,13 +666,17 @@ const events = [
       postalCode: "11205",
     },
     summary:
-        "An opportunity to engage on the platform and find new ways to impact your community.",
+      "An opportunity to engage on the platform and find new ways to impact your community.",
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/recreation.jpg",
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore:new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 4),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 4
+    ),
     proficiency: 250,
     order: "soonest",
   },
@@ -789,7 +829,11 @@ const events = [
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
     status: "going",
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 4),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 4
+    ),
     proficiency: 250,
   },
   {
@@ -811,7 +855,11 @@ const events = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 5),
+    notBefore: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDay() + 5
+    ),
     proficiency: 250,
   },
 ];

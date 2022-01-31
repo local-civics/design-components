@@ -2,12 +2,12 @@
  * Pathway
  */
 export const pathways = [
-    "policy & government",
-    "arts & culture",
-    "college & career",
-    "volunteer",
-    "recreation",
-] as const
+  "policy & government",
+  "arts & culture",
+  "college & career",
+  "volunteer",
+  "recreation",
+] as const;
 
 /**
  * Type for icons

@@ -1,15 +1,19 @@
 import React, { FunctionComponent } from "react";
-import { Outlet }                from "react-router-dom";
-import {useRequest}                                      from "../../hooks/request";
-import { EventWidget }                                   from "../event/widget";
-import { IdentityWidget }                                from "../identity/widget";
-import { Loader }                                        from "../loader";
-import { NavigationBar }                                 from "../navigation-bar";
-import { PassportWidget }                                from "../passport/widget";
-import { Pathway }                                       from "../pathway";
-import {PathwayHelpComponent}                            from "../readiness/component";
-import { PathwayWidget }                                 from "../readiness/widget";
-import { EngagementWidget }                              from "./widget";
+import { Outlet } from "react-router-dom";
+import { useBadges } from "../../hooks/badge";
+import { useEvents } from "../../hooks/event";
+import { useReadiness } from "../../hooks/readiness";
+import { useRequest } from "../../hooks/request";
+import { EventWidget } from "../event/widget";
+import { AchievementWidget } from "./achievement.widget";
+import { IdentityWidget } from "./identity.widget";
+import { Loader } from "../loader";
+import { NavigationBar } from "../navigation-bar";
+import { ImpactWidget } from "./impact.widget";
+import { Pathway } from "../pathway";
+import { PathwayHelpComponent } from "../readiness/component";
+import { PathwayWidget } from "../readiness/widget";
+import { EngagementWidget } from "./widget";
 
 export interface ProfileProps {
   tab?: "badges" | "milestones" | "activity";
@@ -22,23 +26,51 @@ export interface ProfileProps {
  * todo: check identity permissions for expand only
  */
 export const Profile: FunctionComponent<ProfileProps> = (props) => {
-  const req = useRequest()
+  const req = useRequest();
   const [tab, setTab] = React.useState(props.tab || "badges");
   const avatar =
-    (req.resident && req.resident.avatarURL) || "https://cdn.localcivics.io/hub/avatar.jpg";
+    (req.resident && req.resident.avatarURL) ||
+    "https://cdn.localcivics.io/hub/avatar.jpg";
   const onPathwayClick = (pathway: Pathway) =>
-    req.navigate(`/communities/${req.community?.communityName}/explore/events?pathways=${encodeURIComponent(pathway)}`);
-  const onSeeAllClick = () => req.navigate(`/communities/${req.community?.communityName}/calendar/events`);
+    req.navigate(
+      `/communities/${
+        req.community?.communityName
+      }/explore/events?pathways=${encodeURIComponent(pathway)}`
+    );
+  const onSeeAllClick = () =>
+    req.navigate(
+      `/communities/${req.community?.communityName}/calendar/events?tab=going`
+    );
   const onPathwayHelpClick = () => setPathwayHelpVisible(true);
   const onEventClick = (communityName?: string, eventName?: string) =>
     req.navigate(
       `/residents/${req.resident?.residentName}/events/${eventName}`
     );
-  const [pathwayHelpVisible,  setPathwayHelpVisible] = React.useState(false)
+  const [pathwayHelpVisible, setPathwayHelpVisible] = React.useState(false);
+  const milestones = useEvents(req.community?.communityName, {
+    residentName: req.resident?.residentName,
+    timePeriod: "milestone",
+  });
+  const activity = useEvents(req.community?.communityName, {
+    residentName: req.resident?.residentName,
+    status: "contributed",
+  });
+  const bearing = useBadges(req.resident?.residentName, { status: "bearing" });
+  const contingent = useBadges(req.resident?.residentName, {
+    status: "contingent",
+  });
+  const unqualified = useBadges(req.resident?.residentName, {
+    status: "unqualified",
+  });
+  const readiness = useReadiness(req.resident?.residentName);
 
   return (
     <main className="h-screen bg-white font-proxima">
-      <NavigationBar community={req.community} resident={req.resident} page="profile" />
+      <NavigationBar
+        community={req.community}
+        resident={req.resident}
+        page="profile"
+      />
       <Loader isLoading={req.resident === null}>
         <div className="px-4 lg:px-24">
           {/* Avatar Header */}
@@ -52,7 +84,8 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
                 </h4>
                 {req.resident?.createdAt && (
                   <p className="text-slate-400">
-                    Member since {new Date(req.resident?.createdAt).getFullYear()}
+                    Member since{" "}
+                    {new Date(req.resident?.createdAt).getFullYear()}
                   </p>
                 )}
               </div>
@@ -78,7 +111,11 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
                 community={req.community}
                 resident={req.resident}
                 title="about me"
-                onEdit={() => req.navigate(`/residents/${req.resident?.residentName}/settings`)}
+                onEdit={() =>
+                  req.navigate(
+                    `/residents/${req.resident?.residentName}/settings`
+                  )
+                }
               />
 
               {/* Pathways */}
@@ -93,7 +130,11 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
               <EventWidget
                 community={req.community}
                 title="my events"
-                query={{ residentName: req.resident?.residentName, status: "going", limit: 3 }}
+                query={{
+                  residentName: req.resident?.residentName,
+                  status: "going",
+                  limit: 3,
+                }}
                 onSeeAllClick={onSeeAllClick}
                 onClick={onEventClick}
               />
@@ -105,12 +146,23 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
 
             {/* Right Panel */}
             <div className="lg:grow lg:flex-col lg:ml-9">
-              <PassportWidget resident={req.resident} />
+              <div className="lg:flex lg:h-36 w-full">
+                <ImpactWidget resident={req.resident} readiness={readiness} />
+                <AchievementWidget
+                  resident={req.resident}
+                  readiness={readiness}
+                />
+              </div>
 
               {/* Milestones/Activity/Badges */}
               <EngagementWidget
                 community={req.community}
                 resident={req.resident}
+                milestones={milestones}
+                bearing={bearing}
+                contingent={contingent}
+                unqualified={unqualified}
+                activity={activity}
                 active={tab}
                 setActive={setTab}
                 onEventClick={onEventClick}
@@ -119,7 +171,9 @@ export const Profile: FunctionComponent<ProfileProps> = (props) => {
           </div>
         </div>
       </Loader>
-      { pathwayHelpVisible && <PathwayHelpComponent onClose={() => setPathwayHelpVisible(false)}/>}
+      {pathwayHelpVisible && (
+        <PathwayHelpComponent onClose={() => setPathwayHelpVisible(false)} />
+      )}
       <Outlet context={req} />
     </main>
   );

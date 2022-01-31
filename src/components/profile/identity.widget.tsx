@@ -1,14 +1,14 @@
 import React, { FunctionComponent } from "react";
-import {Community}                  from "../../models/community";
-import {Resident}                   from "../../models/resident";
-import { Icon }                     from "../icon";
-import { Loader }                   from "../loader";
+import { Community } from "../../models/community";
+import { Resident } from "../../models/resident";
+import { Icon } from "../icon";
+import { Loader } from "../loader";
 
 /**
  * IdentityWidget props
  */
 export interface IdentityWidgetProps {
-  community: Community | null
+  community: Community | null;
   resident: Resident | null;
   title: string;
   onEdit?: () => void;
@@ -19,9 +19,12 @@ export interface IdentityWidgetProps {
  * @param props
  * @constructor
  */
-export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
-    {community, resident, title, onEdit}
-) => {
+export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = ({
+  community,
+  resident,
+  title,
+  onEdit,
+}) => {
   return (
     <div
       className="border rounded-md shadow-sm min-h-48 lg:w-60 w-full overflow-hidden"

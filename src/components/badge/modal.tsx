@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import {useRequestContext}        from "../../hooks/request";
-import { BadgeComponent }         from "./component";
-import { useBadge }               from "../../hooks/badge";
+import { useRequestContext } from "../../hooks/request";
+import { BadgeComponent } from "./component";
+import { useBadge } from "../../hooks/badge";
 
 /**
  * Badge modal
  * @constructor
  */
 export const BadgeModal = () => {
-  const req = useRequestContext()
-  const badge = useBadge(req.resident?.residentName, req.params.badgeName)
+  const req = useRequestContext();
+  const badge = useBadge(req.resident?.residentName, req.params.badgeName);
   const navigate = useNavigate();
   const onClose = () => navigate(-1);
   const onObjectiveClick = (actionURL?: string) =>

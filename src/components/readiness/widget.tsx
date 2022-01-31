@@ -1,18 +1,18 @@
 import React, { FunctionComponent } from "react";
-import {Resident}                   from "../../models/resident";
-import { Icon }                     from "../icon";
-import { Loader }                   from "../loader";
-import { Pathway }                  from "../pathway";
-import { ProgressBar }              from "../progress-bar";
-import { useReadiness }             from "../../hooks/readiness";
-import { Readiness }                from "../../models/readiness";
+import { Resident } from "../../models/resident";
+import { Icon } from "../icon";
+import { Loader } from "../loader";
+import { Pathway } from "../pathway";
+import { ProgressBar } from "../progress-bar";
+import { useReadiness } from "../../hooks/readiness";
+import { Readiness } from "../../models/readiness";
 
 /**
  * PathwayWidget props
  */
 export interface PathwayWidgetProps {
   title: string;
-  resident: Resident | null
+  resident: Resident | null;
   onHelpClick: () => void;
   onClick: (pathway: Pathway) => void;
 }
@@ -23,12 +23,23 @@ export interface PathwayWidgetProps {
  * @constructor
  */
 export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
-  const cc = useReadiness(props.resident?.residentName, {pathways: ["college & career"]});
-  const pg = useReadiness(props.resident?.residentName, {pathways: ["policy & government"]});
-  const ac = useReadiness(props.resident?.residentName, {pathways: ["arts & culture"]});
-  const vt = useReadiness(props.resident?.residentName, {pathways: ["volunteer"]});
-  const rc = useReadiness(props.resident?.residentName, {pathways: ["recreation"]});
-  const isLoading = cc === null || pg === null || ac === null || vt === null || rc === null;
+  const cc = useReadiness(props.resident?.residentName, {
+    pathways: ["college & career"],
+  });
+  const pg = useReadiness(props.resident?.residentName, {
+    pathways: ["policy & government"],
+  });
+  const ac = useReadiness(props.resident?.residentName, {
+    pathways: ["arts & culture"],
+  });
+  const vt = useReadiness(props.resident?.residentName, {
+    pathways: ["volunteer"],
+  });
+  const rc = useReadiness(props.resident?.residentName, {
+    pathways: ["recreation"],
+  });
+  const isLoading =
+    cc === null || pg === null || ac === null || vt === null || rc === null;
   const pathways: { name: Pathway; readiness: Readiness | null }[] = [
     {
       name: "policy & government",

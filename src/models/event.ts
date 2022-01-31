@@ -43,20 +43,20 @@ export interface Location {
 /**
  * EventQuery
  */
-export interface EventQuery{
+export interface EventQuery {
   status?:
-      | "opportunity"
-      | "going"
-      | "happening"
-      | "survey"
-      | "contributed"
-      | "over";
-  timePeriod?: "day" | "week" | "milestone"
-  limit?: number
-  order?: "soonest" | "top" | "sponsored",
+    | "opportunity"
+    | "going"
+    | "happening"
+    | "survey"
+    | "contributed"
+    | "over";
+  timePeriod?: "day" | "week" | "milestone";
+  limit?: number;
+  order?: "soonest" | "top" | "sponsored";
   residentName?: string;
-  tags?: string[],
-  pathways?: Pathway[],
+  tags?: string[];
+  pathways?: Pathway[];
   title?: string;
   day?: string;
 }

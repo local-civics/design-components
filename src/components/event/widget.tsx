@@ -1,16 +1,16 @@
 import React, { FunctionComponent } from "react";
-import {Community}                  from "../../models/community";
-import { Icon }                     from "../icon";
-import { Loader }                   from "../loader";
-import { useEvents }                from "../../hooks/event";
-import {EventQuery}                 from "../../models/event";
+import { Community } from "../../models/community";
+import { Icon } from "../icon";
+import { Loader } from "../loader";
+import { useEvents } from "../../hooks/event";
+import { EventQuery } from "../../models/event";
 
 /**
  * EventWidget properties
  */
 export interface EventWidgetProps {
   title: string;
-  community: Community | null
+  community: Community | null;
   query?: EventQuery;
   onClick: (communityName?: string, eventName?: string) => void;
   onSeeAllClick: () => void;
@@ -22,7 +22,7 @@ export interface EventWidgetProps {
  * @constructor
  */
 export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
-  const events = useEvents(props.community?.communityName, props.query)
+  const events = useEvents(props.community?.communityName, props.query);
   return (
     <div
       className="border-gray-200 border shadow-sm rounded-md h-[20.5rem] lg:w-60 w-full mt-3 overflow-hidden"

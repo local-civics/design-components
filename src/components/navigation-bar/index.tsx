@@ -1,7 +1,7 @@
-import {useNavigate} from "react-router-dom";
-import {Community}   from "../../models/community";
-import {Resident}    from "../../models/resident";
-import { Logo }      from "../logo";
+import { useNavigate } from "react-router-dom";
+import { Community } from "../../models/community";
+import { Resident } from "../../models/resident";
+import { Logo } from "../logo";
 
 import React, { FunctionComponent } from "react";
 import { Icon } from "../icon";
@@ -10,8 +10,8 @@ import { Icon } from "../icon";
  * Configurable properties for NavigationBar component
  */
 export interface NavigationBarProps {
-  community: Community | null
-  resident: Resident | null
+  community: Community | null;
+  resident: Resident | null;
   page?: "home" | "profile" | "explore" | "calendar";
 }
 
@@ -19,7 +19,7 @@ export interface NavigationBarProps {
  * NavigationBar component
  */
 export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const cursor = props.page === "home" ? "" : "cursor-pointer";
 
   // todo: responsive menu
@@ -65,7 +65,10 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
             <Icon
               onClick={
                 props.page !== "explore"
-                  ? () => navigate(`/communities/${props.community?.communityName}/explore/events`)
+                  ? () =>
+                      navigate(
+                        `/communities/${props.community?.communityName}/explore/events`
+                      )
                   : undefined
               }
               className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${
@@ -90,7 +93,10 @@ export const NavigationBar: FunctionComponent<NavigationBarProps> = (props) => {
             <Icon
               onClick={
                 props.page !== "calendar"
-                  ? () => navigate(`/communities/${props.community?.communityName}/calendar/events`)
+                  ? () =>
+                      navigate(
+                        `/communities/${props.community?.communityName}/calendar/events`
+                      )
                   : undefined
               }
               className={`drop-shadow-sm transition ease-in-out w-5 h-5 ${

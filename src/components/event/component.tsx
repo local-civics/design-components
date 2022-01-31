@@ -113,11 +113,16 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
 
                 {skills && skills.length > 0 && (
                   <div className="grid grid-cols-1 gap-4">
-                    <p className="text-slate-600 font-semibold text-lg">Skills</p>
+                    <p className="text-slate-600 font-semibold text-lg">
+                      Skills
+                    </p>
                     <div className="flex gap-2">
                       {skills.map((skill, i) => {
                         return (
-                          <button key={skill+i} className="grow-0 cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize bg-gray-100 hover:bg-gray-50 active:bg-gray-50 focus:bg-gray-50 px-4 py-2 text-xs text-gray-600">
+                          <button
+                            key={skill + i}
+                            className="grow-0 cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize bg-gray-100 hover:bg-gray-50 active:bg-gray-50 focus:bg-gray-50 px-4 py-2 text-xs text-gray-600"
+                          >
                             {skill}
                           </button>
                         );
