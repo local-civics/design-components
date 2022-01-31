@@ -30,7 +30,7 @@ export const IdentityWidget: FunctionComponent<IdentityWidgetProps> = (
       aria-modal="true"
     >
       <div className="px-2 py-2 bg-gray-200" />
-      <div className="grid grid-cols-1 min-h-60">
+      <div className="grid grid-cols-1 h-full">
         <div className="p-2">
           <div className="flex items-center">
             <div className="grow">

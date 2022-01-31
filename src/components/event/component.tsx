@@ -40,7 +40,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
             Join
           </button>
         );
-      case "went":
+      case "survey":
         return (
           <button className="transition-colors shadow-md font-semibold rounded-lg max-h-14 py-3 px-12 bg-slate-700 text-white mx-2 lg:mt-2">
             Reflect
@@ -60,7 +60,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
   const skills = getSkills(event);
   return (
     <div className="shadow-md overflow-hidden w-11/12 max-w-[36rem] bg-white rounded-md">
-      <div className="pb-5 w-full">
+      <div className="pb-5 h-full w-full">
         <div className="relative z-50">
           <Icon
             onClick={props.onClose}
@@ -68,8 +68,7 @@ export const EventComponent: FunctionComponent<EventComponentProps> = (
             icon="close"
           />
         </div>
-        {/* todo: fix margin for loader */}
-        <div className="w-full min-h-60 justify-items-center content-center">
+        <div className="w-full h-full min-h-60 justify-items-center content-center">
           <Loader isLoading={isLoading}>
             <img
               className="w-full h-60 object-cover"

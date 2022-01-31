@@ -5,9 +5,8 @@ import {Icon} from "../icon";
  * DateWidgetProps
  */
 export interface DateWidgetProps{
-    month: Date | null
-    day: Date | null
-    onSetDay: (day: Date | null) => void;
+    day: Date
+    onSetDay: (day: Date) => void;
 }
 
 /**
@@ -24,26 +23,23 @@ export const DateWidget = (props: DateWidgetProps) => {
         "Sat"
     ]
     const today = new Date()
-    const [day, setDay] = React.useState(props.day)
-    const [month, setMonth] = React.useState(day || props.month || new Date(today.getFullYear(), today.getMonth(), 1))
+    const day = props.day
+    const [month, setMonth] = React.useState(day || new Date(today.getFullYear(), today.getMonth(), 1))
     const [start, end] = getRange(month)
     const days = []
     const onDayClick = (cur: Date) => {
         if(day && isSameDay(day, cur)){
-            setDay(null)
-            props.onSetDay(null)
+            props.onSetDay(today)
             return
         }
-
-        setDay(cur)
         props.onSetDay(cur)
     }
 
     for (let cur = start; cur <= end; cur = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate() + 1)){
         const base = "w-8 h-8 text-center cursor-pointer p-2 hover:text-white hover:font-semibold hover:bg-sky-400"
-        const currentMonth = day && isSameDay(day, cur) ? "text-white font-semibold bg-sky-400" : isSameDay(today, cur) ? "font-semibold bg-slate-100 rounded-full" : cur.getMonth() === month.getMonth() ? "text-slate-500 font-semibold" : "text-slate-400"
+        const currentMonth = isSameDay(today, cur) ? "font-semibold bg-slate-100 rounded-full" : day && isSameDay(day, cur) ? "text-white font-semibold bg-sky-400"  : cur.getMonth() === month.getMonth() ? "text-slate-500 font-semibold" : "text-slate-400"
         const className = [base, currentMonth].join(" ")
-        days.push(<span onClick={() => onDayClick(cur)} className={className}>
+        days.push(<span key={cur.toString()} onClick={() => onDayClick(cur)} className={className}>
                 { cur.getDate() }
             </span>
         )
@@ -52,7 +48,7 @@ export const DateWidget = (props: DateWidgetProps) => {
     return (
         <article className="border-gray-200 border shadow-sm rounded-md min-h-48 lg:w-60 w-full overflow-hidden">
             <div className="p-2 bg-gray-200" />
-            <div className="min-h-60">
+            <div className="h-full">
                 <div className="p-2 border-b border-gray-200">
                     <div className="flex items-center">
                         <div className="grow">

@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { Route, Routes }     from "react-router-dom";
+import {Route, Routes}       from "react-router-dom";
 import { BadgeModal }        from "./badge";
 import {CalendarPage}        from "./calendar/page";
 import { NotFound }          from "./errors";
@@ -36,6 +36,9 @@ export const App: FunctionComponent = () => {
       <Route path="/residents/:residentName/milestones" element={<Profile tab="milestones" />}/>
       <Route path="/residents/:residentName/activity" element={<Profile tab="activity" />}/>
       <Route path="/communities/:communityName/calendar/events" element={<CalendarPage />} />
+      <Route path="/communities/:communityName/calendar/:day/events" element={<CalendarPage />}>
+          <Route path=":eventName" element={<EventModal />} />
+      </Route>
       <Route path="/communities/:communityName/explore/events" element={<ExplorePage />}>
           <Route path=":eventName" element={<EventModal />} />
       </Route>

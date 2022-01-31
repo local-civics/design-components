@@ -51,7 +51,7 @@ export const EventWidget: FunctionComponent<EventWidgetProps> = (props) => {
             </p>
           )}
         </div>
-        <div className="grid grid-cols-1 overflow-hidden justify-items-center content-center min-h-60">
+        <div className="grid grid-cols-1 overflow-hidden justify-items-center content-center min-h-60 h-full">
           <Loader isLoading={events === null}>
             {!events?.length && (
               <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-600">

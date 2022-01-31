@@ -22,7 +22,7 @@ export interface Event {
     | "opportunity"
     | "going"
     | "happening"
-    | "went"
+    | "survey"
     | "contributed"
     | "over";
 }
@@ -48,14 +48,15 @@ export interface EventQuery{
       | "opportunity"
       | "going"
       | "happening"
-      | "went"
+      | "survey"
       | "contributed"
       | "over";
-  timePeriod?: "month" | "day" | "week" | "morning" | "afternoon" | "evening" | "weekend" | "milestone"
+  timePeriod?: "day" | "week" | "milestone"
   limit?: number
   order?: "soonest" | "top" | "sponsored",
   residentName?: string;
   tags?: string[],
   pathways?: Pathway[],
   title?: string;
+  day?: string;
 }

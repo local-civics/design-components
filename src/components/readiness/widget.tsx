@@ -77,7 +77,7 @@ export const PathwayWidget: FunctionComponent<PathwayWidgetProps> = (props) => {
             icon="help"
           />
         </div>
-        <div className="grid grid-cols-1 min-h-60">
+        <div className="grid grid-cols-1 min-h-60 h-full">
           <Loader isLoading={isLoading}>
             {pathways.map((pathway) => {
               return (

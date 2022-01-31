@@ -36,7 +36,12 @@ export const useRequest = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const query = useNavigationQuery()
-    const [request, setRequest] = React.useState({} as Request)
+    const [request, setRequest] = React.useState({
+        location: location,
+        params: params,
+        query: query,
+        navigate: navigate,
+    } as Request)
 
     useEffect(() => {
         (async () => {

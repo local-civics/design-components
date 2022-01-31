@@ -11,6 +11,8 @@ import {ExploreComponent}               from "./component";
  * @constructor
  */
 export const ExplorePage = () => {
+    // todo: location search
+
     const req = useRequest()
     const [eventQuery, setEventQuery] = useEventQuery(req.query)
     const top = useEvents(req.community?.communityName, {order: "top", limit: 4})

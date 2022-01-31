@@ -84,11 +84,16 @@ export const mockApi = () => {
             }
 
             if(query.status){
-                match = match && event.status === query.status
+                const status = query.status === "survey" ? "contributed" : query.status
+                match = match && event.status === status
             }
 
-            if(query.timePeriod){
-              match = match && event.timePeriod === query.timePeriod
+            if(query.timePeriod === "milestone"){
+              match = match && !event.notBefore
+            }
+
+            if(query.day){
+                match = match && event.notBefore && new Date(event.notBefore).toISOString().substring(0, 10) === query.day
             }
 
             if(query.order){
@@ -156,7 +161,7 @@ export const mockApi = () => {
         (schema, request) => {
           delete request.queryParams.limit;
           const query = {
-            pathway: request.queryParams.pathway || "sum",
+            pathways: request.queryParams.pathways || ["sum"],
           };
           return schema.db.readiness.where(query)[0];
         }
@@ -176,32 +181,32 @@ const randomName = () => {
 
 const readiness = [
   {
-    pathway: "college & career",
+    pathways: ["college & career"],
     proficiency: 250,
     nextProficiency: 500,
   },
   {
-    pathway: "policy & government",
+    pathways: ["policy & government"],
     proficiency: 300,
     nextProficiency: 500,
   },
   {
-    pathway: "arts & culture",
+    pathways: ["arts & culture"],
     proficiency: 500,
     nextProficiency: 500,
   },
   {
-    pathway: "volunteer",
+    pathways: ["volunteer"],
     proficiency: 100,
     nextProficiency: 500,
   },
   {
-    pathway: "recreation",
+    pathways: ["recreation"],
     proficiency: 400,
     nextProficiency: 500,
   },
   {
-    pathway: "sum",
+    pathways: ["sum"],
     proficiency: 3475,
     magnitude: 2,
     reflections: 12,
@@ -483,7 +488,7 @@ const events = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 1),
     proficiency: 250,
     order: "top",
   },
@@ -502,7 +507,7 @@ const events = [
       postalCode: "11205",
     },
     url: "https://www.localcivics.io",
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 1),
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "policy & government",
     tags: [
@@ -529,7 +534,7 @@ const events = [
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 2),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "arts & culture",
@@ -557,7 +562,7 @@ const events = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 2),
     proficiency: 250,
     order: "sponsored",
   },
@@ -576,7 +581,7 @@ const events = [
       postalCode: "11205",
     },
     url: "https://www.localcivics.io",
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 3),
     imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
     tags: [
@@ -603,7 +608,7 @@ const events = [
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 3),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
     pathway: "arts & culture",
@@ -631,7 +636,7 @@ const events = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore: new Date(),
+    notBefore:new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 4),
     proficiency: 250,
     order: "soonest",
   },
@@ -691,7 +696,7 @@ const events = [
     imageURL: "https://cdn.localcivics.io/area/volunteer.jpg",
     pathway: "volunteer",
     tags: ["area:volunteer"],
-    status: "went",
+    status: "survey",
     proficiency: 250,
   },
   {
@@ -708,7 +713,7 @@ const events = [
     imageURL: "https://cdn.localcivics.io/area/college-and-career.jpg",
     pathway: "college & career",
     tags: ["area:college & career"],
-    status: "went",
+    status: "survey",
     proficiency: 250,
   },
   {
@@ -724,7 +729,7 @@ const events = [
     imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
-    status: "went",
+    status: "survey",
     proficiency: 250,
   },
   {
@@ -740,7 +745,7 @@ const events = [
     imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
     tags: ["area:policy & government"],
-    status: "went",
+    status: "survey",
     proficiency: 250,
   },
   {
@@ -784,7 +789,7 @@ const events = [
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
     status: "going",
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 4),
     proficiency: 250,
   },
   {
@@ -806,7 +811,7 @@ const events = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "going",
-    notBefore: new Date(),
+    notBefore: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay() + 5),
     proficiency: 250,
   },
 ];
