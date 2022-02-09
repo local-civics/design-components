@@ -25,7 +25,8 @@ const cfg = [
     plugins: [
       peerDepsExternal(),
       resolve({
-        preferBuiltins: true
+        preferBuiltins: true,
+        browser: true,
       }),
       postcss({
         sourceMap: true,
