@@ -2,7 +2,7 @@ import { Auth0ContextInterface, Auth0Provider, useAuth0 } from "@auth0/auth0-rea
 import { request } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useErrorContext } from "..";
+import { useErrorContext } from "../ErrorContext/ErrorContext";
 import * as Sentry from "@sentry/react";
 import { ErrorContextProvider } from "../ErrorContext/ErrorContext";
 

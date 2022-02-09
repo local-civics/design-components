@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ResidentContextProvider, ResidentContextState } from "./contexts";
+import { ResidentContextProvider, ResidentContextState } from "./contexts/ResidentContext/ResidentContext";
 import { mockApi }  from "./mock";
 import { NotFound } from "../build/old/components/errors";
 import { Home }     from "./pages/Home/Home";

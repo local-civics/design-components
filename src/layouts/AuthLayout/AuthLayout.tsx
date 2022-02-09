@@ -1,6 +1,6 @@
 import React from "react";
 import { NavBar, NavBarProps, NavLink, Loader } from "../../components";
-import { useResidentContext } from "../../contexts";
+import { useResidentContext } from "../../contexts/ResidentContext/ResidentContext";
 
 /**
  * The properties for the auth layout
