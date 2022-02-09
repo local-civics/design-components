@@ -3,9 +3,10 @@ import pkg from "./package.json";
 import commonjs from "@rollup/plugin-commonjs";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
-import resolve from "@rollup/plugin-node-resolve";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from '@rollup/plugin-typescript';
 import { terser } from "rollup-plugin-terser";
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 const cfg = [
   {
@@ -24,15 +25,15 @@ const cfg = [
     ],
     plugins: [
       peerDepsExternal(),
-      resolve({
-        preferBuiltins: true,
-        browser: true,
+      commonjs(),
+      nodePolyfills(),
+      nodeResolve({
+        preferBuiltins: false,
       }),
       postcss({
         sourceMap: true,
         minimize: true,
       }),
-      commonjs(),
       typescript(),
       terser(),
     ],
