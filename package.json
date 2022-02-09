@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/react-hub",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
@@ -62,8 +62,14 @@
     "@local-civics/js-client": "^0.0.16",
     "@sentry/react": "^6.17.4",
     "@sentry/tracing": "^6.17.4",
+    "assert": "^2.0.0",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-router-dom": "^6.2.1"
+    "react-router-dom": "^6.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0"
   }
 }
