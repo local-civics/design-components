@@ -1,7 +1,7 @@
 import { Story } from "@storybook/react";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { ResidentContextProvider } from "../../contexts";
+import { ResidentContextProvider } from "../../contexts/ResidentContext/ResidentContext";
 import { HomeLayout, HomeLayoutProps } from "./HomeLayout";
 
 /**

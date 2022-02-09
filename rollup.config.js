@@ -4,7 +4,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
 import resolve from "@rollup/plugin-node-resolve";
-import typescript from "rollup-plugin-typescript2";
+import typescript from '@rollup/plugin-typescript';
 import { terser } from "rollup-plugin-terser";
 
 const cfg = [
@@ -24,15 +24,15 @@ const cfg = [
     ],
     plugins: [
       peerDepsExternal(),
-      resolve(),
+      resolve({
+        preferBuiltins: true
+      }),
       postcss({
         sourceMap: true,
         minimize: true,
       }),
       commonjs(),
-      typescript({
-        clean: true,
-      }),
+      typescript(),
       terser(),
     ],
   },
