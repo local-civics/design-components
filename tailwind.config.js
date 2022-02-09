@@ -5,6 +5,16 @@ module.exports = {
       lineHeight: {
         "extra-loose": "3",
       },
+      colors: {
+        primary: {
+          400: "#61daf5",
+          600: "#3ad1f2",
+        },
+        secondary: {
+          400: "#4e5561",
+          600: "#222a39",
+        },
+      },
     },
     fontFamily: {
       proxima: ["ProximaNova"],

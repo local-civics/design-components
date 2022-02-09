@@ -8,7 +8,7 @@
     "allowJs": true,
     "outDir": "dist",
     "declaration": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticComponentImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,

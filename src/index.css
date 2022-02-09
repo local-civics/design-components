@@ -6,8 +6,7 @@
 @font-face {
   font-family: "ProximaNova";
   font-weight: bold;
-  src: url(https://cdn.localcivics.io/fonts/ProximaNovaBold.otf)
-    format("opentype");
+  src: url(https://cdn.localcivics.io/fonts/ProximaNovaBold.otf) format("opentype");
 }
 
 @tailwind base;
