@@ -1,4 +1,4 @@
-import { Pathway, pathways } from "../old/models/pathway";
+import { Pathway, pathways } from "../../build/old/models/pathway";
 
 export const getPathways = (from: string[] | null) => {
   const selected: Pathway[] = [];

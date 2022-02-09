@@ -1,15 +1,10 @@
 import React from "react";
 import { BrowserRouter, MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ResidentContextProvider, ResidentContextState } from "./contexts";
-import { mockApi } from "./mock";
-import { BadgeModal } from "./old/components/badge";
-import { Calendar } from "./pages/Calendar/Calendar";
-import { NotFound } from "./old/components/errors";
-import { EventModal } from "./old/modals/EventModal";
-import { ExplorePage } from "./old/components/explore/page";
-import { Home } from "./pages/Home/Home";
+import { mockApi }  from "./mock";
+import { NotFound } from "../build/old/components/errors";
+import { Home }     from "./pages/Home/Home";
 import { Profile } from "./pages/Profile/Profile";
-import { Settings } from "./pages/Settings/Settings";
 
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
@@ -44,7 +39,7 @@ export const App = () => {
 /**
  * An in-memory component for the Hub application.
  */
-export const InMemoryApp = (props: { location?: string }) => {
+export const InMemoryApp = (props: { browser?: boolean, location?: string }) => {
   mockApi();
   const ctx: ResidentContextState = {
     accessToken: "foo",
@@ -60,6 +55,16 @@ export const InMemoryApp = (props: { location?: string }) => {
       createdAt: "January 1, 2020",
     },
   };
+
+  if(props.browser){
+    return (
+        <BrowserRouter>
+          <ResidentContextProvider value={ctx}>
+            <AppRoutes />
+          </ResidentContextProvider>
+        </BrowserRouter>
+    );
+  }
 
   const RouteListener = () => {
     const navigate = useNavigate();
@@ -111,21 +116,21 @@ const AppRoutes = (props: { location?: string }) => {
     <Routes location={props.location}>
       <Route path="/" element={<Home />} />
       <Route path="/residents/:residentName" element={<Profile />}>
-        <Route path="settings" element={<Settings />} />
-        <Route path="badges/:badgeName" element={<BadgeModal />} />
-        <Route path="events/:eventName" element={<EventModal />} />
+        {/*<Route path="settings" element={<Settings />} />*/}
+        {/*<Route path="badges/:badgeName" element={<BadgeModal />} />*/}
+        {/*<Route path="events/:eventName" element={<EventModal />} />*/}
       </Route>
       <Route path="/residents/:residentName/:tab" element={<Profile />} />
       <Route path="/residents/:residentName/:tab/:status" element={<Profile />} />
-      <Route path="/communities/:communityName/calendar/events" element={<Calendar />}>
-        <Route path=":eventName" element={<EventModal />} />
-      </Route>
-      <Route path="/communities/:communityName/calendar/:date/events" element={<Calendar />}>
-        <Route path=":eventName" element={<EventModal />} />
-      </Route>
-      <Route path="/communities/:communityName/explore/events" element={<ExplorePage />}>
-        <Route path=":eventName" element={<EventModal />} />
-      </Route>
+      {/*<Route path="/communities/:communityName/calendar/events" element={<Calendar />}>*/}
+      {/*  <Route path=":eventName" element={<EventModal />} />*/}
+      {/*</Route>*/}
+      {/*<Route path="/communities/:communityName/calendar/:date/events" element={<Calendar />}>*/}
+      {/*  <Route path=":eventName" element={<EventModal />} />*/}
+      {/*</Route>*/}
+      {/*<Route path="/communities/:communityName/explore/events" element={<ExplorePage />}>*/}
+      {/*  <Route path=":eventName" element={<EventModal />} />*/}
+      {/*</Route>*/}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
