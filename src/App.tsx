@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ResidentContextProvider, ResidentContextState } from "./contexts/ResidentContext/ResidentContext";
 import { mockApi }  from "./mock";
-import { NotFound } from "../build/old/components/errors";
+import { NotFound } from "./pages/NotFound/NotFound";
 import { Home }     from "./pages/Home/Home";
 import { Profile } from "./pages/Profile/Profile";
 
