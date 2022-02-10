@@ -6,7 +6,7 @@ import { BadgeWorkflow, BadgeWorkflowProps } from "./BadgeWorkflow";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/HighlightBoard/BadgeWorkflow",
+  title: "Workflows/BadgeWorkflow",
   component: BadgeWorkflow,
 };
 

@@ -5,7 +5,7 @@ import { Badge, BadgeProps } from "./Badge";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/Badge",
+  title: "Library/Badge",
   component: Badge,
 };
 

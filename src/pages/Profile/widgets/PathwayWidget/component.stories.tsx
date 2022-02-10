@@ -6,7 +6,7 @@ import { PathwayWidget, PathwayWidgetProps } from "./PathwayWidget";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/PathwayWidget",
+  title: "Widgets/PathwayWidget",
   component: PathwayWidget,
 };
 

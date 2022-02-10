@@ -6,7 +6,7 @@ import { Event } from "../../components/Event/Event";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/CalendarWidget",
+  title: "Widgets/CalendarWidget",
   component: CalendarWidget,
 };
 

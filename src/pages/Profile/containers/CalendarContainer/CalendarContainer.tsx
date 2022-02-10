@@ -1,10 +1,10 @@
-import { request }                                  from "@local-civics/js-client";
-import React                                        from "react";
+import { request } from "@local-civics/js-client";
+import React from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { ResidentContextState, useResidentContext } from "../../../../contexts/ResidentContext/ResidentContext";
-import {useErrorContext}                            from "../../../../contexts/ErrorContext/ErrorContext";
-import { CalendarWidget }                           from "../../widgets/CalendarWidget/CalendarWidget";
-import { Event }                                    from "../../components/Event/Event";
+import { useErrorContext } from "../../../../contexts/ErrorContext/ErrorContext";
+import { CalendarWidget } from "../../widgets/CalendarWidget/CalendarWidget";
+import { Event } from "../../components/Event/Event";
 
 /**
  * A connected container for the calendar widget.

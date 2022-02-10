@@ -5,7 +5,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Context/MessageContext",
+  title: "Contexts/MessageContext",
   component: MessageContextProvider,
 };
 

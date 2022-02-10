@@ -5,7 +5,7 @@ import { AboutWidget, AboutWidgetProps } from "./AboutWidget";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/AboutWidget",
+  title: "Widgets/AboutWidget",
   component: AboutWidget,
 };
 

@@ -5,7 +5,7 @@ import { Task, TaskProps } from "./Task";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/Task",
+  title: "Library/Task",
   component: Task,
 };
 

@@ -5,7 +5,7 @@ import { WidgetBody, WidgetBodyProps } from "./WidgetBody";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Widget/WidgetBody",
+  title: "Library/WidgetBody",
   component: WidgetBody,
   argTypes: {},
 };

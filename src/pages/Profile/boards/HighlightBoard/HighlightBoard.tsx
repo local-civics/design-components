@@ -24,21 +24,21 @@ export const HighlightBoard = (props: HighlightBoardProps) => {
   const tabs = (
     <>
       <Tab
-        disabled={props.disabled}
+        disabled={props.disabled && active !== "badge"}
         icon="badges"
         title="badges"
         active={active === "badge"}
         onClick={props.onBadgeWorkflow}
       />
       <Tab
-        disabled={props.disabled}
+        disabled={props.disabled && active !== "milestone"}
         icon="milestones"
         title="milestones"
         active={active === "milestone"}
         onClick={props.onMilestoneWorkflow}
       />
       <Tab
-        disabled={props.disabled}
+        disabled={props.disabled && active !== "task"}
         icon="activity"
         title="tasks"
         active={active === "task"}

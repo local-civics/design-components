@@ -5,7 +5,7 @@ import { AchievementWidget, AchievementWidgetProps } from "./AchievementWidget";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/AchievementWidget",
+  title: "Widgets/AchievementWidget",
   component: AchievementWidget,
 };
 

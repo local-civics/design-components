@@ -15,7 +15,7 @@ export type NavBarProps = {
 export const NavBar = (props: NavBarProps) => {
   const className = builder("flex items-center justify-between flex-wrap sticky top-0 z-50 w-full h-16 border-b")
     .append("bg-white px-4 py text-center")
-    .append("md:border-none md:border-monochrome-100 md:px-24 md:shadow-md")
+    .append("md:border-none md:border-monochrome-100 lg:px-36 md:shadow-md")
     .build();
 
   const [secondary, setSecondary] = React.useState(false);

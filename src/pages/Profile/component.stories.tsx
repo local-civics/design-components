@@ -6,7 +6,7 @@ import { Profile } from "./Profile";
  * Storybook component configuration
  */
 export default {
-  title: "Profile",
+  title: "Pages/Profile",
   component: Profile,
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { IconName } from "../../components";
-import { Modal }    from "../../components";
+import { Modal } from "../../components";
 
 type MessageContextState = {
   message: Message | null;

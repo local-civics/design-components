@@ -19,7 +19,7 @@ export interface ImpactWidgetProps {
  */
 export const ImpactWidget = (props: ImpactWidgetProps) => {
   return (
-    <Widget color="sky" borderless headless resolving={props.resolving}>
+    <Widget height="sm" color="sky" borderless headless resolving={props.resolving}>
       <WidgetHeader>
         <WidgetTitle icon="objective">Impact Score</WidgetTitle>
       </WidgetHeader>

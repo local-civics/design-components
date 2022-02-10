@@ -5,7 +5,7 @@ import { Milestone, MilestoneProps } from "./Milestone";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/Milestone",
+  title: "Library/Milestone",
   component: Milestone,
 };
 

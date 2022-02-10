@@ -6,7 +6,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Settings/EditModal",
+  title: "Modals/EditModal",
   component: EditModal,
 };
 

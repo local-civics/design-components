@@ -5,7 +5,7 @@ import { Event, EventProps } from "./Event";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/Event",
+  title: "Library/Event",
   component: Event,
 };
 

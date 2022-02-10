@@ -28,7 +28,7 @@ export const Tab = (props: TabProps) => {
   const onClick = () => !props.disabled && !props.active && props.onClick && props.onClick();
   return (
     <div onClick={onClick} className={classname(config.container)}>
-      <div className="md:m-auto w-max">
+      <div className="m-auto w-max">
         {props.icon && (
           <div className={classname(config.icon)}>
             <Icon name={props.icon} />
@@ -70,7 +70,7 @@ const defaultTabConfig = () => {
     container: {
       base: "transition ease-in-out w-full py-3 px-5",
       cursor: "cursor-pointer",
-      shape: "md:rounded-md",
+      shape: "rounded-md",
       bg: {
         color: "",
         hover: "hover:bg-white",
@@ -78,14 +78,14 @@ const defaultTabConfig = () => {
       border: "",
     },
     icon: {
-      base: "align-middle inline-block",
+      base: "align-middle hidden lg:inline-block",
       color: "text-slate-600",
       size: "w-5 h-5",
     },
     title: {
       base: "ml-1 capitalize font-semibold align-middle inline-block",
       color: "text-slate-600",
-      size: "text-sm",
+      size: "text-xs lg:text-sm",
     },
   };
   return config;

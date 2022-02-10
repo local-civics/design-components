@@ -16,7 +16,7 @@ export type WidgetBodyProps = {
  */
 export const WidgetBody = (props: WidgetBodyProps) => {
   const spacing = props.spacing || "sm";
-  const className = builder("h-full")
+  const className = builder("lg:min-h-32")
     .if(spacing === "sm", "p-2")
     .if(spacing === "md", "p-5")
     .build();
@@ -24,7 +24,7 @@ export const WidgetBody = (props: WidgetBodyProps) => {
   return (
     <div className={className}>
       {!hasContent && (
-        <div className="h-full grid justify-items-center content-center h-[4rem]">
+        <div className="grid justify-items-center content-center h-[6rem] -mt-6 lg:mt-0 lg:h-[5.5rem]">
           <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-300">
             No content to display.
           </p>

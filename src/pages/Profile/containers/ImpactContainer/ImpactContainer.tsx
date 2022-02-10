@@ -2,7 +2,7 @@ import { request } from "@local-civics/js-client";
 import React from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { ResidentContextState, useResidentContext } from "../../../../contexts/ResidentContext/ResidentContext";
-import {useErrorContext}                            from "../../../../contexts/ErrorContext/ErrorContext";
+import { useErrorContext } from "../../../../contexts/ErrorContext/ErrorContext";
 import { getIconName } from "../../../../utils/icon/icon";
 import { ActivityProgress } from "../../components/ActivityProgress/ActivityProgress";
 import { AchievementWidget } from "../../widgets/AchievementWidget/AchievementWidget";

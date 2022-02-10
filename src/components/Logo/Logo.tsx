@@ -6,7 +6,7 @@ import React from "react";
 export const Logo = () => {
   return (
     <img
-      className="w-full h-full overflow-hidden object-contain"
+      className="w-full overflow-hidden object-contain"
       src={`https://cdn.localcivics.io/brand/localcivics.png`}
       alt="Logo"
     />

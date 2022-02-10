@@ -31,7 +31,7 @@ export type ButtonJustify = "center" | "start";
 /**
  * The button border.
  */
-export type ButtonBorder = "none" | "rounded" | "rounded-sm" | "circle" | "circle-sm" | "icon:circle";
+export type ButtonBorder = "none" | "rectangle" | "rounded" | "rounded-sm" | "circle" | "circle-sm" | "icon:circle";
 
 /**
  * The button filter.
@@ -91,7 +91,7 @@ export const Button = (props: ButtonProps) => {
       {(props.text || props.footer) && (
         <div className="grid grid-cols-1 justify-items-start gap-4">
           {props.text && <div className="text-left">{props.text}</div>}
-          {props.footer && <div className="text-xs font-normal">{props.footer}</div>}
+          {props.footer && <div className="text-[0.5rem] font-semibold">{props.footer}</div>}
         </div>
       )}
     </button>
@@ -302,17 +302,17 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
       config.button.color = {
         active: {
           text: "text-white",
-          border: "",
-          bg: "bg-sky-400",
+          border: "border-sky-400/90",
+          bg: "bg-sky-400/90",
         },
         interactive: {
           text: "focus:text-slate-600 active:text-slate-600 hover:text-white",
-          border: "",
-          bg: "hover:bg-sky-400",
+          border: "focus:border-sky-300/90 active:border-sky-300/90 hover:border-sky-300/90",
+          bg: "hover:bg-sky-400/90",
         },
         text: "text-slate-500",
-        border: "",
-        bg: "bg-slate-50",
+        border: "border-slate-100",
+        bg: "bg-slate-50/90",
       };
       return;
   }
@@ -424,7 +424,10 @@ const withBorder = (config: ButtonConfig, border?: ButtonBorder) => {
       config.button.border = "border-2 rounded-md";
       break;
     case "rounded-sm":
-      config.button.border = "rounded-md";
+      config.button.border = "border rounded-md";
+      break;
+    case "rectangle":
+      config.button.border = "border";
       break;
     case "circle":
       config.button.border = "border-2 rounded-full";

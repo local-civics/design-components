@@ -2,7 +2,7 @@ import { request } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ResidentContextState, useResidentContext } from "../../../../contexts/ResidentContext/ResidentContext";
-import {useErrorContext}                            from "../../../../contexts/ErrorContext/ErrorContext";
+import { useErrorContext } from "../../../../contexts/ErrorContext/ErrorContext";
 import { AboutWidget } from "../../widgets/AboutWidget/AboutWidget";
 import { ResidentWidget } from "../../widgets/ResidentWidget/ResidentWidget";
 

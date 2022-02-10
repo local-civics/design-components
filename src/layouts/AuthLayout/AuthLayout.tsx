@@ -24,7 +24,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const page = props.page || "profile";
 
   return (
-    <main className="h-screen bg-white font-proxima">
+    <main className="relative h-screen w-full bg-white font-proxima">
       <Loader isLoading={ctx === null || ctx.resolving}>
         <NavBar>
           <NavLink name="home" path="/" />
@@ -44,28 +44,36 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
           <NavLink name="logout" onClick={ctx?.logout} />
         </NavBar>
 
-        <section className="grid grid-cols-1 py-5 lg:px-4 lg:px-24 font-proxima lg:flex lg:flex-col gap-2">
-          {props.header && <div className="w-full md:flex">{props.header}</div>}
+        <section className="w-full py-5 lg:px-36 flex flex-col gap-4">
+          {props.header && <div className="w-full min-h-16 lg:min-h-24 lg:flex">{props.header}</div>}
 
-          {/* Body */}
-          <div className="grid grid-cols-1 lg:gap-x-2 lg:grid-cols-8">
-            {/* Left Panel */}
-            {props.sidebar && (
-              <div className="grid grid-cols-1 lg:col-span-2 lg:flex lg:flex-col gap-2 lg:max-w-[16rem]">
-                {props.sidebar}
-                <p className="place-self-center inline-block mt-2 mb-2 text-xs text-slate-300">
-                  Local Civics © {new Date().getFullYear()}
-                </p>
-              </div>
-            )}
+          <div className="grow w-full min-h-96">
+            {/* Body */}
+            <div className="w-full grid grid-cols-1 gap-y-4 lg:flex lg:gap-x-2">
+              {/* Left Panel */}
+              {props.sidebar && (
+                <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem]">
+                  <div className="grow flex flex-col gap-4 lg:gap-2">{props.sidebar}</div>
+                  <p className="hidden place-self-center lg:inline-block text-xs text-slate-300">
+                    Local Civics © {new Date().getFullYear()}
+                  </p>
+                </div>
+              )}
 
-            {/* Right Panel */}
-            {(props.subheader || props.main) && (
-              <div className="grid grid-cols-1 max-w-full overflow-x-hidden md:col-span-6 md:flex md:flex-col gap-2 md:grow">
-                {props.subheader && <div className="grid grid-cols-1 md:flex w-full gap-2">{props.subheader}</div>}
-                {props.main && <div className="grid grid-cols-1 md:flex w-full gap-2">{props.main}</div>}
-              </div>
-            )}
+              {/* Right Panel */}
+              {(props.subheader || props.main) && (
+                <div className="grow grid grid-cols-1 max-w-full overflow-x-hidden md:flex md:flex-col gap-4 lg:gap-2">
+                  {props.subheader && (
+                    <div className="lg:min-h-32 relative grid grid-cols-1 md:flex w-full gap-4 lg:gap-2">
+                      {props.subheader}
+                    </div>
+                  )}
+                  {props.main && (
+                    <div className="relative grid grid-cols-1 md:flex w-full gap-4 lg:gap-2">{props.main}</div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </section>
       </Loader>

@@ -2,7 +2,7 @@ import { request } from "@local-civics/js-client";
 import React from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { ResidentContextState, useResidentContext } from "../../../../contexts/ResidentContext/ResidentContext";
-import {useErrorContext, AppError}                            from "../../../../contexts/ErrorContext/ErrorContext";
+import { useErrorContext, AppError } from "../../../../contexts/ErrorContext/ErrorContext";
 import { getIconName } from "../../../../utils/icon/icon";
 import { BadgeWorkflow } from "../../boards/HighlightBoard/BadgeWorkflow/BadgeWorkflow";
 import { HighlightBoard } from "../../boards/HighlightBoard/HighlightBoard";

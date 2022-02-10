@@ -6,7 +6,7 @@ import { MilestoneWorkflow, MilestoneWorkflowProps } from "./MilestoneWorkflow";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/HighlightBoard/MilestoneWorkflow",
+  title: "Workflows/MilestoneWorkflow",
   component: MilestoneWorkflow,
 };
 

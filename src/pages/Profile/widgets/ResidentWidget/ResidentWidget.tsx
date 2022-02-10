@@ -26,30 +26,30 @@ export const ResidentWidget = (props: ResidentWidgetProps) => {
     <Widget resolving={props.resolving}>
       <WidgetBody>
         {hasContent && (
-          <div className="p-2 lg:h-[9.5rem] ml-2 lg:ml-40">
-            <div className="flex h-full gap-x-4 items-center">
-              <div className="w-max lg:absolute lg:mt-3 top-1/2 lg:top-0 left-2">
-                <div className="w-max relative">
-                  <img
-                    src={props.avatarURL || "https://cdn.localcivics.io/hub/avatar.jpg"}
-                    alt="avatar"
-                    className="border border-gray-200 shadow-sm w-16 h-16 lg:w-36 lg:h-36 rounded-full object-cover"
-                  />
-                  {props.online && (
-                    <span className="absolute h-4 w-4 lg:w-5 lg:h-5 top-0 right-0 lg:top-3 lg:right-3 rounded-full bg-green-500 border-4 border-white" />
+          <div className="p-2">
+            <div className="flex gap-x-4 items-center">
+              <div className="relative">
+                <img
+                  src={props.avatarURL || "https://cdn.localcivics.io/hub/avatar.jpg"}
+                  alt="avatar"
+                  className="border border-gray-200 shadow-sm w-16 h-16 lg:w-32 lg:h-32 rounded-full object-cover"
+                />
+                {props.online && (
+                  <span className="absolute h-3.5 w-3.5 lg:w-4 lg:h-4 top-0 right-0 lg:top-1 lg:right-1 rounded-full bg-green-500 border-4 border-white" />
+                )}
+              </div>
+              <div className="grid grid-cols-1 content-center align-middle">
+                <div className="grid lg:gap-1">
+                  <div className="grid grid-cols-1">
+                    {props.residentName && <span className="text-slate-300 text-xs">@{props.residentName}</span>}
+                    <h4 className="inline-block font-semibold capitalize text-2xl lg:text-4xl text-slate-600">
+                      {props.givenName} {props.familyName}
+                    </h4>
+                  </div>
+                  {props.createdAt && (
+                    <p className="text-xs text-slate-300">Resident since {new Date(props.createdAt).getFullYear()}.</p>
                   )}
                 </div>
-              </div>
-              <div className="grow grid grid-cols-1 lg:gap-1 content-center h-full align-middle">
-                <div className="grid w-max">
-                  {props.residentName && <span className="text-slate-300 text-xs">@{props.residentName}</span>}
-                  <h4 className="inline-block font-semibold capitalize text-2xl lg:text-3xl text-slate-600">
-                    {props.givenName} {props.familyName}
-                  </h4>
-                </div>
-                {props.createdAt && (
-                  <p className="text-xs text-slate-300">Resident since {new Date(props.createdAt).getFullYear()}.</p>
-                )}
               </div>
             </div>
           </div>

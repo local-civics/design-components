@@ -5,7 +5,7 @@ import { SearchButton, SearchButtonProps } from "./SearchButton";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Search/SearchButton",
+  title: "Library/SearchButton",
   component: SearchButton,
 };
 

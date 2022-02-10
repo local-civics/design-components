@@ -5,7 +5,7 @@ import { HighlightBoard, HighlightBoardProps } from "./HighlightBoard";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/HighlightBoard",
+  title: "Boards/HighlightBoard",
   component: HighlightBoard,
 };
 

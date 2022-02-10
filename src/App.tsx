@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter, MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ResidentContextProvider, ResidentContextState } from "./contexts/ResidentContext/ResidentContext";
-import { mockApi }  from "./mock";
+import { mockApi } from "./mock";
 import { NotFound } from "./pages/NotFound/NotFound";
-import { Home }     from "./pages/Home/Home";
+import { Home } from "./pages/Home/Home";
 import { Profile } from "./pages/Profile/Profile";
 
 import * as Sentry from "@sentry/react";
@@ -39,7 +39,7 @@ export const App = () => {
 /**
  * An in-memory component for the Hub application.
  */
-export const InMemoryApp = (props: { browser?: boolean, location?: string }) => {
+export const InMemoryApp = (props: { browser?: boolean; location?: string }) => {
   mockApi();
   const ctx: ResidentContextState = {
     accessToken: "foo",
@@ -56,13 +56,13 @@ export const InMemoryApp = (props: { browser?: boolean, location?: string }) => 
     },
   };
 
-  if(props.browser){
+  if (props.browser) {
     return (
-        <BrowserRouter>
-          <ResidentContextProvider value={ctx}>
-            <AppRoutes />
-          </ResidentContextProvider>
-        </BrowserRouter>
+      <BrowserRouter>
+        <ResidentContextProvider value={ctx}>
+          <AppRoutes />
+        </ResidentContextProvider>
+      </BrowserRouter>
     );
   }
 

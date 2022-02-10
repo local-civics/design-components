@@ -5,7 +5,7 @@ import { ResidentWidget, ResidentWidgetProps } from "./ResidentWidget";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/ResidentWidget",
+  title: "Widgets/ResidentWidget",
   component: ResidentWidget,
 };
 

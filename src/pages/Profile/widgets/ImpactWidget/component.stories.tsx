@@ -5,7 +5,7 @@ import { ImpactWidget, ImpactWidgetProps } from "./ImpactWidget";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/ImpactWidget",
+  title: "Widgets/ImpactWidget",
   component: ImpactWidget,
 };
 

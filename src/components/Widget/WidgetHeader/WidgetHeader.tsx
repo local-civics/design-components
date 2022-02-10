@@ -23,7 +23,7 @@ export const WidgetHeader = (props: WidgetHeaderProps) => {
     .build();
   return (
     <div className={className}>
-      <div className="flex items-center text-slate-600 items-center flex gap-x-1">{props.children}</div>
+      <div className="flex items-center text-slate-600 items-center gap-x-1">{props.children}</div>
     </div>
   );
 };

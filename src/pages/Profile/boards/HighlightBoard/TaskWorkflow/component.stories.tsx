@@ -6,7 +6,7 @@ import { TaskWorkflow, TaskWorkflowProps } from "./TaskWorkflow";
  * Storybook component configuration
  */
 export default {
-  title: "Profile/HighlightBoard/TaskWorkflow",
+  title: "Workflows/TaskWorkflow",
   component: TaskWorkflow,
 };
 

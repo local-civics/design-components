@@ -19,7 +19,7 @@ export interface AchievementWidgetProps {
  */
 export const AchievementWidget = (props: AchievementWidgetProps) => {
   return (
-    <Widget resolving={props.resolving}>
+    <Widget height="sm" resolving={props.resolving}>
       <WidgetHeader>
         <WidgetTitle icon="achievements">My Achievements</WidgetTitle>
       </WidgetHeader>

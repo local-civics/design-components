@@ -6,7 +6,7 @@ import { Tab, TabProps } from "./Tab";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Board/Tab",
+  title: "Library/Tab",
   component: Tab,
 };
 

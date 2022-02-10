@@ -18,15 +18,12 @@ export type BoardProps = {
  * @constructor
  */
 export const Board = (props: BoardProps) => {
-  const className = builder().if(!!props.secondary, "pt-2 px-2").else("md:px-2 md:py-2 bg-gray-200").build();
-  const layoutClassName = builder("grid grid-cols-1 md:grid-cols-3 justify-items-center")
-    .if(!props.secondary, "md:gap-2")
-    .build();
+  const className = builder().if(!!props.secondary, "pt-2 px-2").else("p-2 bg-gray-200").build();
+  const layoutClassName = builder("grid grid-cols-3 justify-items-center").if(!props.secondary, "gap-2").build();
   const hasWorkflow = props.workflow && React.Children.count(props.workflow) > 0;
   const loaderContainer = builder()
     .if(!!props.secondary && !!props.resolving, "h-[18rem]")
     .if(!props.secondary && !!props.resolving, "h-[21rem]")
-    .if(!props.resolving, "h-max")
     .build();
 
   return (
@@ -37,7 +34,7 @@ export const Board = (props: BoardProps) => {
       <div className={loaderContainer}>
         <Loader isLoading={props.resolving}>
           {!hasWorkflow && (
-            <div className="h-full grid justify-items-center content-center h-[18rem]">
+            <div className="grid justify-items-center content-center h-[18rem]">
               <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-300">
                 No content to display.
               </p>

@@ -32,13 +32,13 @@ export const Badge = (props: BadgeProps) => {
     .if(intensity === "normal", "text-gray-600")
     .if(intensity === "faded", "text-gray-300")
     .build();
-  const titleClassName = builder("font-semibold capitalize text-center text-sm")
+  const titleClassName = builder("font-semibold capitalize text-center text-xs lg:text-sm")
     .if(intensity === "normal", "text-gray-600")
     .if(intensity === "faded", "text-gray-300")
     .build();
 
   const className = builder(
-    "grid justify-items-center content-center h-40 shadow-md bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500"
+    "grid justify-items-center content-center h-28 lg:h-40 shadow-md bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500"
   )
     .if(!!props.open, "cursor-pointer hover:bg-gray-50")
     .build();
@@ -50,7 +50,7 @@ export const Badge = (props: BadgeProps) => {
       {props.statusIcon && (
         <div className={statusIconClassName}>
           <div className="relative">
-            <div className="h-4 w-4 absolute -top-1 -right-1">
+            <div className="absolute h-2 w-2 top-0 right-0 lg:h-4 lg:w-4 lg:-top-1 lg:-right-1">
               <Icon name={props.statusIcon} />
             </div>
           </div>
@@ -60,7 +60,7 @@ export const Badge = (props: BadgeProps) => {
       <div className="flex gap-y-4 flex-col w-full" onClick={onOpen}>
         {props.status === "bearing" && props.imageURL && (
           <img
-            className="h-24 w-24 max-w-24 max-h-24 m-auto drop-shadow-lg object-contain"
+            className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg object-contain"
             alt={props.title}
             src={props.imageURL}
           />
@@ -68,7 +68,7 @@ export const Badge = (props: BadgeProps) => {
 
         {props.status !== "bearing" && (
           <div className={iconClassName}>
-            <div className="h-24 w-24 m-auto drop-shadow-lg">
+            <div className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg">
               <Icon name={icon} />
             </div>
           </div>
