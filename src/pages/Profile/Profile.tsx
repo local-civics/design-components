@@ -1,7 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { AuthLayout } from "../../layouts/AuthLayout/AuthLayout";
-import { CalendarContainer } from "./containers/CalendarContainer/CalendarContainer";
 import { HighlightContainer } from "./containers/HighlightContainer/HighlightContainer";
 import { ImpactContainer } from "./containers/ImpactContainer/ImpactContainer";
 import { ResidentContainer } from "./containers/ResidentContainer/ResidentContainer";
@@ -13,14 +12,12 @@ import { ResidentContainer } from "./containers/ResidentContainer/ResidentContai
 export const Profile = () => {
   const { ResidentWidget, AboutWidget } = ResidentContainer();
   const { ImpactWidget, PathwayWidget, AchievementWidget } = ImpactContainer();
-  const { CalendarWidget } = CalendarContainer();
   const { HighlightBoard } = HighlightContainer();
 
   const sidebar = (
     <>
       <AboutWidget />
       <PathwayWidget />
-      <CalendarWidget />
     </>
   );
 

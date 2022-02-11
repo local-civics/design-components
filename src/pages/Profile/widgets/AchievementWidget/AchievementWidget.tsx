@@ -37,7 +37,7 @@ export const AchievementWidget = (props: AchievementWidgetProps) => {
 
           <div className="justify-self-end">
             <p className="font-bold text-3xl w-max m-auto text-green-500">{compact(props.milestones || 0)}</p>
-            <p className="text-xs w-max m-auto text-gray-400">Milestones</p>
+            <p className="text-xs w-max m-auto text-gray-400">Materials</p>
           </div>
         </div>
       </WidgetBody>

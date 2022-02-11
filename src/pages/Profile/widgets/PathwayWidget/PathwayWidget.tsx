@@ -26,7 +26,7 @@ export const PathwayWidget = (props: PathwayWidgetProps) => {
           <Icon name="help" />
         </WidgetHeaderLink>
       </WidgetHeader>
-      <WidgetBody>{hasContent && <div className="grid gap-4">{props.children}</div>}</WidgetBody>
+      <WidgetBody>{hasContent && <div className="grid gap-2">{props.children}</div>}</WidgetBody>
     </Widget>
   );
 };

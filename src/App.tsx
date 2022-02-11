@@ -8,6 +8,7 @@ import { Profile } from "./pages/Profile/Profile";
 
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
+import { Settings } from "./pages/Settings/Settings";
 
 Sentry.init({
   environment: process.env.APP_ENV,
@@ -45,7 +46,8 @@ export const InMemoryApp = (props: { browser?: boolean; location?: string }) => 
     accessToken: "foo",
     resident: {
       residentId: "me",
-      residentName: "test.user",
+      // residentName: "test.user",
+      residentName: "andre.carter",
       communityName: "hcz",
       givenName: "Andre",
       familyName: "Carter",
@@ -116,7 +118,7 @@ const AppRoutes = (props: { location?: string }) => {
     <Routes location={props.location}>
       <Route path="/" element={<Home />} />
       <Route path="/residents/:residentName" element={<Profile />}>
-        {/*<Route path="settings" element={<Settings />} />*/}
+        <Route path="settings" element={<Settings />} />
         {/*<Route path="badges/:badgeName" element={<BadgeModal />} />*/}
         {/*<Route path="events/:eventName" element={<EventModal />} />*/}
       </Route>

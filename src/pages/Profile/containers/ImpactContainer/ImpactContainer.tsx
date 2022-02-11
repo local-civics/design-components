@@ -21,6 +21,7 @@ export const ImpactContainer = () => {
         {impact.pathways &&
           impact.pathways.map((report) => (
             <ActivityProgress
+              key={report.pathway}
               open={!!report.open}
               title={report.pathway}
               icon={getIconName(report.pathway)}
@@ -94,7 +95,7 @@ const useImpact = () => {
 
     (async () => {
       try {
-        const overall = await fetchOverallReport(ctx, communityName, residentName);
+        const overall = await fetchOverallReport(ctx, residentName);
         const pathways = await fetchPathwayReports(ctx, navigate, communityName, residentName);
         setState({ ...state, resolving: false, overall: overall, pathways: pathways });
       } catch (e) {
@@ -119,7 +120,7 @@ const fetchPathwayReports = async (
       navigate(`/communities/${communityName}/explore/events?pathways=${encodeURIComponent(pathway)}`);
     }
   };
-  const endpoint = `/caliber/v0/communities/${communityName}/reports`;
+  const endpoint = `/caliber/v0/residents/${residentName}/reports`;
   const query = {
     residentName: residentName,
     groups: ["pathway"],
@@ -135,8 +136,8 @@ const fetchPathwayReports = async (
   return reports;
 };
 
-const fetchOverallReport = async (ctx: ResidentContextState, communityName?: string, residentName?: string) => {
-  const endpoint = `/caliber/v0/communities/${communityName}/reports`;
+const fetchOverallReport = async (ctx: ResidentContextState, residentName?: string) => {
+  const endpoint = `/caliber/v0/residents/${residentName}/reports`;
   const query = {
     residentName: residentName,
     formula: "sum",

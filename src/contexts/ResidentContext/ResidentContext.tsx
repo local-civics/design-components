@@ -2,7 +2,7 @@ import { Auth0ContextInterface, Auth0Provider, useAuth0 } from "@auth0/auth0-rea
 import { request } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useErrorContext } from "../ErrorContext/ErrorContext";
+import { AppError, useErrorContext } from "../ErrorContext/ErrorContext";
 import * as Sentry from "@sentry/react";
 import { ErrorContextProvider } from "../ErrorContext/ErrorContext";
 
@@ -20,39 +20,47 @@ export const useResidentContext = () => React.useContext(ResidentContext);
  */
 export type ResidentContextState = {
   resolving?: boolean;
-  resident?: {
-    residentId?: string;
-    residentName?: string;
-    email?: string;
-    givenName?: string;
-    familyName?: string;
-    communityName?: string;
-    communityTrueName?: string;
-    communityPlaceName?: string;
-    role?: "educator" | "student";
-    subject?:
-      | "social studies"
-      | "english"
-      | "math"
-      | "science"
-      | "special education"
-      | "counseling | college & career readiness"
-      | "non-instructional staff"
-      | "school leadership";
-    grade?: "k-5th" | "6th" | "7th" | "8th" | "9th" | "10th" | "11th" | "12th";
-    tags?: string[];
-    impactStatement?: string;
-    avatarURL?: string;
-    permissions?: string[];
-    createdAt?: string;
-    updatedAt?: string;
-    lastLoginAt?: string;
-    lastLogoutAt?: string;
-    online?: boolean;
-  } | null;
+  saving?: boolean;
+  resident?: ResidentState | null;
   accessToken: string | null;
   login?: () => void;
   logout?: () => void;
+  save?: (resident: ResidentState) => Promise<void>;
+};
+
+/**
+ * The state of the resident.
+ */
+export type ResidentState = {
+  [key: string]: number | string | boolean | undefined | string[] | null;
+  residentId?: string;
+  residentName?: string;
+  email?: string;
+  givenName?: string;
+  familyName?: string;
+  communityName?: string;
+  communityTrueName?: string;
+  communityPlaceName?: string;
+  role?: "educator" | "student";
+  subject?:
+    | "social studies"
+    | "english"
+    | "math"
+    | "science"
+    | "special education"
+    | "counseling | college & career readiness"
+    | "non-instructional staff"
+    | "school leadership";
+  grade?: "k-5th" | "6th" | "7th" | "8th" | "9th" | "10th" | "11th" | "12th";
+  tags?: string[];
+  impactStatement?: string;
+  avatarURL?: string;
+  permissions?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  lastLoginAt?: string;
+  lastLogoutAt?: string;
+  online?: boolean;
 };
 
 /**
@@ -77,12 +85,8 @@ export const ResidentContextProvider = (props: ResidentContextProviderProps) => 
     const resident = useResident(value?.accessToken);
 
     React.useEffect(() => {
-      if (props.value) {
-        setValue({ ...resident, ...props.value });
-        return;
-      }
-      setValue(resident);
-    }, [props.value?.accessToken, props.value?.resolving, resident.accessToken, resident.resolving]);
+      setValue({ ...(props.value || {}), ...resident });
+    }, [props.value?.accessToken, props.value?.resolving, resident.saving, resident.accessToken, resident.resolving]);
 
     return <ResidentContext.Provider value={value}>{props.children}</ResidentContext.Provider>;
   };
@@ -105,9 +109,9 @@ const useResident = (token?: string | null) => {
   const navigate = useNavigate();
   const errors = useErrorContext();
   const defaultState: ResidentContextState = {
-    accessToken: null,
+    accessToken: token || null,
     resolving: true,
-    login: () => !token && auth0.loginWithRedirect(),
+    saving: false,
     logout: () => !token && auth0.logout({ returnTo: window.location.origin }),
   };
   const [state, setState] = React.useState(defaultState);
@@ -124,8 +128,7 @@ const useResident = (token?: string | null) => {
     (async () => {
       try {
         const resident = await request(accessToken, "GET", "/identity/v0/resolve");
-        const login = () => navigate(`/residents/${resident.residentName}`);
-        setState({ ...state, resident: resident, accessToken: accessToken, resolving: false, login: login });
+        setState({ ...state, resident: resident, accessToken: accessToken, resolving: false });
         Sentry.setUser({ id: resident.residentId });
       } catch (e) {
         errors.emit(e);
@@ -137,7 +140,31 @@ const useResident = (token?: string | null) => {
   }, [accessToken, token]);
 
   const login = () => (token ? navigate(`/residents/${state.resident?.residentName}`) : auth0.loginWithRedirect());
-  return { ...state, login: login };
+  const save = async (resident: ResidentState) => {
+    if (state.saving) {
+      return;
+    }
+
+    if (!accessToken) {
+      throw new AppError("bad request", "not logged in");
+    }
+
+    setState({ ...state, saving: true });
+    try {
+      Object.keys(resident).forEach((key) => {
+        if (resident[key] === undefined) {
+          delete resident[key];
+        }
+      });
+
+      await saveResident(accessToken, resident);
+      setState({ ...state, resident: { ...state.resident, ...resident }, saving: false });
+    } catch (e) {
+      errors.emit(e);
+    }
+  };
+
+  return { ...state, login: login, save: save };
 };
 
 /**
@@ -169,4 +196,8 @@ const useAccessToken = (auth0: Auth0ContextInterface, token?: string | null) => 
     return () => setAccessToken(token);
   }, [auth0.getAccessTokenSilently, auth0.user?.sub, token]);
   return accessToken;
+};
+
+const saveResident = async (accessToken: string, resident: ResidentState) => {
+  return request(accessToken, "PATCH", "/identity/v0/my/profile", { data: resident });
 };

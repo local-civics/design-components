@@ -16,18 +16,70 @@ export const mockApi = () => {
         return schema.db.residents.where({ residentName: "andre.carter" })[0];
       });
 
+      // e.g., https://api.localcivics.io/identity/v0/communities/hcz/residents/andre.carter?fields[]=residentName&fields[]=avatarURL&fields[]=givenName&fields[]=familyName&fields[]=createdAt&fields[]=online&fields[]=impactStatement&fields[]=communityTrueName&fields[]=communityPlaceName
       this.get("/identity/v0/communities/hcz/residents/andre.carter", (schema) => {
         return schema.db.residents.where({ residentName: "andre.carter" })[0];
       });
 
-      // https://api.localcivics.io/identity/v0/communities/hcz/residents/andre.carter?fields[]=residentName&fields[]=avatarURL&fields[]=givenName&fields[]=familyName&fields[]=createdAt&fields[]=online&fields[]=impactStatement&fields[]=communityTrueName&fields[]=communityPlaceName
-      this.get("/caliber/v0/communities/hcz/reports", () => {
+      this.get("/caliber/v0/residents/andre.carter/reports", (_, request) => {
+        if (request.queryParams.groups) {
+          return [
+            {
+              pathway: "policy & government",
+              proficiency: 500,
+              nextProficiency: 1000,
+            },
+            {
+              pathway: "college & career",
+              proficiency: 500,
+              nextProficiency: 1000,
+            },
+            {
+              pathway: "volunteer",
+              proficiency: 800,
+              nextProficiency: 1000,
+            },
+            {
+              pathway: "recreation",
+              proficiency: 800,
+              nextProficiency: 1000,
+            },
+            {
+              pathway: "arts & culture",
+              proficiency: 500,
+              nextProficiency: 1000,
+            },
+          ];
+        }
+
+        return [
+          {
+            proficiency: 3500,
+            nextProficiency: 4000,
+            magnitude: 2,
+          },
+        ];
+      });
+
+      this.get("/caliber/v0/residents/andre.carter/badges", () => {
         return [];
       });
 
-      this.get("/caliber/v0/communities/hcz/badges", () => {
+      this.get("/curriculum/v0/my/tasks", () => {
         return [];
       });
+
+      this.get("/curriculum/v0/my/materials", () => {
+        return [];
+      });
+
+      this.patch("/identity/v0/my/profile", (schema, request) => {
+        const attrs = JSON.parse(request.requestBody);
+        const resident = { ...schema.db.residents.where({ residentName: "andre.carter" })[0], ...attrs };
+        return schema.db.residents.update({ residentName: "andre.carter" }, resident);
+      });
+
+      // TODO: REMOVE BELOW
 
       this.get("/curriculum/v0/communities/hcz/events", () => {
         return [];
@@ -369,7 +421,7 @@ const residents = [
     givenName: "Andre",
     familyName: "Carter",
     impactStatement:
-      "I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure andre.carter community is a place where everyone is welcome.",
+      "I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure my community is a place where everyone is welcome.",
     communityTrueName: "Harlem Children Zone",
     communityPlaceName: "Harlem, NY",
     grade: "7",

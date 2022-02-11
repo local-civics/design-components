@@ -1,6 +1,6 @@
 import React from "react";
 import { classname } from "../../utils/classname/classname";
-import { Button, ButtonColor } from "../Button/Button";
+import { Button, ButtonColor, ButtonSize, ButtonSpacing } from "../Button/Button";
 import { Icon, IconName } from "../Icon/Icon";
 
 /**
@@ -24,6 +24,11 @@ export type ModalSeverity = "info" | "error" | "success";
 export type ModalJustifyTitle = "center" | "left";
 
 /**
+ * The modal variant.
+ */
+export type ModalVariant = "info" | "input";
+
+/**
  * The properties for the modal.
  */
 export type ModalProps = {
@@ -38,6 +43,7 @@ export type ModalProps = {
   content?: ModalContent;
   severity?: ModalSeverity;
   width?: ModalWidth;
+  variant?: ModalVariant;
   children?: React.ReactNode;
   onClose?: () => void;
   onCTAClick?: () => void;
@@ -54,10 +60,11 @@ export const Modal = (props: ModalProps) => {
   withVisibility(config, props.visible);
   withContent(config, props.content);
   withJustifyTitle(config, props.justifyTitle || "center");
+  withVariant(config, props.variant || "info");
 
   return (
     <div className={classname(config.container)}>
-      <div className="shadow-md bg-white rounded-md relative">
+      <div className="shadow-md w-full px-2 md:px-0 md:w-auto bg-white rounded-md relative">
         {close === "x" && (
           <div className="absolute top-3 right-3 z-50">
             <Button size="xs" filter="none" icon="menu-close" onClick={props.onClose} />
@@ -70,7 +77,7 @@ export const Modal = (props: ModalProps) => {
         )}
         <div className={classname(config.modal)}>
           {(props.icon || props.title) && (
-            <div className="grid justify-items-center content-center gap-2 grid-cols-1">
+            <div className="grid w-full justify-items-center content-center gap-2 grid-cols-1">
               {props.icon && (
                 <div className={classname(config.icon)}>
                   <Icon name={props.icon} />
@@ -81,16 +88,16 @@ export const Modal = (props: ModalProps) => {
           )}
 
           {!!props.embed && props.children && (
-            <div className="grid grid-cols-1 gap-2 w-full max-h-[28rem] overflow-scroll">{props.children}</div>
+            <div className="grid grid-cols-1 py-2 gap-2 w-full max-h-[28rem] overflow-scroll">{props.children}</div>
           )}
 
-          <div className="grid justify-items-center content-center grid-cols-1 gap-6">
+          <div className={config.button.container}>
             {props.description && <p className="text-sm text-center text-slate-700">{props.description}</p>}
             {props.cta && (
-              <div className="w-max m-auto">
+              <div className="my-auto">
                 <Button
-                  size="xs"
-                  spacing="sm"
+                  size={config.button.size}
+                  spacing={config.button.spacing}
                   border="rounded"
                   color={config.button.color}
                   theme="dark"
@@ -130,6 +137,9 @@ type ModalConfig = {
     justify: string;
   };
   button: {
+    container: string;
+    spacing: ButtonSpacing;
+    size: ButtonSize;
     color: ButtonColor;
   };
 };
@@ -137,10 +147,10 @@ type ModalConfig = {
 const defaultModalConfig = () => {
   const config: ModalConfig = {
     container: {
-      base: "grid grid-cols-1 overscroll-contain justify-items-center content-center fixed top-0 left-0 z-50 px-2",
+      base: "grid grid-cols-1 overscroll-contain justify-items-center content-center fixed top-0 left-0 px-4 md:px-2",
       background: "w-screen h-screen bg-gray-500/75",
       animation: "transition ease-in-out duration-500",
-      visibility: "visible",
+      visibility: "",
     },
     modal: {
       base: "grid grid-cols-1 gap-2 justify-items-center",
@@ -152,11 +162,14 @@ const defaultModalConfig = () => {
       color: "",
     },
     title: {
-      base: "font-bold text-md",
+      base: "font-bold text-md w-full",
       color: "",
       justify: "",
     },
     button: {
+      size: "sm",
+      spacing: "sm",
+      container: "grid justify-items-center content-center grid-cols-1 gap-6",
       color: "slate",
     },
   };
@@ -165,9 +178,9 @@ const defaultModalConfig = () => {
 
 const withVisibility = (config: ModalConfig, visible?: boolean) => {
   if (visible) {
-    config.container.visibility = "visible opacity-full";
+    config.container.visibility = "visible z-50 opacity-full";
   } else {
-    config.container.visibility = "invisible opacity-0";
+    config.container.visibility = "invisible -z-50 opacity-0";
   }
 };
 
@@ -175,19 +188,19 @@ const withWidth = (config: ModalConfig, width?: ModalWidth) => {
   switch (width) {
     case "sm":
       config.modal.width = "w-[20rem]";
-      config.modal.spacing = "py-8 px-5";
+      config.modal.spacing = "p-4";
       break;
     case "md":
       config.modal.width = "w-full md:w-[28rem]";
-      config.modal.spacing = "py-8 px-5";
+      config.modal.spacing = "p-4";
       break;
     case "lg":
       config.modal.width = "w-full md:w-[36rem]";
-      config.modal.spacing = "py-8 px-5";
+      config.modal.spacing = "p-4";
       break;
     case "full:lg":
       config.modal.width = "w-full md:w-[36rem]";
-      config.modal.spacing = "py-8";
+      config.modal.spacing = "p-4";
       break;
   }
 };
@@ -227,6 +240,23 @@ const withJustifyTitle = (config: ModalConfig, justifyTitle?: ModalJustifyTitle)
       break;
     case "center":
       config.title.justify = "text-center";
+      break;
+  }
+};
+
+const withVariant = (config: ModalConfig, variant?: ModalVariant) => {
+  switch (variant) {
+    case "info":
+      config.button.size = "xs";
+      config.button.spacing = "sm";
+      config.title.justify = "text-center";
+      config.button.container = "grid justify-items-center content-center grid-cols-1 gap-6 pt-2";
+      break;
+    case "input":
+      config.button.size = "xs";
+      config.button.spacing = "md";
+      config.title.justify = "text-left";
+      config.button.container = "w-full grid justify-items-end content-center grid-cols-1 gap-6 pt-2";
       break;
   }
 };

@@ -74,12 +74,17 @@ const useResident = () => {
   const errors = useErrorContext();
   const residentName = params.residentName;
   const communityName = params.communityName || ctx?.resident?.communityName;
-  const defaultState: ResidentState = { resolving: true };
+  const defaultState: ResidentState = { resolving: ctx?.resolving };
   const [state, setState] = React.useState(defaultState);
 
   React.useEffect(() => {
     if (!ctx?.accessToken || !residentName || !communityName) {
       setState(defaultState);
+      return;
+    }
+
+    if (ctx && ctx.resident && residentName === ctx.resident.residentName) {
+      setState({ ...state, resolving: ctx.resolving, ...ctx.resident });
       return;
     }
 
@@ -95,7 +100,7 @@ const useResident = () => {
     })();
 
     return () => setState(defaultState);
-  }, [ctx?.accessToken, communityName, residentName]);
+  }, [ctx?.accessToken, ctx?.resolving, ctx?.saving, communityName, residentName]);
 
   return {
     ...state,

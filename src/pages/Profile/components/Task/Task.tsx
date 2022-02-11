@@ -10,7 +10,7 @@ export type TaskProps = {
   open?: boolean;
   title?: string;
   icon?: IconName;
-  status?: "todo" | "done" | "urgent";
+  status?: "todo" | "review" | "done";
   onOpen?: () => void;
 };
 

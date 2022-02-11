@@ -31,7 +31,8 @@ export const ActivityProgress = (props: ActivityProgressProps) => {
   const proficiency = props.proficiency || 0;
   const nextProficiency = props.nextProficiency || 1;
   const config = defaultActivityProgressConfig();
-  withHeight(config, props.height);
+  const height = props.height || "sm";
+  withHeight(config, height);
 
   return (
     <div className="grid grid-cols-1 gap-2">
@@ -50,10 +51,12 @@ export const ActivityProgress = (props: ActivityProgressProps) => {
           </div>
 
           <div className="flex">
-            <div className="grow flex gap-x-1">
-              <p className={classname(config.xp.value)}>{compact(proficiency)}</p>
-              <p className={classname(config.xp.suffix)}>XP</p>
-            </div>
+            {height !== "sm" && (
+              <div className="grow flex gap-x-1">
+                <p className={classname(config.xp.value)}>{compact(proficiency)}</p>
+                <p className={classname(config.xp.suffix)}>XP</p>
+              </div>
+            )}
             {!!props.magnitude && (
               <p className={classname(config.magnitude)}>
                 {compact(nextProficiency - proficiency)} exp. until level {props.magnitude + 1}

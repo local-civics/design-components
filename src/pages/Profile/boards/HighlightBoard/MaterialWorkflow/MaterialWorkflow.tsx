@@ -1,11 +1,11 @@
 import React from "react";
-import { MilestoneProps } from "../../../components/Milestone/Milestone";
+import { MaterialProps } from "../../../components/Material/Material";
 
 /**
  * The properties for the badge workflow.
  */
-export type MilestoneWorkflowProps = {
-  children?: React.ReactElement<MilestoneProps> | React.ReactElement<MilestoneProps>[];
+export type MaterialWorkflowProps = {
+  children?: React.ReactElement<MaterialProps> | React.ReactElement<MaterialProps>[];
 };
 
 /**
@@ -13,7 +13,7 @@ export type MilestoneWorkflowProps = {
  * @param props
  * @constructor
  */
-export const MilestoneWorkflow = (props: MilestoneWorkflowProps) => {
+export const MaterialWorkflow = (props: MaterialWorkflowProps) => {
   const hasContent = props.children && React.Children.count(props.children) > 0;
   const count = React.Children.count(props.children || []);
   const columns = 3;
@@ -32,7 +32,7 @@ export const MilestoneWorkflow = (props: MilestoneWorkflowProps) => {
           {props.children}
           {count < gridSize &&
             [...Array(gridSize - count).keys()].map((k) => {
-              return <div key={`milestone.${k}`} className="bg-gray-100 p-4 shadow-md rounded-md h-28 lg:h-40" />;
+              return <div key={`material.${k}`} className="bg-gray-100 p-4 shadow-md rounded-md h-28 lg:h-40" />;
             })}
         </div>
       )}

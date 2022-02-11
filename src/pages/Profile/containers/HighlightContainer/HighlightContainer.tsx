@@ -6,10 +6,10 @@ import { useErrorContext, AppError } from "../../../../contexts/ErrorContext/Err
 import { getIconName } from "../../../../utils/icon/icon";
 import { BadgeWorkflow } from "../../boards/HighlightBoard/BadgeWorkflow/BadgeWorkflow";
 import { HighlightBoard } from "../../boards/HighlightBoard/HighlightBoard";
-import { MilestoneWorkflow } from "../../boards/HighlightBoard/MilestoneWorkflow/MilestoneWorkflow";
+import { MaterialWorkflow } from "../../boards/HighlightBoard/MaterialWorkflow/MaterialWorkflow";
 import { TaskWorkflow } from "../../boards/HighlightBoard/TaskWorkflow/TaskWorkflow";
 import { Badge } from "../../components/Badge/Badge";
-import { Milestone } from "../../components/Milestone/Milestone";
+import { Material } from "../../components/Material/Material";
 import { Task } from "../../components/Task/Task";
 
 /**
@@ -26,7 +26,7 @@ export const HighlightContainer = () => {
         resolving={highlight.resolvingTab}
         active={highlight.tab}
         onBadgeWorkflow={() => highlight.setTab("badge")}
-        onMilestoneWorkflow={() => highlight.setTab("milestone")}
+        onMaterialWorkflow={() => highlight.setTab("material")}
         onTaskWorkflow={() => highlight.setTab("task")}
       >
         {highlight.tab === "badge" && (
@@ -34,6 +34,7 @@ export const HighlightContainer = () => {
             {highlight.badges &&
               highlight.badges.map((badge) => (
                 <Badge
+                  key={badge.badgeName}
                   open={!!badge.open}
                   title={badge.title}
                   icon={getIconName(badge.pathway)}
@@ -47,19 +48,20 @@ export const HighlightContainer = () => {
           </BadgeWorkflow>
         )}
 
-        {highlight.tab === "milestone" && !highlight.browsing && (
-          <MilestoneWorkflow>
-            {highlight.milestones &&
-              highlight.milestones.map((milestone) => (
-                <Milestone
-                  open={!!milestone.open}
-                  title={milestone.title}
-                  icon={getIconName(milestone.pathway)}
-                  status={milestone.status}
-                  onOpen={milestone.open}
+        {highlight.tab === "material" && !highlight.browsing && (
+          <MaterialWorkflow>
+            {highlight.materials &&
+              highlight.materials.map((material) => (
+                <Material
+                  key={material.materialName}
+                  open={!!material.open}
+                  title={material.title}
+                  icon={getIconName(material.pathway)}
+                  status={material.status}
+                  onOpen={material.open}
                 />
               ))}
-          </MilestoneWorkflow>
+          </MaterialWorkflow>
         )}
 
         {highlight.tab === "task" && !highlight.browsing && (
@@ -68,11 +70,12 @@ export const HighlightContainer = () => {
             active={highlight.status}
             onDone={() => highlight.setStatus("done")}
             onTodo={() => highlight.setStatus("todo")}
-            onUrgent={() => highlight.setStatus("urgent")}
+            onReview={() => highlight.setStatus("review")}
           >
             {highlight.tasks &&
               highlight.tasks.map((task) => (
                 <Task
+                  key={task.taskName}
                   open={!!task.open}
                   title={task.title}
                   icon={getIconName(task.pathway)}
@@ -96,22 +99,23 @@ type BadgeState = {
   open?: () => void;
 };
 
-type MilestoneState = {
-  eventName?: string;
+type MaterialState = {
+  materialName?: string;
   title?: string;
   pathway?: "policy & government" | "arts & culture" | "college & career" | "volunteer" | "recreation";
   notBefore?: string;
   open?: () => void;
-  status?: "todo" | "done";
+  delivery?: "synchronous" | "asynchronous";
+  status?: "draft" | "pending" | "available" | "unavailable";
 };
 
 type TaskState = {
-  eventName?: string;
+  taskName?: string;
   title?: string;
   pathway?: "policy & government" | "arts & culture" | "college & career" | "volunteer" | "recreation";
   notBefore?: string;
   open?: () => void;
-  status?: "todo" | "done";
+  status?: "todo" | "review" | "done";
 };
 
 /**
@@ -129,7 +133,7 @@ const useHighlight = () => {
   const [tab, setTab] = React.useState(getTab(params.tab || "badge"));
   const [status, setStatus] = React.useState(getStatus(params.status || "todo"));
   const [badges, setBadges] = React.useState(undefined as BadgeState[] | undefined);
-  const [milestones, setMilestones] = React.useState(undefined as MilestoneState[] | undefined);
+  const [materials, setMaterials] = React.useState(undefined as MaterialState[] | undefined);
   const [tasks, setTasks] = React.useState(undefined as TaskState[] | undefined);
   const [resolvingTab, setResolvingTab] = React.useState(true);
   const [resolvingStatus, setResolvingStatus] = React.useState(true);
@@ -143,8 +147,8 @@ const useHighlight = () => {
         case "badge":
           setBadges(await fetchBadges(ctx, navigate, communityName, residentName));
           break;
-        case "milestone":
-          setMilestones(await fetchMilestones(ctx, navigate, communityName, residentName));
+        case "material":
+          setMaterials(await fetchMaterials(ctx, navigate, communityName, residentName));
           break;
         case "task":
           setTasks(await fetchTasks(ctx, navigate, communityName, residentName, status));
@@ -167,6 +171,10 @@ const useHighlight = () => {
   }, [ctx?.accessToken, communityName, residentName, tab]);
 
   React.useEffect(() => {
+    if (tab !== "task") {
+      return;
+    }
+
     setResolvingStatus(true);
     (async () => {
       await fetch();
@@ -182,7 +190,7 @@ const useHighlight = () => {
     tab: tab,
     status: status,
     badges: badges,
-    milestones: milestones,
+    materials: materials,
     tasks: tasks,
     setTab: setTab,
     setStatus: setStatus,
@@ -196,7 +204,7 @@ const fetchBadges = async (
   residentName?: string
 ) => {
   const openBadge = (badgeName?: string) => navigate(`/residents/${residentName}/badges/${badgeName}`);
-  const endpoint = `/caliber/v0/communities/${communityName}/badges`;
+  const endpoint = `/caliber/v0/residents/${residentName}/badges`;
   const query = {
     residentName: residentName,
     fields: ["badgeName", "title", "pathway", "imageURL", "status"],
@@ -210,28 +218,28 @@ const fetchBadges = async (
   return badges;
 };
 
-const fetchMilestones = async (
+const fetchMaterials = async (
   ctx: ResidentContextState,
   navigate: NavigateFunction,
   communityName?: string,
   residentName?: string
 ) => {
-  const openEvent = (eventName?: string) => navigate(`/residents/${residentName}/events/${eventName}/edit`);
-  const endpoint = `/curriculum/v0/communities/${communityName}/events`;
+  const openMaterial = (materialName?: string) => navigate(`/my/materials/${materialName}`);
+  const endpoint = `/curriculum/v0/my/materials`;
   const query = {
     residentName: residentName,
-    timePeriod: "milestone",
-    fields: ["eventName", "title", "pathway", "notBefore", "status"],
+    timePeriod: "material",
+    fields: ["materialName", "title", "pathway", "notBefore", "delivery", "status"],
   };
 
-  const milestones: MilestoneState[] = await request(ctx.accessToken, "GET", endpoint, { params: query });
-  milestones.map((milestone) => {
+  const materials: MaterialState[] = await request(ctx.accessToken, "GET", endpoint, { params: query });
+  materials.map((material) => {
     if (residentName === ctx.resident?.residentName) {
-      milestone.open = () => openEvent(milestone.eventName);
+      material.open = () => openMaterial(material.materialName);
     }
   });
 
-  return milestones;
+  return materials;
 };
 
 const fetchTasks = async (
@@ -239,20 +247,20 @@ const fetchTasks = async (
   navigate: NavigateFunction,
   communityName?: string,
   residentName?: string,
-  taskStatus?: "todo" | "urgent" | "done"
+  taskStatus?: "todo" | "review" | "done"
 ) => {
-  const openEvent = (eventName?: string) => navigate(`/residents/${residentName}/events/${eventName}/edit`);
-  const endpoint = `/curriculum/v0/communities/${communityName}/events`;
+  const openTask = (taskName?: string) => navigate(`/my/tasks/${taskName}`);
+  const endpoint = `/curriculum/v0/my/tasks`;
   const query = {
     residentName: residentName,
     status: taskStatus,
-    fields: ["eventName", "title", "pathway", "notBefore", "status"],
+    fields: ["taskName", "title", "pathway", "notBefore", "status"],
   };
 
-  const tasks: MilestoneState[] = await request(ctx.accessToken, "GET", endpoint, { params: query });
+  const tasks: TaskState[] = await request(ctx.accessToken, "GET", endpoint, { params: query });
   tasks.map((task) => {
     if (residentName === ctx.resident?.residentName) {
-      task.open = () => openEvent(task.eventName);
+      task.open = () => openTask(task.taskName);
     }
   });
 
@@ -260,19 +268,19 @@ const fetchTasks = async (
 };
 
 const getTab = (name?: string) => {
-  if (!["badge", "milestone", "task"].includes(name || "")) {
+  if (!["badge", "material", "task"].includes(name || "")) {
     throw new AppError("Bad Request", `the provided tab "${name}" does not exist`);
   }
 
-  return name as "badge" | "milestone" | "task";
+  return name as "badge" | "material" | "task";
 };
 
 const getStatus = (name?: string) => {
-  if (!["todo", "urgent", "done"].includes(name || "")) {
+  if (!["todo", "review", "done"].includes(name || "")) {
     throw new AppError("Bad Request", `the provided status "${name}" does not exist`);
   }
 
-  return name as "todo" | "urgent" | "done";
+  return name as "todo" | "review" | "done";
 };
 
 const getBadgeIntensity = (name?: string) => {

@@ -7,9 +7,9 @@ import { TaskProps } from "../../../components/Task/Task";
  */
 export type TaskWorkflowProps = {
   resolving?: boolean;
-  active?: "todo" | "urgent" | "done";
+  active?: "todo" | "review" | "done";
   onTodo?: () => void;
-  onUrgent?: () => void;
+  onReview?: () => void;
   onDone?: () => void;
   children?: React.ReactElement<TaskProps> | React.ReactElement<TaskProps>[];
 };
@@ -24,7 +24,7 @@ export const TaskWorkflow = (props: TaskWorkflowProps) => {
   const tabs = (
     <>
       <Tab secondary icon="todo" title="todo" active={active === "todo"} onClick={props.onTodo} />
-      <Tab secondary icon="urgent" title="urgent" active={active === "urgent"} onClick={props.onUrgent} />
+      <Tab secondary icon="review" title="review" active={active === "review"} onClick={props.onReview} />
       <Tab secondary icon="done" title="done" active={active === "done"} onClick={props.onDone} />
     </>
   );

@@ -1,8 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { Modal } from "../../components";
+import { EditContainer } from "./containers/EditContainer/EditContainer";
 
+/**
+ * A component for the settings page.
+ * @constructor
+ */
 export const Settings = () => {
-  const navigate = useNavigate();
-
-  return <Modal visible onClose={() => navigate(-1)}></Modal>;
+  const { EditModal } = EditContainer();
+  return <EditModal />;
 };
