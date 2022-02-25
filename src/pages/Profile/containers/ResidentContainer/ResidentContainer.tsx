@@ -14,6 +14,7 @@ export const ResidentContainer = () => {
   const peer = usePeer();
   const community = useCommunity();
   const navigate = useNavigate();
+  const now = new Date()
 
   return {
     ResidentWidget: () => (
@@ -24,7 +25,7 @@ export const ResidentContainer = () => {
         givenName={peer?.givenName}
         familyName={peer?.familyName}
         createdAt={peer?.createdAt}
-        online={peer?.online}
+        online={!!peer?.lastLoginAt && ((now.getTime() - new Date(peer?.lastLoginAt).getTime()) < 5000)}
       />
     ),
 
@@ -77,9 +78,7 @@ export const usePeer = () => {
     if (residentName) {
       (async () => {
         setPeer(
-          await api.residents.view(residentName || "", {
-            fields: ["residentName", "avatarURL", "givenName", "familyName", "createdAt", "online", "impactStatement"],
-          })
+          await api.residents.view(residentName || "")
         );
       })();
     } else {
