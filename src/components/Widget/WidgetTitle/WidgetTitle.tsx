@@ -6,7 +6,7 @@ import { Icon, IconName } from "../../Icon/Icon";
  */
 export type WidgetTitleProps = {
   icon?: IconName;
-  children: string;
+  children: React.ReactNode;
 };
 
 /**

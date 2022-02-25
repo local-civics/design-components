@@ -1,65 +1,64 @@
-import { request } from "@local-civics/js-client";
+import { Community, Resident } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ResidentContextState, useResidentContext } from "../../../../contexts/ResidentContext/ResidentContext";
-import { useErrorContext } from "../../../../contexts/ErrorContext/ErrorContext";
-import { AboutWidget } from "../../widgets/AboutWidget/AboutWidget";
-import { ResidentWidget } from "../../widgets/ResidentWidget/ResidentWidget";
+import { useApi, useRequester, useResolver } from "../../../../contexts/App";
+import { AboutWidget } from "../../components/AboutWidget/AboutWidget";
+import { ResidentWidget } from "../../components/ResidentWidget/ResidentWidget";
 
 /**
  * A connected container for the resident and about widget.
  * @constructor
  */
 export const ResidentContainer = () => {
-  const resident = useResident();
+  const requester = useRequester();
+  const peer = usePeer();
+  const community = useCommunity();
+  const navigate = useNavigate();
+
   return {
     ResidentWidget: () => (
       <ResidentWidget
-        resolving={resident.resolving}
-        avatarURL={resident.avatarURL}
-        residentName={resident.residentName}
-        givenName={resident.givenName}
-        familyName={resident.familyName}
-        createdAt={resident.createdAt}
-        online={resident.online}
+        resolving={peer === null}
+        avatarURL={peer?.avatarURL}
+        residentName={peer?.residentName}
+        givenName={peer?.givenName}
+        familyName={peer?.familyName}
+        createdAt={peer?.createdAt}
+        online={peer?.online}
       />
     ),
 
     AboutWidget: () => (
       <AboutWidget
-        resolving={resident.resolving}
-        edit={!resident.browsing}
-        impactStatement={resident.impactStatement}
-        placeName={resident.communityPlaceName}
-        communityName={resident.communityTrueName}
-        onEdit={resident.settings}
+        resolving={peer === null}
+        edit={requester.residentName === peer?.residentName}
+        impactStatement={peer?.impactStatement}
+        placeName={community?.placeName}
+        communityName={community?.displayName}
+        onEdit={() => navigate(`/residents/${requester.residentName}/settings`)}
       />
     ),
   };
 };
 
 /**
- * The state of the resident.
+ * A hook to subscribe to a community.
  */
-type ResidentState = {
-  resolving?: boolean;
-  residentName?: string;
-  givenName?: string;
-  familyName?: string;
-  communityTrueName?: string;
-  communityPlaceName?: string;
-  impactStatement?: string;
-  avatarURL?: string;
-  createdAt?: string;
-  online?: boolean;
-  settings?: () => void;
-};
+const useCommunity = () => {
+  const api = useApi();
+  const requester = useRequester();
+  const [community, setCommunity] = React.useState(null as Community | null);
+  React.useEffect(() => {
+    if (requester?.communityName) {
+      (async () => {
+        setCommunity(await api.communities.view(requester.communityName || ""));
+      })();
+    } else {
+      setCommunity(null);
+    }
+  }, [requester?.communityName]);
 
-/**
- * The query for filtering residents.
- */
-export type ResidentQuery = {
-  fields?: string[];
+  return community;
 };
 
 /**
@@ -67,64 +66,28 @@ export type ResidentQuery = {
  *
  * This hook must be called from the resident context.
  */
-const useResident = () => {
-  const ctx = useResidentContext();
-  const navigate = useNavigate();
+export const usePeer = () => {
   const params = useParams();
-  const errors = useErrorContext();
+  const api = useApi();
+  const resolver = useResolver();
   const residentName = params.residentName;
-  const communityName = params.communityName || ctx?.resident?.communityName;
-  const defaultState: ResidentState = { resolving: ctx?.resolving };
-  const [state, setState] = React.useState(defaultState);
+  const [peer, setPeer] = React.useState(null as Resident | null);
 
   React.useEffect(() => {
-    if (!ctx?.accessToken || !residentName || !communityName) {
-      setState(defaultState);
-      return;
+    if (residentName) {
+      (async () => {
+        setPeer(
+          await api.residents.view(residentName || "", {
+            fields: ["residentName", "avatarURL", "givenName", "familyName", "createdAt", "online", "impactStatement"],
+          })
+        );
+      })();
+    } else {
+      setPeer(null);
     }
 
-    if (ctx && ctx.resident && residentName === ctx.resident.residentName) {
-      setState({ ...state, resolving: ctx.resolving, ...ctx.resident });
-      return;
-    }
+    return () => setPeer(null);
+  }, [residentName, resolver.resolving]);
 
-    setState({ ...state, resolving: true });
-
-    (async () => {
-      try {
-        const resident = await fetchResident(ctx, communityName, residentName);
-        setState({ ...state, resolving: false, ...resident });
-      } catch (e) {
-        errors.emit(e);
-      }
-    })();
-
-    return () => setState(defaultState);
-  }, [ctx?.accessToken, ctx?.resolving, ctx?.saving, communityName, residentName]);
-
-  return {
-    ...state,
-    browsing: residentName !== ctx?.resident?.residentName,
-    settings: () => navigate(`/residents/${residentName}/settings`),
-  };
-};
-
-const fetchResident = async (ctx: ResidentContextState, communityName?: string, residentName?: string) => {
-  const endpoint = `/identity/v0/communities/${communityName}/residents/${residentName}`;
-  const query = {
-    fields: [
-      "residentName",
-      "avatarURL",
-      "givenName",
-      "familyName",
-      "createdAt",
-      "online",
-      "impactStatement",
-      "communityTrueName",
-      "communityPlaceName",
-    ],
-  };
-
-  const resident: ResidentState = await request(ctx.accessToken, "GET", endpoint, { params: query });
-  return resident;
+  return peer;
 };

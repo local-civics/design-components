@@ -11,6 +11,11 @@ export default {
 };
 
 /**
- * Profile
+ * Existing.
  */
-export const Page = () => <InMemoryApp location="/residents/andre.carter" />;
+export const Andre = () => <InMemoryApp accessToken="andre.carter" location="/residents/andre.carter" />;
+
+/**
+ * New resident.
+ */
+export const New = () => <InMemoryApp accessToken="resident" location="/residents/resident" />;

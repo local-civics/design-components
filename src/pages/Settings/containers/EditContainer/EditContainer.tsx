@@ -1,47 +1,35 @@
-import * as path from "path";
+import { Resident } from "@local-civics/js-client";
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useResidentContext } from "../../../../contexts/ResidentContext/ResidentContext";
-import { EditModal, ResidentState } from "../../modals/EditModal/EditModal";
+import { useNavigate } from "react-router-dom";
+import { useApi, useAuth, useRequester, useResolver } from "../../../../contexts/App";
+import { EditModal } from "../../components/EditModal/EditModal";
 
 /**
  * A connected container for the edit modal.
  * @constructor
  */
 export const EditContainer = () => {
-  const ctx = useResidentContext();
+  const requester = useRequester();
+  const resolver = useResolver();
+  const api = useApi();
+  const auth = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const visible = !!location.pathname.match(/^\/residents\/[^/]+\/settings$/);
-  const close = () => navigate(path.dirname(location.pathname));
-  const save = (resident?: ResidentState) => {
-    if (ctx && ctx.saving) {
+  const close = () => navigate(-1);
+  const save = async (resident?: Resident) => {
+    if (!requester.residentName || resolver.resolving) {
       return;
     }
 
-    if (!ctx || !ctx.resident || !ctx.save || !resident) {
+    if (!resident) {
       close();
       return;
     }
 
-    ctx.save(resident).then(close);
+    await api.residents.save(requester.residentName, resident).then(close);
+    await resolver.resolve();
   };
 
   return {
-    EditModal: () => (
-      <EditModal
-        saving={ctx?.saving}
-        avatarURL={ctx?.resident?.avatarURL}
-        residentName={ctx?.resident?.residentName}
-        givenName={ctx?.resident?.givenName}
-        familyName={ctx?.resident?.familyName}
-        grade={ctx?.resident?.grade}
-        impactStatement={ctx?.resident?.impactStatement}
-        accessToken={ctx?.accessToken}
-        visible={visible}
-        onClose={close}
-        onSave={save}
-      />
-    ),
+    EditModal: () => <EditModal {...requester} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
   };
 };

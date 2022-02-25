@@ -31,7 +31,7 @@ export const background = (name?: string, active?: boolean, disabled?: boolean) 
     case "sponsored":
       return disabled ? "bg-sky-200" : active ? "bg-sky-300 hover:bg-sky-200" : "bg-sky-200 hover:bg-sky-300";
     default:
-      return disabled ? "bg-gray-100" : active ? "bg-gray-200 hover:bg-gray-100" : "bg-gray-100 hover:bg-gray-200";
+      return disabled ? "bg-gray-50" : active ? "bg-gray-200 hover:bg-gray-100" : "bg-gray-100 hover:bg-gray-200";
   }
 };
 

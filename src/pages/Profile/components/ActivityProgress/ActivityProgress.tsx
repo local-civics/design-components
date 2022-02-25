@@ -1,3 +1,4 @@
+import { Report } from "@local-civics/js-client";
 import React from "react";
 import { Progress, Button, IconName, ButtonSize } from "../../../../components";
 import { classname } from "../../../../utils/classname/classname";
@@ -11,13 +12,10 @@ export type ActivityProgressHeight = "sm" | "md";
 /**
  * The properties for the pathway progress.
  */
-export type ActivityProgressProps = {
+export type ActivityProgressProps = Report & {
   open?: boolean;
   title?: string;
   icon?: IconName;
-  proficiency?: number;
-  nextProficiency?: number;
-  magnitude?: number;
   height?: ActivityProgressHeight;
   onOpen?: () => void;
 };
@@ -28,8 +26,8 @@ export type ActivityProgressProps = {
  * @constructor
  */
 export const ActivityProgress = (props: ActivityProgressProps) => {
-  const proficiency = props.proficiency || 0;
-  const nextProficiency = props.nextProficiency || 1;
+  const proficiency = props.quality || 0;
+  const nextProficiency = props.nextPromotion || 1;
   const config = defaultActivityProgressConfig();
   const height = props.height || "sm";
   withHeight(config, height);
@@ -39,7 +37,7 @@ export const ActivityProgress = (props: ActivityProgressProps) => {
       <div className="flex gap-x-2 items-center">
         {props.icon && (
           <div className={config.icon.container}>
-            <Button disabled={props.open} size={config.icon.size} icon={props.icon} onClick={props.onOpen} />
+            <Button disabled={!props.open} size={config.icon.size} icon={props.icon} onClick={props.onOpen} />
           </div>
         )}
         <div className="grow grid grid-cols-1 gap-2 items-center">
@@ -57,9 +55,9 @@ export const ActivityProgress = (props: ActivityProgressProps) => {
                 <p className={classname(config.xp.suffix)}>XP</p>
               </div>
             )}
-            {!!props.magnitude && (
+            {!!props.degree && (
               <p className={classname(config.magnitude)}>
-                {compact(nextProficiency - proficiency)} exp. until level {props.magnitude + 1}
+                {compact(nextProficiency - proficiency)} exp. until level {props.degree + 1}
               </p>
             )}
           </div>

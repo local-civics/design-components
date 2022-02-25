@@ -1,3 +1,4 @@
+import { Badge } from "@local-civics/js-client";
 import React from "react";
 import { Icon, IconName } from "../../../../components";
 import { builder } from "../../../../utils/classname/classname";
@@ -5,15 +6,10 @@ import { builder } from "../../../../utils/classname/classname";
 /**
  * The properties for the badge.
  */
-export type BadgeProps = {
+export type BadgeProps = Badge & {
   open?: boolean;
-  title?: string;
   icon?: IconName;
-  statusIcon?: IconName;
-  status?: "bearing" | "contingent" | "unqualified";
-  imageURL?: string;
   onOpen?: () => void;
-  intensity?: "normal" | "faded";
 };
 
 /**
@@ -21,9 +17,10 @@ export type BadgeProps = {
  * @param props
  * @constructor
  */
-export const Badge = (props: BadgeProps) => {
+export const BadgeComponent = (props: BadgeProps) => {
   const icon = props.icon || "badge";
-  const intensity = props.intensity || "normal";
+  const statusIcon = !props.status ? "lock" : "";
+  const intensity = !!props.status ? "normal" : "faded";
   const iconClassName = builder("w-full")
     .if(intensity === "normal", "text-gray-600")
     .if(intensity === "faded", "text-gray-300")
@@ -47,33 +44,33 @@ export const Badge = (props: BadgeProps) => {
 
   return (
     <div className={className}>
-      {props.statusIcon && (
+      {statusIcon && (
         <div className={statusIconClassName}>
           <div className="relative">
             <div className="absolute h-2 w-2 top-0 right-0 lg:h-4 lg:w-4 lg:-top-1 lg:-right-1">
-              <Icon name={props.statusIcon} />
+              <Icon name={statusIcon} />
             </div>
           </div>
         </div>
       )}
 
       <div className="flex gap-y-4 flex-col w-full" onClick={onOpen}>
-        {props.status === "bearing" && props.imageURL && (
+        {props.status === "done" && props.imageURL && (
           <img
             className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg object-contain"
-            alt={props.title}
+            alt={props.displayName}
             src={props.imageURL}
           />
         )}
 
-        {props.status !== "bearing" && (
+        {props.status !== "done" && (
           <div className={iconClassName}>
             <div className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg">
               <Icon name={icon} />
             </div>
           </div>
         )}
-        <p className={titleClassName}>{props.title}</p>
+        <p className={titleClassName}>{props.displayName}</p>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { SearchResult, SearchResultProps } from "./SearchResult";
  * Storybook component configuration
  */
 export default {
-  title: "Library/SearchResult",
+  title: "Library/Search/SearchResult",
   component: SearchResult,
 };
 

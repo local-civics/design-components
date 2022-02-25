@@ -5,7 +5,7 @@ import { WidgetHeaderLink, WidgetHeaderLinkProps } from "./WidgetHeaderLink";
  * Storybook component configuration
  */
 export default {
-  title: "Library/WidgetHeaderLink",
+  title: "Library/Widget/WidgetHeaderLink",
   component: WidgetHeaderLink,
   argTypes: {},
 };

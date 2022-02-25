@@ -25,8 +25,8 @@ export const WidgetHeaderLink = (props: WidgetHeaderLinkProps) => {
     return <Button size="tiny" text={props.children} onClick={props.onClick} />;
   } else {
     return (
-      <div className="flex items-center gap-x-2">
-        <Button icon={props.children.props.name} onClick={props.onClick} />
+      <div className="flex items-center">
+        <Button size="xs" icon={props.children.props.name} onClick={props.onClick} />
       </div>
     );
   }

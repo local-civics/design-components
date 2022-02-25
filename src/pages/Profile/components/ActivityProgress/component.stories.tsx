@@ -5,7 +5,7 @@ import { ActivityProgress, ActivityProgressProps } from "./ActivityProgress";
  * Storybook component configuration
  */
 export default {
-  title: "Library/ActivityProgress",
+  title: "Library/Profile/ActivityProgress",
   component: ActivityProgress,
 };
 

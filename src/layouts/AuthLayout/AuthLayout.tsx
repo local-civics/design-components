@@ -1,12 +1,14 @@
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { NavBar, NavBarProps, NavLink, Loader } from "../../components";
-import { useResidentContext } from "../../contexts/ResidentContext/ResidentContext";
+import { useAuth, useRequester, useResolver } from "../../contexts/App";
 
 /**
  * The properties for the auth layout
  */
 export type AuthLayoutProps = {
   page?: "profile" | "explore" | "calendar";
+  disabled?: boolean;
   header?: React.ReactNode;
   subheader?: React.ReactNode;
   sidebar?: React.ReactNode;
@@ -20,31 +22,45 @@ export type AuthLayoutProps = {
  * @constructor
  */
 export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
-  const ctx = useResidentContext();
+  const requester = useRequester();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
+  const { resolving } = useResolver();
   const page = props.page || "profile";
+  if (requester.residentName && !requester.communityName) {
+    if (location.pathname !== `/residents/${requester.residentName}/onboarding`) {
+      navigate(`/residents/${requester.residentName}/onboarding`);
+    }
+  }
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
-      <Loader isLoading={ctx === null || ctx.resolving}>
+      <Loader isLoading={resolving}>
         <NavBar>
-          <NavLink name="home" path="/" />
-          <NavLink name="profile" path={`/residents/${ctx?.resident?.residentName}`} active={page === "profile"} />
+          <NavLink disabled={props.disabled} name="home" path="/" />
           <NavLink
-            disabled
+            disabled={props.disabled}
+            name="profile"
+            path={`/residents/${requester.residentName}`}
+            active={page === "profile"}
+          />
+          <NavLink
+            disabled={props.disabled}
             name="explore"
-            path={`/communities/${ctx?.resident?.communityName}/explore/events`}
+            path={`/communities/${requester.communityName}/explore/experiences`}
             active={page === "explore"}
           />
           <NavLink
-            disabled
+            disabled={props.disabled}
             name="calendar"
-            path={`/communities/${ctx?.resident?.communityName}/calendar/events`}
+            path={`/communities/${requester.communityName}/calendar/experiences`}
             active={page === "calendar"}
           />
-          <NavLink name="logout" onClick={ctx?.logout} />
+          <NavLink name="logout" onClick={auth.logout} />
         </NavBar>
 
-        <section className="w-full py-5 lg:px-36 flex flex-col gap-4">
+        <section className="w-full px-4 py-5 lg:px-36 flex flex-col gap-4">
           {props.header && <div className="w-full min-h-16 lg:min-h-24 lg:flex">{props.header}</div>}
 
           <div className="grow w-full min-h-96">
@@ -53,7 +69,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
               {/* Left Panel */}
               {props.sidebar && (
                 <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem]">
-                  <div className="grow flex flex-col gap-4 lg:gap-2">{props.sidebar}</div>
+                  <div className="flex flex-col gap-4 lg:gap-2">{props.sidebar}</div>
                   <p className="hidden place-self-center lg:inline-block text-xs text-slate-300">
                     Local Civics © {new Date().getFullYear()}
                   </p>

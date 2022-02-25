@@ -1,21 +1,21 @@
 import { Story } from "@storybook/react";
-import { Badge, BadgeProps } from "./Badge";
+import { BadgeComponent, BadgeProps } from "./Badge";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Library/Badge",
-  component: Badge,
+  title: "Library/Profile/Badge",
+  component: BadgeComponent,
 };
 
 /**
  * Component storybook template
  */
 const Template: Story<BadgeProps> = (args) => (
-  <Badge
-    title="Onboarding Badge"
-    status="bearing"
+  <BadgeComponent
+    displayName="Onboarding Badge"
+    status="done"
     imageURL="https://cdn.localcivics.io/badges/onboarding.png"
     {...args}
   />

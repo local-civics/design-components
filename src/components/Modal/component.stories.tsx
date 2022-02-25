@@ -15,7 +15,13 @@ export default {
  */
 const Template: Story<ModalProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <Modal visible {...args} />
+    <div>
+      <Modal visible {...args}>
+        <div className="w-60 h-24">
+          <p className="m-auto"> Modal Contents </p>
+        </div>
+      </Modal>
+    </div>
     <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
   </div>
 );

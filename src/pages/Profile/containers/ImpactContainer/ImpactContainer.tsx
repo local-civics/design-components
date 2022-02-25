@@ -1,13 +1,12 @@
-import { request } from "@local-civics/js-client";
+import { Report } from "@local-civics/js-client";
 import React from "react";
-import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
-import { ResidentContextState, useResidentContext } from "../../../../contexts/ResidentContext/ResidentContext";
-import { useErrorContext } from "../../../../contexts/ErrorContext/ErrorContext";
-import { getIconName } from "../../../../utils/icon/icon";
+import { useParams } from "react-router-dom";
+import { IconName } from "../../../../components";
+import { useApi } from "../../../../contexts/App";
 import { ActivityProgress } from "../../components/ActivityProgress/ActivityProgress";
-import { AchievementWidget } from "../../widgets/AchievementWidget/AchievementWidget";
-import { ImpactWidget } from "../../widgets/ImpactWidget/ImpactWidget";
-import { PathwayWidget } from "../../widgets/PathwayWidget/PathwayWidget";
+import { AchievementWidget } from "../../components/AchievementWidget/AchievementWidget";
+import { ImpactWidget } from "../../components/ImpactWidget/ImpactWidget";
+import { PathwayWidget } from "../../components/PathwayWidget/PathwayWidget";
 
 /**
  * A connected container for the impact, pathway, and achievement widgets.
@@ -17,34 +16,16 @@ export const ImpactContainer = () => {
   const impact = useImpact();
   return {
     PathwayWidget: () => (
-      <PathwayWidget resolving={impact.resolving}>
-        {impact.pathways &&
-          impact.pathways.map((report) => (
-            <ActivityProgress
-              key={report.pathway}
-              open={!!report.open}
-              title={report.pathway}
-              icon={getIconName(report.pathway)}
-              proficiency={report.proficiency}
-              nextProficiency={report.nextProficiency}
-              onOpen={report.open}
-            />
-          ))}
+      <PathwayWidget resolving={impact.pathways === null}>
+        <Pathways reports={impact.pathways || []} />
       </PathwayWidget>
     ),
 
-    ImpactWidget: () => (
-      <ImpactWidget
-        resolving={impact.resolving}
-        proficiency={impact.overall?.proficiency}
-        nextProficiency={impact.overall?.nextProficiency}
-        magnitude={impact.overall?.magnitude}
-      />
-    ),
+    ImpactWidget: () => <ImpactWidget resolving={impact.overall === null} {...impact.overall} />,
 
     AchievementWidget: () => (
       <AchievementWidget
-        resolving={impact.resolving}
+        resolving={impact.overall === null}
         badges={impact.overall?.badges}
         milestones={impact.overall?.milestones}
         reflections={impact.overall?.reflections}
@@ -53,98 +34,58 @@ export const ImpactContainer = () => {
   };
 };
 
-type ImpactState = {
-  resolving?: boolean;
-  overall?: ReportState;
-  pathways?: ReportState[];
-};
-
-type ReportState = {
-  proficiency?: number;
-  nextProficiency?: number;
-  magnitude?: number;
-  pathway?: string;
-  badges?: number;
-  milestones?: number;
-  reflections?: number;
-  open?: () => void;
-};
-
 /**
  * A hook to fetch a resident's impact.
  *
  * This hook must be called from the resident context.
  */
 const useImpact = () => {
-  const ctx = useResidentContext();
-  const navigate = useNavigate();
   const params = useParams();
-  const errors = useErrorContext();
+  const api = useApi();
   const residentName = params.residentName;
-  const communityName = params.communityName || ctx?.resident?.communityName;
-  const defaultState: ImpactState = { resolving: true };
-  const [state, setState] = React.useState(defaultState);
+  const [pathways, setPathways] = React.useState(null as Report[] | null);
+  const [overall, setOverall] = React.useState(null as Report | null);
 
   React.useEffect(() => {
-    if (!ctx?.accessToken || !residentName || !communityName) {
-      setState(defaultState);
-      return;
+    if (residentName) {
+      (async () => {
+        setPathways(await api.reports.list(residentName, { groupBy: "pathway" }));
+        setOverall((await api.reports.list(residentName))[0]);
+      })();
     }
 
-    setState({ ...state, resolving: true });
+    return () => {
+      setPathways(null);
+      setOverall(null);
+    };
+  }, [residentName]);
 
-    (async () => {
-      try {
-        const overall = await fetchOverallReport(ctx, residentName);
-        const pathways = await fetchPathwayReports(ctx, navigate, communityName, residentName);
-        setState({ ...state, resolving: false, overall: overall, pathways: pathways });
-      } catch (e) {
-        errors.emit(e);
-      }
-    })();
-
-    return () => setState(defaultState);
-  }, [ctx?.accessToken, communityName, residentName]);
-
-  return state;
+  return {
+    pathways,
+    overall,
+  };
 };
 
-const fetchPathwayReports = async (
-  ctx: ResidentContextState,
-  navigate: NavigateFunction,
-  communityName?: string,
-  residentName?: string
-) => {
-  const openReport = (pathway?: string) => {
-    if (pathway) {
-      navigate(`/communities/${communityName}/explore/events?pathways=${encodeURIComponent(pathway)}`);
-    }
+const Pathways = ({ reports }: { reports: Report[] }) => {
+  const pathways = {
+    "college & career": {},
+    "policy & government": {},
+    "arts & culture": {},
+    volunteer: {},
+    recreation: {},
   };
-  const endpoint = `/caliber/v0/residents/${residentName}/reports`;
-  const query = {
-    residentName: residentName,
-    groups: ["pathway"],
-    formula: "sum",
-    fields: ["proficiency", "nextProficiency", "pathway"],
-  };
-  const reports: ReportState[] = await request(ctx.accessToken, "GET", endpoint, { params: query });
+
   reports.map((report) => {
-    if (residentName === ctx.resident?.residentName) {
-      report.open = () => openReport(report.pathway);
+    if (report.pathway && pathways[report.pathway]) {
+      pathways[report.pathway] = { ...report };
     }
   });
-  return reports;
-};
 
-const fetchOverallReport = async (ctx: ResidentContextState, residentName?: string) => {
-  const endpoint = `/caliber/v0/residents/${residentName}/reports`;
-  const query = {
-    residentName: residentName,
-    formula: "sum",
-    fields: ["proficiency", "nextProficiency", "magnitude", "badges", "milestones", "reflections"],
-  };
-  const reports: ReportState[] = await request(ctx.accessToken, "GET", endpoint, { params: query });
-  if (reports.length > 0) {
-    return reports[0];
-  }
+  return (
+    <>
+      {Object.entries(pathways).map(([pathway, props]) => {
+        return <ActivityProgress key={pathway} {...props} icon={pathway as IconName} title={pathway} />;
+      })}
+    </>
+  );
 };

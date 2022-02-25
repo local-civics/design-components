@@ -16,7 +16,7 @@ export const parameters = {
   },
   options: {
     storySort: {
-      order: ["Pages", "Widgets", "Modals", "Boards", "Workflows", "Contexts", "Library"],
+      order: ["Pages", "Library", "Contexts"],
     },
   },
 };

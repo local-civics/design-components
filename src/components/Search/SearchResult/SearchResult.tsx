@@ -2,14 +2,12 @@ import { Button } from "../../Button/Button";
 import { IconName } from "../../Icon/Icon";
 
 export type SearchResultProps = {
-  name?: string;
   title?: string;
   icon?: IconName;
-  onClick?: (name?: string) => void;
+  onClick?: () => void;
 };
 
 export const SearchResult = (props: SearchResultProps) => {
-  const onClick = () => props.onClick && props.onClick(props.name);
   return (
     <Button
       spacing="lg"
@@ -19,7 +17,7 @@ export const SearchResult = (props: SearchResultProps) => {
       color="slate:sky"
       justify="start"
       size="full:sm"
-      onClick={onClick}
+      onClick={props.onClick}
     />
   );
 };

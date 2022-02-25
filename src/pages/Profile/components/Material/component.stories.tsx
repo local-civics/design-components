@@ -5,7 +5,7 @@ import { Material, MaterialProps } from "./Material";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Material",
+  title: "Library/Profile/Material",
   component: Material,
 };
 

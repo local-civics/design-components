@@ -5,7 +5,7 @@ import { WidgetTitle, WidgetTitleProps } from "./WidgetTitle";
  * Storybook component configuration
  */
 export default {
-  title: "Library/WidgetTitle",
+  title: "Library/Widget/WidgetTitle",
   component: WidgetTitle,
   argTypes: {},
 };

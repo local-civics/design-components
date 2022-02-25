@@ -5,7 +5,7 @@ import { NavLink, NavLinkProps } from "./NavLink";
  * Storybook component configuration
  */
 export default {
-  title: "Library/NavLink",
+  title: "Library/NavBar/NavLink",
   component: NavLink,
 };
 

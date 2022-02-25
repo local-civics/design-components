@@ -42,6 +42,8 @@ export type ButtonFilter = "shadow" | "none";
  * The properties for the button.
  */
 export type ButtonProps = {
+  type?: "submit" | "reset" | "button";
+  form?: boolean;
   theme?: ButtonTheme;
   active?: boolean;
   disabled?: boolean;
@@ -75,8 +77,9 @@ export const Button = (props: ButtonProps) => {
   withSpacing(config, props.spacing);
 
   const onClick = () => !props.active && !props.disabled && props.onClick && props.onClick();
+
   return (
-    <button className={classname(config.button)} onClick={onClick}>
+    <button type={props.type} className={classname(config.button)} onClick={onClick}>
       {props.icon && (
         <span className={classname(config.icon)}>
           <Icon name={props.icon} />
@@ -139,7 +142,7 @@ type ButtonConfig = {
 const defaultConfig = () => {
   const config: ButtonConfig = {
     button: {
-      base: "transition-colors flex items-center gap-x-2 capitalize font-semibold",
+      base: "transition-colors flex items-center gap-x-2 font-semibold",
       justify: "",
       spacing: "",
       color: {
@@ -181,13 +184,13 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
   switch (color) {
     case "slate":
       config.button.color = {
-        text: "text-slate-400",
-        border: "border-slate-400",
-        bg: "bg-slate-400",
+        text: "text-slate-500",
+        border: "border-slate-500",
+        bg: "bg-slate-500",
         active: {
           text: "text-slate-600",
           border: "border-slate-600",
-          bg: "border-slate-400",
+          bg: "bg-slate-600",
         },
         interactive: {
           text: "focus:text-slate-600 active:text-slate-600 hover:text-slate-600",
@@ -302,17 +305,17 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
       config.button.color = {
         active: {
           text: "text-white",
-          border: "border-sky-400/90",
-          bg: "bg-sky-400/90",
+          border: "border-sky-400/95",
+          bg: "bg-sky-400/95",
         },
         interactive: {
           text: "focus:text-slate-600 active:text-slate-600 hover:text-white",
-          border: "focus:border-sky-300/90 active:border-sky-300/90 hover:border-sky-300/90",
-          bg: "hover:bg-sky-400/90",
+          border: "focus:border-sky-300/95 active:border-sky-300/95 hover:border-sky-300/95",
+          bg: "hover:bg-sky-400/95",
         },
         text: "text-slate-500",
         border: "border-slate-100",
-        bg: "bg-slate-50/90",
+        bg: "bg-slate-50/95",
       };
       return;
   }
@@ -321,7 +324,7 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
     case "dark":
       config.button.color.text = "text-white";
       config.button.color.active.text = "text-white";
-      config.button.color.interactive.text = "text-white";
+      config.button.color.interactive.text = "hover:text-white focus:text-white active:text-white";
       break;
     default:
       config.button.color.bg = "";
@@ -337,7 +340,7 @@ const withSize = (config: ButtonConfig, size?: ButtonSize) => {
 
   switch (size) {
     case "tiny":
-      config.button.size.text = "text-xs";
+      config.button.size.text = "text-[0.5rem]";
       config.icon.size = "w-1 h-1";
       config.logo.size = "w-12 h-1";
       break;
@@ -359,7 +362,7 @@ const withSize = (config: ButtonConfig, size?: ButtonSize) => {
     case "md":
       config.button.size.text = "text-md";
       config.icon.size = "w-5 h-5";
-      config.logo.size = "w-28 h-5";
+      config.logo.size = "w-28 h-5 -ml-1";
       break;
     case "lg":
       config.button.size.text = "text-md";
@@ -387,6 +390,11 @@ const withActive = (config: ButtonConfig, active?: boolean) => {
 
 const withDisabled = (config: ButtonConfig, disabled?: boolean) => {
   if (disabled) {
+    if (config.button.color.text === "text-white") {
+      config.button.color.bg = "bg-slate-200";
+      config.button.color.border = "border-slate-200";
+    }
+
     config.button.cursor = "cursor-default";
     config.button.color.active.text = "";
     config.button.color.active.border = "";

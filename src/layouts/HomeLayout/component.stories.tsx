@@ -1,7 +1,7 @@
 import { Story } from "@storybook/react";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { ResidentContextProvider } from "../../contexts/ResidentContext/ResidentContext";
+import { AppProvider } from "../../contexts/App";
 import { HomeLayout, HomeLayoutProps } from "./HomeLayout";
 
 /**
@@ -16,14 +16,13 @@ export default {
  * Component
  */
 export const Component: Story<HomeLayoutProps> = (props) => {
-  const value = { resident: {}, resolved: false, accessToken: null, login: () => {}, logout: () => {} };
   return (
     <MemoryRouter>
-      <ResidentContextProvider value={value}>
+      <AppProvider>
         <HomeLayout {...props}>
           <div className="w-full h-96 bg-gray-200" />
         </HomeLayout>
-      </ResidentContextProvider>
+      </AppProvider>
     </MemoryRouter>
   );
 };

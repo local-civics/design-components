@@ -5,14 +5,14 @@ import { Task, TaskProps } from "./Task";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Task",
+  title: "Library/Profile/Task",
   component: Task,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<TaskProps> = (args) => <Task title="A task" {...args} />;
+const Template: Story<TaskProps> = (args) => <Task displayName="A task" {...args} />;
 
 /**
  * Component view

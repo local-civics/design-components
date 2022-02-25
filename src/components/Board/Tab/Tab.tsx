@@ -68,7 +68,7 @@ type TabConfig = {
 const defaultTabConfig = () => {
   const config: TabConfig = {
     container: {
-      base: "transition ease-in-out w-full py-3 px-5",
+      base: "transition ease-in-out w-full p-2 lg:py-3 lg:px-5",
       cursor: "cursor-pointer",
       shape: "rounded-md",
       bg: {
@@ -104,6 +104,8 @@ const withDisabled = (config: TabConfig, disabled?: boolean) => {
     config.container.cursor = "";
     config.container.bg.color = "";
     config.container.bg.hover = "";
+    config.icon.color = "text-slate-400";
+    config.title.color = "text-slate-400";
   }
   config.disabled = disabled;
 };

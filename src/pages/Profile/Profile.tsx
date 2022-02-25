@@ -1,7 +1,7 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { AuthLayout } from "../../layouts/AuthLayout/AuthLayout";
-import { HighlightContainer } from "./containers/HighlightContainer/HighlightContainer";
+import { DashboardContainer } from "./containers/DashboardContainer/DashboardContainer";
 import { ImpactContainer } from "./containers/ImpactContainer/ImpactContainer";
 import { ResidentContainer } from "./containers/ResidentContainer/ResidentContainer";
 
@@ -12,7 +12,7 @@ import { ResidentContainer } from "./containers/ResidentContainer/ResidentContai
 export const Profile = () => {
   const { ResidentWidget, AboutWidget } = ResidentContainer();
   const { ImpactWidget, PathwayWidget, AchievementWidget } = ImpactContainer();
-  const { HighlightBoard } = HighlightContainer();
+  const { Dashboard } = DashboardContainer();
 
   const sidebar = (
     <>
@@ -30,10 +30,11 @@ export const Profile = () => {
 
   return (
     <AuthLayout
+      page="profile"
       header={<ResidentWidget />}
       sidebar={sidebar}
       subheader={subheader}
-      main={<HighlightBoard />}
+      main={<Dashboard />}
       outlet={<Outlet />}
     />
   );

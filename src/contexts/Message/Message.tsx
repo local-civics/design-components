@@ -1,0 +1,150 @@
+import { IsBadRequest, IsNotAuthorized, IsNotFound } from "@local-civics/js-client";
+import React from "react";
+import { Button, Icon, IconName } from "../../components";
+import { Modal } from "../../components";
+import { builder } from "../../utils/classname/classname";
+
+/**
+ * Message state.
+ */
+type MessageState = {
+  message?: Message;
+  send: (message: any, context?: { severity?: "info" | "success"; icon?: IconName; title?: string }) => void;
+  clear: () => void;
+};
+
+/* Message context */
+const MessageContext = React.createContext({} as MessageState);
+
+/**
+ * A hook for subscribing to and emitting messages.
+ */
+export const useMessage = () => {
+  const context = React.useContext(MessageContext);
+  if (context === undefined) {
+    throw new Error("useMessage must be used within a MessageProvider");
+  }
+
+  return {
+    send: context.send,
+  };
+};
+
+/**
+ * The properties for the message context provider.
+ */
+export type MessageProviderProps = {
+  message?: string;
+  children?: React.ReactNode;
+};
+
+/**
+ * A provider for providing message context.
+ * @param props
+ * @constructor
+ */
+export const MessageProvider = (props: MessageProviderProps) => {
+  const context = useContext(props.message);
+  return (
+    <MessageContext.Provider value={context}>
+      <MessageBoundary message={context.message} close={context.clear}>
+        {props.children}
+      </MessageBoundary>
+    </MessageContext.Provider>
+  );
+};
+
+/**
+ * Use context internal.
+ */
+const useContext = (value?: string) => {
+  const [message, setMessage] = React.useState(value ? ({ description: value } as Message) : undefined);
+  const clear = () => setMessage(undefined);
+  const send = (message: any, context?: { icon?: IconName; title?: string }) => {
+    const msg: Message = { ...context };
+    if (message instanceof Error) {
+      msg.severity = "error";
+      if (IsBadRequest(message)) {
+        msg.title = "Bad request";
+        msg.description = message.message;
+      } else if (IsNotAuthorized(message)) {
+        msg.title = "Not authorized";
+        msg.description = message.message;
+      } else if (IsNotFound(message)) {
+        msg.title = "Not found";
+        msg.description = message.message;
+      } else {
+        msg.title = "Something went wrong";
+        msg.description = "If the issue persists, please contact support@localcivics.io.";
+      }
+    } else {
+      msg.description = message;
+    }
+    console.log(msg);
+    setMessage(msg);
+  };
+
+  return {
+    message,
+    send,
+    clear,
+  };
+};
+
+/**
+ * The properties for the message boundary.
+ */
+type MessageBoundaryProps = {
+  message?: Message;
+  close?: () => void;
+  children: React.ReactNode;
+};
+
+/**
+ * A component for catching component messages while rendering.
+ */
+const MessageBoundary = (props: MessageBoundaryProps) => {
+  const iconColor = (() => {
+    switch (props.message?.severity) {
+      case "success":
+        return "text-green-500";
+      case "error":
+        return "text-rose-500";
+      default:
+        return "text-slate-500";
+    }
+  })();
+
+  const className = builder().if(!!props.message, "relative z-40").build();
+
+  return (
+    <>
+      <div className={className}>
+        <Modal visible={!!props.message} onClose={props.close}>
+          <div className="grid grid-cols-1 px-14 pb-4 justify-items-center text-slate-500 gap-y-2">
+            <div className="grid grid-cols-1 justify-items-center gap-y-2">
+              <div className={`w-8 h-8 ${iconColor}`}>
+                <Icon name={props.message?.icon || "bolt"} />
+              </div>
+              <p className="text-sm font-semibold">{props.message?.title || "New message"}</p>
+            </div>
+
+            <p className="text-sm text-center text-slate-700 max-w-[15rem]">{props.message?.description}</p>
+
+            <div className="mt-4">
+              <Button spacing="xs" border="rounded" color="slate" theme="dark" text="ok" onClick={props.close} />
+            </div>
+          </div>
+        </Modal>
+      </div>
+      {props.children}
+    </>
+  );
+};
+
+type Message = {
+  icon?: IconName;
+  title?: string;
+  description?: string;
+  severity?: "info" | "error" | "success";
+};

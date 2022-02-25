@@ -1,7 +1,7 @@
 import { Story } from "@storybook/react";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { ResidentContextProvider } from "../../contexts/ResidentContext/ResidentContext";
+import { AppProvider } from "../../contexts/App";
 import { AuthLayout, AuthLayoutProps } from "./AuthLayout";
 
 /**
@@ -16,15 +16,14 @@ export default {
  * Component
  */
 export const Component: Story<AuthLayoutProps> = (props) => {
-  const value = { resident: {}, resolved: false, accessToken: null, login: () => {}, logout: () => {} };
   const sidebar = <div className="w-full h-96 bg-gray-200" />;
   const main = <div className="w-full h-96 bg-gray-200" />;
 
   return (
     <MemoryRouter>
-      <ResidentContextProvider value={value}>
+      <AppProvider>
         <AuthLayout sidebar={sidebar} main={main} {...props} />
-      </ResidentContextProvider>
+      </AppProvider>
     </MemoryRouter>
   );
 };

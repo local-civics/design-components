@@ -1,14 +1,21 @@
 import React from "react";
-import { BrowserRouter, MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ResidentContextProvider, ResidentContextState } from "./contexts/ResidentContext/ResidentContext";
+import { BrowserRouter, MemoryRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { AppProvider } from "./contexts/App";
 import { mockApi } from "./mock";
+import { Badge } from "./pages/Badge/Badge";
+import { Calendar } from "./pages/Calendar/Calendar";
+import { Experience } from "./pages/Experience/Experience";
+import { Explore } from "./pages/Explore/Explore";
 import { NotFound } from "./pages/NotFound/NotFound";
 import { Home } from "./pages/Home/Home";
+import { Onboarding } from "./pages/Onboarding/Onboarding";
 import { Profile } from "./pages/Profile/Profile";
 
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
+import { Reflection } from "./pages/Reflection/Reflection";
 import { Settings } from "./pages/Settings/Settings";
+import { Task } from "./pages/Task/Task";
 
 Sentry.init({
   environment: process.env.APP_ENV,
@@ -17,22 +24,15 @@ Sentry.init({
   tracesSampleRate: parseFloat(process.env.SENTRY_SAMPLE_RATE || "1.0"),
 });
 
-// todo: additional registration pop-up
-// todo: explore page
-// todo: home page
-// todo: profile page
-// todo: calendar page
-// todo: better 404
-
 /**
  * A component for the Hub application.
  */
 export const App = () => {
   return (
     <BrowserRouter>
-      <ResidentContextProvider>
+      <AppProvider>
         <AppRoutes />
-      </ResidentContextProvider>
+      </AppProvider>
     </BrowserRouter>
   );
 };
@@ -40,61 +40,36 @@ export const App = () => {
 /**
  * An in-memory component for the Hub application.
  */
-export const InMemoryApp = (props: { browser?: boolean; location?: string }) => {
+export const InMemoryApp = (props: { accessToken?: string; browser?: boolean; location?: string }) => {
   mockApi();
-  const ctx: ResidentContextState = {
-    accessToken: "foo",
-    resident: {
-      residentId: "me",
-      // residentName: "test.user",
-      residentName: "andre.carter",
-      communityName: "hcz",
-      givenName: "Andre",
-      familyName: "Carter",
-      impactStatement:
-        "I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure andre.carter community is a place where everyone is welcome.",
-      grade: "7th",
-      createdAt: "January 1, 2020",
-    },
-  };
-
   if (props.browser) {
     return (
       <BrowserRouter>
-        <ResidentContextProvider value={ctx}>
+        <AppProvider accessToken={props.accessToken}>
           <AppRoutes />
-        </ResidentContextProvider>
+        </AppProvider>
       </BrowserRouter>
     );
   }
 
   const RouteListener = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const [start, setStart] = React.useState(true);
-
     React.useEffect(() => {
-      if (start && props.location) {
-        navigate(props.location);
-        setStart(false);
+      if (props.location) {
+        if (props.location) {
+          navigate(props.location);
+        }
       }
-    }, [props.location]);
-
-    React.useEffect(() => {
-      if (!start || !props.location) {
-        navigate(location.pathname);
-      }
-    }, [location.pathname]);
-
+    }, []);
     return null;
   };
 
   return (
     <MemoryRouter>
-      <ResidentContextProvider value={ctx}>
+      <AppProvider accessToken={props.accessToken}>
         <AppRoutes />
         <RouteListener />
-      </ResidentContextProvider>
+      </AppProvider>
     </MemoryRouter>
   );
 };
@@ -113,26 +88,31 @@ export const InMemoryApp = (props: { browser?: boolean; location?: string }) => 
  * hub.localcivics.io/communities/:communityName/calendar/events
  * hub.localcivics.io/communities/:communityName/calendar/events/:eventName
  */
-const AppRoutes = (props: { location?: string }) => {
+const AppRoutes = () => {
   return (
-    <Routes location={props.location}>
+    <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/residents/:residentName" element={<Profile />}>
+        <Route path="onboarding" element={<Onboarding />} />
         <Route path="settings" element={<Settings />} />
-        {/*<Route path="badges/:badgeName" element={<BadgeModal />} />*/}
-        {/*<Route path="events/:eventName" element={<EventModal />} />*/}
+        <Route path="badges/:badgeName" element={<Badge />} />
+        <Route path="tasks/:taskName" element={<Task />} />
+        <Route path="reflections/:experienceName" element={<Reflection />} />
       </Route>
       <Route path="/residents/:residentName/:tab" element={<Profile />} />
-      <Route path="/residents/:residentName/:tab/:status" element={<Profile />} />
-      {/*<Route path="/communities/:communityName/calendar/events" element={<Calendar />}>*/}
-      {/*  <Route path=":eventName" element={<EventModal />} />*/}
-      {/*</Route>*/}
-      {/*<Route path="/communities/:communityName/calendar/:date/events" element={<Calendar />}>*/}
-      {/*  <Route path=":eventName" element={<EventModal />} />*/}
-      {/*</Route>*/}
-      {/*<Route path="/communities/:communityName/explore/events" element={<ExplorePage />}>*/}
-      {/*  <Route path=":eventName" element={<EventModal />} />*/}
-      {/*</Route>*/}
+      <Route path="/residents/:residentName/tasks/:status" element={<Profile />} />
+      <Route path="/communities/:communityName/calendar/experiences" element={<Calendar />}>
+        <Route path=":experienceName" element={<Experience />} />
+      </Route>
+      <Route path="/communities/:communityName/calendar/:date/experiences" element={<Calendar />}>
+        <Route path=":experienceName" element={<Experience />} />
+      </Route>
+      <Route path="/communities/:communityName/explore/experiences" element={<Explore />}>
+        <Route path=":experienceName" element={<Experience />} />
+      </Route>
+      <Route path="/communities/:communityName/skills/:skill/experiences" element={<Explore />}>
+        <Route path=":experienceName" element={<Experience />} />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

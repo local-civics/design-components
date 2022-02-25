@@ -6,7 +6,7 @@ import { WidgetHeader, WidgetHeaderProps } from "./WidgetHeader";
  * Storybook component configuration
  */
 export default {
-  title: "Library/WidgetHeader",
+  title: "Library/Widget/WidgetHeader",
   component: WidgetHeader,
   argTypes: {},
 };

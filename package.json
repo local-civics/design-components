@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/react-hub",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
@@ -67,6 +67,6 @@
     "@sentry/react": "^6.17.4",
     "@sentry/tracing": "^6.17.4",
     "@auth0/auth0-react": "^1.9.0",
-    "@local-civics/js-client": "^0.0.16"
+    "@local-civics/js-client": "^0.0.26"
   }
 }

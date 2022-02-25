@@ -13,14 +13,14 @@ export type NavBarProps = {
  * A component for navigating the platform.
  */
 export const NavBar = (props: NavBarProps) => {
-  const className = builder("flex items-center justify-between flex-wrap sticky top-0 z-50 w-full h-16 border-b")
+  const className = builder("flex items-center justify-between flex-wrap sticky top-0 z-30 w-full h-16 border-b")
     .append("bg-white px-4 py text-center")
     .append("md:border-none md:border-monochrome-100 lg:px-36 md:shadow-md")
     .build();
 
   const [secondary, setSecondary] = React.useState(false);
-  const secondaryClassName = builder("w-full absolute z-50 top-16 left-0 grid grid-cols-1 border-b")
-    .append("md:border-none md:border-monochrome-50 md:invisible")
+  const secondaryClassName = builder("w-full absolute z-30 top-16 left-0 grid grid-cols-1")
+    .append("md:invisible")
     .append("transition duration-500 ease-in-out")
     .if(secondary, "opacity-full visible")
     .else("invisible opacity-0")
