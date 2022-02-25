@@ -1,9 +1,11 @@
 import { Auth0ContextInterface, Auth0Provider, useAuth0 } from "@auth0/auth0-react";
-import { Client, client, Resident } from "@local-civics/js-client";
-import React from "react";
-import * as Sentry from "@sentry/react";
-import { ErrorContextProvider } from "../Error/Error";
-import { MessageProvider, useMessage } from "../Message";
+import { Client, client, Resident }                       from "@local-civics/js-client";
+import {navigate}                                         from "@storybook/addon-links";
+import React                                              from "react";
+import * as Sentry                                        from "@sentry/react";
+import {useNavigate}                                      from "react-router-dom";
+import { ErrorContextProvider }                           from "../Error/Error";
+import { MessageProvider, useMessage }                    from "../Message";
 
 /* Auth domain for auth0 */
 const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
@@ -116,15 +118,6 @@ const useContext = (token?: string) => {
   const auth0 = useAuth0();
   const accessToken = useAccessToken(auth0, token);
   const message = useMessage();
-  const auth = {
-    accessToken: accessToken,
-    login: async () =>
-      auth0.loginWithRedirect().catch((e) => {
-        message.send(e);
-        throw e;
-      }),
-    logout: async () => auth0.logout({ returnTo: window.location.origin }),
-  };
   const api = client({
     accessToken,
     catch: (e) => {
@@ -154,6 +147,23 @@ const useContext = (token?: string) => {
         message.send(e);
       }
     },
+  };
+
+  const navigate = useNavigate()
+  const auth = {
+    accessToken: accessToken,
+    login: async () => {
+      if(requester.residentName){
+        navigate(`/residents/${requester.residentName}`)
+        return
+      }
+
+      auth0.loginWithRedirect().catch((e) => {
+        message.send(e);
+        throw e;
+      })
+    },
+    logout: async () => auth0.logout({ returnTo: window.location.origin }),
   };
 
   // Watch for access token changes and re-authenticate.
