@@ -18,6 +18,7 @@ import { Settings } from "./pages/Settings/Settings";
 import { Task } from "./pages/Task/Task";
 
 Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
   environment: process.env.REACT_APP_ENV,
   release: process.env.REACT_APP_VERSION,
   integrations: [new BrowserTracing()],
