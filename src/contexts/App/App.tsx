@@ -6,10 +6,10 @@ import { ErrorContextProvider } from "../Error/Error";
 import { MessageProvider, useMessage } from "../Message";
 
 /* Auth domain for auth0 */
-const AuthDomain = process.env.AUTH_DOMAIN || "auth.localcivics.io";
+const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
 
 /* Client id for auth0 */
-const ClientId = process.env.CLIENT_ID || "1Epch6YO3dcGBApKkSFCl6dz5aADfU7x";
+const ClientId = process.env.REACT_APP_AUTH_CLIENT_ID || "1Epch6YO3dcGBApKkSFCl6dz5aADfU7x";
 
 /* App context */
 const AppContext = React.createContext({} as AppState);
@@ -212,7 +212,7 @@ const useAccessToken = (auth0: Auth0ContextInterface, token?: string) => {
  * Determine audience by app environment.
  */
 const audience = () => {
-  const env = process.env.APP_ENV;
+  const env = process.env.REACT_APP_ENV;
   switch (env) {
     case "docker":
       return `localhost:8080`;

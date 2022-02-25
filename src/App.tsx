@@ -18,10 +18,10 @@ import { Settings } from "./pages/Settings/Settings";
 import { Task } from "./pages/Task/Task";
 
 Sentry.init({
-  environment: process.env.APP_ENV,
-  release: process.env.APP_VERSION,
+  environment: process.env.REACT_APP_ENV,
+  release: process.env.REACT_APP_VERSION,
   integrations: [new BrowserTracing()],
-  tracesSampleRate: parseFloat(process.env.SENTRY_SAMPLE_RATE || "1.0"),
+  tracesSampleRate: parseFloat(process.env.REACT_APP_SENTRY_SAMPLE_RATE || "1.0"),
 });
 
 /**
