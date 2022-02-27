@@ -3,7 +3,7 @@ import { Icon } from "../../../../components";
 export type ExperienceProps = {
   displayName?: string;
   pathway?: "policy & government" | "arts & culture" | "college & career" | "volunteer" | "recreation";
-  quantity?: number;
+  quality?: number;
   imageURL?: string;
   onClick?: () => void;
 };
@@ -24,9 +24,9 @@ export const Experience = (props: ExperienceProps) => {
                 <div className="text-xs font-medium capitalize text-white w-full">{props.pathway}</div>
               </span>
             )}
-            {props.quantity && (
+            {props.quality && (
               <div className="text-slate-600 shadow-md whitespace-nowrap font-bold rounded-md text-xs px-5 py-2 bg-cyan-400">
-                {props.quantity} pts
+                {props.quality} pts
               </div>
             )}
           </div>
