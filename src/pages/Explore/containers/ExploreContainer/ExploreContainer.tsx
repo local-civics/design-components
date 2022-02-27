@@ -36,7 +36,7 @@ export const ExploreContainer = () => {
       });
 
       if (!filtered || filtered.length === 0) {
-        setSearchResults(null);
+        setSearchResults([]);
         return;
       }
 
@@ -56,10 +56,11 @@ export const ExploreContainer = () => {
     React.useEffect(() => {
       (async () => {
         const q = qp.get("q");
-        if (!q) {
+        const p = qp.get("p")
+        if (!q && !p) {
           return;
         }
-        await fetchExperiences({displayName: qp.get("q"), experienceName: qp.get("p")});
+        await fetchExperiences({displayName: q, experienceName: p});
       })();
     }, [qp.get("q"), qp.get("p")]);
 
@@ -71,7 +72,7 @@ export const ExploreContainer = () => {
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
         onSearch={(search) => fetchExperiences({displayName: search})}
-        resolving={experiences === null}
+        resolving={experiences === null && searchResults === null}
         primary={
           experiences?.primary && (
             <ExperienceComponent
@@ -198,8 +199,10 @@ const useExperiences = (pathways: string[]) => {
         return;
       }
 
-      if(search){
-        return
+      const q = qp.get("q");
+      const p = qp.get("p")
+      if (q || p) {
+        return;
       }
 
       if ((params.skill && params.skill !== "undefined") || pathways.length > 0) {
