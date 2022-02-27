@@ -11,7 +11,6 @@ import { PathwayList } from "../../components/PathwayList/PathwayList";
 
 export const ExploreContainer = () => {
   const location = useLocation();
-  const qp = new URLSearchParams(location.search);
   const navigate = useNavigate();
   const api = useApi();
   const identity = useIdentity();
@@ -24,15 +23,14 @@ export const ExploreContainer = () => {
   );
 
   const ExperienceList = () => {
-    const [open, setOpen] = React.useState(!!qp.get("q") || !!qp.get("p"));
+    const [open, setOpen] = React.useState(false);
     const [searchResults, setSearchResults] = React.useState(null as React.ReactElement<SearchResultProps>[] | null);
-    const fetchExperiences = async ({displayName, experienceName}: {displayName?: string | null, experienceName?: string | null}) => {
+    const fetchExperiences = async (displayName?: string) => {
       if (!identity.communityName) {
         return;
       }
       const filtered = await api.experiences.list(identity.communityName, {
-        displayName: displayName || "",
-        experienceName: experienceName || "",
+        displayName: displayName,
       });
 
       if (!filtered || filtered.length === 0) {
@@ -53,17 +51,6 @@ export const ExploreContainer = () => {
       );
     };
 
-    React.useEffect(() => {
-      (async () => {
-        const q = qp.get("q");
-        const p = qp.get("p")
-        if (!q && !p) {
-          return;
-        }
-        await fetchExperiences({displayName: q, experienceName: p});
-      })();
-    }, [qp.get("q"), qp.get("p")]);
-
     return (
       <Gallery
         open={open}
@@ -71,7 +58,7 @@ export const ExploreContainer = () => {
         count={experiences?.filtered?.length}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
-        onSearch={(search) => fetchExperiences({displayName: search})}
+        onSearch={fetchExperiences}
         resolving={experiences === null && searchResults === null}
         primary={
           experiences?.primary && (
@@ -199,17 +186,15 @@ const useExperiences = (pathways: string[]) => {
         return;
       }
 
-      const q = qp.get("q");
       const p = qp.get("p")
-      if (q || p) {
-        return;
-      }
-
-      if ((params.skill && params.skill !== "undefined") || pathways.length > 0) {
+      const q = qp.get("q")
+      if (q || p || (params.skill && params.skill !== "undefined") || pathways.length > 0) {
         const skills = params.skill && params.skill !== "undefined" ? [params.skill] : qp.getAll("skills");
 
         setExperiences({
           filtered: await api.experiences.list(identity.communityName, {
+            displayName: q || undefined,
+            experienceName: p || undefined,
             skills,
             pathways: pathways as (
               | "policy & government"
