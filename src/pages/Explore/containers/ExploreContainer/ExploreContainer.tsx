@@ -88,7 +88,7 @@ export const ExploreContainer = () => {
                   <ExperienceComponent
                     key={ex.experienceName}
                     {...ex}
-                    onClick={() => navigate(`${location.pathname}/${experiences.primary?.experienceName}`)}
+                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
                   />
                 );
               })}
@@ -104,7 +104,7 @@ export const ExploreContainer = () => {
                   <ExperienceComponent
                     key={ex.experienceName}
                     {...ex}
-                    onClick={() => navigate(`${location.pathname}/${experiences.primary?.experienceName}`)}
+                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
                   />
                 );
               })}
@@ -120,7 +120,7 @@ export const ExploreContainer = () => {
                   <ExperienceComponent
                     key={ex.experienceName}
                     {...ex}
-                    onClick={() => navigate(`${location.pathname}/${experiences.primary?.experienceName}`)}
+                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
                   />
                 );
               })}
@@ -136,7 +136,7 @@ export const ExploreContainer = () => {
                   <ExperienceComponent
                     key={ex.experienceName}
                     {...ex}
-                    onClick={() => navigate(`${location.pathname}/${experiences.primary?.experienceName}`)}
+                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
                   />
                 );
               })}
