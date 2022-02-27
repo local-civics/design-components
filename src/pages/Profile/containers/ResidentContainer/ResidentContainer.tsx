@@ -1,7 +1,7 @@
 import { Community, Resident } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useRequester, useResolver } from "../../../../contexts/App";
+import { useApi, useIdentity } from "../../../../contexts/App";
 import { AboutWidget } from "../../components/AboutWidget/AboutWidget";
 import { ResidentWidget } from "../../components/ResidentWidget/ResidentWidget";
 
@@ -10,11 +10,11 @@ import { ResidentWidget } from "../../components/ResidentWidget/ResidentWidget";
  * @constructor
  */
 export const ResidentContainer = () => {
-  const requester = useRequester();
+  const identity = useIdentity();
   const peer = usePeer();
   const community = useCommunity();
   const navigate = useNavigate();
-  const now = new Date()
+  const now = new Date();
 
   return {
     ResidentWidget: () => (
@@ -25,18 +25,18 @@ export const ResidentContainer = () => {
         givenName={peer?.givenName}
         familyName={peer?.familyName}
         createdAt={peer?.createdAt}
-        online={!!peer?.lastLoginAt && ((now.getTime() - new Date(peer?.lastLoginAt).getTime()) < 5000)}
+        online={!!peer?.lastLoginAt && now.getTime() - new Date(peer?.lastLoginAt).getTime() < 5000}
       />
     ),
 
     AboutWidget: () => (
       <AboutWidget
         resolving={peer === null}
-        edit={requester.residentName === peer?.residentName}
+        edit={identity.residentName === peer?.residentName}
         impactStatement={peer?.impactStatement}
         placeName={community?.placeName}
         communityName={community?.displayName}
-        onEdit={() => navigate(`/residents/${requester.residentName}/settings`)}
+        onEdit={() => navigate(`/residents/${identity.residentName}/settings`)}
       />
     ),
   };
@@ -47,17 +47,17 @@ export const ResidentContainer = () => {
  */
 const useCommunity = () => {
   const api = useApi();
-  const requester = useRequester();
+  const identity = useIdentity();
   const [community, setCommunity] = React.useState(null as Community | null);
   React.useEffect(() => {
-    if (requester?.communityName) {
+    if (identity?.communityName) {
       (async () => {
-        setCommunity(await api.communities.view(requester.communityName || ""));
+        setCommunity(await api.communities.view(identity.communityName || ""));
       })();
     } else {
       setCommunity(null);
     }
-  }, [requester?.communityName]);
+  }, [identity?.communityName]);
 
   return community;
 };
@@ -70,23 +70,26 @@ const useCommunity = () => {
 export const usePeer = () => {
   const params = useParams();
   const api = useApi();
-  const resolver = useResolver();
+  const identity = useIdentity();
   const residentName = params.residentName;
   const [peer, setPeer] = React.useState(null as Resident | null);
 
   React.useEffect(() => {
-    if (residentName) {
-      (async () => {
-        setPeer(
-          await api.residents.view(residentName || "")
-        );
-      })();
-    } else {
-      setPeer(null);
-    }
+    (async () => {
+      if (!identity.residentName || !residentName || residentName === "undefined") {
+        setPeer(null);
+        return;
+      }
 
+      if (identity.residentName === residentName) {
+        setPeer(identity);
+        return;
+      }
+
+      setPeer(await api.residents.view(residentName));
+    })();
     return () => setPeer(null);
-  }, [residentName, resolver.resolving]);
+  }, [identity.residentName, residentName, identity.resolving]);
 
   return peer;
 };

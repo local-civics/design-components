@@ -2,7 +2,7 @@ import { Experience } from "@local-civics/js-client";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { SearchResult, SearchResultProps } from "../../../../components";
-import { useApi, useRequester } from "../../../../contexts/App";
+import { useApi, useIdentity } from "../../../../contexts/App";
 import { Exhibition } from "../../components/Exhibition/Exhibition";
 import { Experience as ExperienceComponent } from "../../components/Experience/Experience";
 import { Gallery } from "../../components/Gallery/Gallery";
@@ -14,7 +14,7 @@ export const ExploreContainer = () => {
   const qp = new URLSearchParams(location.search);
   const navigate = useNavigate();
   const api = useApi();
-  const requester = useRequester();
+  const identity = useIdentity();
   const [pathways, setPathways] = React.useState({} as Record<string, boolean>);
   const togglePathway = (pathway: string) => setPathways({ ...pathways, [pathway]: !pathways[pathway] });
   const experiences = useExperiences(
@@ -27,12 +27,18 @@ export const ExploreContainer = () => {
     const [open, setOpen] = React.useState(!!qp.get("q"));
     const [searchResults, setSearchResults] = React.useState(null as React.ReactElement<SearchResultProps>[] | null);
     const fetchExperiences = async (displayName: string) => {
-      if (!requester.communityName) {
+      if (!identity.communityName) {
         return;
       }
-      const filtered = await api.experiences.list(requester.communityName, {
+      const filtered = await api.experiences.list(identity.communityName, {
         displayName: displayName || "",
       });
+
+      if (!filtered || filtered.length === 0) {
+        setSearchResults(null);
+        return;
+      }
+
       setSearchResults(
         filtered.map((ex) => {
           return (
@@ -171,7 +177,7 @@ const useExperiences = (pathways: string[]) => {
   const { search } = useLocation();
   const qp = new URLSearchParams(location.search);
   const params = useParams();
-  const requester = useRequester();
+  const identity = useIdentity();
   const api = useApi();
   const [experiences, setExperiences] = React.useState(
     null as {
@@ -187,14 +193,14 @@ const useExperiences = (pathways: string[]) => {
   React.useEffect(() => {
     setExperiences(null);
     (async () => {
-      if (!requester.residentName || !requester.communityName) {
+      if (!identity.residentName || !identity.communityName) {
         return;
       }
 
-      if (search || params.skill || pathways.length > 0) {
-        const skills = params.skill ? [params.skill] : qp.getAll("skills");
+      if (search || (params.skill && params.skill !== "undefined") || pathways.length > 0) {
+        const skills = params.skill && params.skill !== "undefined" ? [params.skill] : qp.getAll("skills");
         setExperiences({
-          filtered: await api.experiences.list(requester.communityName, {
+          filtered: await api.experiences.list(identity.communityName, {
             ...qp,
             skills,
             pathways: pathways as (
@@ -207,18 +213,18 @@ const useExperiences = (pathways: string[]) => {
           }),
         });
       } else {
-        const top = await api.experiences.list(requester.communityName, {
+        const top = await api.experiences.list(identity.communityName, {
           orderBy: "top",
           limit: 4,
         });
         setExperiences({
           primary: top.length > 0 ? top[0] : null,
           top: top.length > 1 ? top.slice(1) : null,
-          soonest: await api.experiences.list(requester.communityName, {
+          soonest: await api.experiences.list(identity.communityName, {
             orderBy: "soonest",
             limit: 10,
           }),
-          milestones: await api.experiences.list(requester.communityName, {
+          milestones: await api.experiences.list(identity.communityName, {
             milestone: true,
             limit: 10,
           }),
@@ -227,7 +233,7 @@ const useExperiences = (pathways: string[]) => {
       }
     })();
     return () => setExperiences(null);
-  }, [search, pathways.length, params.skill, requester.residentName]);
+  }, [search, pathways.length, params.skill, identity.residentName]);
 
   return experiences;
 };

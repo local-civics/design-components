@@ -1,7 +1,7 @@
 import { Resident } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useApi, useAuth, useRequester, useResolver } from "../../../../contexts/App";
+import { useApi, useAuth, useIdentity } from "../../../../contexts/App";
 import { EditModal } from "../../components/EditModal/EditModal";
 
 /**
@@ -9,14 +9,13 @@ import { EditModal } from "../../components/EditModal/EditModal";
  * @constructor
  */
 export const EditContainer = () => {
-  const requester = useRequester();
-  const resolver = useResolver();
+  const identity = useIdentity();
   const api = useApi();
   const auth = useAuth();
   const navigate = useNavigate();
   const close = () => navigate(-1);
   const save = async (resident?: Resident) => {
-    if (!requester.residentName || resolver.resolving) {
+    if (!identity.residentName || identity.resolving) {
       return;
     }
 
@@ -25,11 +24,11 @@ export const EditContainer = () => {
       return;
     }
 
-    await api.residents.save(requester.residentName, resident).then(close);
-    await resolver.resolve();
+    await api.residents.save(identity.residentName, resident).then(close);
+    await identity.resolve();
   };
 
   return {
-    EditModal: () => <EditModal {...requester} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
+    EditModal: () => <EditModal {...identity} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
   };
 };

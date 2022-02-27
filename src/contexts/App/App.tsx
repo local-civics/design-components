@@ -1,11 +1,10 @@
 import { Auth0ContextInterface, Auth0Provider, useAuth0 } from "@auth0/auth0-react";
-import { Client, client, Resident }                       from "@local-civics/js-client";
-import {navigate}                                         from "@storybook/addon-links";
-import React                                              from "react";
-import * as Sentry                                        from "@sentry/react";
-import {useNavigate}                                      from "react-router-dom";
-import { ErrorContextProvider }                           from "../Error/Error";
-import { MessageProvider, useMessage }                    from "../Message";
+import { Client, client, IsBadRequest, IsNotAuthorized, IsNotFound, Resident } from "@local-civics/js-client";
+import React from "react";
+import * as Sentry from "@sentry/react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ErrorBoundary } from "../Error/Error";
+import { MessageProvider, useMessage } from "../Message";
 
 /* Auth domain for auth0 */
 const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
@@ -13,69 +12,69 @@ const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
 /* Client id for auth0 */
 const ClientId = process.env.REACT_APP_AUTH_CLIENT_ID || "1Epch6YO3dcGBApKkSFCl6dz5aADfU7x";
 
-/* App context */
-const AppContext = React.createContext({} as AppState);
+/* Api context */
+const ApiContext = React.createContext(undefined as ApiState | undefined);
+
+/* Auth context */
+const AuthContext = React.createContext(undefined as AuthState | undefined);
+
+/* Identity context */
+const IdentityContext = React.createContext(undefined as IdentityState | undefined);
 
 /**
- * A hook for subscribing to the current requester
+ * A hook for subscribing to the current identity
  */
-export const useRequester = () => {
-  const context = React.useContext(AppContext);
+export const useIdentity = () => {
+  const context = React.useContext(IdentityContext);
   if (context === undefined) {
-    throw new Error("useRequester must be used within a AppProvider");
+    throw new Error("useIdentity must be used within a IdentityProvider");
   }
-  return context.requester;
-};
-
-/**
- * A hook for resolving the current requester (typical post update)
- */
-export const useResolver = () => {
-  const context = React.useContext(AppContext);
-  if (context === undefined) {
-    throw new Error("useResolver must be used within a AppProvider");
-  }
-  return context.resolver;
+  return context;
 };
 
 /**
  * A hook for handling authentication.
  */
 export const useAuth = () => {
-  const context = React.useContext(AppContext);
+  const context = React.useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within a AppProvider");
+    throw new Error("useAuth must be used within a AuthProvider");
   }
-  return context.auth;
+  return context;
 };
 
 /**
  * A hook for subscribing to and api context
  */
 export const useApi = () => {
-  const context = React.useContext(AppContext);
+  const context = React.useContext(ApiContext);
   if (context === undefined) {
-    throw new Error("useApi must be used within a AppProvider");
+    throw new Error("useApi must be used within a ApiProvider");
   }
 
-  return context.api;
+  return context;
 };
 
 /**
- * The state of the app.
+ * identity state.
  */
-export type AppState = {
-  auth: {
-    accessToken?: string;
-    login?: () => Promise<void>;
-    logout?: () => void;
-  };
-  requester: Resident;
-  resolver: {
-    resolving: boolean;
-    resolve: () => Promise<void>;
-  };
-  api: Client;
+export type IdentityState = Resident & {
+  resolving: boolean;
+  resolve: () => Promise<void>;
+};
+
+/**
+ * The api state.
+ */
+export type ApiState = Client;
+
+/**
+ * Auth state.
+ */
+export type AuthState = {
+  accessToken?: string;
+  login?: () => Promise<void>;
+  logout?: () => void;
 };
 
 /**
@@ -86,6 +85,8 @@ export type AppProviderProps = {
   children: React.ReactNode;
 };
 
+const Consumer = React.memo((props) => <>{props.children}</>);
+
 /**
  * Provide access to apis and resident.
  *
@@ -95,98 +96,156 @@ export type AppProviderProps = {
  * @constructor
  */
 export const AppProvider = (props: AppProviderProps) => {
-  const App = () => {
-    const context = useContext(props.accessToken);
-    return <AppContext.Provider value={context}>{props.children}</AppContext.Provider>;
-  };
-
   return (
-    <ErrorContextProvider>
+    <ErrorBoundary>
       <MessageProvider>
-        <Auth0Provider domain={AuthDomain} clientId={ClientId} redirectUri={window.location.origin}>
-          <App />
-        </Auth0Provider>
+        <AuthProvider accessToken={props.accessToken}>
+          <ApiProvider>
+            <IdentityProvider>
+              <Consumer>{props.children}</Consumer>
+            </IdentityProvider>
+          </ApiProvider>
+        </AuthProvider>
       </MessageProvider>
-    </ErrorContextProvider>
+    </ErrorBoundary>
   );
 };
 
 /**
- * A hook for subscribing to resident context updates
+ * Provide identity identity.
  */
-const useContext = (token?: string) => {
-  const auth0 = useAuth0();
-  const accessToken = useAccessToken(auth0, token);
-  const message = useMessage();
-  const api = client({
-    accessToken,
-    catch: (e) => {
-      message.send(e);
-      throw e;
-    },
-  });
-
-  const [requester, setRequester] = React.useState({} as Resident);
-  const [resolving, setResolving] = React.useState(false);
-  const resolver = {
-    resolving: resolving,
-    resolve: async () => {
-      try {
+export const IdentityProvider = (props: { children?: React.ReactNode }) => {
+  const Identity = () => {
+    const navigate = useNavigate();
+    const [identity, setIdentity] = React.useState({} as Resident);
+    const [resolving, setResolving] = React.useState(true);
+    const location = useLocation();
+    const api = useApi();
+    const { accessToken } = useAuth();
+    const context = {
+      ...identity,
+      resolving: resolving,
+      resolve: async () => {
         setResolving(true);
-        let residentName: string = requester.residentName || "";
+        let residentName: string = identity.residentName || "";
         if (!residentName) {
           const preview = await api.residents.resolve();
           residentName = preview.residentName || "";
         }
 
+        if (!residentName) {
+          return;
+        }
+
         const resident = await api.residents.view(residentName);
-        setRequester(resident);
+        setIdentity(resident);
         setResolving(false);
         Sentry.setUser({ id: resident.residentId, residentName: resident.residentName });
-      } catch (e) {
-        message.send(e);
+
+        if (location.search && (location.pathname === "/" || !location.pathname)) {
+          navigate(`/residents/${resident.residentName}`);
+        }
+      },
+    };
+
+    // Watch for access token changes and re-authenticate.
+    React.useEffect(() => {
+      if (!accessToken || ((location.pathname === "/" || !location.pathname) && !location.search)) {
+        Sentry.configureScope((scope) => scope.setUser(null));
+        setIdentity({});
+        return;
       }
-    },
+
+      (async () => {
+        await context.resolve();
+      })();
+
+      return () => setIdentity({});
+    }, [accessToken]);
+
+    return (
+      <IdentityContext.Provider value={context}>
+        <Consumer>{props.children}</Consumer>
+      </IdentityContext.Provider>
+    );
   };
 
-  const navigate = useNavigate()
-  const auth = {
-    accessToken: accessToken,
-    login: async () => {
-      if(requester.residentName){
-        navigate(`/residents/${requester.residentName}`)
-        return
-      }
+  return <Identity />;
+};
 
-      auth0.loginWithRedirect().catch((e) => {
-        message.send(e);
-        throw e;
-      })
-    },
-    logout: async () => auth0.logout({ returnTo: window.location.origin }),
+/**
+ * Provide access to apis.
+ */
+export const ApiProvider = (props: { children?: React.ReactNode }) => {
+  const Api = () => {
+    const { send } = useMessage();
+    const memoSend = React.useCallback(send, []);
+    return <MessageApi send={memoSend} />;
   };
 
-  // Watch for access token changes and re-authenticate.
-  React.useEffect(() => {
-    if (!accessToken) {
-      Sentry.configureScope((scope) => scope.setUser(null));
-      setRequester({});
-      return;
-    }
+  const MessageApi = React.memo<{ send: (err: any) => void }>(({ send }) => {
+    const { accessToken } = useAuth();
+    const context = client({
+      apiURL: process.env.REACT_APP_API_URL,
+      accessToken: accessToken,
+      onReject: (e) => {
+        send(e);
+        if (IsBadRequest(e) || IsNotAuthorized(e)) {
+          return Promise.resolve(e);
+        }
 
-    (async () => {
-      await resolver.resolve();
-    })();
+        if (IsNotFound(e)) {
+          return Promise.resolve(null);
+        }
 
-    return () => setRequester({});
-  }, [accessToken]);
+        return Promise.reject(e);
+      },
+    });
+    return (
+      <ApiContext.Provider value={context}>
+        <Consumer>{props.children}</Consumer>
+      </ApiContext.Provider>
+    );
+  });
 
-  return {
-    auth,
-    requester,
-    api,
-    resolver,
+  return <Api />;
+};
+
+/**
+ * Provide access to auth.
+ */
+export const AuthProvider = (props: { accessToken?: string; children?: React.ReactNode }) => {
+  const Auth = () => {
+    const { send } = useMessage();
+    const memoSend = React.useCallback(send, []);
+    return <MessageAuth send={memoSend} />;
   };
+
+  const MessageAuth = React.memo<{ send: (err: any) => void }>(({ send }) => {
+    const auth0 = useAuth0();
+    const accessToken = useAccessToken(auth0, props.accessToken);
+    const context = {
+      accessToken: accessToken,
+      login: async () =>
+        auth0.loginWithRedirect().catch((e) => {
+          send(e);
+          throw e;
+        }),
+      logout: async () => auth0.logout({ returnTo: window.location.origin }),
+    };
+
+    return (
+      <AuthContext.Provider value={context}>
+        <Consumer>{props.children}</Consumer>
+      </AuthContext.Provider>
+    );
+  });
+
+  return (
+    <Auth0Provider audience={audience()} domain={AuthDomain} clientId={ClientId} redirectUri={window.location.origin}>
+      <Auth />
+    </Auth0Provider>
+  );
 };
 
 /**
@@ -202,6 +261,10 @@ const useAccessToken = (auth0: Auth0ContextInterface, token?: string) => {
         return;
       }
 
+      if (!auth0.isAuthenticated) {
+        return;
+      }
+
       try {
         const accessToken = await auth0.getAccessTokenSilently({
           audience: audience(),
@@ -214,7 +277,7 @@ const useAccessToken = (auth0: Auth0ContextInterface, token?: string) => {
     })();
 
     return () => setAccessToken(token);
-  }, [auth0.getAccessTokenSilently, auth0.user?.sub, token]);
+  }, [auth0.isAuthenticated, auth0.user?.sub, token]);
   return accessToken;
 };
 
@@ -222,10 +285,13 @@ const useAccessToken = (auth0: Auth0ContextInterface, token?: string) => {
  * Determine audience by app environment.
  */
 const audience = () => {
+  const audience = process.env.REACT_APP_AUTH_AUDIENCE;
+  if (audience) {
+    return audience;
+  }
+
   const env = process.env.REACT_APP_ENV;
   switch (env) {
-    case "docker":
-      return `localhost:8080`;
     case "beta":
       return `dev.api.localcivics.io`;
     case "alpha":

@@ -13,6 +13,4 @@ export default {
 /**
  * Experience
  */
-export const Page = () => (
-  <InMemoryApp accessToken="andre.carter" location="/communities/hcz/explore/experiences/experience" />
-);
+export const Page = () => <InMemoryApp accessToken="andre.carter" location="/communities/hcz/explore/experience" />;

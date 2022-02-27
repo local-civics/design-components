@@ -6,5 +6,5 @@ export type ExhibitionProps = {
 };
 
 export const Exhibition = (props: ExhibitionProps) => {
-  return <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">{props.children}</article>;
+  return <article className="grid grid-cols-1 gap-2 overflow-scroll">{props.children}</article>;
 };

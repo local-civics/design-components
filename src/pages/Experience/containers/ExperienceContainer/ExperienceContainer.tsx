@@ -5,7 +5,7 @@
 import { Experience } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useRequester } from "../../../../contexts/App";
+import { useApi, useIdentity } from "../../../../contexts/App";
 import { useMessage } from "../../../../contexts/Message";
 import { Card } from "../../components/Card/Card";
 
@@ -14,19 +14,19 @@ import { Card } from "../../components/Card/Card";
  * @constructor
  */
 export const ExperienceContainer = () => {
-  const requester = useRequester();
+  const identity = useIdentity();
   const navigate = useNavigate();
   const close = () => navigate(-1);
   const experience = useExperience();
   const api = useApi();
-  const ready = experience !== null && !!experience.experienceName && !!requester.residentName;
+  const ready = experience !== null && !!experience.experienceName && !!identity.residentName;
   const message = useMessage();
   const register = () =>
     ready &&
     api.registrations
-      .create(requester.residentName || "", {
+      .create(identity.residentName || "", {
         ...experience,
-        ...requester,
+        ...identity,
         originURL: window.location.href,
       })
       .then(() => {
@@ -48,11 +48,11 @@ export const ExperienceContainer = () => {
         onClose={close}
         onRegister={register}
         onUnregister={() =>
-          ready && api.registrations.remove(requester.residentName || "", experience.experienceName || "")
+          ready && api.registrations.remove(identity.residentName || "", experience.experienceName || "")
         }
         onJoin={() => experience?.externalURL && window.open(experience?.externalURL, "_blank")}
         onSkillClick={(skill) =>
-          ready && navigate(`/communities/${requester.communityName}/skills/${skill}/experiences`)
+          ready && navigate(`/communities/${identity.communityName}/skills/${skill}/experiences`)
         }
       />
     ),
@@ -60,7 +60,7 @@ export const ExperienceContainer = () => {
 };
 
 const useExperience = () => {
-  const requester = useRequester();
+  const identity = useIdentity();
   const api = useApi();
   const params = useParams();
   const experienceName = params.experienceName;
@@ -69,13 +69,13 @@ const useExperience = () => {
     setExperience(null);
 
     (async () => {
-      if (!requester.residentName || !requester.communityName || !experienceName) {
+      if (!identity.residentName || !identity.communityName || !experienceName || experienceName === "undefined") {
         return;
       }
 
-      setExperience(await api.experiences.view(requester.communityName, experienceName));
+      setExperience(await api.experiences.view(identity.communityName, experienceName));
     })();
     return () => setExperience(null);
-  }, [experienceName, requester.residentName]);
+  }, [experienceName, identity.residentName]);
   return experience;
 };

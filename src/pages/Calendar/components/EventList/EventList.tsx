@@ -9,7 +9,7 @@ export type EventListProps = {
   resolving?: boolean;
   date: Date | null;
   onSetDate: (date: Date | null) => void;
-  children?: React.ReactElement<EventProps> | React.ReactElement<EventProps>[];
+  children?: React.ReactElement<EventProps> | React.ReactElement<EventProps>[] | null;
 };
 
 /**
@@ -19,7 +19,7 @@ export type EventListProps = {
  */
 export const EventList = (props: EventListProps) => {
   const date = props.date || new Date();
-  const hasChildren = React.Children.count(props.children) > 0;
+  const hasChildren = props.children && React.Children.count(props.children) > 0;
 
   return (
     <Widget>

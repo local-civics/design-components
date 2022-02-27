@@ -1,8 +1,10 @@
 import { IsBadRequest, IsNotAuthorized, IsNotFound } from "@local-civics/js-client";
+import * as Sentry from "@sentry/react";
 import React from "react";
 import { Button, Icon, IconName } from "../../components";
 import { Modal } from "../../components";
 import { builder } from "../../utils/classname/classname";
+import { AppError } from "../Error/Error";
 
 /**
  * Message state.
@@ -25,9 +27,7 @@ export const useMessage = () => {
     throw new Error("useMessage must be used within a MessageProvider");
   }
 
-  return {
-    send: context.send,
-  };
+  return context;
 };
 
 /**
@@ -44,14 +44,19 @@ export type MessageProviderProps = {
  * @constructor
  */
 export const MessageProvider = (props: MessageProviderProps) => {
-  const context = useContext(props.message);
-  return (
-    <MessageContext.Provider value={context}>
-      <MessageBoundary message={context.message} close={context.clear}>
-        {props.children}
-      </MessageBoundary>
-    </MessageContext.Provider>
-  );
+  const Sender = React.memo(() => {
+    return <>{props.children}</>;
+  });
+  const Messenger = () => {
+    const context = useContext(props.message);
+    return (
+      <MessageContext.Provider value={context}>
+        <Sender />
+        <Receiver />
+      </MessageContext.Provider>
+    );
+  };
+  return <Messenger />;
 };
 
 /**
@@ -65,22 +70,32 @@ const useContext = (value?: string) => {
     if (message instanceof Error) {
       msg.severity = "error";
       if (IsBadRequest(message)) {
-        msg.title = "Bad request";
+        msg.title = "try again";
         msg.description = message.message;
       } else if (IsNotAuthorized(message)) {
-        msg.title = "Not authorized";
+        msg.title = "not authorized";
         msg.description = message.message;
       } else if (IsNotFound(message)) {
-        msg.title = "Not found";
+        msg.title = "not here";
         msg.description = message.message;
       } else {
-        msg.title = "Something went wrong";
+        msg.title = "something went wrong";
         msg.description = "If the issue persists, please contact support@localcivics.io.";
       }
     } else {
       msg.description = message;
     }
-    console.log(msg);
+
+    if (message instanceof AppError) {
+      const error = message as AppError;
+      Sentry.captureException(error.cause);
+      console.log(error.cause);
+    } else {
+      const error = message as Error;
+      Sentry.captureException(error);
+      console.log(error);
+    }
+
     setMessage(msg);
   };
 
@@ -92,20 +107,12 @@ const useContext = (value?: string) => {
 };
 
 /**
- * The properties for the message boundary.
- */
-type MessageBoundaryProps = {
-  message?: Message;
-  close?: () => void;
-  children: React.ReactNode;
-};
-
-/**
  * A component for catching component messages while rendering.
  */
-const MessageBoundary = (props: MessageBoundaryProps) => {
+const Receiver = () => {
+  const message = useMessage();
   const iconColor = (() => {
-    switch (props.message?.severity) {
+    switch (message.message?.severity) {
       case "success":
         return "text-green-500";
       case "error":
@@ -115,29 +122,27 @@ const MessageBoundary = (props: MessageBoundaryProps) => {
     }
   })();
 
-  const className = builder().if(!!props.message, "relative z-40").build();
-
+  const className = builder().if(!!message.message, "relative z-40").build();
   return (
     <>
       <div className={className}>
-        <Modal visible={!!props.message} onClose={props.close}>
+        <Modal visible={!!message.message} onClose={message.clear}>
           <div className="grid grid-cols-1 px-14 pb-4 justify-items-center text-slate-500 gap-y-2">
             <div className="grid grid-cols-1 justify-items-center gap-y-2">
               <div className={`w-8 h-8 ${iconColor}`}>
-                <Icon name={props.message?.icon || "bolt"} />
+                <Icon name={message.message?.icon || "bolt"} />
               </div>
-              <p className="text-sm font-semibold">{props.message?.title || "New message"}</p>
+              <p className="text-sm font-semibold">{message.message?.title || "New message"}</p>
             </div>
 
-            <p className="text-sm text-center text-slate-700 max-w-[15rem]">{props.message?.description}</p>
+            <p className="text-sm text-center text-slate-700 max-w-[15rem]">{message.message?.description}</p>
 
             <div className="mt-4">
-              <Button spacing="xs" border="rounded" color="slate" theme="dark" text="ok" onClick={props.close} />
+              <Button spacing="xs" border="rounded" color="slate" theme="dark" text="ok" onClick={message.clear} />
             </div>
           </div>
         </Modal>
       </div>
-      {props.children}
     </>
   );
 };

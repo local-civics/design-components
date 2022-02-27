@@ -13,4 +13,4 @@ export default {
 /**
  * Calendar
  */
-export const Page = () => <InMemoryApp accessToken="andre.carter" location="/communities/hcz/calendar/experiences" />;
+export const Page = () => <InMemoryApp accessToken="andre.carter" location="/communities/hcz/calendar" />;

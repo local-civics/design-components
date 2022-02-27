@@ -2,7 +2,7 @@ import { Report } from "@local-civics/js-client";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { IconName } from "../../../../components";
-import { useApi } from "../../../../contexts/App";
+import { useApi, useIdentity } from "../../../../contexts/App";
 import { ActivityProgress } from "../../components/ActivityProgress/ActivityProgress";
 import { AchievementWidget } from "../../components/AchievementWidget/AchievementWidget";
 import { ImpactWidget } from "../../components/ImpactWidget/ImpactWidget";
@@ -41,13 +41,14 @@ export const ImpactContainer = () => {
  */
 const useImpact = () => {
   const params = useParams();
+  const identity = useIdentity();
   const api = useApi();
   const residentName = params.residentName;
   const [pathways, setPathways] = React.useState(null as Report[] | null);
   const [overall, setOverall] = React.useState(null as Report | null);
 
   React.useEffect(() => {
-    if (residentName) {
+    if (identity.residentName && residentName && residentName !== "undefined") {
       (async () => {
         setPathways(await api.reports.list(residentName, { groupBy: "pathway" }));
         setOverall((await api.reports.list(residentName))[0]);
@@ -58,7 +59,7 @@ const useImpact = () => {
       setPathways(null);
       setOverall(null);
     };
-  }, [residentName]);
+  }, [identity.residentName, residentName]);
 
   return {
     pathways,

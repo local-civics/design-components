@@ -15,23 +15,25 @@ export type GalleryProps = SearchProps & {
 
 export const Gallery = (props: GalleryProps) => {
   const hasPrimary = !!props.primary;
-  const hasTop = React.Children.count(props.top) > 0;
-  const hasSoonest = React.Children.count(props.soonest) > 0;
-  const hasMilestones = React.Children.count(props.milestones) > 0;
-  const numFiltered = React.Children.count(props.filtered);
+  const hasTop = props.top && React.Children.count(props.top) > 0;
+  const hasSoonest = props.soonest && React.Children.count(props.soonest) > 0;
+  const hasMilestones = props.milestones && React.Children.count(props.milestones) > 0;
+  const numFiltered = props.filtered ? React.Children.count(props.filtered) : 0;
   const hasFiltered = numFiltered > 0;
   const hasAny = hasPrimary || hasTop || hasSoonest || hasMilestones || hasFiltered;
 
   return (
     <Loader isLoading={props.resolving}>
-      <Search
-        open={props.open}
-        results={props.results}
-        onClose={props.onClose}
-        onOpen={props.onOpen}
-        onSearch={props.onSearch}
-        placeholder="Search for learning experiences..."
-      />
+      <div className="relative block">
+        <Search
+          open={props.open}
+          results={props.results}
+          onClose={props.onClose}
+          onOpen={props.onOpen}
+          onSearch={props.onSearch}
+          placeholder="Search for learning experiences..."
+        />
+      </div>
 
       {(hasPrimary || hasTop) && (
         <label className="mt-5 relative block grid grid-cols-1 gap-y-2">

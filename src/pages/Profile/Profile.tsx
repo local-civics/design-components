@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { AuthLayout } from "../../layouts/AuthLayout/AuthLayout";
 import { DashboardContainer } from "./containers/DashboardContainer/DashboardContainer";
 import { ImpactContainer } from "./containers/ImpactContainer/ImpactContainer";

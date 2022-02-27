@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { NavBar, NavBarProps, NavLink, Loader } from "../../components";
-import { useAuth, useRequester, useResolver } from "../../contexts/App";
+import { useAuth, useIdentity } from "../../contexts/App";
 
 /**
  * The properties for the auth layout
@@ -22,39 +22,40 @@ export type AuthLayoutProps = {
  * @constructor
  */
 export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
-  const requester = useRequester();
+  const identity = useIdentity();
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuth();
-  const { resolving } = useResolver();
   const page = props.page || "profile";
-  if (requester.residentName && !requester.communityName) {
-    if (location.pathname !== `/residents/${requester.residentName}/onboarding`) {
-      navigate(`/residents/${requester.residentName}/onboarding`);
+  React.useEffect(() => {
+    if (identity.residentName && !identity.communityName) {
+      if (location.pathname !== `/residents/${identity.residentName}/onboarding`) {
+        navigate(`/residents/${identity.residentName}/onboarding`);
+      }
     }
-  }
+  }, [location.pathname, identity.residentName, identity.communityName]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
-      <Loader isLoading={resolving}>
+      <Loader isLoading={identity.resolving}>
         <NavBar>
           <NavLink disabled={props.disabled} name="home" path="/" />
           <NavLink
             disabled={props.disabled}
             name="profile"
-            path={`/residents/${requester.residentName}`}
+            path={`/residents/${identity.residentName}`}
             active={page === "profile"}
           />
           <NavLink
             disabled={props.disabled}
             name="explore"
-            path={`/communities/${requester.communityName}/explore/experiences`}
+            path={`/communities/${identity.communityName}/explore`}
             active={page === "explore"}
           />
           <NavLink
             disabled={props.disabled}
             name="calendar"
-            path={`/communities/${requester.communityName}/calendar/experiences`}
+            path={`/communities/${identity.communityName}/calendar`}
             active={page === "calendar"}
           />
           <NavLink name="logout" onClick={auth.logout} />
@@ -84,9 +85,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
                       {props.subheader}
                     </div>
                   )}
-                  {props.main && (
-                    <div className="relative grid grid-cols-1 md:flex w-full gap-4 lg:gap-2">{props.main}</div>
-                  )}
+                  {props.main && <div className="relative grid grid-cols-1 w-full gap-4 lg:gap-2">{props.main}</div>}
                 </div>
               )}
             </div>

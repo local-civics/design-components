@@ -1,7 +1,7 @@
 import { Badge, Resident, Task } from "@local-civics/js-client";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useApi, useRequester } from "../../../../contexts/App";
+import { useApi, useIdentity } from "../../../../contexts/App";
 import { getIconName } from "../../../../utils/icon/icon";
 import { Dashboard } from "../../components/Dashboard/Dashboard";
 import { BadgeWorkflow } from "../../components/BadgeWorkflow/BadgeWorkflow";
@@ -15,15 +15,15 @@ import { usePeer } from "../ResidentContainer/ResidentContainer";
  * @constructor
  */
 export const DashboardContainer = () => {
-  const requester = useRequester();
-  const dashboard = useDashboard(requester);
+  const identity = useIdentity();
+  const dashboard = useDashboard(identity);
   const navigate = useNavigate();
   const peer = usePeer();
 
   return {
     Dashboard: () => (
       <Dashboard
-        disabled={requester.residentName !== peer?.residentName}
+        disabled={identity.residentName !== peer?.residentName}
         resolving={dashboard.resolvingTab}
         active={dashboard.tab}
         onBadgeWorkflow={() => dashboard.setTab("badges")}
@@ -36,15 +36,15 @@ export const DashboardContainer = () => {
                 <BadgeComponent
                   {...badge}
                   key={badge.badgeName}
-                  open={requester.residentName === peer?.residentName}
+                  open={identity.residentName === peer?.residentName}
                   icon={getIconName(badge.pathway)}
-                  onOpen={() => navigate(`/residents/${requester.residentName}/badges/${badge.badgeName}`)}
+                  onOpen={() => navigate(`/residents/${identity.residentName}/badges/${badge.badgeName}`)}
                 />
               ))}
           </BadgeWorkflow>
         )}
 
-        {dashboard.tab === "tasks" && requester.residentName === peer?.residentName && (
+        {dashboard.tab === "tasks" && identity.residentName === peer?.residentName && (
           <TaskWorkflow
             resolving={dashboard.resolvingStatus}
             active={dashboard.status}
@@ -58,7 +58,7 @@ export const DashboardContainer = () => {
                   {...task}
                   open
                   key={task.taskName}
-                  onOpen={() => navigate(`/residents/${requester.residentName}/tasks/${task.taskName}`)}
+                  onOpen={() => navigate(`/residents/${identity.residentName}/tasks/${task.taskName}`)}
                 />
               ))}
           </TaskWorkflow>
@@ -138,6 +138,10 @@ const useDashboard = (peer?: Resident) => {
 };
 
 const getTab = (name?: string) => {
+  if (!name || name === "undefined") {
+    return "badges";
+  }
+
   if (!["badges", "tasks"].includes(name || "")) {
     throw new Error(`the provided tab "${name}" does not exist`);
   }
@@ -146,20 +150,13 @@ const getTab = (name?: string) => {
 };
 
 const getStatus = (name?: string) => {
+  if (!name || name === "undefined") {
+    return "todo";
+  }
+
   if (!["todo", "in-progress", "done"].includes(name || "")) {
     throw new Error(`the provided status "${name}" does not exist`);
   }
 
   return name as "todo" | "in-progress" | "done";
-};
-
-const getBadgeIntensity = (status?: "todo" | "done" | "in-progress") => {
-  switch (status) {
-    case "todo":
-    case "done":
-    case "in-progress":
-      return "normal";
-    default:
-      return "faded";
-  }
 };

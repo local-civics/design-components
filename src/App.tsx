@@ -102,13 +102,13 @@ const AppRoutes = () => {
       </Route>
       <Route path="/residents/:residentName/:tab" element={<Profile />} />
       <Route path="/residents/:residentName/tasks/:status" element={<Profile />} />
-      <Route path="/communities/:communityName/calendar/experiences" element={<Calendar />}>
+      <Route path="/communities/:communityName/calendar" element={<Calendar />}>
         <Route path=":experienceName" element={<Experience />} />
       </Route>
-      <Route path="/communities/:communityName/calendar/:date/experiences" element={<Calendar />}>
+      <Route path="/communities/:communityName/dates/:date" element={<Calendar />}>
         <Route path=":experienceName" element={<Experience />} />
       </Route>
-      <Route path="/communities/:communityName/explore/experiences" element={<Explore />}>
+      <Route path="/communities/:communityName/explore" element={<Explore />}>
         <Route path=":experienceName" element={<Experience />} />
       </Route>
       <Route path="/communities/:communityName/skills/:skill/experiences" element={<Explore />}>

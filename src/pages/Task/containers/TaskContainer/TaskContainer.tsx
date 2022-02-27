@@ -5,11 +5,11 @@
 import { Resident, Task } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useRequester } from "../../../../contexts/App";
+import { useApi, useIdentity } from "../../../../contexts/App";
 import { TaskModal } from "../../components/TaskModal/TaskModal";
 
 export const TaskContainer = () => {
-  const requester = useRequester();
+  const identity = useIdentity();
   const navigate = useNavigate();
   const close = () => navigate(-1);
   const [started, setStarted] = React.useState(false);
@@ -17,15 +17,15 @@ export const TaskContainer = () => {
   const api = useApi();
 
   const start = async () => {
-    requester.residentName && task?.taskName && (await api.tasks.start(requester.residentName, task.taskName));
+    identity.residentName && task?.taskName && (await api.tasks.start(identity.residentName, task.taskName));
     setStarted(true);
   };
   const finish = async () => {
-    requester.residentName && task?.taskName && (await api.tasks.done(requester.residentName, task.taskName));
+    identity.residentName && task?.taskName && (await api.tasks.done(identity.residentName, task.taskName));
     close();
   };
 
-  const nextURL = actionURL(requester, task);
+  const nextURL = actionURL(identity, task);
   const launch = () => nextURL && navigate(nextURL);
 
   return {
@@ -45,7 +45,7 @@ export const TaskContainer = () => {
 };
 
 const useTask = (started?: boolean) => {
-  const requester = useRequester();
+  const identity = useIdentity();
   const api = useApi();
   const params = useParams();
   const taskName = params.taskName;
@@ -54,43 +54,43 @@ const useTask = (started?: boolean) => {
     setTask(null);
 
     (async () => {
-      if (!requester.residentName || !taskName) {
+      if (!identity.residentName || !taskName || taskName === "undefined") {
         return;
       }
 
-      setTask(await api.tasks.view(requester.residentName, taskName));
+      setTask(await api.tasks.view(identity.residentName, taskName));
     })();
     return () => setTask(null);
-  }, [taskName, requester.residentName, started]);
+  }, [taskName, identity.residentName, started]);
 
   return task;
 };
 
 /**
  * Action URL builder.
- * @param requester
+ * @param identity
  * @param task
  */
-const actionURL = (requester?: Resident, task?: Task | null) => {
-  if (!requester || !task || !task.actionName) {
+const actionURL = (identity?: Resident, task?: Task | null) => {
+  if (!identity || !task || !task.actionName) {
     return "";
   }
 
   const actionName = task.actionName;
   if (actionName === "reflections.create" && !!task.experienceName) {
-    return `/residents/${requester.residentName}/reflections/${task.experienceName}`;
+    return `/residents/${identity.residentName}/reflections/${task.experienceName}`;
   }
 
   if (actionName === "avatar.set") {
-    return `/residents/${requester.residentName}/settings`;
+    return `/residents/${identity.residentName}/settings`;
   }
 
   if (!!task.experienceName) {
-    return `/communities/${requester.communityName}/explore/experiences/${task.experienceName}`;
+    return `/communities/${identity.communityName}/explore/${task.experienceName}`;
   }
 
   if (!!task.experienceNamePrefix) {
-    return `/communities/${requester.communityName}/explore/experiences?experienceName=${encodeURIComponent(
+    return `/communities/${identity.communityName}/explore?experienceName=${encodeURIComponent(
       task.experienceNamePrefix
     )}`;
   }

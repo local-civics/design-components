@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/react-hub",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
@@ -45,6 +45,7 @@
     "@typescript-eslint/parser": "^4.29.0",
     "autoprefixer": "^10.3.1",
     "chromatic": "^5.9.2",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "miragejs": "^0.1.43",
     "numeral": "^2.0.6",
     "postcss": "^8.4.5",
@@ -64,9 +65,9 @@
     "react-router-dom": "^6.2.1"
   },
   "dependencies": {
-    "@sentry/react": "^6.17.4",
-    "@sentry/tracing": "^6.17.4",
     "@auth0/auth0-react": "^1.9.0",
-    "@local-civics/js-client": "^0.0.31"
+    "@local-civics/js-client": "^0.0.35",
+    "@sentry/react": "^6.17.4",
+    "@sentry/tracing": "^6.17.4"
   }
 }

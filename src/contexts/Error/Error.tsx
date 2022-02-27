@@ -42,7 +42,7 @@ export type ErrorContextProviderProps = {
  * @param props
  * @constructor
  */
-export const ErrorContextProvider = (props: ErrorContextProviderProps) => {
+export const ErrorBoundary = (props: ErrorContextProviderProps) => {
   const [state, setState] = React.useState(defaultErrorContext());
   React.useEffect(() => {
     setState({ ...state, error: asAppError(props.value) });
@@ -61,7 +61,7 @@ export const ErrorContextProvider = (props: ErrorContextProviderProps) => {
   const value = { ...state, emit: emit, reset: reset };
   return (
     <ErrorContext.Provider value={value}>
-      <ErrorBoundary context={value}>{props.children}</ErrorBoundary>
+      <ErrorBoundaryComponent context={value}>{props.children}</ErrorBoundaryComponent>
     </ErrorContext.Provider>
   );
 };
@@ -77,7 +77,7 @@ type ErrorBoundaryProps = {
 /**
  * A component for catching component errors while rendering.
  */
-class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+class ErrorBoundaryComponent extends React.Component<ErrorBoundaryProps> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
   }

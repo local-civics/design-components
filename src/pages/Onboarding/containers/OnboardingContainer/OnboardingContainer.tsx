@@ -2,7 +2,7 @@ import { Resident } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, SearchResult } from "../../../../components";
-import { useApi, useAuth, useRequester, useResolver } from "../../../../contexts/App";
+import { useApi, useAuth, useIdentity } from "../../../../contexts/App";
 import { CommunitySearch, CommunitySearchProps } from "../../components/CommunitySearch/CommunitySearch";
 import { ImpactQuiz } from "../../components/ImpactQuiz/ImpactQuiz";
 import { LegalAgreement } from "../../components/LegalAgreement/LegalAgreement";
@@ -11,8 +11,7 @@ import { RoleSelection } from "../../components/RoleSelection/RoleSelection";
 import { Welcome } from "../../components/Welcome/Welcome";
 
 export const OnboardingContainer = () => {
-  const { resolving } = useResolver();
-
+  const { resolving } = useIdentity();
   return {
     Onboarding: () => (
       <Modal resolving={resolving} plain visible>
@@ -23,117 +22,130 @@ export const OnboardingContainer = () => {
 };
 
 const Card = () => {
-  const { resolve } = useResolver();
-  const requester = useRequester();
+  const identity = useIdentity();
   const api = useApi();
   const auth = useAuth();
   const navigate = useNavigate();
-  const [agreed, setAgreed] = React.useState(!!requester.communityName);
-  const [community, setCommunity] = React.useState({ open: false } as CommunitySearchProps & {
-    communityName?: string;
-  });
 
   const setRole = async (role?: "student" | "educator" | "management") => {
-    await api.residents.save(requester.residentName || "", {
+    await api.residents.save(identity.residentName || "", {
       role: role,
     });
-    await resolve();
+    await identity.resolve();
   };
 
-  const fetchCommunities = async (displayName: string) => {
-    const communities = await api.communities.list({
-      displayName: displayName,
+  const JoinCommunity = () => {
+    const [community, setCommunity] = React.useState({ open: false } as CommunitySearchProps & {
+      communityName?: string;
     });
+    const [agreed, setAgreed] = React.useState(!!identity.communityName);
+    const fetchCommunities = async (displayName: string) => {
+      if (!displayName || displayName === "undefined") {
+        setCommunity({ ...community, results: null });
+        return;
+      }
 
-    setCommunity({
-      ...community,
-      results: communities.map((community) => {
-        return (
-          <SearchResult
-            key={community.communityName}
-            title={community.displayName}
-            onClick={() =>
-              setCommunity({
-                ...community,
-                communityName: community.communityName,
-                displayName: community.displayName,
-                placeName: community.placeName,
-                open: false,
-              })
-            }
-          />
-        );
-      }),
-    });
-  };
+      const communities = await api.communities.list({
+        displayName: displayName,
+      });
 
-  const joinCommunity = async (accessCode?: string) => {
-    if (!community?.communityName || !accessCode) {
-      return;
+      if (!communities || communities.length === 0) {
+        setCommunity({ ...community, results: null });
+        return;
+      }
+
+      setCommunity({
+        ...community,
+        results: communities.map((community) => {
+          return (
+            <SearchResult
+              key={community.communityName}
+              title={community.displayName}
+              onClick={() =>
+                setCommunity({
+                  ...community,
+                  communityName: community.communityName,
+                  displayName: community.displayName,
+                  placeName: community.placeName,
+                  open: false,
+                })
+              }
+            />
+          );
+        }),
+      });
+    };
+    const joinCommunity = async (accessCode?: string) => {
+      if (!community?.communityName || !accessCode) {
+        return;
+      }
+
+      setCommunity({ ...community, disabled: true });
+      await api.communities.join(community.communityName, identity.residentName || "", accessCode).then((err) => {
+        if (!err) {
+          return identity.resolve().then(() => setCommunity({ ...community, disabled: false }));
+        }
+        setCommunity({ ...community, disabled: false });
+      });
+    };
+
+    if (!agreed) {
+      return <LegalAgreement onDecline={auth.logout} onAccept={() => setAgreed(true)} />;
     }
 
-    setCommunity({ ...community, disabled: true });
-    await api.communities.join(community.communityName, requester.residentName || "", accessCode);
-    await resolve();
-    setCommunity({ ...community, disabled: false });
+    if (!identity.communityName) {
+      return (
+        <CommunitySearch
+          {...community}
+          onSearch={fetchCommunities}
+          onJoin={joinCommunity}
+          onOpen={() => setCommunity({ ...community, open: true })}
+          onClose={() => setCommunity({ ...community, open: false })}
+        />
+      );
+    }
+
+    return null;
   };
 
   const register = async (registration: Resident) => {
-    await api.residents.save(requester.residentName || "", registration);
-    await resolve();
+    await api.residents.save(identity.residentName || "", registration);
+    await identity.resolve();
   };
 
   const setInterests = async (interests?: string[]) => {
-    await api.residents.save(requester.residentName || "", {
+    await api.residents.save(identity.residentName || "", {
       interests: interests,
     });
-    await resolve();
+    await identity.resolve();
   };
 
-  if (!agreed) {
-    return <LegalAgreement onDecline={auth.logout} onAccept={() => setAgreed(true)} />;
+  if (!identity.communityName) {
+    return <JoinCommunity />;
   }
 
-  if (!requester.communityName) {
+  if (!identity.role) {
     return (
-      <CommunitySearch
-        {...community}
-        onSearch={fetchCommunities}
-        onJoin={joinCommunity}
-        onOpen={() => setCommunity({ ...community, open: true })}
-        onClose={() => setCommunity({ ...community, open: false })}
-      />
+      <RoleSelection role={identity.role} onStudent={() => setRole("student")} onEducator={() => setRole("educator")} />
     );
   }
 
-  if (!requester.role) {
-    return (
-      <RoleSelection
-        role={requester.role}
-        onStudent={() => setRole("student")}
-        onEducator={() => setRole("educator")}
-      />
-    );
-  }
-
-  if (!requester.impactStatement || !requester.givenName) {
+  if (!identity.impactStatement || !identity.givenName) {
     return (
       <Registration
-        role={requester.role}
-        givenName={requester.givenName}
-        familyName={requester.familyName}
-        grade={requester.grade}
-        impactStatement={requester.impactStatement}
+        role={identity.role}
+        givenName={identity.givenName}
+        familyName={identity.familyName}
+        grade={identity.grade}
+        impactStatement={identity.impactStatement}
         onRegister={register}
       />
     );
   }
 
-  if (requester.interests === undefined) {
-    return <ImpactQuiz role={requester.role} interests={requester.interests} onFinish={setInterests} />;
+  if (identity.interests === undefined) {
+    return <ImpactQuiz role={identity.role} interests={identity.interests} onFinish={setInterests} />;
   }
 
-  return (
-    <Welcome givenName={requester.givenName} onContinue={() => navigate(`/residents/${requester.residentName}`)} />
-  );
+  return <Welcome givenName={identity.givenName} onContinue={() => navigate(`/residents/${identity.residentName}`)} />;
 };
