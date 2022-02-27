@@ -11,7 +11,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
   const [started, setStarted] = React.useState(false);
   const [question, setQuestion] = React.useState(0);
   const initialAnswers: { [key: string]: undefined | boolean } = {};
-  props.interests?.map((interest) => {
+  props.interests && props.interests.map((interest) => {
     initialAnswers[interest] = true;
   });
   const [answers, setAnswers] = React.useState(initialAnswers);

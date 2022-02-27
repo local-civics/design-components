@@ -19,17 +19,23 @@ export type IconProps = {
  */
 export const Icon = (props: IconProps) => {
   const viewBox = sprite[props.name].viewBox;
+  const contents = sprite[props.name].contents
+
+  if(!contents){
+    return null
+  }
+
   return (
     <svg
       className="fill-current stroke-current w-full h-full drop-shadow-[inherit]"
       xmlns="http://www.w3.org/2000/svg"
       viewBox={viewBox}
     >
-      {sprite[props.name].contents?.map((v, k) => {
+      {contents.map((v, k) => {
         return v.d && <path key={k} {...(v as React.SVGProps<SVGPathElement>)} />;
       })}
 
-      {sprite[props.name].contents?.map(
+      {contents.map(
         (v, k) => v.r && <circle key={k} {...(v as React.SVGProps<SVGCircleElement>)} />
       )}
     </svg>

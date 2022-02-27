@@ -30,7 +30,7 @@ export const BadgeContainer = () => {
   return {
     BadgeModal: () => (
       <BadgeModal {...badge} resolving={badge === null} visible disabled={false} onStart={start} onClose={close}>
-        {tasks?.map((task) => {
+        {tasks && tasks.map((task) => {
           return (
             <TaskItem
               action

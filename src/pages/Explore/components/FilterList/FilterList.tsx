@@ -20,7 +20,7 @@ export const FilterList = (props: FilterListProps) => {
   const skillTags = ["skill:leadership", "skill:speaking", "skill:group", "skill:navigation"];
   const locationTags = ["location:online", "location:in-person", "location:at school", "location:community"];
   const init: Record<string, boolean> = {};
-  props.tags?.map((tag) => {
+  props.tags && props.tags.map((tag) => {
     init[tag] = true;
   });
 

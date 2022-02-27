@@ -11,7 +11,7 @@ export type BadgeModalProps = Badge & {
   resolving?: boolean;
   visible?: boolean;
   disabled?: boolean;
-  children?: React.ReactElement<TaskProps> | React.ReactElement<TaskProps>[];
+  children?: React.ReactElement<TaskProps> | React.ReactElement<TaskProps>[] | null;
   onClose?: () => void;
   onStart?: () => void;
 };
