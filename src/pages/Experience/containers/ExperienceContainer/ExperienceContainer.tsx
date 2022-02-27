@@ -45,6 +45,7 @@ export const ExperienceContainer = () => {
         {...experience}
         resolving={!ready}
         visible
+        onLaunch={() => experience?.experienceName && `/residents/${identity.residentName}/reflections/${experience.experienceName}`}
         onClose={close}
         onRegister={register}
         onUnregister={() =>

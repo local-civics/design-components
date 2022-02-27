@@ -7,9 +7,11 @@ export type CardProps = Experience & {
   status?: "registered" | "unregistered" | "in-progress";
   resolving?: boolean;
   visible?: boolean;
+  milestone?: boolean
   onRegister?: () => void;
   onUnregister?: () => void;
   onClose?: () => void;
+  onLaunch?: () => void;
   onJoin?: () => void;
   onSkillClick?: (skill: string) => void;
 };
@@ -39,6 +41,18 @@ export const Card = (props: CardProps) => {
   };
 
   const cta = (() => {
+    if(props.milestone){
+      return <Button
+          spacing="md"
+          border="rounded"
+          color="sky"
+          theme="dark"
+          text="Launch"
+          size="sm"
+          onClick={props.onLaunch}
+      />
+    }
+
     switch (status) {
       case "in-progress":
         return (
