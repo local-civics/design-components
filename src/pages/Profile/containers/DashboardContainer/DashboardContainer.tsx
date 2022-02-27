@@ -37,7 +37,6 @@ export const DashboardContainer = () => {
                   {...badge}
                   key={badge.badgeName}
                   open={identity.residentName === peer?.residentName}
-                  icon={getIconName(badge.pathway)}
                   onOpen={() => navigate(`/residents/${identity.residentName}/badges/${badge.badgeName}`)}
                 />
               ))}

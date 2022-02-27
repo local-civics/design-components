@@ -19,19 +19,20 @@ export const ExploreContainer = () => {
   const togglePathway = (pathway: string) => setPathways({ ...pathways, [pathway]: !pathways[pathway] });
   const experiences = useExperiences(
     Object.entries(pathways)
-      .filter(([v, present]) => present)
+      .filter(([, present]) => present)
       .map(([v]) => v)
   );
 
   const ExperienceList = () => {
-    const [open, setOpen] = React.useState(!!qp.get("q"));
+    const [open, setOpen] = React.useState(!!qp.get("q") || !!qp.get("p"));
     const [searchResults, setSearchResults] = React.useState(null as React.ReactElement<SearchResultProps>[] | null);
-    const fetchExperiences = async (displayName: string) => {
+    const fetchExperiences = async ({displayName, experienceName}: {displayName?: string | null, experienceName?: string | null}) => {
       if (!identity.communityName) {
         return;
       }
       const filtered = await api.experiences.list(identity.communityName, {
         displayName: displayName || "",
+        experienceName: experienceName || "",
       });
 
       if (!filtered || filtered.length === 0) {
@@ -58,9 +59,9 @@ export const ExploreContainer = () => {
         if (!q) {
           return;
         }
-        await fetchExperiences(q);
+        await fetchExperiences({displayName: qp.get("q"), experienceName: qp.get("p")});
       })();
-    }, [qp.get("q")]);
+    }, [qp.get("q"), qp.get("p")]);
 
     return (
       <Gallery
@@ -69,7 +70,7 @@ export const ExploreContainer = () => {
         count={experiences?.filtered?.length}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
-        onSearch={fetchExperiences}
+        onSearch={(search) => fetchExperiences({displayName: search})}
         resolving={experiences === null}
         primary={
           experiences?.primary && (
@@ -197,11 +198,15 @@ const useExperiences = (pathways: string[]) => {
         return;
       }
 
-      if (search || (params.skill && params.skill !== "undefined") || pathways.length > 0) {
+      if(search){
+        return
+      }
+
+      if ((params.skill && params.skill !== "undefined") || pathways.length > 0) {
         const skills = params.skill && params.skill !== "undefined" ? [params.skill] : qp.getAll("skills");
+
         setExperiences({
           filtered: await api.experiences.list(identity.communityName, {
-            ...qp,
             skills,
             pathways: pathways as (
               | "policy & government"

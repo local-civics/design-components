@@ -90,7 +90,7 @@ const actionURL = (identity?: Resident, task?: Task | null) => {
   }
 
   if (!!task.experienceNamePrefix) {
-    return `/communities/${identity.communityName}/explore?experienceName=${encodeURIComponent(
+    return `/communities/${identity.communityName}/explore?p=${encodeURIComponent(
       task.experienceNamePrefix
     )}`;
   }
