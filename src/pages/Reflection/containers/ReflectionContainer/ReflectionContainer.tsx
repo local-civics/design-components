@@ -17,7 +17,7 @@ export const ReflectionContainer = () => {
   const identity = useIdentity();
   const navigate = useNavigate();
   const close = () => navigate(-1);
-  const message = useMessage()
+  const [ref, setRef] = React.useState(null as Reflection | null)
   const reflection = useReflection();
   const api = useApi();
 
@@ -25,6 +25,7 @@ export const ReflectionContainer = () => {
     Reflection: () => (
       <Card
         {...reflection}
+        {...ref}
         resolving={reflection === null}
         visible
         unavailable={reflection?.browsing}
@@ -35,9 +36,9 @@ export const ReflectionContainer = () => {
           }
 
           if(reflection?.feedback && reflection.experienceName){
-            api.reflections.update(identity.residentName, reflection.experienceName, ref)
+            api.reflections.update(identity.residentName, reflection.experienceName, ref).then(() => setRef(ref))
           } else {
-            api.reflections.create(identity.residentName, ref)
+            api.reflections.create(identity.residentName, ref).then(() => setRef(ref))
           }
         }}
       />
