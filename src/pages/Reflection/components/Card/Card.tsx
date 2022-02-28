@@ -1,6 +1,6 @@
 import { Experience, Reflection } from "@local-civics/js-client";
-import React from "react";
-import { Button, Icon, Modal } from "../../../../components";
+import React, {useEffect}         from "react";
+import { Button, Icon, Modal }    from "../../../../components";
 import { builder } from "../../../../utils/classname/classname";
 
 export type CardProps = Reflection &
@@ -22,6 +22,10 @@ export const Card = (props: CardProps) => {
     available && (props.confidence !== reflection.confidence || props.feedback !== reflection.feedback);
   const setFeedback = (feedback: string) => setReflection({ ...reflection, feedback: feedback });
   const setConfidence = (confidence: number) => setReflection({ ...reflection, confidence: confidence });
+
+  React.useEffect(() => {
+    setReflection(props)
+  }, [props.feedback, props.confidence])
 
   return (
     <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>

@@ -3,10 +3,11 @@
  * @constructor
  */
 import { Experience, Reflection } from "@local-civics/js-client";
-import React from "react";
+import React                      from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useIdentity } from "../../../../contexts/App";
-import { Card } from "../../components/Card/Card";
+import { useApi, useIdentity }    from "../../../../contexts/App";
+import {useMessage}               from "../../../../contexts/Message";
+import { Card }                   from "../../components/Card/Card";
 
 /**
  * Connected container for reflection.
@@ -16,6 +17,7 @@ export const ReflectionContainer = () => {
   const identity = useIdentity();
   const navigate = useNavigate();
   const close = () => navigate(-1);
+  const message = useMessage()
   const reflection = useReflection();
   const api = useApi();
 
