@@ -76,8 +76,8 @@ const useContext = (value?: string) => {
         msg.title = "not authorized";
         msg.description = message.message;
       } else if (IsNotFound(message)) {
-        msg.title = "not here";
-        msg.description = message.message;
+        msg.title = "not found";
+        msg.description = "sorry, we're unable to find this";
       } else {
         msg.title = "something went wrong";
         msg.description = "If the issue persists, please contact support@localcivics.io.";

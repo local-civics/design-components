@@ -226,7 +226,7 @@ const useExperiences = (pathways: string[]) => {
       }
     })();
     return () => setExperiences(null);
-  }, [search, pathways.length, params.skill, identity.residentName]);
+  }, [pathways.length, params.skill, identity.residentName]);
 
   return experiences;
 };
