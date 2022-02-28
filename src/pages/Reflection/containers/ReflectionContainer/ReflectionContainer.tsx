@@ -27,7 +27,17 @@ export const ReflectionContainer = () => {
         visible
         unavailable={reflection?.browsing}
         onClose={close}
-        onSave={(reflection) => identity.residentName && api.reflections.create(identity.residentName, reflection)}
+        onSave={(ref) => {
+          if(!identity.residentName){
+            return
+          }
+
+          if(reflection?.feedback && reflection.experienceName){
+            api.reflections.update(identity.residentName, reflection.experienceName, ref)
+          } else {
+            api.reflections.create(identity.residentName, ref)
+          }
+        }}
       />
     ),
   };
