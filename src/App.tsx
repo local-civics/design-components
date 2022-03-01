@@ -111,7 +111,7 @@ const AppRoutes = () => {
       <Route path="/communities/:communityName/explore" element={<Explore />}>
         <Route path=":experienceName" element={<Experience />} />
       </Route>
-      <Route path="/communities/:communityName/skills/:skill/experiences" element={<Explore />}>
+      <Route path="/communities/:communityName/skills/:skill" element={<Explore />}>
         <Route path=":experienceName" element={<Experience />} />
       </Route>
       <Route path="*" element={<NotFound />} />

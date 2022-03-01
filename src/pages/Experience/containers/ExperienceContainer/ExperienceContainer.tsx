@@ -53,7 +53,7 @@ export const ExperienceContainer = () => {
         }
         onJoin={() => experience?.externalURL && window.open(experience?.externalURL, "_blank")}
         onSkillClick={(skill) =>
-          ready && navigate(`/communities/${identity.communityName}/skills/${skill}/experiences`)
+          ready && navigate(`/communities/${identity.communityName}/skills/${skill}`)
         }
       />
     ),
