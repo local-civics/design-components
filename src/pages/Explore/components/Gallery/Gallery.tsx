@@ -60,15 +60,15 @@ export const Gallery = (props: GalleryProps) => {
       {hasFiltered && !!props.count && (
         <label className="mt-5 relative block grid grid-cols-1 gap-y-2">
           <p className="text-gray-600 font-semibold">Events</p>
-          <p className="text-gray-600 text-sm"> We found {props.count >= 10 ? "10+" : props.count} events </p>
+          <p className="text-gray-600 text-sm"> We found {props.count >= 10 ? "10+" : props.count} experiences </p>
           {props.filtered}
         </label>
       )}
 
       {!hasAny && (
         <label className="mt-5 relative block">
-          <p className="text-gray-600 font-semibold">Events</p>
-          <p className="text-gray-600 mt-5 text-sm">No events found.</p>
+          <p className="text-gray-600 font-semibold">Experiences</p>
+          <p className="text-gray-600 mt-5 text-sm">No experiences found.</p>
         </label>
       )}
     </Loader>
