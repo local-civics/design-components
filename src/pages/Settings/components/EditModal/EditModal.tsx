@@ -34,9 +34,9 @@ export const EditModal = (props: EditModalProps) => {
     reader.onloadend = () => {
       if (typeof reader.result === "string") {
         setAvatarURL(reader.result);
+        setAvatarFile(file);
       }
     };
-    setAvatarFile(file);
     reader.readAsDataURL(file);
   };
   const hasChanges =
