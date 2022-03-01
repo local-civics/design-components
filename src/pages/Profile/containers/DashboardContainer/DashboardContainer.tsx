@@ -76,7 +76,6 @@ const useDashboard = (peer?: Resident) => {
   const location = useLocation();
   const params = useParams();
   const api = useApi();
-
   const residentName = peer?.residentName || "";
   const communityName = peer?.communityName || "";
   const [tab, setTab] = React.useState(getTab(params.tab || "badges"));

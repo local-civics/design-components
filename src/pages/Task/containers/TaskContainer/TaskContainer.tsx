@@ -95,5 +95,5 @@ const actionURL = (identity?: Resident, task?: Task | null) => {
     )}`;
   }
 
-  return "";
+  return `/communities/${identity.communityName}/explore`;
 };
