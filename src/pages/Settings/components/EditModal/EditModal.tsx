@@ -10,7 +10,7 @@ export type EditModalProps = Resident & {
   resolving?: boolean;
   visible?: boolean;
   onClose?: () => void;
-  onSave?: (resident?: Resident) => void;
+  onSave?: (resident?: Resident & {avatarFile?: Blob }) => void;
 };
 
 /**
@@ -20,6 +20,7 @@ export type EditModalProps = Resident & {
  */
 export const EditModal = (props: EditModalProps) => {
   // https://stackoverflow.com/questions/55075604/react-hooks-useeffect-only-on-update
+  const [avatarFile, setAvatarFile] = React.useState(undefined as Blob | undefined);
   const [avatarURL, setAvatarURL] = React.useState(undefined as string | undefined);
   const [residentName, setResidentName] = React.useState(undefined as string | undefined);
   const [givenName, setGivenName] = React.useState(undefined as string | undefined);
@@ -35,6 +36,7 @@ export const EditModal = (props: EditModalProps) => {
         setAvatarURL(reader.result);
       }
     };
+    setAvatarFile(file);
     reader.readAsDataURL(file);
   };
   const hasChanges =
@@ -54,7 +56,7 @@ export const EditModal = (props: EditModalProps) => {
       familyName: familyName,
       grade: grade,
       impactStatement: impactStatement,
-      avatarURL: avatarURL,
+      avatarFile: avatarFile,
     });
 
   return (
