@@ -28,11 +28,11 @@ export const BadgeWorkflow = (props: BadgeWorkflowProps) => {
         </div>
       )}
       {hasContent && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-2 max-h-[16rem] lg:max-h-[22rem] overflow-scroll">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-2 max-h-[16rem] md:max-h-[22rem] overflow-scroll">
           {props.children}
           {count < gridSize &&
             [...Array(gridSize - count).keys()].map((k) => {
-              return <div key={`badge.${k}`} className="bg-gray-100 p-4 shadow-md rounded-md h-28 lg:h-40" />;
+              return <div key={`badge.${k}`} className="bg-gray-100 p-4 shadow-md rounded-md h-28 md:h-36 lg:h-44" />;
             })}
         </div>
       )}
