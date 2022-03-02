@@ -75,11 +75,15 @@ const useExperience = () => {
       }
 
       const now = new Date()
-      const registration = await api.registrations.view(identity.residentName, experienceName)
       const experience = await api.experiences.view(identity.communityName, experienceName)
-      const inProgress = (experience.notBefore && now > new Date(experience.notBefore)) && (experience.notAfter && now < new Date(experience.notAfter))
-      const isOver = experience.notAfter && now > new Date(experience.notAfter)
-      const status = inProgress ? "in-progress" : isOver ? undefined : registration?.experienceName ? "registered" : "unregistered"
+      let status: "in-progress" | "registered" | "unregistered" | undefined
+      if(!experience.milestone){
+        const registration = await api.registrations.view(identity.residentName, experienceName)
+        const inProgress = (experience.notBefore && now > new Date(experience.notBefore)) && (experience.notAfter && now < new Date(experience.notAfter))
+        const isOver = experience.notAfter && now > new Date(experience.notAfter)
+        status = inProgress ? "in-progress" : isOver || !experience.notBefore || !experience.notAfter ? undefined : registration?.experienceName ? "registered" : "unregistered"
+      }
+
       setExperience({...experience, status});
     })();
     return () => setExperience(null);
