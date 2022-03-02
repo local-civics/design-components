@@ -9,6 +9,7 @@ import { builder } from "../../../../utils/classname/classname";
 export type BadgeProps = Badge & {
   open?: boolean;
   icon?: IconName;
+  statusIcon?: IconName;
   onOpen?: () => void;
 };
 
@@ -19,7 +20,7 @@ export type BadgeProps = Badge & {
  */
 export const BadgeComponent = (props: BadgeProps) => {
   const icon = props.icon || "badge";
-  const statusIcon = !props.status ? "lock" : "";
+  const statusIcon = props.statusIcon ? props.statusIcon : !props.status ? "lock" : "";
   const intensity = !!props.status ? "normal" : "faded";
   const iconClassName = builder("w-full")
     .if(intensity === "normal", "text-gray-600")
@@ -35,7 +36,7 @@ export const BadgeComponent = (props: BadgeProps) => {
     .build();
 
   const className = builder(
-    "grid justify-items-center content-center h-28 lg:h-40 shadow-md bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500"
+    "grid justify-items-center content-center shadow-md bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500"
   )
     .if(!!props.open, "cursor-pointer hover:bg-gray-50")
     .build();
@@ -47,7 +48,7 @@ export const BadgeComponent = (props: BadgeProps) => {
       {statusIcon && (
         <div className={statusIconClassName}>
           <div className="relative">
-            <div className="absolute h-2 w-2 top-0 right-0 lg:h-4 lg:w-4 lg:-top-1 lg:-right-1">
+            <div className="absolute h-2 w-2 top-0 right-0 md:-top-2 md:-right-1 lg:h-4 lg:w-4 lg:-top-1 lg:-right-1">
               <Icon name={statusIcon} />
             </div>
           </div>
