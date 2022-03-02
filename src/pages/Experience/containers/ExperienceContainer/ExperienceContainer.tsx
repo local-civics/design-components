@@ -65,7 +65,7 @@ const useExperience = () => {
   const api = useApi();
   const params = useParams();
   const experienceName = params.experienceName;
-  const [experience, setExperience] = React.useState(null as Experience | null);
+  const [experience, setExperience] = React.useState(null as Experience & {status?: "registered" | "unregistered" | "in-progress"} | null);
   React.useEffect(() => {
     setExperience(null);
 
@@ -74,7 +74,13 @@ const useExperience = () => {
         return;
       }
 
-      setExperience(await api.experiences.view(identity.communityName, experienceName));
+      const now = new Date()
+      const registration = await api.registrations.view(identity.residentName, experienceName)
+      const experience = await api.experiences.view(identity.communityName, experienceName)
+      const inProgress = (experience.notBefore && now > new Date(experience.notBefore)) && (experience.notAfter && now < new Date(experience.notAfter))
+      const isOver = experience.notAfter && now > new Date(experience.notAfter)
+      const status = inProgress ? "in-progress" : isOver ? undefined : registration?.experienceName ? "registered" : "unregistered"
+      setExperience({...experience, status});
     })();
     return () => setExperience(null);
   }, [experienceName, identity.residentName]);
