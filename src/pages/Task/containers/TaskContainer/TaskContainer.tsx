@@ -4,10 +4,9 @@
  */
 import {OrganizationSearchView, TaskView} from "@local-civics/js-client";
 import React                              from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import {AppError} from "../../../../contexts/Error/Error";
-import {useWorkspace}              from "../../../Profile/containers/WorkspaceContainer/WorkspaceContainer";
-import { TaskModal }              from "../../components/TaskModal/TaskModal";
+import { useNavigate, useParams }         from "react-router-dom";
+import {useWorkspace}                     from "../../../Profile/containers/WorkspaceContainer/WorkspaceContainer";
+import { TaskModal }                      from "../../components/TaskModal/TaskModal";
 
 export const TaskContainer = () => {
   const {identity, workspace} = useWorkspace()
@@ -15,26 +14,28 @@ export const TaskContainer = () => {
   const navigate = useNavigate();
   const params = useParams()
   const close = () => navigate(-1);
-
-  let tasks: TaskView[] = []
+  const [tasks, setTasks] = React.useState([] as TaskView[])
   let status = "todo"
 
-  if(workspace !== null){
-    tasks = workspace?.todo?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
-    if(tasks.length === 0){
-      status = "in-progress"
-      tasks = workspace?.inProgress?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
-    }
+  React.useEffect(() => {
+    let filtered: TaskView[] = []
+    if(workspace !== null){
+      // TODO this is a nasty bug waiting to happen. looks like we need an endpoint to fetch a task.
+      filtered = workspace?.todo?.filter(v => v?.id === parseInt(params.taskId||"") && v?.badgeId === parseInt(params.badgeId||"") && (!params.level || !v.level || parseInt(params.level) === v.level)) || []
+      if(filtered.length === 0){
+        status = "in-progress"
+        filtered = workspace?.inProgress?.filter(v => v?.id === parseInt(params.taskId||"") && v?.badgeId === parseInt(params.badgeId||"") && (!params.level || !v.level || parseInt(params.level) === v.level)) || []
+      }
 
-    if(tasks.length === 0){
-      status = "done"
-      tasks = workspace?.done?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
-    }
+      if(filtered.length === 0){
+        status = "done"
+        filtered = workspace?.done?.filter(v => v?.id === parseInt(params.taskId||"") && v?.badgeId === parseInt(params.badgeId||"") && (!params.level || !v.level || parseInt(params.level) === v.level)) || []
+      }
 
-    if(tasks.length === 0){
-      throw new AppError("task not found", "try starting back from your profile page")
+      setTasks(filtered)
     }
-  }
+  }, [workspace?.id])
+
   const task = tasks.length > 0 ? tasks[0] : null
   const nextURL = actionURL(identity.nickname, primaryOrganization, task);
   const launch = () => nextURL && navigate(nextURL);
@@ -48,6 +49,7 @@ export const TaskContainer = () => {
         visible
         disabled={false}
         onContinue={launch}
+        onStart={launch}
         onClose={close}
       />
     ),

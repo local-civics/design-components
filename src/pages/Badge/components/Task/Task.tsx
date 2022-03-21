@@ -6,7 +6,7 @@ import { Icon, IconName } from "../../../../components";
  */
 export type TaskProps = {
   action?: boolean;
-  headline?: string;
+  title?: string;
   status?: "todo" | "review" | "in-progress" | "done";
   onAction?: () => void;
 };
@@ -32,7 +32,7 @@ export const Task = (props: TaskProps) => {
       <div className="h-3 w-3">
         <Icon name={icon} />
       </div>
-      <p className="grow font-semibold text-slate-500 text-sm">{props.headline}</p>
+      <p className="grow font-semibold text-slate-500 text-sm">{props.title}</p>
     </div>
   );
 };

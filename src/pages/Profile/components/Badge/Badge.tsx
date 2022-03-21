@@ -7,9 +7,11 @@ import { builder }        from "../../../../utils/classname/classname";
  * The properties for the badge.
  */
 export type BadgeProps = BadgeView & {
+  award?: boolean
+  objective?: boolean
+  incentive?: boolean
   open?: boolean;
   icon?: IconName;
-  statusIcon?: IconName;
   onOpen?: () => void;
 };
 
@@ -21,7 +23,7 @@ export type BadgeProps = BadgeView & {
 export const BadgeComponent = (props: BadgeProps) => {
   const icon = props.icon || "badge";
   const locked = !props.todo && !props.inProgress && !props.done
-  const statusIcon = props.statusIcon ? props.statusIcon : locked ? "lock" : "";
+  const statusIcon: IconName | "" = props.objective ? "unlock" : props.award ? "" : "lock";
   const intensity = !locked ? "normal" : "faded";
   const iconClassName = builder("w-full")
     .if(intensity === "normal", "text-gray-600")
@@ -42,8 +44,7 @@ export const BadgeComponent = (props: BadgeProps) => {
     .if(!!props.open, "cursor-pointer hover:bg-gray-50")
     .build();
 
-  const onOpen = () => props.open && props.onOpen && props.onOpen();
-  const done = props.done && !props.todo && !props.inProgress
+  const onOpen = () => (props.award || props.objective || props.incentive) && props.open && props.onOpen && props.onOpen();
 
   return (
     <div className={className}>
@@ -58,7 +59,7 @@ export const BadgeComponent = (props: BadgeProps) => {
       )}
 
       <div className="flex gap-y-4 flex-col w-full" onClick={onOpen}>
-        {done && props.imageURL && (
+        {props.award && props.imageURL && (
           <img
             className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg object-contain"
             alt={props.headline}
@@ -66,7 +67,7 @@ export const BadgeComponent = (props: BadgeProps) => {
           />
         )}
 
-        {!done && (
+        {!props.award && (
           <div className={iconClassName}>
             <div className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg">
               <Icon name={icon} />

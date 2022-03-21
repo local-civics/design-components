@@ -1,6 +1,7 @@
-import {ActivityView, ReactionView} from "@local-civics/js-client";
-import React         from "react";
+import {ActivityView, ReactionView}    from "@local-civics/js-client";
+import React                           from "react";
 import {Button, Icon, IconName, Modal} from "../../../../components";
+import {useMessage}                    from "../../../../contexts/Message";
 import { builder }                     from "../../../../utils/classname/classname";
 
 export type CardProps = ActivityView & {
@@ -8,12 +9,12 @@ export type CardProps = ActivityView & {
     resolving?: boolean;
     onClose?: () => void;
     unavailable?: boolean;
-    onSave?: (reflection: string, rating: number) => void;
+    onSave?: (reflection: string, rating: number) => Promise<void>;
   };
 
 export const Card = (props: CardProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.resolving, "min-h-[20rem]").build();
-
+  const message = useMessage();
   const now = new Date();
   const available = !props.unavailable && (!props.startTime || now >= new Date(props.startTime));
   const [reaction, setReaction] = React.useState(props.reaction||{} as ReactionView);
@@ -49,7 +50,15 @@ export const Card = (props: CardProps) => {
 
           {hasChanges && (
             <Button
-              onClick={() => props.onSave && props.onSave(reaction.reflection||"", reaction.rating||0)}
+              onClick={() => props.onSave && props.onSave(reaction.reflection||"", reaction.rating||0).then(() => {
+                if(reaction.reflection && !props.reaction?.reflection){
+                  message.send(`You've successfully submitted your reflection and earned your points.`, {
+                    severity: "success",
+                    icon: "reflection",
+                    title: "Nice Work!",
+                  });
+                }
+              })}
               theme="dark"
               border="rounded"
               size="sm"
@@ -99,7 +108,7 @@ const Confidence = (props: CardProps & { setConfidence?: (confidence: number) =>
   const maxPoints = 5;
   const [confidence, setConfidence] = React.useState(props.reaction?.rating || -1);
   const buttons = Array.from({ length: maxPoints }, (_, i) => {
-    const color = i < confidence ? "text-sky-100" : "text-slate-100";
+    const color = i < confidence ? "text-sky-200" : "text-slate-200";
     return (
       <div key={i} onMouseEnter={() => setConfidence(i + 1)} onMouseLeave={() => setConfidence(props.reaction?.rating || -1)}>
         <div
@@ -113,11 +122,11 @@ const Confidence = (props: CardProps & { setConfidence?: (confidence: number) =>
   });
   const labels = Array.from({ length: maxPoints }, (_, i) => {
     if (i === 0) {
-      return <p className="inline-block text-monochrome-500">Poor</p>;
+      return <p className="inline-block text-sm text-monochrome-500">Poor</p>;
     }
 
     if (i === maxPoints - 1) {
-      return <p className="inline-block text-monochrome-500">Amazing</p>;
+      return <p className="inline-block text-sm text-monochrome-500">Amazing</p>;
     }
 
     return <p className="inline-block text-monochrome-500" />;
@@ -131,9 +140,9 @@ const Confidence = (props: CardProps & { setConfidence?: (confidence: number) =>
 
   return (
     <div className="inline-block mt-2">
-      <h6 className="font-bold pb-2 text-md"> Rate your experience from 1 - {maxPoints}</h6>
-      <div className={`w-[14.7rem] grid grid-cols-5 justify-self-center items-center gap-7 mb-2`}>{buttons}</div>
-      <div className={`w-[15.7rem] text-[0.5rem] grid grid-cols-5 justify-self-center items-center`}>{labels}</div>
+      <h6 className="font-bold pb-2 text-md"> Rate your experience from poor to amazing</h6>
+      <div className={`w-[17.7rem] grid grid-cols-5 justify-self-center items-center gap-7 mb-2`}>{buttons}</div>
+      <div className={`w-[16.7rem] text-[0.5rem] grid grid-cols-5 justify-self-center items-center`}>{labels}</div>
     </div>
   );
 };

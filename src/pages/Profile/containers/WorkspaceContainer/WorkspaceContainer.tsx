@@ -22,6 +22,49 @@ export const WorkspaceContainer = () => {
   const {identity, workspace, navigation} = useWorkspace()
   const primaryOrganization = workspace?.organizations && workspace.organizations.length > 0 ? workspace.organizations[0] : {}
   const navigate = useNavigate();
+  const awards = workspace?.awards || []
+  if(identity.nickname && identity.organizations && identity.interests && identity.givenName && identity.familyName && identity.avatarURL){
+    awards.push({
+      id: 0,
+      headline: "Onboarding Badge",
+      summary: "Getting started with Local",
+      imageURL: "https://cdn.localcivics.io/badges/onboarding.png"
+    })
+  }
+  const objectives = workspace?.objectives || []
+  const incentives = workspace?.incentives || []
+  const badges = awards.map((badge) => (
+      <BadgeComponent
+          {...badge}
+          open={identity.nickname === workspace?.nickname}
+          award
+          key={`${badge.marketId}:${badge.id}:${badge.level}`}
+          onOpen={() => badge.id && navigate(`/tenants/${identity.nickname}/${badgePath(primaryOrganization, badge)}`)}
+      />
+  ))
+
+  badges.push(...objectives.map((badge) => (
+      <BadgeComponent
+          {...badge}
+          objective
+          open={identity.nickname === workspace?.nickname}
+          key={`${badge.marketId}:${badge.id}:${badge.level}`}
+          onOpen={() => badge.id && navigate(`/tenants/${identity.nickname}/${badgePath(primaryOrganization, badge)}`)}
+      />
+  )))
+
+  badges.push(...incentives.map((badge) => (
+      <BadgeComponent
+          {...badge}
+          incentive
+          open={identity.nickname === workspace?.nickname}
+          key={`${badge.marketId}:${badge.id}:${badge.level}`}
+          onOpen={() => badge.id && navigate(`/tenants/${identity.nickname}/${badgePath(primaryOrganization, badge)}`)}
+      />
+  )))
+
+  const tasks = navigation.status === "todo" ? (workspace?.todo || []) : navigation.status === "in-progress" ? (workspace?.inProgress || []) : navigation.status === "done" ? (workspace?.done || []) : []
+
   return {
     ResidentWidget: () => (
       <ResidentWidget
@@ -77,18 +120,11 @@ export const WorkspaceContainer = () => {
         >
           {navigation.tab === "badges" && (
               <BadgeWorkflow>
-                {workspace?.awards &&
-                workspace?.awards.map((badge) => (
-                    <BadgeComponent
-                        {...badge}
-                        key={`${badge.marketId}:${badge.id}:${badge.level}`}
-                        onOpen={() => navigate(`/tenants/${identity.nickname}/${badgePath(primaryOrganization, badge)}`)}
-                    />
-                ))}
+                { badges }
               </BadgeWorkflow>
           )}
 
-          {navigation.tab === "tasks" && workspace?.nickname !== identity?.nickname && (
+          {navigation.tab === "tasks" && workspace?.nickname === identity?.nickname && (
               <TaskWorkflow
                   resolving={workspace === null}
                   active={navigation.status}
@@ -97,10 +133,11 @@ export const WorkspaceContainer = () => {
                   onInProgress={() => navigation.setStatus("in-progress")}
               >
                 {
-                  workspace?.todo?.map((task) => (
+                  tasks.map((task) => (
                     <TaskItem
                         {...task}
                         open
+                        status={navigation.status}
                         key={`${task.marketId}:${task.badgeId}:${task.level}:${task.title}`}
                         onOpen={() => navigate(`/tenants/${identity.nickname}/${taskPath(primaryOrganization, task)}`)}
                     />
@@ -120,13 +157,14 @@ export const useWorkspace = () => {
   const tenantName = params.tenantName;
   const api = useApi();
   const identity = useIdentity();
+  const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {}
   const [tab, setTab] = React.useState(getTab(params.tab || "badges"));
   const [status, setStatus] = React.useState(getStatus(params.status || "todo"));
   const [workspace, setWorkspace] = React.useState(null as (WorkspaceView & TenantPreview) | null);
   React.useEffect(() => {
     if (identity.nickname && tenantName) {
       (async () => {
-        const space = await api.curriculum.viewWorkspace(tenantName || "")
+        const space = await api.curriculum.viewWorkspace(tenantName || "", po.nickname||"")
         const tenant = await api.identity.viewTenant(tenantName)
         setWorkspace({...space, ...tenant});
       })();
@@ -172,7 +210,7 @@ const getStatus = (name?: string) => {
 };
 
 const badgePath = (org: OrganizationSearchView, badge: BadgePreview) => {
-  return `badges/${org.nickname}/${badge.id}` + ((badge.level || 0) > 0 ? `${badge.level}` : '')
+  return `badges/${org.nickname}/${badge.id}` + ((badge.level || 0) > 0 ? `.${badge.level}` : '')
 }
 
 const taskPath = (org: OrganizationSearchView, task: TaskView) => {

@@ -20,22 +20,31 @@ export const ExperienceContainer = () => {
   const experience = useExperience();
   const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {}
   const api = useApi();
+  const params = useParams()
+  const marketName = params.marketName
+  const activityId = params.activityId
   const ready = experience !== null && !!experience && !!identity.nickname;
   const message = useMessage();
   const register = () =>
     ready &&
     api.curriculum.changeReaction(identity.nickname || "", po.nickname || "", experience.activityId, {
-        ...experience,
-        ...identity,
-        toggleNotifications: true,
+        email: identity.email,
+        givenName: identity.givenName,
+        notify: true,
         origin: window.location.href,
       })
       .then(() => {
         if (experience.rsvp) {
-          message.send(`This activity may require additional registration.`, {
+          message.send(`Please be aware that this activity may require additional registration.`, {
             severity: "success",
             icon: "calendar",
-            title: "Notice",
+            title: "Nice! You're registered.",
+          });
+        } else {
+          message.send(`Check your email for confirmation.`, {
+            severity: "success",
+            icon: "calendar",
+            title: "Nice! You're registered.",
           });
         }
       });
@@ -48,11 +57,10 @@ export const ExperienceContainer = () => {
         visible
         onClose={close}
         onRegister={register}
+        onLaunch={() => navigate(`/tenants/${identity.nickname}/reflections/${marketName}/${activityId}`)}
         onUnregister={() =>
           ready && api.curriculum.changeReaction(identity.nickname || "", po.nickname || "", experience.activityId, {
-              ...experience,
-              ...identity,
-              toggleNotifications: false,
+                notify: false,
             })
         }
         onJoin={() => experience?.link && window.open(experience?.link, "_blank")}

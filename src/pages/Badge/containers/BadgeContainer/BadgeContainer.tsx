@@ -21,8 +21,8 @@ export const BadgeContainer = () => {
   const close = () => navigate(-1);
   const api = useApi();
   const [started, setStarted] = React.useState(false);
-  const badgeId = parseInt(params.badgeId||"")
-  const level = parseInt(params.level||"")
+  const badgeId = parseInt(params.badgeId||"0")
+  const level = parseInt(params.level||"0")
   const badge = useBadge(badgeId, level, started);
   const start = async () => {
     if (!identity.nickname || !po.nickname || !badgeId) {
@@ -35,25 +35,19 @@ export const BadgeContainer = () => {
 
   let tasks: TaskView[] = []
   let status: "todo" | "in-progress" | "done" = "todo"
+  const todo = badge?.todo || []
+  const inProgress = badge?.inProgress || []
+  const done = badge?.done || []
 
-  if(badge !== null){
-    tasks = badge?.todo?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
-    if(tasks.length === 0){
-      status = "in-progress"
-      tasks = badge?.inProgress?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
-    }
-
-    if(tasks.length === 0){
-      status = "done"
-      tasks = badge?.done?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
-    }
-
-    if(tasks.length === 0){
-      throw new AppError("task not found", "try starting back from your profile page")
+  if(todo.length > 0 ||inProgress.length > 0 || done.length > 0){
+    if(todo.length > 0){
+      tasks = todo
+    } else if(inProgress.length > 0){
+      tasks = inProgress
+    } else {
+      tasks = done
     }
   }
-
-
 
   return {
     BadgeModal: () => (
@@ -64,7 +58,7 @@ export const BadgeContainer = () => {
             <TaskItem
               action
               key={`${task.marketId}${task.badgeId}${task.level}${task.id}`}
-              headline={task.title}
+              title={task.title}
               status={status}
               onAction={() => link && navigate(link)}
             />
@@ -79,12 +73,13 @@ const useBadge = (badgeId?: number, badgeLevel?: number, started?: boolean) => {
   const identity = useIdentity();
   const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {}
   const api = useApi();
+  const params = useParams()
   const [badge, setBadge] = React.useState(null as BadgeView | null);
   React.useEffect(() => {
     (async () => {
       if (badgeId && identity.nickname && po.nickname) {
         setBadge(
-          await api.curriculum.viewWorkspaceBadge(identity.nickname, po.nickname, badgeId, badgeLevel || 0)
+          await api.curriculum.viewWorkspaceBadge(identity.nickname, po.nickname, params.marketName||"", badgeId, badgeLevel || 0)
         );
       } else {
         setBadge(null);

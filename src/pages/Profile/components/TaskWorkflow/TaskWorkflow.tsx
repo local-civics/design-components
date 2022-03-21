@@ -40,7 +40,7 @@ export const TaskWorkflow = (props: TaskWorkflowProps) => {
         </div>
       )}
       {hasContent && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[12rem] lg:max-h-[18rem] overflow-scroll px-2">
+        <div className="grid grid-cols-1 gap-1 overflow-scroll">
           {props.children}
         </div>
       )}

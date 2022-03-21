@@ -31,12 +31,12 @@ export const ReflectionContainer = () => {
         visible
         unavailable={reflection?.browsing}
         onClose={close}
-        onSave={(ref, rating) => {
+        onSave={async (ref, rating) => {
           if(!identity.nickname || !po.nickname || !activityId){
             return
           }
 
-          api.curriculum.changeReaction(identity.nickname, po.nickname, activityId, {
+          return api.curriculum.changeReaction(identity.nickname, po.nickname, activityId, {
             reflection: ref,
             rating: rating,
           }).then(() => setRef({

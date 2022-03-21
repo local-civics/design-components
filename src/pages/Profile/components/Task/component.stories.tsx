@@ -12,7 +12,7 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<TaskProps> = (args) => <Task headline="A task" {...args} />;
+const Template: Story<TaskProps> = (args) => <Task title="A task" {...args} />;
 
 /**
  * Component view

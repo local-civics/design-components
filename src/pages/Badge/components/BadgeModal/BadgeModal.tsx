@@ -7,7 +7,7 @@ import { TaskProps } from "../Task/Task";
 /**
  * The properties for the badge.
  */
-export type BadgeModalProps = BadgeView & {
+export type BadgeModalProps = {
   workspace?: WorkspaceView
   badge?: BadgeView & {id?: number, marketId?: string, level?: number}
   resolving?: boolean;
@@ -41,8 +41,12 @@ export const BadgeModal = (props: BadgeModalProps) => {
     );
   };
 
+  const todo = props.badge?.todo || []
+  const inProgress = props.badge?.inProgress || []
+  const done = props.badge?.done || []
+
   const BadgeButton = () => {
-    if (props.disabled) {
+    if (props.disabled || todo.length > 0 ||inProgress.length > 0 || done.length > 0) {
       return null;
     }
 
@@ -67,8 +71,8 @@ export const BadgeModal = (props: BadgeModalProps) => {
     return null;
   };
 
-  const done = !!props.badge?.done && !props.badge.todo && !props.badge.inProgress
-  const doing = props.badge?.todo || props.badge?.inProgress
+  const isDone = !!props.badge?.done && !props.badge.todo && !props.badge.inProgress
+  const doing = todo || inProgress
 
   return (
     <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
@@ -76,10 +80,10 @@ export const BadgeModal = (props: BadgeModalProps) => {
         <div className="px-4 pb-4 border-b border-gray-200 w-[18rem] md:w-[24rem] lg:w-[28rem]">
           <div className="flex items-center gap-x-2 -mt-4">
             <div className="grow align-middle inline-block">
-              <p className="font-semibold capitalize text-slate-500 text-lg">{props.headline}</p>
-              {props.summary && (
+              <p className="font-semibold capitalize text-slate-500 text-lg">{props.badge?.headline}</p>
+              {props.badge?.summary && (
                 <div className="text-sm">
-                  <p className="inline-block text-slate-500">{props.summary}</p>
+                  <p className="inline-block text-slate-500">{props.badge?.summary}</p>
                 </div>
               )}
             </div>
@@ -87,19 +91,19 @@ export const BadgeModal = (props: BadgeModalProps) => {
           <BadgeButton />
         </div>
 
-        {done && !!props.imageURL && (
+        {isDone && !!props.badge?.imageURL && (
           <div className="w-full h-full bg-slate-100">
             <div className="p-14">
               <img
                 className="max-w-[14rem] max-h-[18rem] drop-shadow-lg m-auto w-full h-full object-cover"
-                alt={props.headline}
-                src={props.imageURL}
+                alt={props.badge?.headline}
+                src={props.badge?.imageURL}
               />
             </div>
           </div>
         )}
 
-        {doing && !done && <BadgeTasks />}
+        {doing && !isDone && <BadgeTasks />}
       </div>
     </Modal>
   );
