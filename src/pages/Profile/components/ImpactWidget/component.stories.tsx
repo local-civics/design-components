@@ -12,9 +12,7 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<ImpactWidgetProps> = (args) => (
-  <ImpactWidget degree={2} quality={3500} nextPromotion={4000} {...args} />
-);
+const Template: Story<ImpactWidgetProps> = (args) => <ImpactWidget level={2} xp={3500} nextXP={4000} {...args} />;
 
 /**
  * Component view

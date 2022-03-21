@@ -16,15 +16,15 @@ export default {
 const Template: Story<CardProps> = (args) => (
   <div className="h-full w-full overscroll-none">
     <Card
-      quality={250}
+      xp={250}
       pathway="arts & culture"
       imageURL="https://s.yimg.com/os/creatr-uploaded-images/2019-11/7b5b5330-112b-11ea-a77f-7c019be7ecae"
       visible
-      displayName="A learning experience"
+      headline="A learning experience"
       summary="A sample summary"
-      notBefore={new Date().toString()}
+      startTime={new Date().toString()}
       address="123 Civic Lane, Brooklyn, NY, 12345"
-      externalURL="https://www.localcivics.io"
+      link="https://www.localcivics.io"
       skills={["math", "public speaking", "engineering"]}
       {...args}
     />

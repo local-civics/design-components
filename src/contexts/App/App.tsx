@@ -1,10 +1,12 @@
 import { Auth0ContextInterface, Auth0Provider, useAuth0 } from "@auth0/auth0-react";
-import { Client, client, IsBadRequest, IsNotAuthorized, IsNotFound, Resident } from "@local-civics/js-client";
+import { Client, client, IsBadRequest, IsNotAuthorized, IsNotFound, TenantPreview } from "@local-civics/js-client";
 import React from "react";
 import * as Sentry from "@sentry/react";
+import { Simulate } from "react-dom/test-utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorBoundary } from "../Error/Error";
 import { MessageProvider, useMessage } from "../Message";
+import error = Simulate.error;
 
 /* Auth domain for auth0 */
 const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
@@ -58,9 +60,9 @@ export const useApi = () => {
 /**
  * identity state.
  */
-export type IdentityState = Resident & {
+export type IdentityState = TenantPreview & {
   resolving: boolean;
-  resolve: () => Promise<void>;
+  digest: () => Promise<void>;
 };
 
 /**
@@ -88,7 +90,7 @@ export type AppProviderProps = {
 const Consumer = React.memo((props) => <>{props.children}</>);
 
 /**
- * Provide access to apis and resident.
+ * Provide access to apis and tenant.
  *
  * @link https://auth0.com/docs/quickstart/spa/react/01-login#show-user-profile-information
  * @link https://auth0.com/docs/quickstart/spa/react/02-calling-an-api
@@ -117,7 +119,7 @@ export const AppProvider = (props: AppProviderProps) => {
 export const IdentityProvider = (props: { children?: React.ReactNode }) => {
   const Identity = () => {
     const navigate = useNavigate();
-    const [identity, setIdentity] = React.useState({} as Resident);
+    const [identity, setIdentity] = React.useState({} as TenantPreview);
     const [resolving, setResolving] = React.useState(true);
     const location = useLocation();
     const api = useApi();
@@ -125,39 +127,29 @@ export const IdentityProvider = (props: { children?: React.ReactNode }) => {
     const context = {
       ...identity,
       resolving: resolving,
-      resolve: async () => {
+      digest: async () => {
         setResolving(true);
-        let residentName: string = identity.residentName || "";
-        if (!residentName) {
-          const preview = await api.residents.resolve();
-          residentName = preview.residentName || "";
-        }
-
-        if (!residentName) {
-          return;
-        }
-
-        const resident = await api.residents.view(residentName);
-        setIdentity(resident);
+        const tenant = await api.identity.digest();
+        setIdentity(tenant);
         setResolving(false);
-        Sentry.setUser({ id: resident.residentId, residentName: resident.residentName });
+        Sentry.setUser({ id: tenant.id, tenantName: tenant.nickname });
 
         if (location.search && (location.pathname === "/" || !location.pathname)) {
-          navigate(`/residents/${resident.residentName}`);
+          navigate(`/tenants/${tenant.nickname}`);
         }
       },
     };
 
     // Watch for access token changes and re-authenticate.
     React.useEffect(() => {
-      if (!accessToken || ((location.pathname === "/" || !location.pathname) && !location.search)) {
+      if (!accessToken) {
         Sentry.configureScope((scope) => scope.setUser(null));
         setIdentity({});
         return;
       }
 
       (async () => {
-        await context.resolve();
+        await context.digest();
       })();
 
       return () => setIdentity({});
@@ -190,11 +182,11 @@ export const ApiProvider = (props: { children?: React.ReactNode }) => {
       accessToken: accessToken,
       onReject: (e) => {
         send(e);
-        if (IsBadRequest(e) || IsNotAuthorized(e)) {
+        if (IsBadRequest(e)) {
           return Promise.resolve(e);
         }
 
-        if (IsNotFound(e)) {
+        if (IsNotFound(e) || IsNotAuthorized(e)) {
           return Promise.resolve(null);
         }
 

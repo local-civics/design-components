@@ -13,4 +13,4 @@ export default {
 /**
  * Task
  */
-export const Page = () => <InMemoryApp accessToken="andre.carter" location="/residents/andre.carter/tasks/tasks.1" />;
+export const Page = () => <InMemoryApp accessToken="andre.carter" location="/tenants/andre.carter/tasks/tasks.1" />;

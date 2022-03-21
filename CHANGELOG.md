@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2022-03-01
 
 ## Added
+
 - ENG-183 Added Board component.
 - ENG-184 Added Button component.
 - ENG-185 Added Icon component.
@@ -40,4 +41,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ENG-210 Added Task page.
 
 ## Changed
+
 ## Removed

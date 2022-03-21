@@ -31,7 +31,7 @@ const Template: Story<CommunitySearchProps> = (args) => {
 
   return (
     <div className="w-max font-proxima m-auto">
-      <CommunitySearch results={results} displayName="New Community" placeName="Location, OK" {...args} />
+      <CommunitySearch results={results} name="New Community" location="Location, OK" {...args} />
     </div>
   );
 };

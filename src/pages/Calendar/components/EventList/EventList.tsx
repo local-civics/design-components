@@ -39,7 +39,7 @@ export const EventList = (props: EventListProps) => {
           {hasChildren && <div className="grid grid-cols-1 max-h-[30rem] overflow-scroll gap-2">{props.children}</div>}
           {!hasChildren && (
             <div className="grid justify-items-center content-center h-[16rem] lg:h-[22rem]">
-              <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-300">
+              <p className="text-sm text-center align-middle leading-6 font-semibold text-slate-300">
                 No events for the day.
               </p>
             </div>

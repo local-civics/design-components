@@ -1,10 +1,11 @@
-import { Experience } from "@local-civics/js-client";
-import React from "react";
+import { WorkspaceActivitiesView } from "@local-civics/js-client";
+import React, { useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { SearchResult, SearchResultProps } from "../../../../components";
+import { Button } from "../../../../components";
 import { useApi, useIdentity } from "../../../../contexts/App";
 import { Exhibition } from "../../components/Exhibition/Exhibition";
 import { Experience as ExperienceComponent } from "../../components/Experience/Experience";
+import { FilterList } from "../../components/FilterList/FilterList";
 import { Gallery } from "../../components/Gallery/Gallery";
 import { Pathway } from "../../components/Pathway/Pathway";
 import { PathwayList } from "../../components/PathwayList/PathwayList";
@@ -12,8 +13,6 @@ import { PathwayList } from "../../components/PathwayList/PathwayList";
 export const ExploreContainer = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const api = useApi();
-  const identity = useIdentity();
   const [pathways, setPathways] = React.useState({} as Record<string, boolean>);
   const togglePathway = (pathway: string) => setPathways({ ...pathways, [pathway]: !pathways[pathway] });
   const experiences = useExperiences(
@@ -24,115 +23,89 @@ export const ExploreContainer = () => {
 
   const ExperienceList = () => {
     const [open, setOpen] = React.useState(false);
-    const [searchResults, setSearchResults] = React.useState(null as React.ReactElement<SearchResultProps>[] | null);
-    const fetchExperiences = async (displayName?: string) => {
-      if (!identity.communityName) {
-        return;
-      }
-      const filtered = await api.experiences.list(identity.communityName, {
-        displayName: displayName,
-      });
-
-      if (!filtered || filtered.length === 0) {
-        setSearchResults([]);
-        return;
-      }
-
-      setSearchResults(
-        filtered.map((ex) => {
-          return (
-            <SearchResult
-              key={ex.experienceName}
-              title={ex.displayName}
-              onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
-            />
-          );
-        })
-      );
-    };
+    const primary = !experiences?.top ? null : experiences.top.length > 0 ? experiences?.top[0] : null;
 
     return (
-      <Gallery
-        open={open}
-        results={searchResults}
-        count={experiences?.filtered?.length}
-        onOpen={() => setOpen(true)}
-        onClose={() => setOpen(false)}
-        onSearch={fetchExperiences}
-        resolving={experiences === null && searchResults === null}
-        primary={
-          experiences?.primary && (
-            <ExperienceComponent
-              {...experiences?.primary}
-              onClick={() => navigate(`${location.pathname}/${experiences?.primary?.experienceName}`)}
-            />
-          )
-        }
-        top={
-          experiences?.top &&
-          experiences.top?.length > 0 && (
-            <Exhibition>
-              {experiences.top.map((ex) => {
-                return (
-                  <ExperienceComponent
-                    key={ex.experienceName}
-                    {...ex}
-                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
-                  />
-                );
-              })}
-            </Exhibition>
-          )
-        }
-        soonest={
-          experiences?.soonest &&
-          experiences.soonest?.length > 0 && (
-            <Exhibition>
-              {experiences.soonest.map((ex) => {
-                return (
-                  <ExperienceComponent
-                    key={ex.experienceName}
-                    {...ex}
-                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
-                  />
-                );
-              })}
-            </Exhibition>
-          )
-        }
-        milestones={
-          experiences?.milestones &&
-          experiences.milestones?.length > 0 && (
-            <Exhibition>
-              {experiences.milestones.map((ex) => {
-                return (
-                  <ExperienceComponent
-                    key={ex.experienceName}
-                    {...ex}
-                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
-                  />
-                );
-              })}
-            </Exhibition>
-          )
-        }
-        filtered={
-          experiences?.filtered &&
-          experiences.filtered?.length > 0 && (
-            <Exhibition>
-              {experiences.filtered.map((ex) => {
-                return (
-                  <ExperienceComponent
-                    key={ex.experienceName}
-                    {...ex}
-                    onClick={() => navigate(`${location.pathname}/${ex.experienceName}`)}
-                  />
-                );
-              })}
-            </Exhibition>
-          )
-        }
-      />
+      <>
+        <Search value={experiences.search} send={(search?: string) => experiences.setSearch(search)} />
+        <FilterList tags={experiences.tags || null} onTagClick={experiences.setTags} />
+        <Gallery
+          open={open}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
+          resolving={experiences.resolving}
+          primary={
+            primary && (
+              <ExperienceComponent {...primary} onClick={() => navigate(`${location.pathname}/${primary.id}`)} />
+            )
+          }
+          top={
+            experiences?.top &&
+            experiences?.top?.length > 0 && (
+              <Exhibition>
+                {experiences?.top.map((ex) => {
+                  return (
+                    <ExperienceComponent
+                      key={`${ex.marketId}${ex.id}`}
+                      {...ex}
+                      onClick={() => navigate(`${location.pathname}/${ex.id}`)}
+                    />
+                  );
+                })}
+              </Exhibition>
+            )
+          }
+          soonest={
+            experiences?.upcoming &&
+            experiences?.upcoming?.length > 0 && (
+              <Exhibition>
+                {experiences?.upcoming.map((ex) => {
+                  return (
+                    <ExperienceComponent
+                      key={`${ex.marketId}${ex.id}`}
+                      {...ex}
+                      onClick={() => navigate(`${location.pathname}/${ex.id}`)}
+                    />
+                  );
+                })}
+              </Exhibition>
+            )
+          }
+          milestones={
+            experiences?.milestones &&
+            experiences?.milestones?.length > 0 && (
+              <Exhibition>
+                {experiences?.milestones.map((ex) => {
+                  return (
+                    <ExperienceComponent
+                      key={`${ex.marketId}${ex.id}`}
+                      {...ex}
+                      onClick={() => navigate(`${location.pathname}/${ex.id}`)}
+                    />
+                  );
+                })}
+              </Exhibition>
+            )
+          }
+          count={experiences.suggested?.length}
+          filtered={
+            experiences?.suggested &&
+            experiences?.suggested?.length > 0 && (
+              <Exhibition>
+                {experiences?.suggested.map((ex) => {
+                  return (
+                    <ExperienceComponent
+                      key={`${ex.marketId}${ex.id}`}
+                      {...ex}
+                      onClick={() => navigate(`${location.pathname}/${ex.id}`)}
+                    />
+                  );
+                })}
+              </Exhibition>
+            )
+          }
+        />
+      </>
     );
   };
 
@@ -162,71 +135,80 @@ export const ExploreContainer = () => {
   };
 };
 
-const useExperiences = (pathways: string[]) => {
-  const { search } = useLocation();
+const useExperiences = (pathways?: string[]) => {
+  const [search, setSearch] = React.useState(undefined as string | undefined);
+  const [resolving, setResolving] = React.useState(false);
   const qp = new URLSearchParams(location.search);
   const params = useParams();
   const identity = useIdentity();
+  const primaryOrganization =
+    identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
   const api = useApi();
-  const [experiences, setExperiences] = React.useState(
-    null as {
-      primary?: Experience | null;
-      top?: Experience[] | null;
-      soonest?: Experience[] | null;
-      milestones?: Experience[] | null;
-      filtered?: Experience[] | null;
-      results?: React.ReactElement<SearchResultProps>[];
-    } | null
-  );
+  const [experiences, setExperiences] = React.useState(null as WorkspaceActivitiesView | null);
+  const [tags, setTags] = React.useState(undefined as string[] | undefined);
 
   React.useEffect(() => {
+    if (resolving) {
+      return;
+    }
+
     setExperiences(null);
+    setResolving(true);
+
     (async () => {
-      if (!identity.residentName || !identity.communityName) {
+      if (!primaryOrganization.nickname) {
+        setResolving(false);
         return;
       }
 
-      const p = qp.get("p")
-      const q = qp.get("q")
-      if (q || p || (params.skill && params.skill !== "undefined") || pathways.length > 0) {
-        const skills = params.skill && params.skill !== "undefined" ? [params.skill] : qp.getAll("skills");
+      const name = qp.get("name");
+      const skills = params.skill && params.skill !== "undefined" ? [params.skill] : qp.getAll("skills");
+      setExperiences(
+        await api.curriculum.viewMarketplaceActivities(primaryOrganization.nickname, {
+          name: search || name || "",
+          tags,
+          skills,
+          pathways,
+        })
+      );
 
-        setExperiences({
-          filtered: await api.experiences.list(identity.communityName, {
-            displayName: q || undefined,
-            experienceName: p || undefined,
-            skills,
-            pathways: pathways as (
-              | "policy & government"
-              | "arts & culture"
-              | "college & career"
-              | "volunteer"
-              | "recreation"
-            )[],
-          }),
-        });
-      } else {
-        const top = await api.experiences.list(identity.communityName, {
-          orderBy: "top",
-          limit: 4,
-        });
-        setExperiences({
-          primary: top.length > 0 ? top[0] : null,
-          top: top.length > 1 ? top.slice(1) : null,
-          soonest: await api.experiences.list(identity.communityName, {
-            orderBy: "soonest",
-            limit: 10,
-          }),
-          milestones: await api.experiences.list(identity.communityName, {
-            milestone: true,
-            limit: 10,
-          }),
-          filtered: null,
-        });
-      }
+      setResolving(false);
     })();
-    return () => setExperiences(null);
-  }, [pathways.length, params.skill, identity.residentName]);
+    return () => {
+      setExperiences(null);
+      setResolving(false);
+    };
+  }, [pathways?.length, params.skill, identity.nickname, identity.organizations, search, tags?.length]);
 
-  return experiences;
+  return { ...experiences, resolving, search, setSearch, tags, setTags };
+};
+
+const debounce = (func: (search: string) => void, delay: number) => {
+  let timeout: NodeJS.Timeout;
+  return (search: string) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(search), delay);
+  };
+};
+
+const Search = ({ send, value }: { value?: string; send: (search?: string) => void }) => {
+  const handler = useCallback(debounce(send, 500), []);
+  return (
+    <div className="relative block">
+      <label className="relative block">
+        <span className="absolute inset-y-0 left-0 top-0 flex items-center pl-2">
+          <Button icon="search" />
+        </span>
+        <input
+          autoFocus={true}
+          defaultValue={value}
+          onChange={(e) => handler(e.target.value)}
+          className="placeholder:text-slate-400 text-slate-400 block bg-white w-full text-sm border border-slate-300 rounded-md py-3 px-8 shadow-sm cursor-pointer hover:bg-sky-50 hover:border-sky-100 hover:text-slate-500 hover:placeholder:text-slate-600 focus:outline-none hover:bg-sky-50 hover:border-sky-100"
+          type="text"
+          name="search"
+          placeholder="Search for activities..."
+        />
+      </label>
+    </div>
+  );
 };

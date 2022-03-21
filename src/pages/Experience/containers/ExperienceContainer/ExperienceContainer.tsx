@@ -2,7 +2,7 @@
  * A connected container for tasks.
  * @constructor
  */
-import { Experience } from "@local-civics/js-client";
+import { ActivityView } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useApi, useIdentity } from "../../../../contexts/App";
@@ -18,23 +18,34 @@ export const ExperienceContainer = () => {
   const navigate = useNavigate();
   const close = () => navigate(-1);
   const experience = useExperience();
+  const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
   const api = useApi();
-  const ready = experience !== null && !!experience.experienceName && !!identity.residentName;
+  const params = useParams();
+  const marketName = params.marketName;
+  const activityId = params.activityId;
+  const ready = experience !== null && !!experience && !!identity.nickname;
   const message = useMessage();
   const register = () =>
     ready &&
-    api.registrations
-      .create(identity.residentName || "", {
-        ...experience,
-        ...identity,
-        originURL: window.location.href,
+    api.curriculum
+      .changeReaction(identity.nickname || "", po.nickname || "", experience.activityId, {
+        email: identity.email,
+        givenName: identity.givenName,
+        notify: true,
+        origin: window.location.href,
       })
       .then(() => {
-        if (experience.registrationURL) {
-          message.send(`Please do so by visiting ${experience.registrationURL}`, {
+        if (experience.rsvp) {
+          message.send(`Please be aware that this activity may require additional registration.`, {
             severity: "success",
             icon: "calendar",
-            title: "Additional registration required",
+            title: "Nice! You're registered.",
+          });
+        } else {
+          message.send(`Check your email for confirmation.`, {
+            severity: "success",
+            icon: "calendar",
+            title: "Nice! You're registered.",
           });
         }
       });
@@ -45,16 +56,17 @@ export const ExperienceContainer = () => {
         {...experience}
         resolving={!ready}
         visible
-        onLaunch={() => experience?.experienceName && navigate(`/residents/${identity.residentName}/reflections/${experience.experienceName}`)}
         onClose={close}
         onRegister={register}
+        onLaunch={() => navigate(`/tenants/${identity.nickname}/reflections/${marketName}/${activityId}`)}
         onUnregister={() =>
-          ready && api.registrations.remove(identity.residentName || "", experience.experienceName || "")
+          ready &&
+          api.curriculum.changeReaction(identity.nickname || "", po.nickname || "", experience.activityId, {
+            notify: false,
+          })
         }
-        onJoin={() => experience?.externalURL && window.open(experience?.externalURL, "_blank")}
-        onSkillClick={(skill) =>
-          ready && navigate(`/communities/${identity.communityName}/skills/${skill}`)
-        }
+        onJoin={() => experience?.link && window.open(experience?.link, "_blank")}
+        onSkillClick={(skill: string) => ready && navigate(`/marketplace/${po.nickname}/skills/${skill}`)}
       />
     ),
   };
@@ -62,31 +74,46 @@ export const ExperienceContainer = () => {
 
 const useExperience = () => {
   const identity = useIdentity();
+  const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
   const api = useApi();
   const params = useParams();
-  const experienceName = params.experienceName;
-  const [experience, setExperience] = React.useState(null as Experience & {status?: "registered" | "unregistered" | "in-progress"} | null);
+  const activityId = parseInt(params.activityId || "");
+  const [experience, setExperience] = React.useState(
+    null as (ActivityView & { activityId?: number } & { status?: "registered" | "unregistered" | "in-progress" }) | null
+  );
   React.useEffect(() => {
     setExperience(null);
 
     (async () => {
-      if (!identity.residentName || !identity.communityName || !experienceName || experienceName === "undefined") {
+      if (!po.nickname || !identity.nickname || !activityId) {
         return;
       }
 
-      const now = new Date()
-      const experience = await api.experiences.view(identity.communityName, experienceName)
-      let status: "in-progress" | "registered" | "unregistered" | undefined
-      if(!experience.milestone){
-        const registration = await api.registrations.view(identity.residentName, experienceName)
-        const inProgress = (experience.notBefore && now > new Date(experience.notBefore)) && (experience.notAfter && now < new Date(experience.notAfter))
-        const isOver = experience.notAfter && now > new Date(experience.notAfter)
-        status = inProgress ? "in-progress" : isOver || !experience.notBefore || !experience.notAfter ? undefined : registration?.experienceName ? "registered" : "unregistered"
+      const now = new Date();
+      const experience = await api.curriculum.viewWorkspaceActivity(identity.nickname, po.nickname, activityId);
+      let status: "in-progress" | "registered" | "unregistered" | undefined;
+      if (!experience.milestone) {
+        const inProgress =
+          experience.startTime &&
+          now > new Date(experience.startTime) &&
+          experience.minutes &&
+          now < new Date(new Date(experience.startTime).getTime() + experience.minutes * 60000);
+        const isOver =
+          experience.minutes &&
+          experience.startTime &&
+          now > new Date(new Date(experience.startTime).getTime() + experience.minutes * 60000);
+        status = inProgress
+          ? "in-progress"
+          : isOver || !experience.startTime || !experience.minutes
+          ? undefined
+          : experience.reaction?.notify
+          ? "registered"
+          : "unregistered";
       }
 
-      setExperience({...experience, status});
+      setExperience({ ...experience, status });
     })();
     return () => setExperience(null);
-  }, [experienceName, identity.residentName]);
-  return experience;
+  }, [activityId, identity.nickname]);
+  return { ...experience, activityId };
 };

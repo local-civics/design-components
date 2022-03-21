@@ -27,17 +27,17 @@ export const AchievementWidget = (props: AchievementWidgetProps) => {
         <div className="grid grid-cols-3 justify-items-center">
           <div className="justify-self-start">
             <p className="font-bold text-3xl w-max m-auto text-green-500">{compact(props.reflections || 0)}</p>
-            <p className="text-xs w-max m-auto text-gray-400">Reflections</p>
+            <p className="text-sm w-max m-auto text-gray-400">Reflections</p>
           </div>
 
           <div>
             <p className="font-bold text-3xl w-max m-auto text-green-500">{compact(props.badges || 0)}</p>
-            <p className="text-xs w-max m-auto text-gray-400">Badges</p>
+            <p className="text-sm w-max m-auto text-gray-400">Badges</p>
           </div>
 
           <div className="justify-self-end">
             <p className="font-bold text-3xl w-max m-auto text-green-500">{compact(props.milestones || 0)}</p>
-            <p className="text-xs w-max m-auto text-gray-400">Milestones</p>
+            <p className="text-sm w-max m-auto text-gray-400">Milestones</p>
           </div>
         </div>
       </WidgetBody>

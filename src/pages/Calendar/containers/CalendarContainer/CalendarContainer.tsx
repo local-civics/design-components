@@ -1,5 +1,4 @@
-import { Experience } from "@local-civics/js-client";
-import { navigate } from "@storybook/addon-links";
+import { WorkspaceCalendarView } from "@local-civics/js-client";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useIdentity } from "../../../../contexts/App";
@@ -12,21 +11,17 @@ export const CalendarContainer = () => {
   const location = useLocation();
   const params = useParams();
   const [date, setDate] = React.useState(
-    params.date && params.date !== "undefined" ? new Date(params.date) : (new Date() as Date | null)
+    params.date && params.date !== "undefined" ? dayDate(params.date) : (new Date() as Date | null)
   );
-  const events = useEvents(date);
+  const calendar = useEvents(params.marketName, date);
   return {
     DateSelection: () => <DateSelection date={date} setDate={setDate} />,
     EventList: () => (
-      <EventList resolving={events === null} date={date} onSetDate={setDate}>
-        {events &&
-          events.map((event) => {
+      <EventList resolving={calendar === null} date={date} onSetDate={setDate}>
+        {calendar?.events &&
+          calendar.events.map((ex) => {
             return (
-              <Event
-                {...event}
-                key={event.experienceName}
-                onClick={() => navigate(`${location.pathname}/${event.experienceName}`)}
-              />
+              <Event key={`${ex.marketId}${ex.id}`} {...ex} onClick={() => navigate(`${location.pathname}/${ex.id}`)} />
             );
           })}
       </EventList>
@@ -34,24 +29,26 @@ export const CalendarContainer = () => {
   };
 };
 
-const useEvents = (date: Date | null) => {
+const useEvents = (marketName?: string, date?: Date | null) => {
   const identity = useIdentity();
   const api = useApi();
-  const [events, setEvents] = React.useState(null as Experience[] | null);
+  const [events, setEvents] = React.useState(null as WorkspaceCalendarView | null);
   React.useEffect(() => {
     setEvents(null);
     (async () => {
-      if (!identity.residentName || !identity.communityName || !date) {
+      if (!marketName || !identity.nickname || !date) {
         return;
       }
 
-      setEvents(
-        await api.experiences.list(identity.communityName, {
-          day: date.toISOString().split("T")[0],
-        })
-      );
+      setEvents(await api.curriculum.viewMarketplaceCalendar(marketName, date.toISOString().split("T")[0]));
     })();
     return () => setEvents(null);
-  }, [date, identity.residentName]);
+  }, [date, identity.nickname, marketName]);
   return events;
 };
+
+// https://stackoverflow.com/questions/7151543/convert-dd-mm-yyyy-string-to-date
+function dayDate(dateStr: string) {
+  const [year, month, day] = dateStr.split("-");
+  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+}

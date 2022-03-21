@@ -1,4 +1,4 @@
-import { Reflection, Task } from "@local-civics/js-client";
+import { TaskView } from "@local-civics/js-client";
 import React from "react";
 import { Button, Modal } from "../../../../components";
 import { builder } from "../../../../utils/classname/classname";
@@ -6,10 +6,11 @@ import { builder } from "../../../../utils/classname/classname";
 /**
  * The properties for the task.
  */
-export type TaskModalProps = Task & {
+export type TaskModalProps = TaskView & {
   disabled?: boolean;
   resolving?: boolean;
   visible?: boolean;
+  status?: string;
   onClose?: () => void;
   onStart?: () => void;
   onContinue?: () => void;
@@ -100,12 +101,7 @@ export const TaskModal = (props: TaskModalProps) => {
         <div className="px-4 pb-4 border-b border-gray-200 w-[18rem] md:w-[24rem] lg:w-[28rem]">
           <div className="flex items-center gap-x-2 -mt-4">
             <div className="grow align-middle inline-block">
-              <p className="font-semibold capitalize text-slate-500 text-lg">{props.displayName}</p>
-              {props.summary && (
-                <div className="text-xs">
-                  <p className="inline-block text-slate-500">{props.summary}</p>
-                </div>
-              )}
+              <p className="font-semibold capitalize text-slate-500 text-lg">{props.title}</p>
             </div>
           </div>
           <TaskButton />
