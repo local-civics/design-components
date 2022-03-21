@@ -1,9 +1,9 @@
-import { Experience } from "@local-civics/js-client";
-import React from "react";
-import { Button, Icon, Modal } from "../../../../components";
-import { builder } from "../../../../utils/classname/classname";
+import {ActivityView} from "@local-civics/js-client";
+import React                           from "react";
+import {Button, Icon, IconName, Modal} from "../../../../components";
+import { builder }                     from "../../../../utils/classname/classname";
 
-export type CardProps = Experience & {
+export type CardProps = ActivityView & {
   status?: "registered" | "unregistered" | "in-progress";
   resolving?: boolean;
   visible?: boolean;
@@ -96,19 +96,19 @@ export const Card = (props: CardProps) => {
   return (
     <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
       <div className={className}>
-        <img className="w-full h-60 object-cover" alt={props.displayName} src={props.imageURL} />
+        <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
           <div className="flex items-start grow">
             <div className="inline-block min-w-6 w-6 h-6 text-slate-600">
-              <Icon name={props.pathway || "explore"} />
+              <Icon name={props.pathway as IconName || "explore"} />
             </div>
 
             <div className="grow align-top ml-2 inline-block leading-none">
-              <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">{props.displayName}</p>
+              <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">{props.headline}</p>
               <div>
-                <p className="text-xs inline-block capitalize text-slate-600">{props.pathway}</p>
-                {props.quality && (
-                  <p className="ml-1 font-semibold inline-block text-xs text-green-500">{props.quality} pts</p>
+                <p className="text-sm inline-block capitalize text-slate-600">{props.pathway}</p>
+                {props.xp && (
+                  <p className="ml-1 font-semibold inline-block text-sm text-green-500">{props.xp} pts</p>
                 )}
               </div>
             </div>
@@ -135,7 +135,7 @@ export const Card = (props: CardProps) => {
                       <button
                         onClick={() => props.onSkillClick && props.onSkillClick(skill)}
                         key={skill + i}
-                        className="grow-0 cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize bg-gray-100 hover:bg-gray-50 active:bg-gray-50 focus:bg-gray-50 px-4 py-2 text-xs text-gray-600"
+                        className="grow-0 cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize bg-gray-100 hover:bg-gray-50 active:bg-gray-50 focus:bg-gray-50 px-4 py-2 text-sm text-gray-600"
                       >
                         {skill}
                       </button>
@@ -146,7 +146,7 @@ export const Card = (props: CardProps) => {
             )}
           </div>
           <div className="w-full p-5 border-b border-gray-200 grid grid-cols-1 gap-4">
-            {(props.address || props.externalURL || props.notBefore) && (
+            {(props.address || props.link || props.startTime) && (
               <div className="text-slate-600 grid grid-cols-1 gap-4">
                 <p className="font-semibold text-lg">Details</p>
                 <div className="grid grid-cols-1 gap-8">
@@ -161,7 +161,7 @@ export const Card = (props: CardProps) => {
                     </div>
                   )}
 
-                  {props.notBefore && (
+                  {props.startTime && (
                     <div className="flex gap-1 items-center">
                       <div className="grow-0 w-6 h-6 min-w-6 text-slate-600">
                         <Icon name="clock" />
@@ -170,18 +170,18 @@ export const Card = (props: CardProps) => {
                         {new Intl.DateTimeFormat("en-US", {
                           dateStyle: "full",
                           timeStyle: "long",
-                        }).format(new Date(props.notBefore))}
+                        }).format(new Date(props.startTime))}
                       </div>
                     </div>
                   )}
 
-                  {props.externalURL && (
+                  {props.link && (
                     <div className="flex gap-1 items-center">
                       <div className="grow-0 w-6 h-6 min-w-6 text-slate-600">
                         <Icon name="globe" />
                       </div>
                       <div className="grow font-medium inline-block px-4 py-2 text-sm text-slate-600 hover:underline">
-                        <a href={props.externalURL}>{props.externalURL}</a>
+                        <a href={props.link}>{props.link}</a>
                       </div>
                     </div>
                   )}

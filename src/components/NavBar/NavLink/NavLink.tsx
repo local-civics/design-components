@@ -55,25 +55,31 @@ const withName = (config: ButtonProps, name?: NavLinkName) => {
   switch (name) {
     case "home":
       config.logo = true;
-      config.size = "md";
+      config.size = "lg";
       break;
     case "profile":
       config.icon = name;
+      config.size = "lg";
+      config.color = "slate:icon";
       break;
     case "explore":
       config.icon = name;
+      config.size = "lg";
+      config.color = "slate:icon";
       break;
     case "calendar":
       config.icon = name;
+      config.size = "lg";
+      config.color = "slate:icon";
       break;
     case "login":
-      config.size = "tiny";
+      config.size = "sm";
       config.spacing = "sm";
       config.text = "Login";
       config.border = "rounded";
       break;
     case "logout":
-      config.size = "tiny";
+      config.size = "sm";
       config.spacing = "sm";
       config.text = "Logout";
       config.border = "rounded";

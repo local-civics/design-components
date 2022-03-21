@@ -7,7 +7,7 @@ import { Widget, WidgetBody } from "../../../../components";
 export type ResidentWidgetProps = {
   resolving?: boolean;
   avatarURL?: string;
-  residentName?: string;
+  tenantName?: string;
   givenName?: string;
   familyName?: string;
   createdAt?: string;
@@ -41,13 +41,13 @@ export const ResidentWidget = (props: ResidentWidgetProps) => {
               <div className="grid grid-cols-1 content-center align-middle">
                 <div className="grid lg:gap-1">
                   <div className="grid grid-cols-1">
-                    {props.residentName && <span className="text-slate-300 text-xs">@{props.residentName}</span>}
+                    {props.tenantName && <span className="text-slate-300 text-sm">@{props.tenantName}</span>}
                     <h4 className="inline-block font-semibold capitalize text-2xl lg:text-4xl text-slate-600">
                       {props.givenName} {props.familyName}
                     </h4>
                   </div>
                   {props.createdAt && (
-                    <p className="text-xs text-slate-300">Resident since {new Date(props.createdAt).getFullYear()}.</p>
+                    <p className="text-sm text-slate-300">Member since {new Date(props.createdAt).getFullYear()}</p>
                   )}
                 </div>
               </div>

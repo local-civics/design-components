@@ -14,7 +14,7 @@ export type DashboardProps = {
 };
 
 /**
- * A component for highlighting actionable content for residents.
+ * A component for highlighting actionable content for tenants.
  * @param props
  * @constructor
  */

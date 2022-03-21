@@ -8,9 +8,9 @@ import { background } from "../../../../utils/colors";
  */
 export type TaskProps = {
   open?: boolean;
-  displayName?: string;
+  headline?: string;
   status?: "todo" | "review" | "in-progress" | "done";
-  notBefore?: string;
+  startTime?: string;
   notAfter?: string;
   onOpen?: () => void;
 };
@@ -41,7 +41,7 @@ export const Task = (props: TaskProps) => {
     return props.status;
   })();
 
-  const tooEarly = !!props.notBefore && now < new Date(props.notBefore);
+  const tooEarly = !!props.startTime && now < new Date(props.startTime);
   const tooLate = !!props.notAfter && now > new Date(props.notAfter);
   const disabled = !props.status || tooEarly || tooLate;
   const className = builder("flex gap-3 flex-col shadow-md transition ease-in-out")
@@ -68,7 +68,7 @@ export const Task = (props: TaskProps) => {
       </div>
 
       <div className="grid grid-cols-1">
-        <p className="font-semibold text-slate-600 text-md">{props.displayName}</p>
+        <p className="font-semibold text-slate-600 text-md">{props.headline}</p>
       </div>
     </div>
   );

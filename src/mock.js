@@ -17,45 +17,45 @@ export const mockApi = () => {
         if (!accessToken) {
         }
 
-        let resident = schema.db.residents.where({ residentName: accessToken })[0];
+        let resident = schema.db.tenants.where({ tenantName: accessToken })[0];
         if (resident === undefined) {
-          resident = schema.db.residents.insert({ residentName: accessToken });
+          resident = schema.db.tenants.insert({ tenantName: accessToken });
         }
 
         return resident;
       });
 
-      // e.g., https://api.localcivics.io/identity/v0/communities/hcz/residents/andre.carter?fields[]=residentName&fields[]=avatarURL&fields[]=givenName&fields[]=familyName&fields[]=createdAt&fields[]=online&fields[]=impactStatement&fields[]=communityTrueName&fields[]=communityPlaceName
-      this.get("/identity/v0/residents/:residentName", (schema, request) => {
-        return schema.db.residents.where({ residentName: request.params.residentName })[0];
+      // e.g., https://api.localcivics.io/identity/v0/communities/hcz/tenants/andre.carter?fields[]=tenantName&fields[]=avatarURL&fields[]=givenName&fields[]=familyName&fields[]=createdAt&fields[]=online&fields[]=impactStatement&fields[]=communityTrueName&fields[]=communityPlaceName
+      this.get("/identity/v0/tenants/:tenantName", (schema, request) => {
+        return schema.db.tenants.where({ tenantName: request.params.tenantName })[0];
       });
 
-      this.get("/discovery/v0/residents/:residentName/reports", (_, request) => {
+      this.get("/discovery/v0/tenants/:tenantName/reports", (_, request) => {
         if (request.queryParams.groups) {
           return [
             {
               pathway: "policy & government",
-              quality: 500,
+              xp: 500,
               nextProficiency: 1000,
             },
             {
               pathway: "college & career",
-              quality: 500,
+              xp: 500,
               nextProficiency: 1000,
             },
             {
               pathway: "volunteer",
-              quality: 800,
+              xp: 800,
               nextProficiency: 1000,
             },
             {
               pathway: "recreation",
-              quality: 800,
+              xp: 800,
               nextProficiency: 1000,
             },
             {
               pathway: "arts & culture",
-              quality: 500,
+              xp: 500,
               nextProficiency: 1000,
             },
           ];
@@ -63,7 +63,7 @@ export const mockApi = () => {
 
         return [
           {
-            quality: 3500,
+            xp: 3500,
             nextProficiency: 4000,
             magnitude: 2,
           },
@@ -78,7 +78,7 @@ export const mockApi = () => {
         return schema.db.badges.where({ badgeName: request.params.badgeName })[0];
       });
 
-      this.get("/curriculum/v0/residents/:residentName/tasks", (schema, request) => {
+      this.get("/curriculum/v0/tenants/:tenantName/tasks", (schema, request) => {
         const query = {};
         if (request.queryParams.status) {
           query.status = request.queryParams.status;
@@ -87,64 +87,64 @@ export const mockApi = () => {
         return schema.db.tasks.where(query);
       });
 
-      this.get("/curriculum/v0/residents/:residentName/tasks/:taskName", (schema, request) => {
+      this.get("/curriculum/v0/tenants/:tenantName/tasks/:taskName", (schema, request) => {
         return schema.db.tasks.where({ taskName: request.params.taskName })[0];
       });
 
-      this.get("/curriculum/v0/residents/:residentName/reflections/:experienceName", (schema, request) => {
+      this.get("/curriculum/v0/tenants/:tenantName/reflections/:activityId", (schema, request) => {
         return {};
       });
 
-      this.patch("/identity/v0/residents/:residentName", (schema, request) => {
+      this.patch("/identity/v0/tenants/:tenantName", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
-        const resident = { ...schema.db.residents.where({ residentName: request.params.residentName })[0], ...attrs };
-        return schema.db.residents.update({ residentName: request.params.residentName }, resident);
+        const resident = { ...schema.db.tenants.where({ tenantName: request.params.tenantName })[0], ...attrs };
+        return schema.db.tenants.update({ tenantName: request.params.tenantName }, resident);
       });
 
-      this.post("/identity/v0/communities/:communityName/residents", (schema, request) => {
+      this.post("/identity/v0/communities/:communityName/tenants", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
-        const resident = { ...schema.db.residents.where({ residentName: attrs.residentName })[0] };
+        const resident = { ...schema.db.tenants.where({ tenantName: attrs.tenantName })[0] };
         resident.communityName = request.params.communityName;
-        return schema.db.residents.update({ residentName: attrs.residentName }, resident);
+        return schema.db.tenants.update({ tenantName: attrs.tenantName }, resident);
       });
 
-      this.put("/identity/v0/residents/:residentName/interests", (schema, request) => {
+      this.put("/identity/v0/tenants/:tenantName/interests", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
-        const resident = { ...schema.db.residents.where({ residentName: request.params.residentName })[0], ...attrs };
-        return schema.db.residents.update({ residentName: request.params.residentName }, resident);
+        const resident = { ...schema.db.tenants.where({ tenantName: request.params.tenantName })[0], ...attrs };
+        return schema.db.tenants.update({ tenantName: request.params.tenantName }, resident);
       });
 
-      this.put("/identity/v0/residents/:residentName/impact-statement", (schema, request) => {
+      this.put("/identity/v0/tenants/:tenantName/impact-statement", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
-        const resident = { ...schema.db.residents.where({ residentName: request.params.residentName })[0], ...attrs };
-        return schema.db.residents.update({ residentName: request.params.residentName }, resident);
+        const resident = { ...schema.db.tenants.where({ tenantName: request.params.tenantName })[0], ...attrs };
+        return schema.db.tenants.update({ tenantName: request.params.tenantName }, resident);
       });
 
-      this.put("/identity/v0/residents/:residentName/avatar", (schema, request) => {
+      this.put("/identity/v0/tenants/:tenantName/avatar", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
-        const resident = { ...schema.db.residents.where({ residentName: request.params.residentName })[0], ...attrs };
-        return schema.db.residents.update({ residentName: request.params.residentName }, resident);
+        const resident = { ...schema.db.tenants.where({ tenantName: request.params.tenantName })[0], ...attrs };
+        return schema.db.tenants.update({ tenantName: request.params.tenantName }, resident);
       });
 
-      this.put("/curriculum/v0/residents/:residentName/badges/:badgeName", (schema, request) => {
+      this.put("/curriculum/v0/tenants/:tenantName/badges/:badgeName", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
         const badge = { ...schema.db.badges.where({ badgeName: request.params.badgeName })[0], ...attrs };
         badge.status = "in-progress";
         return schema.db.badges.update({ badgeName: request.params.badgeName }, badge);
       });
 
-      this.patch("/curriculum/v0/residents/:residentName/tasks/:taskName", (schema, request) => {
+      this.patch("/curriculum/v0/tenants/:tenantName/tasks/:taskName", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
         const task = { ...schema.db.tasks.where({ taskName: request.params.taskName })[0], ...attrs };
         return schema.db.tasks.update({ taskName: request.params.taskName }, task);
       });
 
-      this.put("/identity/v0/residents/:residentName", (schema, request) => {
-        if (request.params.residentName === "my" || request.params.residentName === "me") {
-          request.params.residentName = "andre.carter";
+      this.put("/identity/v0/tenants/:tenantName", (schema, request) => {
+        if (request.params.tenantName === "my" || request.params.tenantName === "me") {
+          request.params.tenantName = "andre.carter";
         }
         const attrs = JSON.parse(request.requestBody);
-        return schema.db.residents.update({ residentName: request.params.residentName }, attrs);
+        return schema.db.tenants.update({ tenantName: request.params.tenantName }, attrs);
       });
 
       this.get("/identity/v0/communities", (schema) => {
@@ -164,8 +164,8 @@ export const mockApi = () => {
         const query = request.queryParams;
         experiences = experiences.filter((experience) => {
           let match = true;
-          if (query.displayName) {
-            match = match && experience.displayName.toLowerCase().startsWith(query.displayName.toLowerCase());
+          if (query.headline) {
+            match = match && experience.headline.toLowerCase().startsWith(query.headline.toLowerCase());
           }
 
           if (query.tags) {
@@ -182,14 +182,14 @@ export const mockApi = () => {
           }
 
           if (query.timePeriod === "milestone") {
-            match = match && !experience.notBefore;
+            match = match && !experience.startTime;
           }
 
           if (query.date) {
             match =
               match &&
-              experience.notBefore &&
-              new Date(experience.notBefore).toISOString().substring(0, 10) === query.date;
+              experience.startTime &&
+              new Date(experience.startTime).toISOString().substring(0, 10) === query.date;
           }
 
           if (query.order) {
@@ -204,8 +204,8 @@ export const mockApi = () => {
         return experiences.slice(page * limit, page * limit + limit);
       });
 
-      this.get("/curriculum/v0/communities/:communityName/experiences/:experienceName", (schema, request) => {
-        let experiences = schema.db.experiences.where({ experienceName: request.params.experienceName });
+      this.get("/curriculum/v0/communities/:communityName/experiences/:activityId", (schema, request) => {
+        let experiences = schema.db.experiences.where({ activityId: request.params.activityId });
         return experiences[0];
       });
     },
@@ -219,14 +219,14 @@ const randomName = () => {
 const tasks = [
   {
     taskName: "tasks.1",
-    displayName: "Task #1",
+    headline: "Task #1",
     summary: "Do something nice.",
     pathway: "policy & government",
     status: "todo",
   },
   {
     taskName: "tasks.2",
-    displayName: "Task #2",
+    headline: "Task #2",
     summary: "Do something nice.",
     pathway: "arts & culture",
     status: "todo",
@@ -234,28 +234,28 @@ const tasks = [
   {
     taskName: "set.avatar",
     actionName: "avatar.set",
-    displayName: "Set your avatar",
+    headline: "Set your avatar",
     summary: "Show the world your creativity.",
     status: "todo",
   },
   {
     taskName: "create.reflection",
     actionName: "reflections.create",
-    displayName: "Submit your reflection",
-    experienceName: "experience",
+    headline: "Submit your reflection",
+    activityId: "experience",
     summary: "Submit a reflection of your experience.",
     status: "todo",
   },
   {
     taskName: "tasks.3",
-    displayName: "Task #3",
+    headline: "Task #3",
     summary: "Do something nice.",
     pathway: "college & career",
     status: "todo",
   },
   {
     taskName: "tasks.4",
-    displayName: "Task #4",
+    headline: "Task #4",
     summary: "Do something nice.",
     pathway: "volunteer",
     status: "todo",
@@ -263,29 +263,29 @@ const tasks = [
   },
   {
     taskName: "tasks.5",
-    displayName: "Task #5",
+    headline: "Task #5",
     summary: "Do something nice.",
     pathway: "recreation",
     status: "todo",
-    notBefore: new Date("2222-01-01").toString(),
+    startTime: new Date("2222-01-01").toString(),
   },
   {
     taskName: "tasks.6",
-    displayName: "Task #1",
+    headline: "Task #1",
     summary: "Do something nice.",
     pathway: "policy & government",
     status: "in-progress",
   },
   {
     taskName: "tasks.7",
-    displayName: "Task #2",
+    headline: "Task #2",
     summary: "Do something nice.",
     pathway: "arts & culture",
     status: "in-progress",
   },
   {
     taskName: "tasks.8",
-    displayName: "Task #1",
+    headline: "Task #1",
     summary: "Do something nice.",
     pathway: "volunteer",
     status: "done",
@@ -295,32 +295,32 @@ const tasks = [
 const readiness = [
   {
     pathways: ["college & career"],
-    quality: 250,
+    xp: 250,
     nextProficiency: 500,
   },
   {
     pathways: ["policy & government"],
-    quality: 300,
+    xp: 300,
     nextProficiency: 500,
   },
   {
     pathways: ["arts & culture"],
-    quality: 500,
+    xp: 500,
     nextProficiency: 500,
   },
   {
     pathways: ["volunteer"],
-    quality: 100,
+    xp: 100,
     nextProficiency: 500,
   },
   {
     pathways: ["recreation"],
-    quality: 400,
+    xp: 400,
     nextProficiency: 500,
   },
   {
     pathways: ["sum"],
-    quality: 3475,
+    xp: 3475,
     magnitude: 2,
     reflections: 12,
     badges: 3,
@@ -332,24 +332,24 @@ const readiness = [
 const badges = [
   {
     badgeName: "onboarding.badge",
-    displayName: "Onboarding Badge",
+    headline: "Onboarding Badge",
     summary: "Get on the platform and check things out.",
     imageURL: "https://cdn.localcivics.io/badges/onboarding.png",
     tasks: [
       {
         taskName: "onboarding.badge.about",
-        displayName: "Tell us about yourself",
+        headline: "Tell us about yourself",
         status: "done",
       },
       {
         taskName: "onboarding.badge.impact",
-        displayName: "Complete the initial impact quiz",
+        headline: "Complete the initial impact quiz",
         status: "done",
       },
       {
         taskName: "onboarding.badge.avatar",
-        displayName: "Set your avatar",
-        actionURL: `/residents/andre.carter/settings`,
+        headline: "Set your avatar",
+        actionURL: `/tenants/andre.carter/settings`,
         status: "todo",
       },
     ],
@@ -357,23 +357,23 @@ const badges = [
   },
   {
     badgeName: "participation.badge",
-    displayName: "Participation Badge",
+    headline: "Participation Badge",
     summary: "Get out of your shy shell",
     imageURL: "https://cdn.localcivics.io/badges/participation.png",
     tasks: [
       {
         taskName: "objective.1",
-        displayName: "Complete one civic milestone",
+        headline: "Complete one civic milestone",
         status: "done",
       },
       {
         taskName: "objective.2",
-        displayName: "Complete the political pathway",
+        headline: "Complete the political pathway",
         status: "todo",
       },
       {
         taskName: "objective.3",
-        displayName: "Attend two guest speaker experiences",
+        headline: "Attend two guest speaker experiences",
         status: "todo",
       },
     ],
@@ -381,23 +381,23 @@ const badges = [
   },
   {
     badgeName: "civic.lens.badge",
-    displayName: "Civic Lens Badge",
+    headline: "Civic Lens Badge",
     summary: "See through the lens of civics.",
     imageURL: "https://cdn.localcivics.io/badges/civic-lens.png",
     tasks: [
       {
         taskName: "objective.1",
-        displayName: "Complete one civic milestone",
+        headline: "Complete one civic milestone",
         status: "done",
       },
       {
         criterionName: "objective.2",
-        displayName: "Complete the political pathway",
+        headline: "Complete the political pathway",
         status: "todo",
       },
       {
         criterionName: "objective.3",
-        displayName: "Attend two guest speaker experiences",
+        headline: "Attend two guest speaker experiences",
         status: "todo",
       },
     ],
@@ -405,23 +405,23 @@ const badges = [
   },
   {
     badgeName: "college.explorer.badge",
-    displayName: "College Explorer Badge",
+    headline: "College Explorer Badge",
     summary: "Learn about the different colleges and their unique offerings.",
     imageURL: "https://cdn.localcivics.io/badges/college-explorer.png",
     tasks: [
       {
         taskName: "objective.1",
-        displayName: "Complete one civic milestone",
+        headline: "Complete one civic milestone",
         status: "done",
       },
       {
         criterionName: "objective.2",
-        displayName: "Complete the political pathway",
+        headline: "Complete the political pathway",
         status: "todo",
       },
       {
         criterionName: "objective.3",
-        displayName: "Attend two guest speaker experiences",
+        headline: "Attend two guest speaker experiences",
         status: "todo",
       },
     ],
@@ -429,23 +429,23 @@ const badges = [
   },
   {
     badgeName: "us.history.badge",
-    displayName: "U.S History Badge",
+    headline: "U.S History Badge",
     summary: "Learn about the history of the United States.",
     imageURL: "https://cdn.localcivics.io/badges/us-history.png",
     tasks: [
       {
         taskName: "objective.1",
-        displayName: "Complete one civic milestone",
+        headline: "Complete one civic milestone",
         status: "done",
       },
       {
         taskName: "objective.2",
-        displayName: "Complete the political pathway",
+        headline: "Complete the political pathway",
         status: "todo",
       },
       {
         taskName: "objective.3",
-        displayName: "Attend two guest speaker experiences",
+        headline: "Attend two guest speaker experiences",
         status: "todo",
       },
     ],
@@ -454,21 +454,21 @@ const badges = [
   {
     badgeName: "tech.guru.badge",
     summary: "Become a master of technology.",
-    displayName: "Tech Guru Badge",
+    headline: "Tech Guru Badge",
     tasks: [
       {
         taskName: "objective.1",
-        displayName: "Complete one civic milestone",
+        headline: "Complete one civic milestone",
         status: "todo",
       },
       {
         taskName: "objective.2",
-        displayName: "Complete the political pathway",
+        headline: "Complete the political pathway",
         status: "todo",
       },
       {
         taskName: "objective.3",
-        displayName: "Attend two guest speaker experiences",
+        headline: "Attend two guest speaker experiences",
         status: "todo",
       },
     ],
@@ -477,33 +477,33 @@ const badges = [
   {
     badgeName: "elected.official.badge",
     summary: "Meet your elected official in your community.",
-    displayName: "Elected Official Badge",
+    headline: "Elected Official Badge",
     tasks: [
       {
         taskName: "objective.1",
-        displayName: "Complete one civic milestone",
+        headline: "Complete one civic milestone",
         status: "todo",
       },
       {
         taskName: "objective.2",
-        displayName: "Complete the political pathway",
+        headline: "Complete the political pathway",
         status: "todo",
       },
       {
         taskName: "objective.3",
-        displayName: "Attend two guest speaker experiences",
+        headline: "Attend two guest speaker experiences",
         status: "todo",
       },
     ],
   },
 ];
 
-const residents = [
+const tenants = [
   {
-    residentName: "resident",
+    tenantName: "resident",
   },
   {
-    residentName: "andre.carter",
+    tenantName: "andre.carter",
     communityName: "hcz",
     identityId: "me",
     givenName: "Andre",
@@ -521,28 +521,28 @@ const residents = [
 const experiences = [
   {
     courseName: "hcz",
-    experienceName: "experience",
-    residentName: "andre.carter",
+    activityId: "experience",
+    tenantName: "andre.carter",
     experienceId: "hcz.experience.0.top",
-    displayName: "Voter Registration 101",
+    headline: "Voter Registration 101",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     address: "200 Willoughby Ave, Brooklyn, NY, 11205",
-    externalURL: "https://www.localcivics.io",
-    notBefore: new Date(),
+    link: "https://www.localcivics.io",
+    startTime: new Date(),
     imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
     tags: [],
     skills: ["leadership", "public speaking", "group work"],
     status: "unregistered",
-    quality: 250,
+    xp: 250,
     order: "top",
   },
   {
     courseName: "hcz",
     experienceId: "hcz.experience.1.top",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Guess the Odd One Out",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Guess the Odd One Out",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -550,21 +550,21 @@ const experiences = [
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date(),
+    startTime: new Date(),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
     status: "registered",
-    quality: 250,
+    xp: 250,
     order: "top",
   },
   {
     courseName: "hcz",
     experienceId: "hcz.experience.2.top",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Explore NYC Public Data - Your School",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Explore NYC Public Data - Your School",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -572,22 +572,22 @@ const experiences = [
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date(),
+    startTime: new Date(),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/volunteer.jpg",
     pathway: "volunteer",
     tags: ["area:volunteer"],
     status: "opportunity",
-    quality: 250,
+    xp: 250,
     order: "top",
   },
 
   {
     courseName: "hcz",
     experienceId: "hcz.experience.3.top",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "YA Anime Club",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "YA Anime Club",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -600,16 +600,16 @@ const experiences = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "registered",
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 1),
-    quality: 250,
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 1),
+    xp: 250,
     order: "top",
   },
   {
     courseName: "hcz",
-    experienceName: randomName(),
-    residentName: "andre.carter",
+    activityId: randomName(),
+    tenantName: "andre.carter",
     experienceId: "hcz.experience.0.top",
-    displayName: "Voter Registration 101 (Breakout I)",
+    headline: "Voter Registration 101 (Breakout I)",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -618,20 +618,20 @@ const experiences = [
       postalCode: "11205",
     },
     url: "https://www.localcivics.io",
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 1),
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 1),
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "policy & government",
     tags: ["area:policy & government", "skill:leadership", "skill:speaking", "skill:group"],
     status: "opportunity",
-    quality: 250,
+    xp: 250,
     order: "sponsored",
   },
   {
     courseName: "hcz",
     experienceId: "hcz.experience.1.top",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Guess the Odd One Out (Breakout I)",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Guess the Odd One Out (Breakout I)",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -639,21 +639,21 @@ const experiences = [
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 2),
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 2),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/sponsored.jpg",
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
     status: "registered",
-    quality: 250,
+    xp: 250,
     order: "sponsored",
   },
   {
     courseName: "hcz",
     experienceId: "hcz.experience.3.top",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "YA Anime Club (Breakout I)",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "YA Anime Club (Breakout I)",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -666,16 +666,16 @@ const experiences = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "registered",
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 2),
-    quality: 250,
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 2),
+    xp: 250,
     order: "sponsored",
   },
   {
     courseName: "hcz",
-    experienceName: randomName(),
-    residentName: "andre.carter",
+    activityId: randomName(),
+    tenantName: "andre.carter",
     experienceId: "hcz.experience.0.top",
-    displayName: "Voter Registration 101 (Prep)",
+    headline: "Voter Registration 101 (Prep)",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -684,20 +684,20 @@ const experiences = [
       postalCode: "11205",
     },
     url: "https://www.localcivics.io",
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 3),
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 3),
     imageURL: "https://cdn.localcivics.io/area/policy-and-government.jpg",
     pathway: "policy & government",
     tags: ["area:policy & government", "skill:leadership", "skill:speaking", "skill:group"],
     status: "opportunity",
-    quality: 250,
+    xp: 250,
     order: "soonest",
   },
   {
     courseName: "hcz",
     experienceId: "hcz.experience.1.top",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Guess the Odd One Out (Prep)",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Guess the Odd One Out (Prep)",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -705,21 +705,21 @@ const experiences = [
       state: "NY",
       postalCode: "11205",
     },
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 3),
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 3),
     url: "https://www.localcivics.io",
     imageURL: "https://cdn.localcivics.io/area/arts-and-culture.jpg",
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
     status: "registered",
-    quality: 250,
+    xp: 250,
     order: "soonest",
   },
   {
     courseName: "hcz",
     experienceId: "hcz.experience.3.top",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "YA Anime Club (Prep)",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "YA Anime Club (Prep)",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -732,16 +732,16 @@ const experiences = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "registered",
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 4),
-    quality: 250,
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 4),
+    xp: 250,
     order: "soonest",
   },
   {
     courseName: "hcz",
-    experienceName: randomName(),
-    residentName: "andre.carter",
+    activityId: randomName(),
+    tenantName: "andre.carter",
     experienceId: "andre.carter.milestone.experience.0",
-    displayName: "Dive into the Constitution I",
+    headline: "Dive into the Constitution I",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -755,14 +755,14 @@ const experiences = [
     pathway: "policy & government",
     tags: ["area:policy & government", "skill:leadership", "skill:speaking", "skill:group"],
     status: "contributed",
-    quality: 250,
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.milestone.experience.1",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Annual Conference on Civics Education",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Annual Conference on Civics Education",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     timePeriod: "milestone",
     url: "https://www.localcivics.io",
@@ -770,14 +770,14 @@ const experiences = [
     pathway: "policy & government",
     tags: ["area:sponsored"],
     status: "contributed",
-    quality: 250,
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.milestone.experience.2",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Explore NYC Public Data - Your School",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Explore NYC Public Data - Your School",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     timePeriod: "milestone",
     url: "https://www.localcivics.io",
@@ -785,14 +785,14 @@ const experiences = [
     pathway: "volunteer",
     tags: ["area:volunteer"],
     status: "survey",
-    quality: 250,
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.milestone.experience.3",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Tech Event REWIND: Careers in Philanthropy & the Arts with Obi Asiama",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Tech Event REWIND: Careers in Philanthropy & the Arts with Obi Asiama",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     timePeriod: "milestone",
     url: "https://www.localcivics.io",
@@ -800,14 +800,14 @@ const experiences = [
     pathway: "college & career",
     tags: ["area:college & career"],
     status: "survey",
-    quality: 250,
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.milestone.experience.4",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Guess the Odd One Out II",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Guess the Odd One Out II",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     timePeriod: "milestone",
     url: "https://www.localcivics.io",
@@ -815,14 +815,14 @@ const experiences = [
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
     status: "survey",
-    quality: 250,
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.milestone.experience.5",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Dive into the Constitution II",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Dive into the Constitution II",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     timePeriod: "milestone",
     url: "https://www.localcivics.io",
@@ -830,14 +830,14 @@ const experiences = [
     pathway: "policy & government",
     tags: ["area:policy & government"],
     status: "survey",
-    quality: 250,
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.watched.experience.0",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Exploring Careers in Technology",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Exploring Careers in Technology",
     summary: "An opportunity to engage on the platform and find new ways to impact your community.",
     location: {
       address: "200 Willoughby Ave",
@@ -850,15 +850,15 @@ const experiences = [
     pathway: "college & career",
     tags: ["area:college & career"],
     status: "registered",
-    notBefore: new Date(),
-    quality: 250,
+    startTime: new Date(),
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.watched.experience.1",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "Graphic Novel Open Book Discussion",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "Graphic Novel Open Book Discussion",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -871,15 +871,15 @@ const experiences = [
     pathway: "arts & culture",
     tags: ["area:arts & culture"],
     status: "registered",
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 4),
-    quality: 250,
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 4),
+    xp: 250,
   },
   {
     courseName: "hcz",
     experienceId: "andre.carter.watched.experience.2",
-    experienceName: randomName(),
-    residentName: "andre.carter",
-    displayName: "YA Anime Club",
+    activityId: randomName(),
+    tenantName: "andre.carter",
+    headline: "YA Anime Club",
     location: {
       address: "200 Willoughby Ave",
       city: "Brooklyn",
@@ -892,13 +892,13 @@ const experiences = [
     pathway: "recreation",
     tags: ["area:recreation"],
     status: "registered",
-    notBefore: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 5),
-    quality: 250,
+    startTime: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDay() + 5),
+    xp: 250,
   },
 ];
 
 const data = {
-  residents: residents,
+  tenants: tenants,
   tasks: tasks,
   passports: [
     {
@@ -915,7 +915,7 @@ const data = {
     {
       communityId: "hcz",
       communityName: "hcz",
-      displayName: "Harlem Children Zone",
+      headline: "Harlem Children Zone",
       placeName: "Harlem, NY",
     },
   ],

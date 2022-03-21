@@ -29,6 +29,7 @@ export const NavBar = (props: NavBarProps) => {
   const menuIcon = secondary ? "menu-close" : "menu";
   return (
     <nav className={className}>
+      <div className="w-full flex items-center justify-between flex-wrap sticky max-w-[62.5rem] m-auto">
       {React.Children.map(props.children, (Link) => {
         if (Link && Link.props.name === "home") {
           return <div className="grow items-center flex-shrink-0 md:mr-6">{Link}</div>;
@@ -61,6 +62,7 @@ export const NavBar = (props: NavBarProps) => {
           }
           return null;
         })}
+      </div>
       </div>
     </nav>
   );

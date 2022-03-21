@@ -34,7 +34,7 @@ export const TaskWorkflow = (props: TaskWorkflowProps) => {
     <>
       {!hasContent && (
         <div className="grid justify-items-center content-center h-[12rem] lg:h-[18rem]">
-          <p className="text-xs text-center align-middle leading-6 font-semibold text-slate-300">
+          <p className="text-sm text-center align-middle leading-6 font-semibold text-slate-300">
             No content to display.
           </p>
         </div>

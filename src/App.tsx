@@ -75,44 +75,32 @@ export const InMemoryApp = (props: { accessToken?: string; browser?: boolean; lo
   );
 };
 
-/**
- * The application routes.
- * hub.localcivics.io/residents/:residentName
- * hub.localcivics.io/residents/:residentName/settings
- * hub.localcivics.io/residents/:residentName/milestones
- * hub.localcivics.io/residents/:residentName/activity
- * hub.localcivics.io/residents/:residentName/events/:eventName
- * hub.localcivics.io/residents/:residentName/badges/:badgeName
- * hub.localcivics.io/communities/:communityName
- * hub.localcivics.io/communities/:communityName/explore/events
- * hub.localcivics.io/communities/:communityName/explore/events/:eventName
- * hub.localcivics.io/communities/:communityName/calendar/events
- * hub.localcivics.io/communities/:communityName/calendar/events/:eventName
- */
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/residents/:residentName" element={<Profile />}>
-        <Route path="onboarding" element={<Onboarding />} />
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/tenants/:tenantName" element={<Profile />}>
         <Route path="settings" element={<Settings />} />
-        <Route path="badges/:badgeName" element={<Badge />} />
-        <Route path="tasks/:taskName" element={<Task />} />
-        <Route path="reflections/:experienceName" element={<Reflection />} />
+        <Route path="badges/:marketName/:badgeId" element={<Badge />} />
+        <Route path="badges/:marketName/:badgeId/:level" element={<Badge />} />
+        <Route path="badges/:marketName/:badgeId/tasks/:taskId" element={<Task />} />
+        <Route path="badges/:marketName/:badgeId/:level/tasks/:taskId" element={<Task />} />
+        <Route path="reflections/:marketName/:activityId" element={<Reflection />} />
       </Route>
-      <Route path="/residents/:residentName/:tab" element={<Profile />} />
-      <Route path="/residents/:residentName/tasks/:status" element={<Profile />} />
-      <Route path="/communities/:communityName/calendar" element={<Calendar />}>
-        <Route path=":experienceName" element={<Experience />} />
+      <Route path="/tenants/:tenantName/:tab" element={<Profile />} />
+      <Route path="/tenants/:tenantName/tasks/:status" element={<Profile />} />
+      <Route path="/marketplace/:marketName/calendar/day/today" element={<Calendar />}>
+        <Route path=":activityId" element={<Experience />} />
       </Route>
-      <Route path="/communities/:communityName/dates/:date" element={<Calendar />}>
-        <Route path=":experienceName" element={<Experience />} />
+      <Route path="/marketplace/:marketName/calendar/day/:date" element={<Calendar />}>
+        <Route path=":activityId" element={<Experience />} />
       </Route>
-      <Route path="/communities/:communityName/explore" element={<Explore />}>
-        <Route path=":experienceName" element={<Experience />} />
+      <Route path="/marketplace/:marketName/activities" element={<Explore />}>
+        <Route path=":activityId" element={<Experience />} />
       </Route>
-      <Route path="/communities/:communityName/skills/:skill" element={<Explore />}>
-        <Route path=":experienceName" element={<Experience />} />
+      <Route path="/marketplace/:marketName/skills/:skill" element={<Explore />}>
+        <Route path=":activityId" element={<Experience />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

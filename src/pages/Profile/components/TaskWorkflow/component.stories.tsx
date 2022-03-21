@@ -15,12 +15,12 @@ export default {
  */
 const Template: Story<TaskWorkflowProps> = (args) => (
   <TaskWorkflow {...args}>
-    <Task displayName="task #1" status="review" />
-    <Task displayName="task #2" status="review" />
-    <Task displayName="task #3" />
-    <Task displayName="task #4" />
-    <Task displayName="task #5" />
-    <Task displayName="task #6" />
+    <Task headline="task #1" status="review" />
+    <Task headline="task #2" status="review" />
+    <Task headline="task #3" />
+    <Task headline="task #4" />
+    <Task headline="task #5" />
+    <Task headline="task #6" />
   </TaskWorkflow>
 );
 

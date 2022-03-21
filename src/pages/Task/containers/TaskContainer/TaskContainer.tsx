@@ -2,98 +2,78 @@
  * A connected container for tasks.
  * @constructor
  */
-import { Resident, Task } from "@local-civics/js-client";
-import React from "react";
+import {OrganizationSearchView, TaskView} from "@local-civics/js-client";
+import React                              from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useIdentity } from "../../../../contexts/App";
-import { TaskModal } from "../../components/TaskModal/TaskModal";
+import {AppError} from "../../../../contexts/Error/Error";
+import {useWorkspace}              from "../../../Profile/containers/WorkspaceContainer/WorkspaceContainer";
+import { TaskModal }              from "../../components/TaskModal/TaskModal";
 
 export const TaskContainer = () => {
-  const identity = useIdentity();
+  const {identity, workspace} = useWorkspace()
+  const primaryOrganization = workspace?.organizations && workspace.organizations.length > 0 ? workspace.organizations[0] : {}
   const navigate = useNavigate();
+  const params = useParams()
   const close = () => navigate(-1);
-  const [started, setStarted] = React.useState(false);
-  const task = useTask(started);
-  const api = useApi();
 
-  const start = async () => {
-    identity.residentName && task?.taskName && (await api.tasks.start(identity.residentName, task.taskName));
-    setStarted(true);
-  };
-  const finish = async () => {
-    identity.residentName && task?.taskName && (await api.tasks.done(identity.residentName, task.taskName));
-    close();
-  };
+  let tasks: TaskView[] = []
+  let status = "todo"
 
-  const nextURL = actionURL(identity, task);
+  if(workspace !== null){
+    tasks = workspace?.todo?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
+    if(tasks.length === 0){
+      status = "in-progress"
+      tasks = workspace?.inProgress?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
+    }
+
+    if(tasks.length === 0){
+      status = "done"
+      tasks = workspace?.done?.filter(v => v?.id === params.taskId && v?.badgeId === params.badgeId && v?.marketId === params.marketId && (!params.level || parseInt(params.level) === v?.level)) || []
+    }
+
+    if(tasks.length === 0){
+      throw new AppError("task not found", "try starting back from your profile page")
+    }
+  }
+  const task = tasks.length > 0 ? tasks[0] : null
+  const nextURL = actionURL(identity.nickname, primaryOrganization, task);
   const launch = () => nextURL && navigate(nextURL);
 
   return {
     TaskModal: () => (
       <TaskModal
         {...task}
+        status={status}
         resolving={task === null}
         visible
         disabled={false}
-        onStart={start}
         onContinue={launch}
-        onDone={finish}
         onClose={close}
       />
     ),
   };
 };
 
-const useTask = (started?: boolean) => {
-  const identity = useIdentity();
-  const api = useApi();
-  const params = useParams();
-  const taskName = params.taskName;
-  const [task, setTask] = React.useState(null as Task | null);
-  React.useEffect(() => {
-    setTask(null);
-
-    (async () => {
-      if (!identity.residentName || !taskName || taskName === "undefined") {
-        return;
-      }
-
-      setTask(await api.tasks.view(identity.residentName, taskName));
-    })();
-    return () => setTask(null);
-  }, [taskName, identity.residentName, started]);
-
-  return task;
-};
-
 /**
  * Action URL builder.
- * @param identity
+ * @param workspaceName
+ * @param org
  * @param task
  */
-const actionURL = (identity?: Resident, task?: Task | null) => {
-  if (!identity || !task || !task.actionName) {
+export const actionURL = (workspaceName?: string, org?: OrganizationSearchView, task?: TaskView | null) => {
+  if (!task || !workspaceName || !org) {
     return "";
   }
 
-  const actionName = task.actionName;
-  if (actionName === "reflections.create" && !!task.experienceName) {
-    return `/residents/${identity.residentName}/reflections/${task.experienceName}`;
+  if (!!task.activityId) {
+    return `/marketplace/${org.nickname}/activities/${task.activityId}`;
   }
 
-  if (actionName === "avatar.set") {
-    return `/residents/${identity.residentName}/settings`;
-  }
-
-  if (!!task.experienceName) {
-    return `/communities/${identity.communityName}/explore/${task.experienceName}`;
-  }
-
-  if (!!task.experienceNamePrefix) {
-    return `/communities/${identity.communityName}/explore?p=${encodeURIComponent(
-      task.experienceNamePrefix
+  if (!!task.activityPrefix) {
+    return `/marketplace/${org.nickname}/activities?name=${encodeURIComponent(
+      task.activityPrefix
     )}`;
   }
 
-  return `/communities/${identity.communityName}/explore`;
+  return `/marketplace/${org.nickname}/activities`;
 };

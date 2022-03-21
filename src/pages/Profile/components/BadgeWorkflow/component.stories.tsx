@@ -15,9 +15,9 @@ export default {
  */
 const Template: Story<BadgeWorkflowProps> = (args) => (
   <BadgeWorkflow {...args}>
-    <Badge displayName="onboarding badge" imageURL="https://cdn.localcivics.io/badges/onboarding.png" status="done" />
-    <Badge displayName="badge #2" status="todo" />
-    <Badge displayName="badge #3" />
+    <Badge headline="onboarding badge" imageURL="https://cdn.localcivics.io/badges/onboarding.png" />
+    <Badge headline="badge #2" />
+    <Badge headline="badge #3" />
   </BadgeWorkflow>
 );
 

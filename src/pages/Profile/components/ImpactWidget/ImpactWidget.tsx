@@ -1,12 +1,12 @@
-import { Report } from "@local-civics/js-client";
-import React from "react";
+import {ImpactView, WorkspaceView} from "@local-civics/js-client";
+import React                       from "react";
 import { WidgetHeader, WidgetTitle, WidgetBody, Widget } from "../../../../components";
 import { ActivityProgress } from "../ActivityProgress/ActivityProgress";
 
 /**
  * The properties for the impact score widget.
  */
-export type ImpactWidgetProps = Report & {
+export type ImpactWidgetProps = ImpactView & {
   resolving?: boolean;
 };
 
@@ -24,9 +24,9 @@ export const ImpactWidget = (props: ImpactWidgetProps) => {
       <WidgetBody>
         <ActivityProgress
           height="md"
-          degree={props.degree}
-          quality={props.quality}
-          nextPromotion={props.nextPromotion}
+          level={props.level}
+          xp={props.xp}
+          nextXP={props.nextXP}
         />
       </WidgetBody>
     </Widget>

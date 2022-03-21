@@ -1,10 +1,11 @@
 import { IsBadRequest, IsNotAuthorized, IsNotFound } from "@local-civics/js-client";
-import * as Sentry from "@sentry/react";
-import React from "react";
-import { Button, Icon, IconName } from "../../components";
-import { Modal } from "../../components";
-import { builder } from "../../utils/classname/classname";
-import { AppError } from "../Error/Error";
+import * as Sentry                                   from "@sentry/react";
+import React                                         from "react";
+import {useNavigate}                                 from "react-router-dom";
+import { Button, Icon, IconName }                    from "../../components";
+import { Modal }                                     from "../../components";
+import { builder }                                   from "../../utils/classname/classname";
+import { AppError }                                  from "../Error/Error";
 
 /**
  * Message state.
@@ -63,24 +64,34 @@ export const MessageProvider = (props: MessageProviderProps) => {
  * Use context internal.
  */
 const useContext = (value?: string) => {
+  const navigate = useNavigate()
   const [message, setMessage] = React.useState(value ? ({ description: value } as Message) : undefined);
-  const clear = () => setMessage(undefined);
+  const clear = () => {
+    const unrecoverable = message?.unrecoverable;
+    setMessage(undefined)
+    if(unrecoverable){
+      navigate(-1)
+    }
+  }
   const send = (message: any, context?: { icon?: IconName; title?: string }) => {
     const msg: Message = { ...context };
     if (message instanceof Error) {
       msg.severity = "error";
       if (IsBadRequest(message)) {
-        msg.title = "try again";
+        msg.title = "Try again";
         msg.description = message.message;
       } else if (IsNotAuthorized(message)) {
-        msg.title = "not authorized";
+        msg.title = "Not authorized";
         msg.description = message.message;
+        msg.unrecoverable = true
       } else if (IsNotFound(message)) {
-        msg.title = "not found";
+        msg.title = "Not found";
         msg.description = "sorry, we're unable to find this";
+        msg.unrecoverable = true
       } else {
-        msg.title = "something went wrong";
+        msg.title = "Something went wrong";
         msg.description = "If the issue persists, please contact support@localcivics.io.";
+        msg.unrecoverable = true
       }
     } else {
       msg.description = message;
@@ -151,5 +162,6 @@ type Message = {
   icon?: IconName;
   title?: string;
   description?: string;
+  unrecoverable?: boolean
   severity?: "info" | "error" | "success";
 };

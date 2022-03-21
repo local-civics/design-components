@@ -1,5 +1,5 @@
-import { Report } from "@local-civics/js-client";
-import React from "react";
+import {ImpactView} from "@local-civics/js-client";
+import React                from "react";
 import { Progress, Button, IconName, ButtonSize } from "../../../../components";
 import { classname } from "../../../../utils/classname/classname";
 import { compact } from "../../../../utils/numbers";
@@ -12,7 +12,7 @@ export type ActivityProgressHeight = "sm" | "md";
 /**
  * The properties for the pathway progress.
  */
-export type ActivityProgressProps = Report & {
+export type ActivityProgressProps = ImpactView & {
   open?: boolean;
   title?: string;
   icon?: IconName;
@@ -26,8 +26,8 @@ export type ActivityProgressProps = Report & {
  * @constructor
  */
 export const ActivityProgress = (props: ActivityProgressProps) => {
-  const proficiency = props.quality || 0;
-  const nextProficiency = props.nextPromotion || 1;
+  const proficiency = props.xp || 0;
+  const nextProficiency = props.nextXP || 1;
   const config = defaultActivityProgressConfig();
   const height = props.height || "sm";
   withHeight(config, height);
@@ -42,7 +42,7 @@ export const ActivityProgress = (props: ActivityProgressProps) => {
         )}
         <div className="grow grid grid-cols-1 gap-2 items-center">
           <div>
-            {props.title && <p className="capitalize text-xs text-slate-400">{props.title}</p>}
+            {props.title && <p className="capitalize text-sm text-slate-400">{props.title}</p>}
             <div className={classname(config.progress)}>
               <Progress start={proficiency} end={nextProficiency} />
             </div>
@@ -55,9 +55,9 @@ export const ActivityProgress = (props: ActivityProgressProps) => {
                 <p className={classname(config.xp.suffix)}>XP</p>
               </div>
             )}
-            {!!props.degree && (
+            {!!props.level && (
               <p className={classname(config.magnitude)}>
-                {compact(nextProficiency - proficiency)} exp. until level {props.degree + 1}
+                {compact(nextProficiency - proficiency)} exp. until level {props.level + 1}
               </p>
             )}
           </div>
@@ -126,9 +126,9 @@ const withHeight = (config: ActivityProgressConfig, height?: ActivityProgressHei
       config.progress.height = "h-4";
       config.icon.size = "md";
       config.icon.container = "mt-1";
-      config.xp.value.text = "text-xs";
-      config.xp.suffix.text = "text-xs";
-      config.magnitude.text = "text-xs";
+      config.xp.value.text = "text-sm";
+      config.xp.suffix.text = "text-sm";
+      config.magnitude.text = "text-sm";
       break;
     case "md":
       config.progress.height = "h-8";

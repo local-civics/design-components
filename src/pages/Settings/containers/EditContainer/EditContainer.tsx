@@ -1,4 +1,3 @@
-import { Resident } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi, useAuth, useIdentity } from "../../../../contexts/App";
@@ -14,18 +13,28 @@ export const EditContainer = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const close = () => navigate(-1);
-  const save = async (resident?: Resident) => {
-    if (!identity.residentName || identity.resolving) {
+  const save = async (changes?: {
+    newNickname?: string;
+    newGivenName?: string;
+    newFamilyName?: string;
+    newGrade?: number;
+    newSubject?: string;
+    newRole?: string;
+    newImpactStatement?: string;
+    newInterests?: string[];
+    newAvatar?: Blob;
+  }) => {
+    if (!identity.nickname || identity.resolving) {
       return;
     }
 
-    if (!resident) {
+    if (!changes || Object.keys(changes).length === 0) {
       close();
       return;
     }
 
-    await api.residents.save(identity.residentName, resident).then(close);
-    await identity.resolve();
+    await api.identity.configureTenant(identity.nickname||"", changes).then(close);
+    await identity.digest()
   };
 
   return {

@@ -1,10 +1,9 @@
-import React from "react";
-import { Loader, Search, SearchProps } from "../../../../components";
-import { ExperienceProps } from "../Experience/Experience";
+import React                                 from "react";
+import {Button, Loader, Search, SearchProps} from "../../../../components";
+import { ExperienceProps }                   from "../Experience/Experience";
 
 export type GalleryProps = SearchProps & {
   count?: number;
-  onSearch?: (search: string) => void;
   resolving?: boolean;
   primary?: React.ReactElement<ExperienceProps> | null | false;
   top?: React.ReactElement<GalleryProps> | null | false;
@@ -24,17 +23,6 @@ export const Gallery = (props: GalleryProps) => {
 
   return (
     <Loader isLoading={props.resolving}>
-      <div className="relative block">
-        <Search
-          open={props.open}
-          results={props.results}
-          onClose={props.onClose}
-          onOpen={props.onOpen}
-          onSearch={props.onSearch}
-          placeholder="Search for learning experiences..."
-        />
-      </div>
-
       {(hasPrimary || hasTop) && (
         <label className="mt-5 relative block grid grid-cols-1 gap-y-2">
           <p className="text-gray-600 font-semibold">Trending</p>
@@ -60,15 +48,15 @@ export const Gallery = (props: GalleryProps) => {
       {hasFiltered && !!props.count && (
         <label className="mt-5 relative block grid grid-cols-1 gap-y-2">
           <p className="text-gray-600 font-semibold">Events</p>
-          <p className="text-gray-600 text-sm"> We found {props.count >= 10 ? "10+" : props.count} experiences </p>
+          <p className="text-gray-600 text-sm"> We found {props.count >= 10 ? "10+" : props.count} activities. </p>
           {props.filtered}
         </label>
       )}
 
       {!hasAny && (
         <label className="mt-5 relative block">
-          <p className="text-gray-600 font-semibold">Experiences</p>
-          <p className="text-gray-600 mt-5 text-sm">No experiences found.</p>
+          <p className="text-gray-600 font-semibold">Activities</p>
+          <p className="text-gray-600 mt-5 text-sm">No activities found.</p>
         </label>
       )}
     </Loader>

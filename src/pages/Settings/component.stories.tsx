@@ -13,4 +13,4 @@ export default {
 /**
  * Settings
  */
-export const Page = () => <InMemoryApp location="/residents/andre.carter/settings" />;
+export const Page = () => <InMemoryApp location="/tenants/andre.carter/settings" />;

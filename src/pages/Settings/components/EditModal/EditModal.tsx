@@ -1,16 +1,26 @@
-import { Resident } from "@local-civics/js-client";
-import React from "react";
+import {TenantPreview}   from "@local-civics/js-client";
+import React             from "react";
 import { Button, Modal } from "../../../../components";
 
 /**
  * The properties for the edit modal.
  */
-export type EditModalProps = Resident & {
+export type EditModalProps = TenantPreview & {
   accessToken?: string;
   resolving?: boolean;
   visible?: boolean;
   onClose?: () => void;
-  onSave?: (resident?: Resident & {avatarFile?: Blob }) => void;
+  onSave?: (changes?: {
+    newNickname?: string;
+    newGivenName?: string;
+    newFamilyName?: string;
+    newGrade?: number;
+    newSubject?: string;
+    newRole?: string;
+    newImpactStatement?: string;
+    newInterests?: string[];
+    newAvatar?: Blob;
+  }) => void;
 };
 
 /**
@@ -22,7 +32,7 @@ export const EditModal = (props: EditModalProps) => {
   // https://stackoverflow.com/questions/55075604/react-hooks-useeffect-only-on-update
   const [avatarFile, setAvatarFile] = React.useState(undefined as Blob | undefined);
   const [avatarURL, setAvatarURL] = React.useState(undefined as string | undefined);
-  const [residentName, setResidentName] = React.useState(undefined as string | undefined);
+  const [tenantName, setResidentName] = React.useState(undefined as string | undefined);
   const [givenName, setGivenName] = React.useState(undefined as string | undefined);
   const [familyName, setFamilyName] = React.useState(undefined as string | undefined);
   const [grade, setGrade] = React.useState(undefined as number | undefined);
@@ -40,23 +50,23 @@ export const EditModal = (props: EditModalProps) => {
     reader.readAsDataURL(file);
   };
   const hasChanges =
-    (residentName && residentName !== props.residentName) ||
+    (tenantName && tenantName !== props.nickname) ||
     (givenName && givenName !== props.givenName) ||
     (familyName && familyName !== props.familyName) ||
     (grade && grade !== props.grade) ||
-    (impactStatement && impactStatement !== props.impactStatement) ||
+    (impactStatement && impactStatement !== props.statement) ||
     (avatarURL && avatarURL !== props.avatarURL);
 
   const onSave = () =>
     hasChanges &&
     props.onSave &&
     props.onSave({
-      residentName: residentName,
-      givenName: givenName,
-      familyName: familyName,
-      grade: grade,
-      impactStatement: impactStatement,
-      avatarFile: avatarFile,
+      newNickname: tenantName,
+      newGivenName: givenName,
+      newFamilyName: familyName,
+      newGrade: grade,
+      newImpactStatement: impactStatement,
+      newAvatar: avatarFile,
     });
 
   return (
@@ -91,12 +101,12 @@ export const EditModal = (props: EditModalProps) => {
 
           <div className="grid grid-cols-1 gap-6 h-[18rem] md:h-[24rem] px-1 overflow-y-scroll">
             <div>
-              <p className="mb-2 font-semibold text-slate-500 text-xs">Username</p>
+              <p className="mb-2 font-semibold text-slate-500 text-sm">Username</p>
               <input
                 min={6}
                 max={30}
                 onChange={(e) => setResidentName(e.target.value)}
-                defaultValue={props.residentName}
+                defaultValue={props.nickname}
                 className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -106,7 +116,7 @@ export const EditModal = (props: EditModalProps) => {
             </div>
 
             <div>
-              <p className="mb-2 w-full font-semibold text-slate-500 text-xs">First Name</p>
+              <p className="mb-2 w-full font-semibold text-slate-500 text-sm">First Name</p>
               <input
                 onChange={(e) => setGivenName(e.target.value)}
                 defaultValue={props.givenName}
@@ -119,7 +129,7 @@ export const EditModal = (props: EditModalProps) => {
             </div>
 
             <div className="w-full">
-              <p className="mb-2 font-semibold text-slate-500 text-xs">Last Name</p>
+              <p className="mb-2 font-semibold text-slate-500 text-sm">Last Name</p>
               <input
                 onChange={(e) => setFamilyName(e.target.value)}
                 defaultValue={props.familyName}
@@ -132,7 +142,7 @@ export const EditModal = (props: EditModalProps) => {
             </div>
 
             <div>
-              <p className="mb-2 font-semibold text-slate-500 text-xs">Grade</p>
+              <p className="mb-2 font-semibold text-slate-500 text-sm">Grade</p>
               <select
                 onChange={(e) => setGrade(parseInt(e.target.value, 10))}
                 defaultValue={props.grade}
@@ -152,10 +162,10 @@ export const EditModal = (props: EditModalProps) => {
             </div>
 
             <div>
-              <p className="mb-2 font-semibold text-slate-500 text-xs">Impact Statement</p>
+              <p className="mb-2 font-semibold text-slate-500 text-sm">Impact Statement</p>
               <textarea
                 onChange={(e) => setImpactStatement(e.target.value)}
-                defaultValue={props.impactStatement}
+                defaultValue={props.statement}
                 className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -165,7 +175,7 @@ export const EditModal = (props: EditModalProps) => {
             </div>
 
             <div>
-              <p className="mb-2 font-semibold text-slate-500 text-xs">Access Token</p>
+              <p className="mb-2 font-semibold text-slate-500 text-sm">Access Token</p>
               <input
                 disabled
                 defaultValue={props.accessToken || ""}

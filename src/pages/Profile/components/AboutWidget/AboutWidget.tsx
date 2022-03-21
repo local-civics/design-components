@@ -31,19 +31,19 @@ export const AboutWidget = (props: AboutWidgetProps) => {
       <WidgetBody>
         {hasContent && (
           <div className="grid gap-2">
-            <p className="line-clamp-10 text-xs text-slate-400">{props.impactStatement}</p>
-            <div className="mt-2 flex gap-x-2 items-center">
+            <p className="line-clamp-10 text-sm text-slate-400">{props.impactStatement}</p>
+              { !!props.placeName && <div className="mt-2 flex gap-x-2 items-center">
               <div className="w-4 h-4 text-slate-600 inline-block">
                 <Icon name="pin" />
               </div>
-              <h4 className="grow capitalize text-xs text-slate-500">{props.placeName}</h4>
-            </div>
-            <div className="mt-2 flex gap-x-2 items-center">
+              <h4 className="grow text-sm text-slate-500">{props.placeName}</h4>
+            </div> }
+              { props.communityName && <div className="mt-2 flex gap-x-2 items-center">
               <div className="w-4 h-4 text-slate-600 inline-block">
                 <Icon name="college & career" />
               </div>
-              <h4 className="grow capitalize text-xs text-slate-500">{props.communityName}</h4>
-            </div>
+              <h4 className="grow text-sm text-slate-500">{props.communityName}</h4>
+            </div> }
           </div>
         )}
       </WidgetBody>

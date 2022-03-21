@@ -1,12 +1,12 @@
-import { Badge } from "@local-civics/js-client";
-import React from "react";
+import {BadgeView}        from "@local-civics/js-client";
+import React              from "react";
 import { Icon, IconName } from "../../../../components";
-import { builder } from "../../../../utils/classname/classname";
+import { builder }        from "../../../../utils/classname/classname";
 
 /**
  * The properties for the badge.
  */
-export type BadgeProps = Badge & {
+export type BadgeProps = BadgeView & {
   open?: boolean;
   icon?: IconName;
   statusIcon?: IconName;
@@ -20,8 +20,9 @@ export type BadgeProps = Badge & {
  */
 export const BadgeComponent = (props: BadgeProps) => {
   const icon = props.icon || "badge";
-  const statusIcon = props.statusIcon ? props.statusIcon : !props.status ? "lock" : "";
-  const intensity = !!props.status ? "normal" : "faded";
+  const locked = !props.todo && !props.inProgress && !props.done
+  const statusIcon = props.statusIcon ? props.statusIcon : locked ? "lock" : "";
+  const intensity = !locked ? "normal" : "faded";
   const iconClassName = builder("w-full")
     .if(intensity === "normal", "text-gray-600")
     .if(intensity === "faded", "text-gray-300")
@@ -42,6 +43,7 @@ export const BadgeComponent = (props: BadgeProps) => {
     .build();
 
   const onOpen = () => props.open && props.onOpen && props.onOpen();
+  const done = props.done && !props.todo && !props.inProgress
 
   return (
     <div className={className}>
@@ -56,22 +58,22 @@ export const BadgeComponent = (props: BadgeProps) => {
       )}
 
       <div className="flex gap-y-4 flex-col w-full" onClick={onOpen}>
-        {props.status === "done" && props.imageURL && (
+        {done && props.imageURL && (
           <img
             className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg object-contain"
-            alt={props.displayName}
+            alt={props.headline}
             src={props.imageURL}
           />
         )}
 
-        {props.status !== "done" && (
+        {!done && (
           <div className={iconClassName}>
             <div className="h-16 w-16 max-w-16 lg:h-24 lg:w-24 lg:max-w-24 m-auto drop-shadow-lg">
               <Icon name={icon} />
             </div>
           </div>
         )}
-        <p className={titleClassName}>{props.displayName}</p>
+        <p className={titleClassName}>{props.headline}</p>
       </div>
     </div>
   );

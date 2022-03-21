@@ -1,48 +1,47 @@
-import { Experience, Reflection } from "@local-civics/js-client";
-import React, {useEffect}         from "react";
-import { Button, Icon, Modal }    from "../../../../components";
-import { builder } from "../../../../utils/classname/classname";
+import {ActivityView, ReactionView} from "@local-civics/js-client";
+import React         from "react";
+import {Button, Icon, IconName, Modal} from "../../../../components";
+import { builder }                     from "../../../../utils/classname/classname";
 
-export type CardProps = Reflection &
-  Experience & {
+export type CardProps = ActivityView & {
     visible?: boolean;
     resolving?: boolean;
     onClose?: () => void;
     unavailable?: boolean;
-    onSave?: (reflection: Reflection) => void;
+    onSave?: (reflection: string, rating: number) => void;
   };
 
 export const Card = (props: CardProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.resolving, "min-h-[20rem]").build();
 
   const now = new Date();
-  const available = !props.unavailable && (!props.notBefore || now >= new Date(props.notBefore));
-  const [reflection, setReflection] = React.useState(props as Reflection);
+  const available = !props.unavailable && (!props.startTime || now >= new Date(props.startTime));
+  const [reaction, setReaction] = React.useState(props.reaction||{} as ReactionView);
   const hasChanges =
-    available && (props.confidence !== reflection.confidence || props.feedback !== reflection.feedback);
-  const setFeedback = (feedback: string) => setReflection({ ...reflection, feedback: feedback });
-  const setConfidence = (confidence: number) => setReflection({ ...reflection, confidence: confidence });
+    available && (props.reaction?.rating !== reaction.rating || props.reaction?.reflection !== reaction.reflection);
+  const setFeedback = (feedback: string) => setReaction({ ...reaction, reflection: feedback });
+  const setConfidence = (confidence: number) => setReaction({ ...reaction, rating: confidence });
 
   React.useEffect(() => {
-    setReflection(props)
-  }, [props.feedback, props.confidence])
+    setReaction(props.reaction||{} as ReactionView)
+  }, [props.reaction?.reflection, props.reaction?.reflection])
 
   return (
     <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
       <div className={className}>
-        <img className="w-full h-60 object-cover" alt={props.displayName} src={props.imageURL} />
+        <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
           <div className="flex items-start grow">
             <div className="inline-block min-w-6 w-6 h-6 text-slate-600">
-              <Icon name={props.pathway || "explore"} />
+              <Icon name={props.pathway as IconName || "explore"} />
             </div>
 
             <div className="grow align-top ml-2 inline-block leading-none">
-              <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">{props.displayName}</p>
+              <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">{props.headline}</p>
               <div>
-                <p className="text-xs inline-block capitalize text-slate-600">{props.pathway}</p>
-                {props.quality && (
-                  <p className="ml-1 font-semibold inline-block text-xs text-green-500">{props.quality} pts</p>
+                <p className="text-sm inline-block capitalize text-slate-600">{props.pathway}</p>
+                {props.xp && (
+                  <p className="ml-1 font-semibold inline-block text-sm text-green-500">{props.xp} pts</p>
                 )}
               </div>
             </div>
@@ -50,7 +49,7 @@ export const Card = (props: CardProps) => {
 
           {hasChanges && (
             <Button
-              onClick={() => props.onSave && props.onSave(reflection)}
+              onClick={() => props.onSave && props.onSave(reaction.reflection||"", reaction.rating||0)}
               theme="dark"
               border="rounded"
               size="sm"
@@ -65,13 +64,13 @@ export const Card = (props: CardProps) => {
           <div className="w-full p-5 border-b border-gray-200 grid grid-cols-1 gap-4">
             <div className="text-slate-600 grid grid-cols-1 gap-4">
               <p className="font-semibold text-lg">Almost there, share your reflection to earn your points!</p>
-              <p className="font-semibold text-sm">Write a short reflection on your experience</p>
+              <p className="font-semibold text-sm">Write a short reflection on your experience.</p>
 
               <textarea
                 disabled={!available}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder="Describe your experience in 20 words or more. Then rate your experience."
-                defaultValue={props.feedback}
+                defaultValue={props.reaction?.reflection}
                 className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -79,7 +78,7 @@ export const Card = (props: CardProps) => {
       focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
               />
 
-              {available && <Confidence {...props} {...reflection} setConfidence={setConfidence} />}
+              {available && <Confidence {...props} reaction={reaction} setConfidence={setConfidence} />}
             </div>
           </div>
         </div>
@@ -98,11 +97,11 @@ const Confidence = (props: CardProps & { setConfidence?: (confidence: number) =>
    * Max points for reflection.
    */
   const maxPoints = 5;
-  const [confidence, setConfidence] = React.useState(props.confidence || -1);
+  const [confidence, setConfidence] = React.useState(props.reaction?.rating || -1);
   const buttons = Array.from({ length: maxPoints }, (_, i) => {
     const color = i < confidence ? "text-sky-100" : "text-slate-100";
     return (
-      <div key={i} onMouseEnter={() => setConfidence(i + 1)} onMouseLeave={() => setConfidence(props.confidence || -1)}>
+      <div key={i} onMouseEnter={() => setConfidence(i + 1)} onMouseLeave={() => setConfidence(props.reaction?.rating || -1)}>
         <div
           className={`cursor-pointer h-4 w-4 ${color}`}
           onClick={() => props.setConfidence && props.setConfidence(i + 1)}
@@ -125,10 +124,10 @@ const Confidence = (props: CardProps & { setConfidence?: (confidence: number) =>
   });
 
   React.useEffect(() => {
-    if (props.confidence && props.confidence !== confidence) {
-      setConfidence(props.confidence);
+    if (props.reaction?.rating && props.reaction.rating !== confidence) {
+      setConfidence(props.reaction.rating);
     }
-  }, [props.confidence]);
+  }, [props.reaction?.rating]);
 
   return (
     <div className="inline-block mt-2">

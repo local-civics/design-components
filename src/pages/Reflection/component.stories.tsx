@@ -14,5 +14,5 @@ export default {
  * Reflection
  */
 export const Page = () => (
-  <InMemoryApp accessToken="andre.carter" location="/residents/andre.carter/reflections/experience" />
+  <InMemoryApp accessToken="andre.carter" location="/tenants/andre.carter/reflections/experience" />
 );

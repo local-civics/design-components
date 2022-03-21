@@ -1,4 +1,3 @@
-import { Resident } from "@local-civics/js-client";
 import React from "react";
 import { Button } from "../../../../components";
 export type RegistrationProps = {
@@ -6,8 +5,8 @@ export type RegistrationProps = {
   familyName?: string;
   grade?: number;
   impactStatement?: string;
-  role?: "educator" | "student" | "management";
-  onRegister?: (resident: Resident) => void;
+  role?: string;
+  onRegister?: (changes: {newGivenName?: string, newFamilyName?: string, newGrade?: number, newImpactStatement?: string, newRole?: string}) => void;
 };
 
 export const Registration = (props: RegistrationProps) => {
@@ -19,10 +18,10 @@ export const Registration = (props: RegistrationProps) => {
   const onRegister = () =>
     props.onRegister &&
     props.onRegister({
-      givenName: givenName,
-      familyName: familyName,
-      grade: grade,
-      impactStatement: impactStatement,
+      newGivenName: givenName,
+      newFamilyName: familyName,
+      newGrade: grade,
+      newImpactStatement: impactStatement,
     });
 
   return (
@@ -41,7 +40,7 @@ export const Registration = (props: RegistrationProps) => {
       <div className="grid grid-cols-1 pb-4 gap-6">
         <div className="grid grid-cols-1 gap-6 h-[18rem] md:h-[24rem] px-1 overflow-y-scroll">
           <div>
-            <p className="mb-2 w-full font-semibold text-slate-500 text-xs">First Name</p>
+            <p className="mb-2 w-full font-semibold text-slate-500 text-sm">First Name</p>
             <input
               required
               type="text"
@@ -55,7 +54,7 @@ export const Registration = (props: RegistrationProps) => {
           </div>
 
           <div className="w-full">
-            <p className="mb-2 font-semibold text-slate-500 text-xs">Last Name</p>
+            <p className="mb-2 font-semibold text-slate-500 text-sm">Last Name</p>
             <input
               required
               placeholder="Insert your last name"
@@ -69,7 +68,7 @@ export const Registration = (props: RegistrationProps) => {
 
           {props.role === "educator" && (
             <div>
-              <p className="mb-2 font-semibold text-slate-500 text-xs">Subject</p>
+              <p className="mb-2 font-semibold text-slate-500 text-sm">Subject</p>
               <select
                 onChange={(e) => setGrade(parseInt(e.target.value, 10))}
                 defaultValue={props.grade}
@@ -91,7 +90,7 @@ export const Registration = (props: RegistrationProps) => {
           )}
 
           <div>
-            <p className="mb-2 font-semibold text-slate-500 text-xs">Grade</p>
+            <p className="mb-2 font-semibold text-slate-500 text-sm">Grade</p>
             <select
               onChange={(e) => setGrade(parseInt(e.target.value, 10))}
               defaultValue={props.grade}
@@ -111,7 +110,7 @@ export const Registration = (props: RegistrationProps) => {
           </div>
 
           <div>
-            <p className="mb-2 font-semibold text-slate-500 text-xs">Impact Statement</p>
+            <p className="mb-2 font-semibold text-slate-500 text-sm">Impact Statement</p>
             <textarea
               required
               placeholder="E.g., I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure my community is a place where everyone is welcome."

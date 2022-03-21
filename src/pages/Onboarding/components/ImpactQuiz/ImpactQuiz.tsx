@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Icon, IconName } from "../../../../components";
 
 export type ImpactQuizProps = {
-  role?: "student" | "educator" | "management";
+  role?: string;
   interests?: string[];
   onFinish?: (interests: string[]) => void;
 };
@@ -31,7 +31,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["policy & government"]}
             imageURL="https://cdn.localcivics.io/rc/event/politics.jpg"
             icon="policy & government"
-            displayName="Voter Registration Assistance"
+            headline="Voter Registration Assistance"
             summary="Gain the knowledge and technological skills to help friends and family navigate the voter registration process. You can have a civic impact in your immediate circle — every vote counts!"
             onAnswer={(interest) => setAnswer("policy & government", interest)}
           />,
@@ -41,7 +41,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["recreation"]}
             imageURL="https://cdn.localcivics.io/rc/event/recreation.jpg"
             icon="recreation"
-            displayName="Yin Yoga & Social Justice w/ Shayna Johnson"
+            headline="Yin Yoga & Social Justice w/ Shayna Johnson"
             summary="Get in the flow and foster courage in the face of fear. Learn to work through physical and emotional discomfort as you practice balance, meditation, and relaxation."
             onAnswer={(interest) => setAnswer("recreation", interest)}
           />,
@@ -51,7 +51,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["volunteer"]}
             imageURL="https://cdn.localcivics.io/rc/event/volunteer.jpg"
             icon="volunteer"
-            displayName="Harlem Grown Harvest Volunteer"
+            headline="Harlem Grown Harvest Volunteer"
             summary="Don’t mind getting your hands dirty? Lend one and learn about the benefits of farming organic at one of the many community gardens in the Harlem area."
             onAnswer={(interest) => setAnswer("volunteer", interest)}
           />,
@@ -61,7 +61,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["arts & culture"]}
             imageURL="https://cdn.localcivics.io/rc/event/culture.jpg"
             icon="arts & culture"
-            displayName="#CreateSeries: Introduction to Drawing & Painting"
+            headline="#CreateSeries: Introduction to Drawing & Painting"
             summary="Flex your creative muscles and pick up some new skills! In our #CreateSeries, learn directly from experienced artists and connect with like-minded students."
             onAnswer={(interest) => setAnswer("arts & culture", interest)}
           />,
@@ -71,7 +71,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["college & career"]}
             imageURL="https://cdn.localcivics.io/rc/event/college.jpg"
             icon="college & career"
-            displayName="Career Journeys: Tech, Law, & Healthcare"
+            headline="Career Journeys: Tech, Law, & Healthcare"
             summary="Join us each week and meet diverse professionals representing a wide range of careers. Get all your interests answered and explore your dream jobs with the people who know them best!"
             onAnswer={(interest) => setAnswer("college & career", interest)}
           />,
@@ -81,7 +81,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["sponsored"]}
             imageURL="https://cdn.localcivics.io/rc/event/sponsored.jpg"
             icon="sponsored"
-            displayName="Social Entrepreneurship & Design Thinking"
+            headline="Social Entrepreneurship & Design Thinking"
             summary="Learn about leaders who have pursued positive social change instead of profits. Then, follow in their footsteps with a design thinking framework to brainstorm innovative solutions for community needs."
             onAnswer={(interest) => setAnswer("sponsored", interest)}
           />
@@ -95,7 +95,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["policy & government"]}
             imageURL="https://cdn.localcivics.io/rc/event/politics.jpg"
             icon="policy & government"
-            displayName="Voter Registration Assistance"
+            headline="Voter Registration Assistance"
             summary="Gain the knowledge and technological skills to help friends and family navigate the voter registration process. You can have a civic impact in your immediate circle — every vote counts!"
             onAnswer={(interest) => setAnswer("policy & government", interest)}
           />,
@@ -105,7 +105,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["arts & culture"]}
             imageURL="https://cdn.localcivics.io/rc/event/culture.jpg"
             icon="arts & culture"
-            displayName="#CreateSeries: Introduction to Drawing & Painting"
+            headline="#CreateSeries: Introduction to Drawing & Painting"
             summary="In our #CreateSeries, students learn directly from experienced artists and connect with like-minded students. Encourage them to flex their creative muscles and pick up some new skills!"
             onAnswer={(interest) => setAnswer("arts & culture", interest)}
           />,
@@ -115,7 +115,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
             answer={answers["sponsored"]}
             imageURL="https://cdn.localcivics.io/rc/event/sponsored.jpg"
             icon="sponsored"
-            displayName="Social Entrepreneurship & Design Thinking"
+            headline="Social Entrepreneurship & Design Thinking"
             summary="Learn about leaders who have pursued positive social change instead of profits. Then, follow in their footsteps with a design thinking framework to brainstorm innovative solutions for community needs."
             onAnswer={(interest) => setAnswer("sponsored", interest)}
           />
@@ -213,7 +213,7 @@ type QuestionProps = {
   answer?: boolean;
   imageURL: string;
   icon: IconName;
-  displayName: string;
+  headline: string;
   summary: string;
   onAnswer?: (interest: boolean) => void;
 };
@@ -226,7 +226,7 @@ const Question = (props: QuestionProps) => {
   return (
     <div className="grid grid-cols-1 gap-8 content-center">
       <div className="w-full overflow-hidden max-w-[18rem] md:max-w-[30rem] md:w-[30rem] rounded-md bg-white shadow-sm grid grid-cols-1 md:grid-cols-2">
-        <img alt={props.displayName} className="w-full h-full object-cover" src={props.imageURL} />
+        <img alt={props.headline} className="w-full h-full object-cover" src={props.imageURL} />
         <div className="p-5">
           <div className="flex">
             <div className="h-8 w-8 text-slate-500">
@@ -235,7 +235,7 @@ const Question = (props: QuestionProps) => {
           </div>
 
           <div className="grid grid-cols-1 text-slate-500">
-            <p className="font-semibold text-lg">{props.displayName}</p>
+            <p className="font-semibold text-lg">{props.headline}</p>
             <p className="text-sm">{props.summary}</p>
           </div>
         </div>

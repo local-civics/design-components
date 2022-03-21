@@ -18,7 +18,7 @@ export interface FilterListProps {
 export const FilterList = (props: FilterListProps) => {
   const timeTags = ["time:morning", "time:afternoon", "time:evening", "time:weekend"];
   const skillTags = ["skill:leadership", "skill:speaking", "skill:group", "skill:navigation"];
-  const locationTags = ["location:online", "location:in-person", "location:at school", "location:community"];
+  const locationTags = ["location:online", "location:in-person", "location:at-school", "location:community"];
   const init: Record<string, boolean> = {};
   props.tags && props.tags.map((tag) => {
     init[tag] = true;
@@ -28,17 +28,26 @@ export const FilterList = (props: FilterListProps) => {
   const onTagClick = (tag: string) => {
     if (active[tag]) {
       setActive({ ...active, [tag]: false });
+      const tags = Object.entries({ ...active, [tag]: false })
+          .filter(([, active]) => active)
+          .map(([tag]) => tag);
+      props.onTagClick(tags);
+
     } else {
       setActive({ ...active, [tag]: true });
+
+      const tags = Object.entries({ ...active, [tag]: true })
+          .filter(([, active]) => active)
+          .map(([tag]) => tag);
+      props.onTagClick(tags);
     }
   };
 
   React.useEffect(() => {
-    const tags = Object.entries(active)
-      .filter(([, active]) => active)
-      .map(([tag]) => tag);
-    props.onTagClick(tags);
-  }, [active]);
+    props.tags && props.tags.map((tag) => {
+      init[tag] = true;
+    });
+  }, [props.tags])
 
   return (
     <article className={["w-full", props.className || ""].join(" ")}>
