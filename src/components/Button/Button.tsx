@@ -478,10 +478,10 @@ const withSpacing = (config: ButtonConfig, spacing?: ButtonSpacing) => {
       config.button.spacing = "py-1 px-5";
       break;
     case "md":
-      config.button.spacing = "py-2 px-8";
+      config.button.spacing = "py-3 px-8";
       break;
     case "lg":
-      config.button.spacing = "py-4 px-8";
+      config.button.spacing = "py-3 px-8";
       break;
     default:
       config.button.spacing = "";

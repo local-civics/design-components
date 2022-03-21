@@ -48,7 +48,7 @@ export const Card = (props: CardProps) => {
           color="sky"
           theme="dark"
           text="Launch"
-          size="sm"
+          size="md"
           onClick={props.onLaunch}
       />
     }
@@ -60,7 +60,7 @@ export const Card = (props: CardProps) => {
             onClick={props.onJoin}
             theme="dark"
             border="rounded"
-            size="sm"
+            size="md"
             spacing="md"
             color="green"
             text="Join"
@@ -72,7 +72,7 @@ export const Card = (props: CardProps) => {
             onClick={onRegister}
             theme="dark"
             border="rounded"
-            size="sm"
+            size="md"
             spacing="md"
             color="sky"
             text="Register"
@@ -84,7 +84,7 @@ export const Card = (props: CardProps) => {
             onClick={onUnregister}
             theme="dark"
             border="rounded"
-            size="sm"
+            size="md"
             spacing="md"
             color="slate"
             text="Registered"
