@@ -15,9 +15,9 @@ export default {
  */
 export const Component: Story<ExperienceProps> = (props) => (
   <Experience
-    displayName="Event #1"
+    headline="Event #1"
     pathway="policy & government"
-    quality={250}
+    xp={250}
     imageURL="https://i.insider.com/592f4169b74af41b008b5977?width=1300&format=jpeg&auto=webp"
     {...props}
   />

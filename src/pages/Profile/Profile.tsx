@@ -1,18 +1,15 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { AuthLayout } from "../../layouts/AuthLayout/AuthLayout";
-import { DashboardContainer } from "./containers/DashboardContainer/DashboardContainer";
-import { ImpactContainer } from "./containers/ImpactContainer/ImpactContainer";
-import { ResidentContainer } from "./containers/ResidentContainer/ResidentContainer";
+import { WorkspaceContainer } from "./containers/WorkspaceContainer/WorkspaceContainer";
 
 /**
  * A component for the profile page.
  * @constructor
  */
 export const Profile = () => {
-  const { ResidentWidget, AboutWidget } = ResidentContainer();
-  const { ImpactWidget, PathwayWidget, AchievementWidget } = ImpactContainer();
-  const { Dashboard } = DashboardContainer();
+  const { ResidentWidget, AboutWidget, ImpactWidget, PathwayWidget, AchievementWidget, Dashboard } =
+    WorkspaceContainer();
 
   const sidebar = (
     <>

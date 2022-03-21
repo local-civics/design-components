@@ -1,4 +1,3 @@
-import { Resident } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, SearchResult } from "../../../../components";
@@ -22,31 +21,39 @@ export const OnboardingContainer = () => {
 };
 
 const Card = () => {
-  const identity = useIdentity();
-  const api = useApi();
   const auth = useAuth();
+  console.log(auth);
+  const identity = useIdentity();
+  console.log(identity);
+  const api = useApi();
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    if (auth.accessToken && !identity.nickname) {
+      identity.digest();
+    }
+  }, [auth.accessToken, identity.nickname]);
+
   const setRole = async (role?: "student" | "educator" | "management") => {
-    await api.residents.save(identity.residentName || "", {
-      role: role,
+    await api.identity.configureTenant(identity.nickname || "", {
+      newRole: role,
     });
-    await identity.resolve();
+    await identity.digest();
   };
 
   const JoinCommunity = () => {
     const [community, setCommunity] = React.useState({ open: false } as CommunitySearchProps & {
-      communityName?: string;
+      nickname?: string;
     });
-    const [agreed, setAgreed] = React.useState(!!identity.communityName);
-    const fetchCommunities = async (displayName: string) => {
-      if (!displayName || displayName === "undefined") {
+    const [agreed, setAgreed] = React.useState(!!identity.organizations && identity.organizations.length > 0);
+    const fetchCommunities = async (headline: string) => {
+      if (!headline || headline === "undefined") {
         setCommunity({ ...community, results: null });
         return;
       }
 
-      const communities = await api.communities.list({
-        displayName: displayName,
+      const communities = await api.identity.searchOrganizations({
+        name: headline,
       });
 
       if (!communities || communities.length === 0) {
@@ -59,14 +66,14 @@ const Card = () => {
         results: communities.map((community) => {
           return (
             <SearchResult
-              key={community.communityName}
-              title={community.displayName}
+              key={community.nickname}
+              title={community.name}
               onClick={() =>
                 setCommunity({
                   ...community,
-                  communityName: community.communityName,
-                  displayName: community.displayName,
-                  placeName: community.placeName,
+                  nickname: community.nickname,
+                  name: community.name,
+                  location: community.location,
                   open: false,
                 })
               }
@@ -76,14 +83,14 @@ const Card = () => {
       });
     };
     const joinCommunity = async (accessCode?: string) => {
-      if (!community?.communityName || !accessCode) {
+      if (!community?.nickname || !accessCode) {
         return;
       }
 
       setCommunity({ ...community, disabled: true });
-      await api.communities.join(community.communityName, identity.residentName || "", accessCode).then((err) => {
+      await api.identity.joinOrganization(identity.nickname || "", community.nickname || "", accessCode).then((err) => {
         if (!err) {
-          return identity.resolve().then(() => setCommunity({ ...community, disabled: false }));
+          return identity.digest().then(() => setCommunity({ ...community, disabled: false }));
         }
         setCommunity({ ...community, disabled: false });
       });
@@ -93,7 +100,7 @@ const Card = () => {
       return <LegalAgreement onDecline={auth.logout} onAccept={() => setAgreed(true)} />;
     }
 
-    if (!identity.communityName) {
+    if (!identity.organizations || identity.organizations.length == 0) {
       return (
         <CommunitySearch
           {...community}
@@ -108,19 +115,25 @@ const Card = () => {
     return null;
   };
 
-  const register = async (registration: Resident) => {
-    await api.residents.save(identity.residentName || "", registration);
-    await identity.resolve();
+  const register = async (changes: {
+    newGivenName?: string;
+    newFamilyName?: string;
+    newGrade?: number;
+    newImpactStatement?: string;
+    newRole?: string;
+  }) => {
+    await api.identity.configureTenant(identity.nickname || "", changes);
+    await identity.digest();
   };
 
   const setInterests = async (interests?: string[]) => {
-    await api.residents.save(identity.residentName || "", {
-      interests: interests,
+    await api.identity.configureTenant(identity.nickname || "", {
+      newInterests: interests,
     });
-    await identity.resolve();
+    await identity.digest();
   };
 
-  if (!identity.communityName) {
+  if (!identity.organizations || identity.organizations.length === 0) {
     return <JoinCommunity />;
   }
 
@@ -130,14 +143,14 @@ const Card = () => {
     );
   }
 
-  if (!identity.impactStatement || !identity.givenName) {
+  if (!identity.statement || !identity.givenName) {
     return (
       <Registration
         role={identity.role}
         givenName={identity.givenName}
         familyName={identity.familyName}
         grade={identity.grade}
-        impactStatement={identity.impactStatement}
+        impactStatement={identity.statement}
         onRegister={register}
       />
     );
@@ -147,5 +160,5 @@ const Card = () => {
     return <ImpactQuiz role={identity.role} interests={identity.interests} onFinish={setInterests} />;
   }
 
-  return <Welcome givenName={identity.givenName} onContinue={() => navigate(`/residents/${identity.residentName}`)} />;
+  return <Welcome givenName={identity.givenName} onContinue={() => navigate(`/tenants/${identity.nickname}`)} />;
 };

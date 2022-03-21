@@ -13,9 +13,9 @@ export default {
 /**
  * Existing.
  */
-export const Andre = () => <InMemoryApp accessToken="andre.carter" location="/residents/andre.carter" />;
+export const Andre = () => <InMemoryApp accessToken="andre.carter" location="/tenants/andre.carter" />;
 
 /**
  * New resident.
  */
-export const New = () => <InMemoryApp accessToken="resident" location="/residents/resident" />;
+export const New = () => <InMemoryApp accessToken="resident" location="/tenants/resident" />;

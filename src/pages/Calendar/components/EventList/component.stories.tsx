@@ -15,9 +15,9 @@ export default {
  */
 const Template: Story<EventListProps> = (args) => (
   <EventList {...args}>
-    <Event displayName="Event #1" pathway="policy & government" />
-    <Event displayName="Event #2" pathway="arts & culture" />
-    <Event displayName="Event #3" pathway="volunteer" />
+    <Event headline="Event #1" pathway="policy & government" />
+    <Event headline="Event #2" pathway="arts & culture" />
+    <Event headline="Event #3" pathway="volunteer" />
   </EventList>
 );
 

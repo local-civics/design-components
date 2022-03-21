@@ -8,9 +8,9 @@ import { background } from "../../../../utils/colors";
  */
 export type TaskProps = {
   open?: boolean;
-  displayName?: string;
+  title?: string;
   status?: "todo" | "review" | "in-progress" | "done";
-  notBefore?: string;
+  startTime?: string;
   notAfter?: string;
   onOpen?: () => void;
 };
@@ -41,7 +41,7 @@ export const Task = (props: TaskProps) => {
     return props.status;
   })();
 
-  const tooEarly = !!props.notBefore && now < new Date(props.notBefore);
+  const tooEarly = !!props.startTime && now < new Date(props.startTime);
   const tooLate = !!props.notAfter && now > new Date(props.notAfter);
   const disabled = !props.status || tooEarly || tooLate;
   const className = builder("flex gap-3 flex-col shadow-md transition ease-in-out")
@@ -54,21 +54,20 @@ export const Task = (props: TaskProps) => {
 
   return (
     <div onClick={onOpen} className={className}>
-      <div className="flex justify-start">
-        <div className="grow">
-          <div className="w-4 h-4 min-h-4 drop-shadow-md stroke-slate-600 fill-slate-600">
-            <Icon name={icon} />
-          </div>
+      <div className="flex items-center gap-x-1">
+        <div className="w-4 h-4 min-h-4 drop-shadow-md stroke-slate-600 fill-slate-600">
+          <Icon name={icon} />
         </div>
+
+        <div className="grow">
+          <p className="font-semibold text-slate-600 text-md">{props.title}</p>
+        </div>
+
         {!disabled && statusIcon && (
           <div className="h-4 w-4 text-slate-600">
             <Icon name={statusIcon} />
           </div>
         )}
-      </div>
-
-      <div className="grid grid-cols-1">
-        <p className="font-semibold text-slate-600 text-md">{props.displayName}</p>
       </div>
     </div>
   );

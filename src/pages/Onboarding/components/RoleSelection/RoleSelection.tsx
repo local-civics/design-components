@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Icon } from "../../../../components";
 
 export type RoleSelectionProps = {
-  role?: "student" | "educator" | "management";
+  role?: string;
   onStudent?: () => void;
   onEducator?: () => void;
 };

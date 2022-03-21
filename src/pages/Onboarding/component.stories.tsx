@@ -13,4 +13,4 @@ export default {
 /**
  * Onboarding
  */
-export const Page = () => <InMemoryApp accessToken="resident" location="/residents/resident/onboarding" />;
+export const Page = () => <InMemoryApp accessToken="resident" location="/onboarding" />;

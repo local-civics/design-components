@@ -14,5 +14,5 @@ export default {
  * Badge
  */
 export const Page = () => (
-  <InMemoryApp accessToken="andre.carter" location="/residents/andre.carter/badges/onboarding.badge" />
+  <InMemoryApp accessToken="andre.carter" location="/tenants/andre.carter/badges/onboarding.badge" />
 );

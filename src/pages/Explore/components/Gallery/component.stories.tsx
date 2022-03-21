@@ -20,30 +20,30 @@ export const Component: Story<GalleryProps> = (props) => (
     {...props}
     primary={
       <Experience
-        displayName="Event #1"
+        headline="Event #1"
         pathway="policy & government"
-        quality={250}
+        xp={250}
         imageURL="https://i.insider.com/592f4169b74af41b008b5977?width=1300&format=jpeg&auto=webp"
       />
     }
     top={
       <Exhibition>
         <Experience
-          displayName="Event #1"
+          headline="Event #1"
           pathway="policy & government"
-          quality={250}
+          xp={250}
           imageURL="https://i.insider.com/592f4169b74af41b008b5977?width=1300&format=jpeg&auto=webp"
         />
         <Experience
-          displayName="Event #2"
+          headline="Event #2"
           pathway="college & career"
-          quality={250}
+          xp={250}
           imageURL="https://imageio.forbes.com/specials-images/imageserve/0fyvc753KyfCB/960x960.jpg?fit=bounds&format=jpg&width=960"
         />
         <Experience
-          displayName="Event #3"
+          headline="Event #3"
           pathway="arts & culture"
-          quality={250}
+          xp={250}
           imageURL="https://bestlifeonline.com/wp-content/uploads/sites/3/2019/12/shutterstock_1120210925.jpg"
         />
       </Exhibition>
@@ -51,21 +51,21 @@ export const Component: Story<GalleryProps> = (props) => (
     soonest={
       <Exhibition>
         <Experience
-          displayName="Event #1"
+          headline="Event #1"
           pathway="policy & government"
-          quality={250}
+          xp={250}
           imageURL="https://i.insider.com/592f4169b74af41b008b5977?width=1300&format=jpeg&auto=webp"
         />
         <Experience
-          displayName="Event #2"
+          headline="Event #2"
           pathway="college & career"
-          quality={250}
+          xp={250}
           imageURL="https://imageio.forbes.com/specials-images/imageserve/0fyvc753KyfCB/960x960.jpg?fit=bounds&format=jpg&width=960"
         />
         <Experience
-          displayName="Event #3"
+          headline="Event #3"
           pathway="arts & culture"
-          quality={250}
+          xp={250}
           imageURL="https://bestlifeonline.com/wp-content/uploads/sites/3/2019/12/shutterstock_1120210925.jpg"
         />
       </Exhibition>

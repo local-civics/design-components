@@ -18,7 +18,7 @@ export type SearchButtonProps = {
  */
 export const SearchButton = (props: SearchButtonProps) => {
   const className = builder("placeholder:text-slate-400 text-slate-400")
-    .append("block bg-white w-full text-xs border border-slate-300")
+    .append("block bg-white w-full text-sm border border-slate-300")
     .append("rounded-md py-3 px-8 shadow-sm")
     .if(!props.disabled, "cursor-pointer")
     .if(!props.disabled, "focus:outline-none focus:border-sky-100 focus:ring-sky-100 focus:ring-1")

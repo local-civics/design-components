@@ -27,13 +27,32 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const location = useLocation();
   const auth = useAuth();
   const page = props.page || "profile";
+  const primaryOrganization =
+    identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
   React.useEffect(() => {
-    if (identity.residentName && !identity.communityName) {
-      if (location.pathname !== `/residents/${identity.residentName}/onboarding`) {
-        navigate(`/residents/${identity.residentName}/onboarding`);
+    if (identity.resolving) {
+      return;
+    }
+
+    if (
+      !identity.organizations ||
+      identity.organizations?.length == 0 ||
+      !identity.statement ||
+      !identity.givenName ||
+      !identity.role
+    ) {
+      if (location.pathname !== `/onboarding`) {
+        navigate(`/onboarding`);
       }
     }
-  }, [location.pathname, identity.residentName, identity.communityName]);
+  }, [
+    location.pathname,
+    identity.nickname,
+    identity.organizations,
+    identity.statement,
+    identity.givenName,
+    identity.role,
+  ]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
@@ -43,30 +62,32 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
           <NavLink
             disabled={props.disabled}
             name="profile"
-            path={`/residents/${identity.residentName}`}
+            path={`/tenants/${identity.nickname}`}
             active={page === "profile"}
           />
           <NavLink
             disabled={props.disabled}
             name="explore"
-            path={`/communities/${identity.communityName}/explore`}
+            path={`/marketplace/${primaryOrganization.nickname}/activities`}
             active={page === "explore"}
           />
           <NavLink
             disabled={props.disabled}
             name="calendar"
-            path={`/communities/${identity.communityName}/calendar`}
+            path={`/marketplace/${primaryOrganization.nickname}/calendar/day/today`}
             active={page === "calendar"}
           />
           <NavLink name="logout" onClick={auth.logout} />
         </NavBar>
 
         <section className="w-full px-4 py-5 lg:px-36 flex flex-col gap-4">
-          {props.header && <div className="w-full min-h-16 lg:min-h-24 lg:flex">{props.header}</div>}
+          {props.header && (
+            <div className="w-full max-w-[62.5rem] m-auto min-h-16 lg:min-h-24 lg:flex">{props.header}</div>
+          )}
 
           <div className="grow w-full min-h-96">
             {/* Body */}
-            <div className="w-full grid grid-cols-1 gap-y-4 lg:flex lg:gap-x-2">
+            <div className="w-full max-w-[62.5rem] m-auto grid grid-cols-1 gap-y-4 lg:flex lg:gap-x-2">
               {/* Left Panel */}
               {props.sidebar && (
                 <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem]">
