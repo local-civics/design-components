@@ -1,5 +1,5 @@
-import {TenantPreview}   from "@local-civics/js-client";
-import React             from "react";
+import { TenantPreview } from "@local-civics/js-client";
+import React from "react";
 import { Button, Modal } from "../../../../components";
 
 /**

@@ -1,15 +1,15 @@
-import {BadgeView}        from "@local-civics/js-client";
-import React              from "react";
+import { BadgeView } from "@local-civics/js-client";
+import React from "react";
 import { Icon, IconName } from "../../../../components";
-import { builder }        from "../../../../utils/classname/classname";
+import { builder } from "../../../../utils/classname/classname";
 
 /**
  * The properties for the badge.
  */
 export type BadgeProps = BadgeView & {
-  award?: boolean
-  objective?: boolean
-  incentive?: boolean
+  award?: boolean;
+  objective?: boolean;
+  incentive?: boolean;
   open?: boolean;
   icon?: IconName;
   onOpen?: () => void;
@@ -22,7 +22,7 @@ export type BadgeProps = BadgeView & {
  */
 export const BadgeComponent = (props: BadgeProps) => {
   const icon = props.icon || "badge";
-  const locked = !props.todo && !props.inProgress && !props.done
+  const locked = !props.todo && !props.inProgress && !props.done;
   const statusIcon: IconName | "" = props.objective ? "unlock" : props.award ? "" : "lock";
   const intensity = !locked ? "normal" : "faded";
   const iconClassName = builder("w-full")
@@ -44,7 +44,8 @@ export const BadgeComponent = (props: BadgeProps) => {
     .if(!!props.open, "cursor-pointer hover:bg-gray-50")
     .build();
 
-  const onOpen = () => (props.award || props.objective || props.incentive) && props.open && props.onOpen && props.onOpen();
+  const onOpen = () =>
+    (props.award || props.objective || props.incentive) && props.open && props.onOpen && props.onOpen();
 
   return (
     <div className={className}>

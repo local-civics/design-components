@@ -1,5 +1,5 @@
-import {TaskView} from "@local-civics/js-client";
-import React                        from "react";
+import { TaskView } from "@local-civics/js-client";
+import React from "react";
 import { Button, Modal } from "../../../../components";
 import { builder } from "../../../../utils/classname/classname";
 
@@ -10,7 +10,7 @@ export type TaskModalProps = TaskView & {
   disabled?: boolean;
   resolving?: boolean;
   visible?: boolean;
-  status?: string
+  status?: string;
   onClose?: () => void;
   onStart?: () => void;
   onContinue?: () => void;

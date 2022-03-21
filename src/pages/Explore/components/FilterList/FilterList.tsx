@@ -20,34 +20,35 @@ export const FilterList = (props: FilterListProps) => {
   const skillTags = ["skill:leadership", "skill:speaking", "skill:group", "skill:navigation"];
   const locationTags = ["location:online", "location:in-person", "location:at-school", "location:community"];
   const init: Record<string, boolean> = {};
-  props.tags && props.tags.map((tag) => {
-    init[tag] = true;
-  });
+  props.tags &&
+    props.tags.map((tag) => {
+      init[tag] = true;
+    });
 
   const [active, setActive] = React.useState(init);
   const onTagClick = (tag: string) => {
     if (active[tag]) {
       setActive({ ...active, [tag]: false });
       const tags = Object.entries({ ...active, [tag]: false })
-          .filter(([, active]) => active)
-          .map(([tag]) => tag);
+        .filter(([, active]) => active)
+        .map(([tag]) => tag);
       props.onTagClick(tags);
-
     } else {
       setActive({ ...active, [tag]: true });
 
       const tags = Object.entries({ ...active, [tag]: true })
-          .filter(([, active]) => active)
-          .map(([tag]) => tag);
+        .filter(([, active]) => active)
+        .map(([tag]) => tag);
       props.onTagClick(tags);
     }
   };
 
   React.useEffect(() => {
-    props.tags && props.tags.map((tag) => {
-      init[tag] = true;
-    });
-  }, [props.tags])
+    props.tags &&
+      props.tags.map((tag) => {
+        init[tag] = true;
+      });
+  }, [props.tags]);
 
   return (
     <article className={["w-full", props.className || ""].join(" ")}>

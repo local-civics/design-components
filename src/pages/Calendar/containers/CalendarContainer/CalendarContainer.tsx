@@ -1,4 +1,4 @@
-import {WorkspaceCalendarView} from "@local-civics/js-client";
+import { WorkspaceCalendarView } from "@local-civics/js-client";
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useIdentity } from "../../../../contexts/App";
@@ -21,11 +21,7 @@ export const CalendarContainer = () => {
         {calendar?.events &&
           calendar.events.map((ex) => {
             return (
-              <Event
-                  key={`${ex.marketId}${ex.id}`}
-                  {...ex}
-                  onClick={() => navigate(`${location.pathname}/${ex.id}`)}
-              />
+              <Event key={`${ex.marketId}${ex.id}`} {...ex} onClick={() => navigate(`${location.pathname}/${ex.id}`)} />
             );
           })}
       </EventList>
@@ -44,18 +40,15 @@ const useEvents = (marketName?: string, date?: Date | null) => {
         return;
       }
 
-      setEvents(
-        await api.curriculum.viewMarketplaceCalendar(marketName, date.toISOString().split("T")[0])
-      );
+      setEvents(await api.curriculum.viewMarketplaceCalendar(marketName, date.toISOString().split("T")[0]));
     })();
     return () => setEvents(null);
   }, [date, identity.nickname, marketName]);
   return events;
 };
 
-
 // https://stackoverflow.com/questions/7151543/convert-dd-mm-yyyy-string-to-date
 function dayDate(dateStr: string) {
-  const [year, month, day] = dateStr.split("-")
-  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  const [year, month, day] = dateStr.split("-");
+  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
 }

@@ -30,39 +30,39 @@ export const NavBar = (props: NavBarProps) => {
   return (
     <nav className={className}>
       <div className="w-full flex items-center justify-between flex-wrap sticky max-w-[62.5rem] m-auto">
-      {React.Children.map(props.children, (Link) => {
-        if (Link && Link.props.name === "home") {
-          return <div className="grow items-center flex-shrink-0 md:mr-6">{Link}</div>;
-        }
-
-        return null;
-      })}
-
-      <div className="hidden md:flex md:items-center gap-x-8">
         {React.Children.map(props.children, (Link) => {
-          if (Link && Link.props.name !== "home") {
-            return <div className="relative">{Link}</div>;
+          if (Link && Link.props.name === "home") {
+            return <div className="grow items-center flex-shrink-0 md:mr-6">{Link}</div>;
           }
+
           return null;
         })}
-      </div>
 
-      <div className="inline-block md:hidden">
-        <NavLink onClick={() => setSecondary(!secondary)} name={menuIcon} />
-      </div>
+        <div className="hidden md:flex md:items-center gap-x-8">
+          {React.Children.map(props.children, (Link) => {
+            if (Link && Link.props.name !== "home") {
+              return <div className="relative">{Link}</div>;
+            }
+            return null;
+          })}
+        </div>
 
-      <div className={secondaryClassName}>
-        {React.Children.map(props.children, (Link) => {
-          if (Link && Link.props.name !== "home") {
-            return (
-              <div className="relative">
-                <NavLink {...Link.props} menu />
-              </div>
-            );
-          }
-          return null;
-        })}
-      </div>
+        <div className="inline-block md:hidden">
+          <NavLink onClick={() => setSecondary(!secondary)} name={menuIcon} />
+        </div>
+
+        <div className={secondaryClassName}>
+          {React.Children.map(props.children, (Link) => {
+            if (Link && Link.props.name !== "home") {
+              return (
+                <div className="relative">
+                  <NavLink {...Link.props} menu />
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
       </div>
     </nav>
   );

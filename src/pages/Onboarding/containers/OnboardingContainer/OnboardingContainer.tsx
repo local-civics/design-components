@@ -21,10 +21,18 @@ export const OnboardingContainer = () => {
 };
 
 const Card = () => {
-  const identity = useIdentity();
-  const api = useApi();
   const auth = useAuth();
+  console.log(auth);
+  const identity = useIdentity();
+  console.log(identity);
+  const api = useApi();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (auth.accessToken && !identity.nickname) {
+      identity.digest();
+    }
+  }, [auth.accessToken, identity.nickname]);
 
   const setRole = async (role?: "student" | "educator" | "management") => {
     await api.identity.configureTenant(identity.nickname || "", {
@@ -80,7 +88,7 @@ const Card = () => {
       }
 
       setCommunity({ ...community, disabled: true });
-      await api.identity.joinOrganization(identity.nickname||"", community.nickname||"", accessCode).then((err) => {
+      await api.identity.joinOrganization(identity.nickname || "", community.nickname || "", accessCode).then((err) => {
         if (!err) {
           return identity.digest().then(() => setCommunity({ ...community, disabled: false }));
         }
@@ -107,9 +115,15 @@ const Card = () => {
     return null;
   };
 
-  const register = async (changes: {newGivenName?: string, newFamilyName?: string, newGrade?: number, newImpactStatement?: string, newRole?: string}) => {
+  const register = async (changes: {
+    newGivenName?: string;
+    newFamilyName?: string;
+    newGrade?: number;
+    newImpactStatement?: string;
+    newRole?: string;
+  }) => {
     await api.identity.configureTenant(identity.nickname || "", changes);
-    await identity.digest()
+    await identity.digest();
   };
 
   const setInterests = async (interests?: string[]) => {

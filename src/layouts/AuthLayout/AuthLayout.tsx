@@ -27,18 +27,32 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const location = useLocation();
   const auth = useAuth();
   const page = props.page || "profile";
-  const primaryOrganization = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {}
+  const primaryOrganization =
+    identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
   React.useEffect(() => {
-    if(identity.resolving){
-      return
+    if (identity.resolving) {
+      return;
     }
 
-    if (!identity.organizations || identity.organizations?.length == 0 || !identity.statement || !identity.givenName || !identity.role) {
+    if (
+      !identity.organizations ||
+      identity.organizations?.length == 0 ||
+      !identity.statement ||
+      !identity.givenName ||
+      !identity.role
+    ) {
       if (location.pathname !== `/onboarding`) {
         navigate(`/onboarding`);
       }
     }
-  }, [location.pathname, identity.nickname, identity.organizations, identity.statement, identity.givenName, identity.role]);
+  }, [
+    location.pathname,
+    identity.nickname,
+    identity.organizations,
+    identity.statement,
+    identity.givenName,
+    identity.role,
+  ]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
@@ -67,7 +81,9 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
         </NavBar>
 
         <section className="w-full px-4 py-5 lg:px-36 flex flex-col gap-4">
-          {props.header && <div className="w-full max-w-[62.5rem] m-auto min-h-16 lg:min-h-24 lg:flex">{props.header}</div>}
+          {props.header && (
+            <div className="w-full max-w-[62.5rem] m-auto min-h-16 lg:min-h-24 lg:flex">{props.header}</div>
+          )}
 
           <div className="grow w-full min-h-96">
             {/* Body */}

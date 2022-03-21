@@ -64,9 +64,9 @@ export const Task = (props: TaskProps) => {
         </div>
 
         {!disabled && statusIcon && (
-            <div className="h-4 w-4 text-slate-600">
-              <Icon name={statusIcon} />
-            </div>
+          <div className="h-4 w-4 text-slate-600">
+            <Icon name={statusIcon} />
+          </div>
         )}
       </div>
     </div>

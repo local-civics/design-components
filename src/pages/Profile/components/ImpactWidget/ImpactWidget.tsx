@@ -1,5 +1,5 @@
-import {ImpactView, WorkspaceView} from "@local-civics/js-client";
-import React                       from "react";
+import { ImpactView, WorkspaceView } from "@local-civics/js-client";
+import React from "react";
 import { WidgetHeader, WidgetTitle, WidgetBody, Widget } from "../../../../components";
 import { ActivityProgress } from "../ActivityProgress/ActivityProgress";
 
@@ -22,12 +22,7 @@ export const ImpactWidget = (props: ImpactWidgetProps) => {
         <WidgetTitle icon="objective">Impact Score</WidgetTitle>
       </WidgetHeader>
       <WidgetBody>
-        <ActivityProgress
-          height="md"
-          level={props.level}
-          xp={props.xp}
-          nextXP={props.nextXP}
-        />
+        <ActivityProgress height="md" level={props.level} xp={props.xp} nextXP={props.nextXP} />
       </WidgetBody>
     </Widget>
   );

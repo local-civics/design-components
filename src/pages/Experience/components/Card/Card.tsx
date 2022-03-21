@@ -1,13 +1,13 @@
-import {ActivityView} from "@local-civics/js-client";
-import React                           from "react";
-import {Button, Icon, IconName, Modal} from "../../../../components";
-import { builder }                     from "../../../../utils/classname/classname";
+import { ActivityView } from "@local-civics/js-client";
+import React from "react";
+import { Button, Icon, IconName, Modal } from "../../../../components";
+import { builder } from "../../../../utils/classname/classname";
 
 export type CardProps = ActivityView & {
   status?: "registered" | "unregistered" | "in-progress";
   resolving?: boolean;
   visible?: boolean;
-  milestone?: boolean
+  milestone?: boolean;
   onRegister?: () => void;
   onUnregister?: () => void;
   onClose?: () => void;
@@ -41,8 +41,9 @@ export const Card = (props: CardProps) => {
   };
 
   const cta = (() => {
-    if(props.milestone){
-      return <Button
+    if (props.milestone) {
+      return (
+        <Button
           spacing="md"
           border="rounded"
           color="sky"
@@ -50,7 +51,8 @@ export const Card = (props: CardProps) => {
           text="Launch"
           size="md"
           onClick={props.onLaunch}
-      />
+        />
+      );
     }
 
     switch (status) {
@@ -100,16 +102,14 @@ export const Card = (props: CardProps) => {
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
           <div className="flex items-start grow">
             <div className="inline-block min-w-6 w-6 h-6 text-slate-600">
-              <Icon name={props.pathway as IconName || "explore"} />
+              <Icon name={(props.pathway as IconName) || "explore"} />
             </div>
 
             <div className="grow align-top ml-2 inline-block leading-none">
               <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">{props.headline}</p>
               <div>
                 <p className="text-sm inline-block capitalize text-slate-600">{props.pathway}</p>
-                {props.xp && (
-                  <p className="ml-1 font-semibold inline-block text-sm text-green-500">{props.xp} pts</p>
-                )}
+                {props.xp && <p className="ml-1 font-semibold inline-block text-sm text-green-500">{props.xp} pts</p>}
               </div>
             </div>
           </div>

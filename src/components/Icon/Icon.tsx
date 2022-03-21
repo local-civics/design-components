@@ -19,10 +19,10 @@ export type IconProps = {
  */
 export const Icon = (props: IconProps) => {
   const viewBox = sprite[props.name].viewBox;
-  const contents = sprite[props.name].contents
+  const contents = sprite[props.name].contents;
 
-  if(!contents){
-    return null
+  if (!contents) {
+    return null;
   }
 
   return (
@@ -35,9 +35,7 @@ export const Icon = (props: IconProps) => {
         return v.d && <path key={k} {...(v as React.SVGProps<SVGPathElement>)} />;
       })}
 
-      {contents.map(
-        (v, k) => v.r && <circle key={k} {...(v as React.SVGProps<SVGCircleElement>)} />
-      )}
+      {contents.map((v, k) => v.r && <circle key={k} {...(v as React.SVGProps<SVGCircleElement>)} />)}
     </svg>
   );
 };

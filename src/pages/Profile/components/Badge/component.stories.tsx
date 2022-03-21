@@ -12,7 +12,7 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<BadgeProps&{status?: string}> = (args) => (
+const Template: Story<BadgeProps & { status?: string }> = (args) => (
   <BadgeComponent
     headline="Onboarding Badge"
     status="done"

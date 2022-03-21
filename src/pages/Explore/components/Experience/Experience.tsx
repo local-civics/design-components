@@ -1,4 +1,4 @@
-import {Icon, IconName} from "../../../../components";
+import { Icon, IconName } from "../../../../components";
 
 export type ExperienceProps = {
   headline?: string;
@@ -17,7 +17,7 @@ export const Experience = (props: ExperienceProps) => {
           <div className="text-sm font-bold text-white w-full">{props.headline}</div>
           <div className="mt-2 flex items-center gap-x-2 w-full">
             <div className="flex-shrink-0 w-6 h-6 text-white fill-white">
-              <Icon name={props.pathway as IconName || "globe"} />
+              <Icon name={(props.pathway as IconName) || "globe"} />
             </div>
             {props.pathway && (
               <span className="grow">

@@ -1,6 +1,6 @@
-import React                                 from "react";
-import {Button, Loader, Search, SearchProps} from "../../../../components";
-import { ExperienceProps }                   from "../Experience/Experience";
+import React from "react";
+import { Button, Loader, Search, SearchProps } from "../../../../components";
+import { ExperienceProps } from "../Experience/Experience";
 
 export type GalleryProps = SearchProps & {
   count?: number;

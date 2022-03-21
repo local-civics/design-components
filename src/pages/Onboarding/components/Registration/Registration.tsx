@@ -6,7 +6,13 @@ export type RegistrationProps = {
   grade?: number;
   impactStatement?: string;
   role?: string;
-  onRegister?: (changes: {newGivenName?: string, newFamilyName?: string, newGrade?: number, newImpactStatement?: string, newRole?: string}) => void;
+  onRegister?: (changes: {
+    newGivenName?: string;
+    newFamilyName?: string;
+    newGrade?: number;
+    newImpactStatement?: string;
+    newRole?: string;
+  }) => void;
 };
 
 export const Registration = (props: RegistrationProps) => {

@@ -1,31 +1,31 @@
-import {ActivityView, ReactionView}    from "@local-civics/js-client";
-import React                           from "react";
-import {Button, Icon, IconName, Modal} from "../../../../components";
-import {useMessage}                    from "../../../../contexts/Message";
-import { builder }                     from "../../../../utils/classname/classname";
+import { ActivityView, ReactionView } from "@local-civics/js-client";
+import React from "react";
+import { Button, Icon, IconName, Modal } from "../../../../components";
+import { useMessage } from "../../../../contexts/Message";
+import { builder } from "../../../../utils/classname/classname";
 
 export type CardProps = ActivityView & {
-    visible?: boolean;
-    resolving?: boolean;
-    onClose?: () => void;
-    unavailable?: boolean;
-    onSave?: (reflection: string, rating: number) => Promise<void>;
-  };
+  visible?: boolean;
+  resolving?: boolean;
+  onClose?: () => void;
+  unavailable?: boolean;
+  onSave?: (reflection: string, rating: number) => Promise<void>;
+};
 
 export const Card = (props: CardProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.resolving, "min-h-[20rem]").build();
   const message = useMessage();
   const now = new Date();
   const available = !props.unavailable && (!props.startTime || now >= new Date(props.startTime));
-  const [reaction, setReaction] = React.useState(props.reaction||{} as ReactionView);
+  const [reaction, setReaction] = React.useState(props.reaction || ({} as ReactionView));
   const hasChanges =
     available && (props.reaction?.rating !== reaction.rating || props.reaction?.reflection !== reaction.reflection);
   const setFeedback = (feedback: string) => setReaction({ ...reaction, reflection: feedback });
   const setConfidence = (confidence: number) => setReaction({ ...reaction, rating: confidence });
 
   React.useEffect(() => {
-    setReaction(props.reaction||{} as ReactionView)
-  }, [props.reaction?.reflection, props.reaction?.reflection])
+    setReaction(props.reaction || ({} as ReactionView));
+  }, [props.reaction?.reflection, props.reaction?.reflection]);
 
   return (
     <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
@@ -34,31 +34,32 @@ export const Card = (props: CardProps) => {
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
           <div className="flex items-start grow">
             <div className="inline-block min-w-6 w-6 h-6 text-slate-600">
-              <Icon name={props.pathway as IconName || "explore"} />
+              <Icon name={(props.pathway as IconName) || "explore"} />
             </div>
 
             <div className="grow align-top ml-2 inline-block leading-none">
               <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">{props.headline}</p>
               <div>
                 <p className="text-sm inline-block capitalize text-slate-600">{props.pathway}</p>
-                {props.xp && (
-                  <p className="ml-1 font-semibold inline-block text-sm text-green-500">{props.xp} pts</p>
-                )}
+                {props.xp && <p className="ml-1 font-semibold inline-block text-sm text-green-500">{props.xp} pts</p>}
               </div>
             </div>
           </div>
 
           {hasChanges && (
             <Button
-              onClick={() => props.onSave && props.onSave(reaction.reflection||"", reaction.rating||0).then(() => {
-                if(reaction.reflection && !props.reaction?.reflection){
-                  message.send(`You've successfully submitted your reflection and earned your points.`, {
-                    severity: "success",
-                    icon: "reflection",
-                    title: "Nice Work!",
-                  });
-                }
-              })}
+              onClick={() =>
+                props.onSave &&
+                props.onSave(reaction.reflection || "", reaction.rating || 0).then(() => {
+                  if (reaction.reflection && !props.reaction?.reflection) {
+                    message.send(`You've successfully submitted your reflection and earned your points.`, {
+                      severity: "success",
+                      icon: "reflection",
+                      title: "Nice Work!",
+                    });
+                  }
+                })
+              }
               theme="dark"
               border="rounded"
               size="sm"
@@ -110,7 +111,11 @@ const Confidence = (props: CardProps & { setConfidence?: (confidence: number) =>
   const buttons = Array.from({ length: maxPoints }, (_, i) => {
     const color = i < confidence ? "text-sky-200" : "text-slate-200";
     return (
-      <div key={i} onMouseEnter={() => setConfidence(i + 1)} onMouseLeave={() => setConfidence(props.reaction?.rating || -1)}>
+      <div
+        key={i}
+        onMouseEnter={() => setConfidence(i + 1)}
+        onMouseLeave={() => setConfidence(props.reaction?.rating || -1)}
+      >
         <div
           className={`cursor-pointer h-4 w-4 ${color}`}
           onClick={() => props.setConfidence && props.setConfidence(i + 1)}

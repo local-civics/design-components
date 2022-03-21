@@ -18,9 +18,9 @@ const Template: Story<BadgeModalProps> = (args) => (
   <div className="h-full w-full overscroll-none">
     <BadgeModal
       badge={{
-          imageURL: "https://cdn.localcivics.io/badges/participation.png",
-          headline: "Onboarding Badge",
-          summary: "A sample summary",
+        imageURL: "https://cdn.localcivics.io/badges/participation.png",
+        headline: "Onboarding Badge",
+        summary: "A sample summary",
       }}
       visible
       {...args}

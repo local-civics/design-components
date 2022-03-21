@@ -6,7 +6,16 @@ import { Logo } from "../Logo/Logo";
 /**
  * The button color.
  */
-export type ButtonColor = "slate" | "sky" | "green" | "rose" | "emerald" | "primary" | "secondary" | "slate:sky" | "slate:icon";
+export type ButtonColor =
+  | "slate"
+  | "sky"
+  | "green"
+  | "rose"
+  | "emerald"
+  | "primary"
+  | "secondary"
+  | "slate:sky"
+  | "slate:icon";
 
 /**
  * The button size.
@@ -199,23 +208,23 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
         },
       };
       break;
-  case "slate:icon":
-    config.button.color = {
-      text: "text-slate-500",
-      border: "border-slate-500",
-      bg: "bg-slate-500",
-      active: {
-        text: "text-sky-400",
-        border: "border-sky-400",
-        bg: "bg-sky-400",
-      },
-      interactive: {
-        text: "focus:text-sky-600 active:text-sky-600 hover:text-sky-600",
-        border: "focus:border-sky-600 active:border-sky-600 hover:border-sky-600",
-        bg: "focus:bg-sky-600 active:bg-sky-600 hover:bg-sky-600",
-      },
-    };
-    break;
+    case "slate:icon":
+      config.button.color = {
+        text: "text-slate-500",
+        border: "border-slate-500",
+        bg: "bg-slate-500",
+        active: {
+          text: "text-sky-400",
+          border: "border-sky-400",
+          bg: "bg-sky-400",
+        },
+        interactive: {
+          text: "focus:text-sky-600 active:text-sky-600 hover:text-sky-600",
+          border: "focus:border-sky-600 active:border-sky-600 hover:border-sky-600",
+          bg: "focus:bg-sky-600 active:bg-sky-600 hover:bg-sky-600",
+        },
+      };
+      break;
     case "sky":
       config.button.color = {
         active: {

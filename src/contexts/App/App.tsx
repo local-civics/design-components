@@ -1,10 +1,12 @@
-import { Auth0ContextInterface, Auth0Provider, useAuth0 }                         from "@auth0/auth0-react";
-import {Client, client, IsBadRequest, IsNotAuthorized, IsNotFound, TenantPreview} from "@local-civics/js-client";
-import React                                                                      from "react";
+import { Auth0ContextInterface, Auth0Provider, useAuth0 } from "@auth0/auth0-react";
+import { Client, client, IsBadRequest, IsNotAuthorized, IsNotFound, TenantPreview } from "@local-civics/js-client";
+import React from "react";
 import * as Sentry from "@sentry/react";
+import { Simulate } from "react-dom/test-utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorBoundary } from "../Error/Error";
 import { MessageProvider, useMessage } from "../Message";
+import error = Simulate.error;
 
 /* Auth domain for auth0 */
 const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
@@ -180,11 +182,11 @@ export const ApiProvider = (props: { children?: React.ReactNode }) => {
       accessToken: accessToken,
       onReject: (e) => {
         send(e);
-        if (IsBadRequest(e) || IsNotAuthorized(e)) {
+        if (IsBadRequest(e)) {
           return Promise.resolve(e);
         }
 
-        if (IsNotFound(e)) {
+        if (IsNotFound(e) || IsNotAuthorized(e)) {
           return Promise.resolve(null);
         }
 

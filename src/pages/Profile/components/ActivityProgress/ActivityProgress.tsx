@@ -1,5 +1,5 @@
-import {ImpactView} from "@local-civics/js-client";
-import React                from "react";
+import { ImpactView } from "@local-civics/js-client";
+import React from "react";
 import { Progress, Button, IconName, ButtonSize } from "../../../../components";
 import { classname } from "../../../../utils/classname/classname";
 import { compact } from "../../../../utils/numbers";

@@ -1,5 +1,5 @@
-import {BadgeView, WorkspaceView} from "@local-civics/js-client";
-import React                      from "react";
+import { BadgeView, WorkspaceView } from "@local-civics/js-client";
+import React from "react";
 import { Button, Modal } from "../../../../components";
 import { builder } from "../../../../utils/classname/classname";
 import { TaskProps } from "../Task/Task";
@@ -8,8 +8,8 @@ import { TaskProps } from "../Task/Task";
  * The properties for the badge.
  */
 export type BadgeModalProps = {
-  workspace?: WorkspaceView
-  badge?: BadgeView & {id?: number, marketId?: string, level?: number}
+  workspace?: WorkspaceView;
+  badge?: BadgeView & { id?: number; marketId?: string; level?: number };
   resolving?: boolean;
   visible?: boolean;
   disabled?: boolean;
@@ -26,7 +26,9 @@ export type BadgeModalProps = {
 export const BadgeModal = (props: BadgeModalProps) => {
   const hasTasks = props.children && React.Children.count(props.children) > 0;
   const className = builder("w-full").if(!!props.resolving, "min-h-[20rem]").build();
-  const objectives = props.workspace?.objectives?.filter(v => v.id === props.badge?.id && v.level === props.badge?.level && v.marketId === props.badge?.marketId)
+  const objectives = props.workspace?.objectives?.filter(
+    (v) => v.id === props.badge?.id && v.level === props.badge?.level && v.marketId === props.badge?.marketId
+  );
 
   const BadgeTasks = () => {
     if (!hasTasks || props.disabled) {
@@ -41,12 +43,12 @@ export const BadgeModal = (props: BadgeModalProps) => {
     );
   };
 
-  const todo = props.badge?.todo || []
-  const inProgress = props.badge?.inProgress || []
-  const done = props.badge?.done || []
+  const todo = props.badge?.todo || [];
+  const inProgress = props.badge?.inProgress || [];
+  const done = props.badge?.done || [];
 
   const BadgeButton = () => {
-    if (props.disabled || todo.length > 0 ||inProgress.length > 0 || done.length > 0) {
+    if (props.disabled || todo.length > 0 || inProgress.length > 0 || done.length > 0) {
       return null;
     }
 
@@ -71,8 +73,8 @@ export const BadgeModal = (props: BadgeModalProps) => {
     return null;
   };
 
-  const isDone = !!props.badge?.done && !props.badge.todo && !props.badge.inProgress
-  const doing = todo || inProgress
+  const isDone = !!props.badge?.done && !props.badge.todo && !props.badge.inProgress;
+  const doing = todo || inProgress;
 
   return (
     <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
