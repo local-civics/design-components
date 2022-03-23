@@ -23,7 +23,7 @@ export const WorkspaceContainer = () => {
   const primaryOrganization =
     workspace?.organizations && workspace.organizations.length > 0 ? workspace.organizations[0] : {};
   const navigate = useNavigate();
-  const awards = workspace?.awards || [];
+  const awards = [...workspace?.awards || []];
   if (
     identity.nickname &&
     identity.organizations &&
@@ -39,8 +39,8 @@ export const WorkspaceContainer = () => {
       imageURL: "https://cdn.localcivics.io/badges/onboarding.png",
     });
   }
-  const objectives = workspace?.objectives || [];
-  const incentives = workspace?.incentives || [];
+  const objectives = [...workspace?.objectives || []];
+  const incentives = [...workspace?.incentives || []];
   const badges = awards.map((badge) => (
     <BadgeComponent
       {...badge}
@@ -123,7 +123,7 @@ export const WorkspaceContainer = () => {
     AchievementWidget: () => (
       <AchievementWidget
         resolving={workspace?.impact === null}
-        badges={workspace?.awards?.length}
+        badges={awards?.length}
         milestones={workspace?.impact?.milestones}
         reflections={workspace?.impact?.reflections}
       />
