@@ -26,12 +26,6 @@ const Card = () => {
   const api = useApi();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    if(auth.accessToken && !identity.nickname){
-      identity.digest()
-    }
-  }, [auth.accessToken, identity.nickname])
-
   const setRole = async (role?: "student" | "educator" | "management") => {
     await api.identity.configureTenant(identity.nickname || "", {
       newRole: role,
