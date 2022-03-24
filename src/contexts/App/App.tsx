@@ -74,6 +74,7 @@ export type ApiState = Client;
  * Auth state.
  */
 export type AuthState = {
+  nickname?: string
   accessToken?: string;
   login?: () => Promise<void>;
   logout?: () => void;
@@ -123,14 +124,14 @@ export const IdentityProvider = (props: { children?: React.ReactNode }) => {
     const [resolving, setResolving] = React.useState(true);
     const location = useLocation();
     const api = useApi();
-    const { accessToken } = useAuth();
+    const { accessToken, nickname } = useAuth();
     const context = {
       ...identity,
       resolving: resolving,
       digest: async () => {
         setResolving(true);
         const tenant = await api.identity.digest();
-        setIdentity(tenant);
+        setIdentity({nickname: nickname, ...tenant});
         setResolving(false);
         Sentry.setUser({ id: tenant.id, tenantName: tenant.nickname });
 
@@ -217,6 +218,7 @@ export const AuthProvider = (props: { accessToken?: string; children?: React.Rea
     const auth0 = useAuth0();
     const accessToken = useAccessToken(auth0, props.accessToken);
     const context = {
+      nickname: auth0.user?.nickname,
       accessToken: accessToken,
       login: async () =>
         auth0.loginWithRedirect().catch((e) => {
