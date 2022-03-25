@@ -59,6 +59,9 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
       <Loader isLoading={identity.resolving}>
         <NavBar>
           <NavLink disabled={props.disabled} name="home" path="/" />
+          <NavLink name="faq" onClick={() => window.open("https://docs.google.com/document/d/19d8bO2D_KSxyvT8HPS8RqJTRMla6jgBtVPV5HgcSAk8/view", "_blank")}/>
+          <NavLink name="privacy" onClick={() => window.open("https://www.localcivics.io/privacy-policy", "_blank")}/>
+          <NavLink name="terms" onClick={() => window.open("https://www.localcivics.io/terms-of-service", "_blank")}/>
           <NavLink
             disabled={props.disabled}
             name="profile"

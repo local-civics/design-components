@@ -36,6 +36,9 @@ export const HomeLayout = (props: HomeLayoutProps) => {
       <NavBar>
         <NavLink name="home" path="/" active />
         <NavLink name="login" onClick={auth.login} />
+        <NavLink name="faq" onClick={() => window.open("https://docs.google.com/document/d/19d8bO2D_KSxyvT8HPS8RqJTRMla6jgBtVPV5HgcSAk8/view", "_blank")}/>
+        <NavLink name="privacy" onClick={() => window.open("https://www.localcivics.io/privacy-policy", "_blank")}/>
+        <NavLink name="terms" onClick={() => window.open("https://www.localcivics.io/terms-of-service", "_blank")}/>
       </NavBar>
 
       <section className="absolute top-0 left-0 h-full overflow-hidden pt-16 w-full">{props.children}</section>
