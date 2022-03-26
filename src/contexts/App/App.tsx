@@ -130,8 +130,8 @@ export const IdentityProvider = (props: { children?: React.ReactNode }) => {
       resolving: resolving,
       digest: async () => {
         setResolving(true);
-        const tenant = await api.identity.digest();
-        setIdentity({nickname: nickname, ...tenant});
+        const tenant = { nickname: nickname, ...await api.identity.digest() };
+        setIdentity(tenant);
         setResolving(false);
         Sentry.setUser({ id: tenant.id, tenantName: tenant.nickname });
 
