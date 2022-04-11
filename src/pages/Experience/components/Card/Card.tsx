@@ -12,7 +12,7 @@ export type CardProps = ActivityView & {
   onUnregister?: () => void;
   onClose?: () => void;
   onLaunch?: () => void;
-  onJoin?: () => void;
+  onReflect?: () => void;
   onSkillClick?: (skill: string) => void;
 };
 
@@ -43,15 +43,26 @@ export const Card = (props: CardProps) => {
   const cta = (() => {
     if (props.milestone) {
       return (
-        <Button
-          spacing="md"
-          border="rounded"
-          color="sky"
-          theme="dark"
-          text="Launch"
-          size="md"
-          onClick={props.onLaunch}
-        />
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+                spacing="md"
+                border="rounded"
+                color="green"
+                theme="dark"
+                text="Launch"
+                size="md"
+                onClick={props.onLaunch}
+            />
+            <Button
+                spacing="md"
+                border="rounded"
+                color="sky"
+                theme="dark"
+                text="Reflect"
+                size="md"
+                onClick={props.onReflect}
+            />
+          </div>
       );
     }
 
@@ -59,13 +70,13 @@ export const Card = (props: CardProps) => {
       case "in-progress":
         return (
           <Button
-            onClick={props.onJoin}
+            onClick={props.onLaunch}
             theme="dark"
             border="rounded"
             size="md"
             spacing="md"
             color="green"
-            text="Join"
+            text="Launch"
           />
         );
       case "unregistered":
@@ -100,7 +111,7 @@ export const Card = (props: CardProps) => {
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
-          <div className="flex items-start grow">
+          <div className="flex items-start grow md:max-w-[22rem]">
             <div className="inline-block min-w-6 w-6 h-6 text-slate-600">
               <Icon name={(props.pathway as IconName) || "explore"} />
             </div>
@@ -114,7 +125,7 @@ export const Card = (props: CardProps) => {
             </div>
           </div>
 
-          {cta}
+          {cta && <div className="max-h-[12rem]">{cta}</div>}
         </div>
 
         <div className="w-full max-h-[20rem] overflow-scroll">
