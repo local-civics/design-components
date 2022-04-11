@@ -21,8 +21,9 @@ const Template: Story<CardProps> = (args) => (
       status="unregistered"
       imageURL="https://s.yimg.com/os/creatr-uploaded-images/2019-11/7b5b5330-112b-11ea-a77f-7c019be7ecae"
       visible
-      headline="A learning experience"
+      headline="A learning experience with a really long headline to demonstrate wrapping"
       summary="A sample summary"
+      milestone={true}
       startTime={new Date().toString()}
       address="123 Civic Lane, Brooklyn, NY, 12345"
       link="https://www.localcivics.io"
