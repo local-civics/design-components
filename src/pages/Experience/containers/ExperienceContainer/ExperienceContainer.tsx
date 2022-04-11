@@ -58,14 +58,14 @@ export const ExperienceContainer = () => {
         visible
         onClose={close}
         onRegister={register}
-        onLaunch={() => navigate(`/tenants/${identity.nickname}/reflections/${marketName}/${activityId}`)}
+        onReflect={() => navigate(`/tenants/${identity.nickname}/reflections/${marketName}/${activityId}`)}
         onUnregister={() =>
           ready &&
           api.curriculum.changeReaction(identity.nickname || "", po.nickname || "", experience.activityId, {
             notify: false,
           })
         }
-        onJoin={() => experience?.link && window.open(experience?.link, "_blank")}
+        onLaunch={() => experience?.link && window.open(experience?.link, "_blank")}
         onSkillClick={(skill: string) => ready && navigate(`/marketplace/${po.nickname}/skills/${skill}`)}
       />
     ),
