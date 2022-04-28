@@ -3,82 +3,49 @@
  * @constructor
  */
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useTenant } from "../../contexts/App";
+import {useLocation, useParams} from "react-router-dom";
 import { OpenReflection } from "../../components/Reflection/OpenReflection/OpenReflection";
+import {useActivity} from "../Activity/ActivityContainer";
+import {useApi} from "../../contexts/App";
+import {useMessage} from "../../contexts/Message";
 
 /**
  * Connected container for reflection.
  * @constructor
  */
 export const ReflectionContainer = () => {
-  const tenant = useTenant();
-  const navigate = useNavigate();
-  const close = () => navigate(-1);
-  const [ref, setRef] = React.useState(null as ReactionView | null);
-  const params = useParams();
-  const activityId = parseInt(params.activityId || "");
-  const reflection = useReflection();
-  const api = useApi();
-  const po = tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
+  const params = useParams()
+  const tenantName = params.tenantName
+  const activityId = params.activityId;
+  if(!tenantName || !activityId){
+    throw new Error("request must missing required params")
+  }
+  const location = useLocation()
+  const api = useApi()
+  const message = useMessage();
+  const activity = useActivity(tenantName, activityId);
   return {
     Reflection: () => (
       <OpenReflection
-        {...reflection}
-        {...ref}
-        isLoading={reflection === null}
-        visible
-        unavailable={reflection?.browsing}
-        onClose={close}
-        onSave={async (ref, rating) => {
-          if (!tenant.nickname || !po.nickname || !activityId) {
-            return;
-          }
-
-          return api.curriculum
-            .changeReaction(tenant.nickname, po.nickname, activityId, {
-              reflection: ref,
-              rating: rating,
-            })
-            .then(() =>
-              setRef({
-                reflection: ref,
-                rating: rating,
-              })
-            );
+        {...activity}
+        onSave={async (reflection, rating) => {
+          const ctx = {referrer: location.pathname}
+          return api.do(ctx, "PATCH", "curriculum", `/tenants/${tenantName}/activities/${activity.activityId}`, {
+            body: {
+              reflection,
+              rating
+            }
+          }).then((err) => {
+            if(!err){
+              message.send(`Your reflection has been saved.`, {
+                severity: "success",
+                icon: "reflection",
+                title: "Well done!",
+              });
+            }
+          });
         }}
       />
     ),
   };
-};
-
-const useReflection = () => {
-  const tenant = useTenant();
-  const po = tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
-  const api = useApi();
-  const params = useParams();
-  const activityId = parseInt(params.activityId || "");
-  const tenantName = params.tenantName;
-  const browsing = tenant.nickname !== tenantName;
-  const [experience, setExperience] = React.useState(null as ActivityView | null);
-  React.useEffect(() => {
-    (async () => {
-      if (
-        !tenant.nickname ||
-        !po.nickname ||
-        !activityId ||
-        !tenantName ||
-        activityId === 0 ||
-        tenantName === "undefined"
-      ) {
-        return;
-      }
-
-      setExperience(await api.curriculum.viewWorkspaceActivity(tenant.nickname, po.nickname || "", activityId));
-    })();
-    return () => {
-      setExperience(null);
-    };
-  }, [activityId, tenantName, tenant.nickname]);
-  return experience ? { ...experience, browsing } : null;
 };

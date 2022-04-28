@@ -80,7 +80,7 @@ export const OpenActivity = (props: OpenActivityProps) => {
   }
 
   return (
-    <Modal visible isLoading={!!props.activityId}>
+    <Modal visible isLoading={!props.activityId}>
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">

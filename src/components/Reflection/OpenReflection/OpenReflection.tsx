@@ -4,9 +4,7 @@ import { useMessage } from "../../../contexts/Message";
 import { builder } from "../../../utils/classname/classname";
 
 export type OpenReflectionProps = {
-  visible?: boolean;
-  isLoading?: boolean;
-
+  activityId?: string
   startTime?: string
   reflection?: string
   pathway?: string
@@ -21,7 +19,7 @@ export type OpenReflectionProps = {
 };
 
 export const OpenReflection = (props: OpenReflectionProps) => {
-  const className = builder("w-full md:w-[40rem]").if(!!props.isLoading, "min-h-[20rem]").build();
+  const className = builder("w-full md:w-[40rem]").if(!props.activityId, "min-h-[20rem]").build();
   const message = useMessage();
   const [reaction, setReaction] = React.useState({
     rating: props.rating,
@@ -40,7 +38,7 @@ export const OpenReflection = (props: OpenReflectionProps) => {
   }, [props.reflection]);
 
   return (
-    <Modal isLoading={props.isLoading} visible={props.visible} onClose={props.onClose}>
+    <Modal isLoading={!props.activityId} visible onClose={props.onClose}>
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">

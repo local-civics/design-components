@@ -61,7 +61,7 @@ export const OpenBadge = (props: OpenBadgeProps) => {
   };
 
   return (
-    <Modal isLoading={!!props.badgeId} visible>
+    <Modal isLoading={!props.badgeId} visible>
       <div className={className}>
         <div className="px-4 pb-4 border-b border-gray-200 w-[18rem] md:w-[24rem] lg:w-[28rem]">
           <div className="flex items-center gap-x-2 -mt-4">

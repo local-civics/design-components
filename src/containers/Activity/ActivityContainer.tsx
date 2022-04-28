@@ -40,7 +40,7 @@ export const ActivityContainer = () => {
 };
 
 // A hook to fetch an activity
-const useActivity = (tenantName: string, activityId: string) => {
+export const useActivity = (tenantName: string, activityId: string) => {
   const [activity, setActivity] = React.useState({} as any)
   const api = useApi();
   const location = useLocation()
