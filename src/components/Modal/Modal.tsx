@@ -2,7 +2,7 @@ import React from "react";
 import { builder } from "../../utils/classname/classname";
 import { Button } from "../Button/Button";
 import { Loader } from "../Loader/Loader";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /**
  * The properties for the modal.
@@ -20,7 +20,7 @@ export type ModalProps = {
  * A component for displaying modals
  */
 export const Modal = (props: ModalProps) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const className = builder(
     "font-proxima grid grid-cols-1 overscroll-contain justify-items-center fixed top-0 left-0 px-4 md:px-2"
   )
@@ -35,11 +35,11 @@ export const Modal = (props: ModalProps) => {
   const contentClassName = builder().if(!props.plain, "shadow-md bg-white overflow-hidden rounded-md relative").build();
 
   const close = () => {
-    if(props.onClose){
-      props.onClose()
+    if (props.onClose) {
+      props.onClose();
     }
-    navigate(-1)
-  }
+    navigate(-1);
+  };
 
   return (
     <div className={className}>

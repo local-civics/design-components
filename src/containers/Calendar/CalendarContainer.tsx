@@ -13,14 +13,14 @@ export const CalendarContainer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
-  const tenantName = params.tenantName
+  const tenantName = params.tenantName;
   const [date, setDate] = React.useState(
     params.date && params.date !== "undefined" ? dayDate(params.date) : (new Date() as Date | null)
   );
   if (!tenantName) {
-    throw new Error("request is missing required params")
+    throw new Error("request is missing required params");
   }
-  const day = (date || new Date()).toISOString().split("T")[0]
+  const day = (date || new Date()).toISOString().split("T")[0];
   const events = useEvents(tenantName, day);
   return {
     DateSelection: () => <DateSelection date={date} setDate={setDate} />,
@@ -29,7 +29,11 @@ export const CalendarContainer = () => {
         {events &&
           events.map((event: any) => {
             return (
-              <EventPreview key={event.eventId} {...event} onClick={() => navigate(`${location.pathname}/${event.eventId}`)} />
+              <EventPreview
+                key={event.eventId}
+                {...event}
+                onClick={() => navigate(`${location.pathname}/${event.eventId}`)}
+              />
             );
           })}
       </EventList>
@@ -39,17 +43,19 @@ export const CalendarContainer = () => {
 
 // A hook to fetch the calendar events
 const useEvents = (tenantName: string, day: string) => {
-  const [events, setEvents] = React.useState(null as any)
+  const [events, setEvents] = React.useState(null as any);
   const api = useApi();
   React.useEffect(() => {
     setEvents(null);
     (async () => {
-      const ctx = {referrer: location.pathname}
-      setEvents(await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/events`, {
-        query: {
-          day: day,
-        }
-      }));
+      const ctx = { referrer: location.pathname };
+      setEvents(
+        await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/events`, {
+          query: {
+            day: day,
+          },
+        })
+      );
     })();
     return () => setEvents(null);
   }, [tenantName, day]);

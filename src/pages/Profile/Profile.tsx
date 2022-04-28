@@ -8,8 +8,7 @@ import { ProfileContainer } from "../../containers/Profile/ProfileContainer";
  * @constructor
  */
 export const Profile = () => {
-  const { ResidentWidget, AboutWidget, ImpactWidget, PathwayWidget, AchievementWidget, Dashboard } =
-    ProfileContainer();
+  const { ResidentWidget, AboutWidget, ImpactWidget, PathwayWidget, AchievementWidget, Dashboard } = ProfileContainer();
 
   const sidebar = (
     <>

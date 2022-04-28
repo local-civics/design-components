@@ -6,9 +6,9 @@ import { PathwayProgress } from "../../Pathway/PathwayProgress/PathwayProgress";
  * The properties for the impact score widget.
  */
 export type ImpactWidgetProps = {
-  level?: number
-  xp?: number
-  nextXP?: number
+  level?: number;
+  xp?: number;
+  nextXP?: number;
   isLoading?: boolean;
 };
 

@@ -62,7 +62,7 @@ export type TenantState = any & {
   isLoading: boolean;
   resolve: () => Promise<void>;
   configure: (conf: any) => Promise<void>;
-  changePersona: (persona: string) => Promise<void>
+  changePersona: (persona: string) => Promise<void>;
 };
 
 /**
@@ -123,35 +123,35 @@ export const TenantProvider = (props: { children?: React.ReactNode }) => {
     const [isLoading, setResolving] = React.useState(true);
     const location = useLocation();
     const api = useApi();
-    const { accessToken  } = useAuth();
+    const { accessToken } = useAuth();
     const context = {
       ...tenant,
       isLoading: isLoading,
       configure: async (body: any) => {
         setResolving(true);
-        const data = {...body}
-        const ctx = {referrer: location.pathname}
+        const data = { ...body };
+        const ctx = { referrer: location.pathname };
         if (data.avatar !== undefined) {
           const form = new FormData();
           form.append("avatar", data.avatar);
-          await api.do(ctx,"PATCH", "identity", `/tenants/${tenant.tenantName}`, {
+          await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
             body: form,
-          })
+          });
           delete data.avatar;
         }
 
         if (Object.keys(data).length > 0) {
-          await api.do(ctx,"PATCH", "identity", `/tenants/${tenant.tenantName}`, {
+          await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
             body: data,
-          })
+          });
         }
 
-        return tenant.resolve()
+        return tenant.resolve();
       },
       resolve: async () => {
         setResolving(true);
-        const ctx = {referrer: location.pathname}
-        const tenant = { ...await api.do(ctx,"GET", "identity", "/me") };
+        const ctx = { referrer: location.pathname };
+        const tenant = { ...(await api.do(ctx, "GET", "identity", "/me")) };
         setTenant(tenant);
         setResolving(false);
         Sentry.setUser({ id: tenant.tenantId, tenantName: tenant.tenantName });
@@ -204,7 +204,7 @@ export const ApiProvider = (props: { children?: React.ReactNode }) => {
       onReject: (e) => {
         send(e);
 
-        const code = errorCode(e)
+        const code = errorCode(e);
         if (code === 400) {
           return Promise.resolve(e);
         }

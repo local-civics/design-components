@@ -4,15 +4,15 @@ import { useMessage } from "../../../contexts/Message";
 import { builder } from "../../../utils/classname/classname";
 
 export type OpenReflectionProps = {
-  activityId?: string
-  startTime?: string
-  reflection?: string
-  pathway?: string
-  rating?: number
-  xp?: number
-  headline?: string
-  imageURL?: string
-  canReflect?: boolean
+  activityId?: string;
+  startTime?: string;
+  reflection?: string;
+  pathway?: string;
+  rating?: number;
+  xp?: number;
+  headline?: string;
+  imageURL?: string;
+  canReflect?: boolean;
 
   onClose?: () => void;
   onSave?: (reflection: string, rating: number) => Promise<void>;
@@ -25,8 +25,7 @@ export const OpenReflection = (props: OpenReflectionProps) => {
     rating: props.rating,
     reflection: props.reflection,
   });
-  const hasChanges =
-    props.canReflect && (props.rating !== reaction.rating || props.reflection !== reaction.reflection);
+  const hasChanges = props.canReflect && (props.rating !== reaction.rating || props.reflection !== reaction.reflection);
   const setFeedback = (feedback: string) => setReaction({ ...reaction, reflection: feedback });
   const setConfidence = (confidence: number) => setReaction({ ...reaction, rating: confidence });
 
@@ -121,11 +120,7 @@ const Confidence = (props: OpenReflectionProps & { setConfidence?: (confidence: 
   const buttons = Array.from({ length: maxPoints }, (_, i) => {
     const color = i < confidence ? "text-sky-200" : "text-slate-200";
     return (
-      <div
-        key={i}
-        onMouseEnter={() => setConfidence(i + 1)}
-        onMouseLeave={() => setConfidence(props.rating || -1)}
-      >
+      <div key={i} onMouseEnter={() => setConfidence(i + 1)} onMouseLeave={() => setConfidence(props.rating || -1)}>
         <div
           className={`cursor-pointer h-4 w-4 ${color}`}
           onClick={() => props.setConfidence && props.setConfidence(i + 1)}

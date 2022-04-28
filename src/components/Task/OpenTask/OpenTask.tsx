@@ -6,8 +6,8 @@ import { builder } from "../../../utils/classname/classname";
  * The properties for the task.
  */
 export type OpenTaskProps = {
-  taskId?: string
-  headline?: string
+  taskId?: string;
+  headline?: string;
   isLoading?: boolean;
   status?: string;
   onStart?: () => void;

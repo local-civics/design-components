@@ -27,8 +27,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const location = useLocation();
   const auth = useAuth();
   const page = props.page || "profile";
-  const primaryOrganization =
-    tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
+  const primaryOrganization = tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
   React.useEffect(() => {
     if (tenant.isLoading) {
       return;
@@ -45,23 +44,24 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
         navigate(`/onboarding`);
       }
     }
-  }, [
-    location.pathname,
-    tenant.nickname,
-    tenant.organizations,
-    tenant.statement,
-    tenant.givenName,
-    tenant.persona,
-  ]);
+  }, [location.pathname, tenant.nickname, tenant.organizations, tenant.statement, tenant.givenName, tenant.persona]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
       <Loader isLoading={tenant.isLoading}>
         <NavBar>
           <NavLink disabled={props.disabled} name="home" path="/" />
-          <NavLink name="faq" onClick={() => window.open("https://docs.google.com/document/d/19d8bO2D_KSxyvT8HPS8RqJTRMla6jgBtVPV5HgcSAk8/view", "_blank")}/>
-          <NavLink name="privacy" onClick={() => window.open("https://www.localcivics.io/privacy-policy", "_blank")}/>
-          <NavLink name="terms" onClick={() => window.open("https://www.localcivics.io/terms-of-service", "_blank")}/>
+          <NavLink
+            name="faq"
+            onClick={() =>
+              window.open(
+                "https://docs.google.com/document/d/19d8bO2D_KSxyvT8HPS8RqJTRMla6jgBtVPV5HgcSAk8/view",
+                "_blank"
+              )
+            }
+          />
+          <NavLink name="privacy" onClick={() => window.open("https://www.localcivics.io/privacy-policy", "_blank")} />
+          <NavLink name="terms" onClick={() => window.open("https://www.localcivics.io/terms-of-service", "_blank")} />
           <NavLink
             disabled={props.disabled}
             name="profile"

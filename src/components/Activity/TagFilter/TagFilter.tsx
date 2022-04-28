@@ -65,7 +65,9 @@ export const TagFilter = (props: TagFilterProps) => {
                 const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600";
                 const className = [base, bg].join(" ");
                 return (
-                    <button onClick={() => onTagClick(tag)} key={tag + i} className={className}>{tag}</button>
+                  <button onClick={() => onTagClick(tag)} key={tag + i} className={className}>
+                    {tag}
+                  </button>
                 );
               })}
             </div>
@@ -83,7 +85,9 @@ export const TagFilter = (props: TagFilterProps) => {
                 const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600";
                 const className = [base, bg].join(" ");
                 return (
-                  <button onClick={() => onTagClick(tag)} key={tag + i} className={className}>{tag}</button>
+                  <button onClick={() => onTagClick(tag)} key={tag + i} className={className}>
+                    {tag}
+                  </button>
                 );
               })}
             </div>
@@ -101,7 +105,9 @@ export const TagFilter = (props: TagFilterProps) => {
                 const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600";
                 const className = [base, bg].join(" ");
                 return (
-                    <button onClick={() => onTagClick(tag)} key={tag + i} className={className}>{tag}</button>
+                  <button onClick={() => onTagClick(tag)} key={tag + i} className={className}>
+                    {tag}
+                  </button>
                 );
               })}
             </div>

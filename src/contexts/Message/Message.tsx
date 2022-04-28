@@ -77,7 +77,7 @@ const useContext = (value?: string) => {
     const msg: Message = { ...context };
     if (message instanceof Error) {
       msg.severity = "error";
-      const code = errorCode(message)
+      const code = errorCode(message);
       if (code === 400) {
         msg.title = "Try again";
         msg.description = message.message;

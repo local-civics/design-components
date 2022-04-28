@@ -21,8 +21,7 @@ export const TaskPreview = (props: TaskPreviewProps) => {
   const border = props.status === "done" ? "border rounded border-gray-200" : "border rounded border-gray-200";
   const opacity = props.status === "done" ? "opacity-50" : "";
   const icon: IconName = props.status === "done" ? "accept" : "circle";
-  const cursor =
-    props.status === "done"  ? "" : "cursor-pointer hover:text-cyan-400 hover:border-gray-300";
+  const cursor = props.status === "done" ? "" : "cursor-pointer hover:text-cyan-400 hover:border-gray-300";
   return (
     <div
       onClick={() => props.onAction && props.onAction()}

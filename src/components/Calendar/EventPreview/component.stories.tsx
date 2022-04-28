@@ -12,7 +12,9 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<EventPreviewProps> = (args) => <EventPreview headline="EventPreview #1" pathway="policy & government" {...args} />;
+const Template: Story<EventPreviewProps> = (args) => (
+  <EventPreview headline="EventPreview #1" pathway="policy & government" {...args} />
+);
 
 /**
  * Component view

@@ -1,6 +1,6 @@
 import React from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {useApi} from "../../contexts/App";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useApi } from "../../contexts/App";
 import { TaskPreview } from "../../components/Task/TaskPreview/TaskPreview";
 import { OpenBadge } from "../../components/Badge/OpenBadge/OpenBadge";
 
@@ -10,41 +10,30 @@ import { OpenBadge } from "../../components/Badge/OpenBadge/OpenBadge";
  */
 export const BadgeContainer = () => {
   const navigate = useNavigate();
-  const params = useParams()
-  const tenantName = params.tenantName
+  const params = useParams();
+  const tenantName = params.tenantName;
   const badgeId = params.badgeId;
-  if(!tenantName || !badgeId){
-    throw new Error("request must missing required params")
+  if (!tenantName || !badgeId) {
+    throw new Error("request must missing required params");
   }
   const badge = useBadge(tenantName, badgeId);
-  const startBadge = useStartBadge(tenantName, badgeId)
+  const startBadge = useStartBadge(tenantName, badgeId);
   return {
     OpenBadge: () => (
-      <OpenBadge
-        { ...badge }
-        onStart={startBadge}
-        showTasks={!!badge.tasks && badge.tasks.length > 0}
-      >
+      <OpenBadge {...badge} onStart={startBadge} showTasks={!!badge.tasks && badge.tasks.length > 0}>
         {badge.tasks &&
           badge.tasks.map((task: any) => {
-            const search = new URLSearchParams()
-            if(task?.activityName !== ""){
-                search.set("headline", task?.activityName)
+            const search = new URLSearchParams();
+            if (task?.activityName !== "") {
+              search.set("headline", task?.activityName);
             }
 
-            if(task?.directory !== ""){
-              search.set("directory", task?.directory)
+            if (task?.directory !== "") {
+              search.set("directory", task?.directory);
             }
 
             const link = `/tenants/${tenantName}/activities?${search.toString()}`;
-            return (
-              <TaskPreview
-                key={`${task.criterionId}`}
-                action
-                {...task}
-                onAction={() => link && navigate(link)}
-              />
-            );
+            return <TaskPreview key={`${task.criterionId}`} action {...task} onAction={() => link && navigate(link)} />;
           })}
       </OpenBadge>
     ),
@@ -53,27 +42,38 @@ export const BadgeContainer = () => {
 
 // A hook to fetch a badge
 const useBadge = (tenantName: string, badgeId: string) => {
-  const [badge, setBadge] = React.useState({} as any)
+  const [badge, setBadge] = React.useState({} as any);
   const api = useApi();
-  const location = useLocation()
+  const location = useLocation();
   React.useEffect(() => {
+    if (badgeId === "onboarding") {
+      setBadge({
+        badgeId: "onboarding",
+        isAwarded: true,
+        headline: "Onboarding Badge",
+        summary: "Getting started with Local",
+        imageURL: "https://cdn.localcivics.io/badges/onboarding.png",
+      });
+      return;
+    }
+
     (async () => {
-      const ctx = {referrer: location.pathname}
-      setBadge({ ...await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/badges/${badgeId}`)})
+      const ctx = { referrer: location.pathname };
+      setBadge({ ...(await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/badges/${badgeId}`)) });
     })();
 
     return () => setBadge({});
-  }, [tenantName, badgeId])
+  }, [tenantName, badgeId]);
 
-  return badge
-}
+  return badge;
+};
 
 // A hook to start a badge
 const useStartBadge = (tenantName: string, badgeId: string) => {
   const api = useApi();
-  const location = useLocation()
+  const location = useLocation();
   return async () => {
-    const ctx = {referrer: location.pathname}
-    await api.do(ctx, "POST", "curriculum", `/tenants/${tenantName}/badges/${badgeId}`)
-  }
-}
+    const ctx = { referrer: location.pathname };
+    await api.do(ctx, "POST", "curriculum", `/tenants/${tenantName}/badges/${badgeId}`);
+  };
+};

@@ -1,6 +1,5 @@
 import React from "react";
 import { Board, Tab } from "../../index";
-import { TaskProps } from "../../Profile/Task/Task";
 
 /**
  * The properties for the task workflow.
@@ -11,7 +10,7 @@ export type TaskListProps = {
   onTodo?: () => void;
   onInProgress?: () => void;
   onDone?: () => void;
-  children?: React.ReactElement<TaskProps> | React.ReactElement<TaskProps>[];
+  children?: React.ReactNode;
 };
 
 /**

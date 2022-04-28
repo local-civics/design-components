@@ -10,12 +10,7 @@ export type RegistrationProps = {
   grade?: number;
   impactStatement?: string;
   persona?: string;
-  onRegister?: (changes: {
-    givenName?: string;
-    familyName?: string;
-    grade?: number;
-    impactStatement?: string;
-  }) => void;
+  onRegister?: (changes: { givenName?: string; familyName?: string; grade?: number; impactStatement?: string }) => void;
 };
 
 /**

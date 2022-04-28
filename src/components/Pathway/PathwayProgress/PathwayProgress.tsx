@@ -12,9 +12,9 @@ export type PathwayProgressHeight = "sm" | "md";
  * The properties for the pathway progress.
  */
 export type PathwayProgressProps = {
-  xp?: number
-  nextXP?: number
-  level?: number
+  xp?: number;
+  nextXP?: number;
+  level?: number;
   open?: boolean;
   title?: string;
   icon?: IconName;

@@ -5,12 +5,12 @@ import { Button, Modal } from "../../index";
  * The properties for the edit modal.
  */
 export type OpenSettingsProps = {
-  tenantName?: string
-  givenName?: string
-  familyName?: string
-  grade?: number
-  impactStatement?: string
-  avatarURL?: string
+  tenantName?: string;
+  givenName?: string;
+  familyName?: string;
+  grade?: number;
+  impactStatement?: string;
+  avatarURL?: string;
   accessToken?: string;
   isLoading?: boolean;
   visible?: boolean;

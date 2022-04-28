@@ -1,12 +1,12 @@
 import React, { FunctionComponent } from "react";
-import {PathwayButton} from "../PathwayButton/PathwayButton";
+import { PathwayButton } from "../PathwayButton/PathwayButton";
 
 /**
  * PathwayFilter props
  */
 export interface PathwayFilterProps {
-  title: string
-  pathways?: string[]
+  title: string;
+  pathways?: string[];
   onChange?: (pathways: string[]) => void;
 }
 
@@ -18,21 +18,23 @@ export interface PathwayFilterProps {
 export const PathwayFilter: FunctionComponent<PathwayFilterProps> = (props) => {
   const [pathways, setPathways] = React.useState({} as Record<string, boolean>);
   const togglePathway = (pathway: string) => {
-    setPathways({ ...pathways, [pathway]: !pathways[pathway] })
-    if(props.onChange){
-      props.onChange(Object.entries(pathways)
+    setPathways({ ...pathways, [pathway]: !pathways[pathway] });
+    if (props.onChange) {
+      props.onChange(
+        Object.entries(pathways)
           .filter(([, present]) => present)
-          .map(([v]) => v))
+          .map(([v]) => v)
+      );
     }
   };
 
-  const pathwaysKey = JSON.stringify(props.pathways)
+  const pathwaysKey = JSON.stringify(props.pathways);
   React.useEffect(() => {
-    setPathways({})
+    setPathways({});
     props.pathways?.map((pathway) => {
-      togglePathway(pathway)
-    })
-  }, [pathwaysKey])
+      togglePathway(pathway);
+    });
+  }, [pathwaysKey]);
 
   return (
     <div
@@ -53,21 +55,25 @@ export const PathwayFilter: FunctionComponent<PathwayFilterProps> = (props) => {
 
         <div className="grid grid-cols-1">
           <PathwayButton
-              onClick={() => togglePathway("policy & government")}
-              active={pathways["policy & government"]}
-              name="policy & government"
+            onClick={() => togglePathway("policy & government")}
+            active={pathways["policy & government"]}
+            name="policy & government"
           />
           <PathwayButton
-              onClick={() => togglePathway("arts & culture")}
-              active={pathways["arts & culture"]}
-              name="arts & culture"
+            onClick={() => togglePathway("arts & culture")}
+            active={pathways["arts & culture"]}
+            name="arts & culture"
           />
-          <PathwayButton onClick={() => togglePathway("recreation")} active={pathways["recreation"]} name="recreation" />
+          <PathwayButton
+            onClick={() => togglePathway("recreation")}
+            active={pathways["recreation"]}
+            name="recreation"
+          />
           <PathwayButton onClick={() => togglePathway("volunteer")} active={pathways["volunteer"]} name="volunteer" />
           <PathwayButton
-              onClick={() => togglePathway("college & career")}
-              active={pathways["college & career"]}
-              name="college & career"
+            onClick={() => togglePathway("college & career")}
+            active={pathways["college & career"]}
+            name="college & career"
           />
         </div>
       </div>

@@ -6,14 +6,14 @@ import { builder } from "../../../utils/classname/classname";
  * The properties for the badge.
  */
 export type OpenBadgeProps = {
-  badgeId?: string
-  headline?: string
-  imageURL?: string
-  summary?: string
-  isLocked?: boolean
-  isAwarded?: boolean
-  isInProgress?: boolean
-  showTasks?: boolean
+  badgeId?: string;
+  headline?: string;
+  imageURL?: string;
+  summary?: string;
+  isLocked?: boolean;
+  isAwarded?: boolean;
+  isInProgress?: boolean;
+  showTasks?: boolean;
   children?: React.ReactNode;
   onStart?: () => void;
 };
@@ -44,19 +44,19 @@ export const OpenBadge = (props: OpenBadgeProps) => {
     }
 
     return (
-        <div className="flex w-full pt-4 pb-2">
-          <div className="grow">
-            <Button
-                spacing="lg"
-                border="rounded"
-                color="sky"
-                theme="dark"
-                text="Start"
-                size="full:sm"
-                onClick={props.onStart}
-            />
-          </div>
+      <div className="flex w-full pt-4 pb-2">
+        <div className="grow">
+          <Button
+            spacing="lg"
+            border="rounded"
+            color="sky"
+            theme="dark"
+            text="Start"
+            size="full:sm"
+            onClick={props.onStart}
+          />
         </div>
+      </div>
     );
   };
 

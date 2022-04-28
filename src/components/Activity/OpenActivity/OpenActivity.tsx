@@ -6,20 +6,20 @@ import { builder } from "../../../utils/classname/classname";
  * OpenActivityProps
  */
 export type OpenActivityProps = {
-  activityId?: string
-  headline?: string
-  imageURL?: string
-  pathway?: string
-  xp?: number
-  summary?: string
-  skills?: string[]
-  tags?: string[]
-  startTime?: string
-  endTime?: string
-  link?: string
-  address?: string
-  isSubscribed?: boolean
-  canReflect?: boolean
+  activityId?: string;
+  headline?: string;
+  imageURL?: string;
+  pathway?: string;
+  xp?: number;
+  summary?: string;
+  skills?: string[];
+  tags?: string[];
+  startTime?: string;
+  endTime?: string;
+  link?: string;
+  address?: string;
+  isSubscribed?: boolean;
+  canReflect?: boolean;
   milestone?: boolean;
   onRegister?: () => void;
   onUnregister?: () => void;
@@ -36,48 +36,50 @@ export type OpenActivityProps = {
 export const OpenActivity = (props: OpenActivityProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.activityId, "min-h-[20rem]").build();
   const ActionButton = () => {
-    const now = new Date()
-    const inProgress = props.milestone || (props.startTime && props.endTime) && now >= new Date(props.startTime) && now <= new Date(props.endTime)
-    const status = inProgress ? "in-progress" : props.isSubscribed ? "subscribed" : "unsubscribed"
+    const now = new Date();
+    const inProgress =
+      props.milestone ||
+      (props.startTime && props.endTime && now >= new Date(props.startTime) && now <= new Date(props.endTime));
+    const status = inProgress ? "in-progress" : props.isSubscribed ? "subscribed" : "unsubscribed";
     switch (status) {
       case "in-progress":
         return (
-            <Button
-                onClick={props.onLaunch}
-                theme="dark"
-                border="rounded"
-                size="md"
-                spacing="md"
-                color="green"
-                text="Launch"
-            />
+          <Button
+            onClick={props.onLaunch}
+            theme="dark"
+            border="rounded"
+            size="md"
+            spacing="md"
+            color="green"
+            text="Launch"
+          />
         );
       case "unsubscribed":
         return (
-            <Button
-                onClick={props.onRegister}
-                theme="dark"
-                border="rounded"
-                size="md"
-                spacing="md"
-                color="sky"
-                text="Register"
-            />
+          <Button
+            onClick={props.onRegister}
+            theme="dark"
+            border="rounded"
+            size="md"
+            spacing="md"
+            color="sky"
+            text="Register"
+          />
         );
       case "subscribed":
         return (
-            <Button
-                onClick={props.onUnregister}
-                theme="dark"
-                border="rounded"
-                size="md"
-                spacing="md"
-                color="slate"
-                text="Registered"
-            />
+          <Button
+            onClick={props.onUnregister}
+            theme="dark"
+            border="rounded"
+            size="md"
+            spacing="md"
+            color="slate"
+            text="Registered"
+          />
         );
     }
-  }
+  };
 
   return (
     <Modal visible isLoading={!props.activityId}>
@@ -101,14 +103,14 @@ export const OpenActivity = (props: OpenActivityProps) => {
           <div className="max-h-[12rem]">
             <ActionButton />
             <Button
-                disabled={!props.canReflect}
-                spacing="md"
-                border="rounded"
-                color="sky"
-                theme="dark"
-                text="Reflect"
-                size="md"
-                onClick={props.onReflect}
+              disabled={!props.canReflect}
+              spacing="md"
+              border="rounded"
+              color="sky"
+              theme="dark"
+              text="Reflect"
+              size="md"
+              onClick={props.onReflect}
             />
           </div>
         </div>

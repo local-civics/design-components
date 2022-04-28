@@ -6,14 +6,14 @@ import { builder } from "../../../utils/classname/classname";
  * The properties for the badge.
  */
 export type BadgePreviewProps = {
-  isInProgress?: boolean
-  isAwarded?: boolean
-  isLocked?: boolean
+  isInProgress?: boolean;
+  isAwarded?: boolean;
+  isLocked?: boolean;
   isOpen?: boolean;
 
-  headline?: string
+  headline?: string;
   icon?: IconName;
-  imageURL?: string
+  imageURL?: string;
 
   onOpen?: () => void;
 };
@@ -46,8 +46,7 @@ export const BadgePreview = (props: BadgePreviewProps) => {
     .if(!!props.isOpen, "cursor-pointer hover:bg-gray-50")
     .build();
 
-  const onOpen = () =>
-    (props.isAwarded || !props.isLocked) && props.isOpen && props.onOpen && props.onOpen();
+  const onOpen = () => (props.isAwarded || !props.isLocked) && props.isOpen && props.onOpen && props.onOpen();
 
   return (
     <div className={className}>
