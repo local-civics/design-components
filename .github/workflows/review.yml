@@ -3,7 +3,7 @@
 # Workflow name
 name: "Review"
 
-# Event for the workflow
+# EventPreview for the workflow
 on:
   pull_request:
     branches:
@@ -23,6 +23,8 @@ jobs:
           node-version: "16"
       - name: Install dependencies
         run: npm install
+      - name: Test
+        run: npm test
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
         uses: chromaui/action@v1

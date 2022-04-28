@@ -7,7 +7,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Task/TaskModal",
+  title: "Library/TaskPreview/TaskModal",
   component: TaskModal,
 };
 
@@ -16,7 +16,7 @@ export default {
  */
 const Template: Story<TaskModalProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <TaskModal visible title="Onboarding Task" {...args} />
+    <TaskModal visible title="Onboarding TaskPreview" {...args} />
     <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
   </div>
 );

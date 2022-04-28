@@ -9,7 +9,7 @@ import { useWorkspace } from "../../../Profile/containers/WorkspaceContainer/Wor
 import { TaskModal } from "../../components/TaskModal/TaskModal";
 
 export const TaskContainer = () => {
-  const { identity, workspace } = useWorkspace();
+  const { tenant, workspace } = useWorkspace();
   const primaryOrganization =
     workspace?.organizations && workspace.organizations.length > 0 ? workspace.organizations[0] : {};
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export const TaskContainer = () => {
   }, [workspace?.id]);
 
   const task = tasks.length > 0 ? tasks[0] : null;
-  const nextURL = actionURL(identity.nickname, primaryOrganization, task);
+  const nextURL = actionURL(tenant.nickname, primaryOrganization, task);
   const launch = () => nextURL && navigate(nextURL);
 
   return {
@@ -64,7 +64,7 @@ export const TaskContainer = () => {
       <TaskModal
         {...task}
         status={status}
-        resolving={task === null}
+        isLoading={task === null}
         visible
         disabled={false}
         onContinue={launch}

@@ -1,7 +1,7 @@
 import { BadgePreview, OrganizationSearchView, TaskView, TenantPreview, WorkspaceView } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useIdentity } from "../../../../contexts/App";
+import { useApi, useTenant } from "../../../../contexts/App";
 import { AboutWidget } from "../../components/AboutWidget/AboutWidget";
 import { AchievementWidget } from "../../components/AchievementWidget/AchievementWidget";
 import { ActivityProgress } from "../../components/ActivityProgress/ActivityProgress";
@@ -19,18 +19,18 @@ import { TaskWorkflow } from "../../components/TaskWorkflow/TaskWorkflow";
  * @constructor
  */
 export const WorkspaceContainer = () => {
-  const { identity, workspace, navigation } = useWorkspace();
+  const { tenant, workspace, navigation } = useWorkspace();
   const primaryOrganization =
     workspace?.organizations && workspace.organizations.length > 0 ? workspace.organizations[0] : {};
   const navigate = useNavigate();
   const awards = [...workspace?.awards || []];
   if (
-    identity.nickname &&
-    identity.organizations &&
-    identity.interests &&
-    identity.givenName &&
-    identity.familyName &&
-    identity.avatarURL
+    tenant.nickname &&
+    tenant.organizations &&
+    tenant.interests &&
+    tenant.givenName &&
+    tenant.familyName &&
+    tenant.avatarURL
   ) {
     awards.push({
       id: 0,
@@ -44,10 +44,10 @@ export const WorkspaceContainer = () => {
   const badges = awards.map((badge) => (
     <BadgeComponent
       {...badge}
-      open={identity.nickname === workspace?.nickname}
+      open={tenant.nickname === workspace?.nickname}
       award
       key={`${badge.marketId}:${badge.id}:${badge.level}`}
-      onOpen={() => badge.id && navigate(`/tenants/${identity.nickname}/${badgePath(primaryOrganization, badge)}`)}
+      onOpen={() => badge.id && navigate(`/tenants/${tenant.nickname}/${badgePath(primaryOrganization, badge)}`)}
     />
   ));
 
@@ -56,9 +56,9 @@ export const WorkspaceContainer = () => {
       <BadgeComponent
         {...badge}
         objective
-        open={identity.nickname === workspace?.nickname}
+        open={tenant.nickname === workspace?.nickname}
         key={`${badge.marketId}:${badge.id}:${badge.level}`}
-        onOpen={() => badge.id && navigate(`/tenants/${identity.nickname}/${badgePath(primaryOrganization, badge)}`)}
+        onOpen={() => badge.id && navigate(`/tenants/${tenant.nickname}/${badgePath(primaryOrganization, badge)}`)}
       />
     ))
   );
@@ -68,9 +68,9 @@ export const WorkspaceContainer = () => {
       <BadgeComponent
         {...badge}
         incentive
-        open={identity.nickname === workspace?.nickname}
+        open={tenant.nickname === workspace?.nickname}
         key={`${badge.marketId}:${badge.id}:${badge.level}`}
-        onOpen={() => badge.id && navigate(`/tenants/${identity.nickname}/${badgePath(primaryOrganization, badge)}`)}
+        onOpen={() => badge.id && navigate(`/tenants/${tenant.nickname}/${badgePath(primaryOrganization, badge)}`)}
       />
     ))
   );
@@ -87,7 +87,7 @@ export const WorkspaceContainer = () => {
   return {
     ResidentWidget: () => (
       <ResidentWidget
-        resolving={workspace === null}
+        isLoading={workspace === null}
         avatarURL={workspace?.avatarURL}
         tenantName={workspace?.nickname}
         givenName={workspace?.givenName}
@@ -99,17 +99,17 @@ export const WorkspaceContainer = () => {
 
     AboutWidget: () => (
       <AboutWidget
-        resolving={workspace === null}
-        edit={workspace?.nickname === identity?.nickname}
+        isLoading={workspace === null}
+        edit={workspace?.nickname === tenant?.nickname}
         impactStatement={workspace?.statement}
         placeName={primaryOrganization.location}
         communityName={primaryOrganization.name || primaryOrganization.nickname}
-        onEdit={() => identity?.nickname && navigate(`/tenants/${identity.nickname}/settings`)}
+        onEdit={() => tenant?.nickname && navigate(`/tenants/${tenant.nickname}/settings`)}
       />
     ),
 
     PathwayWidget: () => (
-      <PathwayWidget resolving={workspace?.impact === null}>
+      <PathwayWidget isLoading={workspace?.impact === null}>
         <ActivityProgress {...workspace?.impact?.career} icon="college & career" title="college & career" />
         <ActivityProgress {...workspace?.impact?.policy} icon="policy & government" title="policy & government" />
         <ActivityProgress {...workspace?.impact?.culture} icon="arts & culture" title="arts & culture" />
@@ -118,11 +118,11 @@ export const WorkspaceContainer = () => {
       </PathwayWidget>
     ),
 
-    ImpactWidget: () => <ImpactWidget resolving={workspace?.impact === null} {...workspace?.impact} />,
+    ImpactWidget: () => <ImpactWidget isLoading={workspace?.impact === null} {...workspace?.impact} />,
 
     AchievementWidget: () => (
       <AchievementWidget
-        resolving={workspace?.impact === null}
+        isLoading={workspace?.impact === null}
         badges={awards?.length}
         milestones={workspace?.impact?.milestones}
         reflections={workspace?.impact?.reflections}
@@ -131,17 +131,17 @@ export const WorkspaceContainer = () => {
 
     Dashboard: () => (
       <Dashboard
-        disabled={workspace?.nickname !== identity?.nickname}
-        resolving={workspace === null}
+        disabled={workspace?.nickname !== tenant?.nickname}
+        isLoading={workspace === null}
         active={navigation.tab}
         onBadgeWorkflow={() => navigation.setTab("badges")}
         onTaskWorkflow={() => navigation.setTab("tasks")}
       >
         {navigation.tab === "badges" && <BadgeWorkflow>{badges}</BadgeWorkflow>}
 
-        {navigation.tab === "tasks" && workspace?.nickname === identity?.nickname && (
+        {navigation.tab === "tasks" && workspace?.nickname === tenant?.nickname && (
           <TaskWorkflow
-            resolving={workspace === null}
+            isLoading={workspace === null}
             active={navigation.status}
             onDone={() => navigation.setStatus("done")}
             onTodo={() => navigation.setStatus("todo")}
@@ -153,7 +153,7 @@ export const WorkspaceContainer = () => {
                 open
                 status={navigation.status}
                 key={`${task.marketId}:${task.badgeId}:${task.level}:${task.title}`}
-                onOpen={() => navigate(`/tenants/${identity.nickname}/${taskPath(primaryOrganization, task)}`)}
+                onOpen={() => navigate(`/tenants/${tenant.nickname}/${taskPath(primaryOrganization, task)}`)}
               />
             ))}
           </TaskWorkflow>
@@ -170,25 +170,25 @@ export const useWorkspace = () => {
   const params = useParams();
   const tenantName = params.tenantName;
   const api = useApi();
-  const identity = useIdentity();
-  const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
+  const tenant = useTenant();
+  const po = tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
   const [tab, setTab] = React.useState(getTab(params.tab || "badges"));
   const [status, setStatus] = React.useState(getStatus(params.status || "todo"));
   const [workspace, setWorkspace] = React.useState(null as (WorkspaceView & TenantPreview) | null);
   React.useEffect(() => {
-    if (identity.nickname && tenantName) {
+    if (tenant.nickname && tenantName) {
       (async () => {
         const space = await api.curriculum.viewWorkspace(tenantName || "", po.nickname || "");
-        const tenant = await api.identity.viewTenant(tenantName);
+        const tenant = await api.tenant.viewTenant(tenantName);
         setWorkspace({ ...space, ...tenant });
       })();
     } else {
       setWorkspace(null);
     }
-  }, [tenantName, identity?.nickname]);
+  }, [tenantName, tenant?.nickname]);
 
   return {
-    identity,
+    tenant,
     workspace,
     navigation: {
       tab,

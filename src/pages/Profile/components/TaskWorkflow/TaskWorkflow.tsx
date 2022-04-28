@@ -6,7 +6,7 @@ import { TaskProps } from "../Task/Task";
  * The properties for the badge workflow.
  */
 export type TaskWorkflowProps = {
-  resolving?: boolean;
+  isLoading?: boolean;
   active?: "todo" | "in-progress" | "done";
   onTodo?: () => void;
   onInProgress?: () => void;
@@ -44,7 +44,7 @@ export const TaskWorkflow = (props: TaskWorkflowProps) => {
   );
   return (
     <div className="h-[16rem] lg:h-[22rem] w-full">
-      <Board resolving={props.resolving} tabs={tabs} workflow={workflow} secondary />
+      <Board isLoading={props.isLoading} tabs={tabs} workflow={workflow} secondary />
     </div>
   );
 };

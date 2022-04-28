@@ -5,7 +5,7 @@ import { ActivityProgressProps } from "../ActivityProgress/ActivityProgress";
  * The properties for the pathway progress widget
  */
 export interface PathwayWidgetProps {
-  resolving?: boolean;
+  isLoading?: boolean;
   edit?: boolean;
   onHelp?: () => void;
   children?: React.ReactElement<ActivityProgressProps> | React.ReactElement<ActivityProgressProps>[];
@@ -19,7 +19,7 @@ export interface PathwayWidgetProps {
 export const PathwayWidget = (props: PathwayWidgetProps) => {
   const hasContent = props.children && React.Children.count(props.children) > 0;
   return (
-    <Widget resolving={props.resolving}>
+    <Widget isLoading={props.isLoading}>
       <WidgetHeader>
         <WidgetTitle icon="pathway">Pathways</WidgetTitle>
         <WidgetHeaderLink onClick={props.onHelp} display={props.edit}>

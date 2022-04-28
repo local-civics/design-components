@@ -8,7 +8,7 @@ import { builder } from "../../../../utils/classname/classname";
  */
 export type TaskModalProps = TaskView & {
   disabled?: boolean;
-  resolving?: boolean;
+  isLoading?: boolean;
   visible?: boolean;
   status?: string;
   onClose?: () => void;
@@ -23,7 +23,7 @@ export type TaskModalProps = TaskView & {
  * @constructor
  */
 export const TaskModal = (props: TaskModalProps) => {
-  const className = builder("w-full").if(!!props.resolving, "min-h-[20rem]").build();
+  const className = builder("w-full").if(!!props.isLoading, "min-h-[20rem]").build();
 
   const TaskButton = () => {
     if (props.disabled) {
@@ -96,7 +96,7 @@ export const TaskModal = (props: TaskModalProps) => {
   };
 
   return (
-    <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
+    <Modal isLoading={props.isLoading} visible={props.visible} onClose={props.onClose}>
       <div className={className}>
         <div className="px-4 pb-4 border-b border-gray-200 w-[18rem] md:w-[24rem] lg:w-[28rem]">
           <div className="flex items-center gap-x-2 -mt-4">

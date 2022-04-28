@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useApi, useAuth, useIdentity } from "../../../../contexts/App";
+import { useApi, useAuth, useTenant } from "../../../../contexts/App";
 import { useMessage } from "../../../../contexts/Message";
 import { EditModal } from "../../components/EditModal/EditModal";
 
@@ -9,7 +9,7 @@ import { EditModal } from "../../components/EditModal/EditModal";
  * @constructor
  */
 export const EditContainer = () => {
-  const identity = useIdentity();
+  const tenant = useTenant();
   const api = useApi();
   const auth = useAuth();
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const EditContainer = () => {
     newInterests?: string[];
     newAvatar?: Blob;
   }) => {
-    if (!identity.nickname || identity.resolving) {
+    if (!tenant.nickname || tenant.isLoading) {
       return;
     }
 
@@ -35,8 +35,8 @@ export const EditContainer = () => {
       return;
     }
 
-    await api.identity.configureTenant(identity.nickname || "", changes).then(close);
-    await identity.digest();
+    await api.tenant.configureTenant(tenant.nickname || "", changes).then(close);
+    await tenant.digest();
 
     message.send(`We've processed your changes.`, {
       severity: "success",
@@ -46,6 +46,6 @@ export const EditContainer = () => {
   };
 
   return {
-    EditModal: () => <EditModal {...identity} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
+    EditModal: () => <EditModal {...tenant} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
   };
 };

@@ -2,12 +2,13 @@ import React from "react";
 import { builder } from "../../utils/classname/classname";
 import { Button } from "../Button/Button";
 import { Loader } from "../Loader/Loader";
+import {useNavigate} from "react-router-dom";
 
 /**
  * The properties for the modal.
  */
 export type ModalProps = {
-  resolving?: boolean;
+  isLoading?: boolean;
   visible?: boolean;
   top?: boolean;
   plain?: boolean;
@@ -19,6 +20,7 @@ export type ModalProps = {
  * A component for displaying modals
  */
 export const Modal = (props: ModalProps) => {
+  const navigate = useNavigate()
   const className = builder(
     "font-proxima grid grid-cols-1 overscroll-contain justify-items-center fixed top-0 left-0 px-4 md:px-2"
   )
@@ -32,17 +34,24 @@ export const Modal = (props: ModalProps) => {
 
   const contentClassName = builder().if(!props.plain, "shadow-md bg-white overflow-hidden rounded-md relative").build();
 
+  const close = () => {
+    if(props.onClose){
+      props.onClose()
+    }
+    navigate(-1)
+  }
+
   return (
     <div className={className}>
       <div className={contentClassName}>
         <div className="grid grid-cols-1 gap-y-2">
           {props.onClose && (
             <div className="justify-self-end mx-2 mt-2 z-30">
-              <Button size="xs" filter="none" icon="menu-close" onClick={props.onClose} />
+              <Button size="xs" filter="none" icon="menu-close" onClick={close} />
             </div>
           )}
 
-          <Loader isLoading={props.resolving}>{props.children}</Loader>
+          <Loader isLoading={props.isLoading}>{props.children}</Loader>
         </div>
       </div>
     </div>

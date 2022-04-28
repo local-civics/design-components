@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { NavBar, NavLink } from "../../components";
-import { useAuth, useIdentity } from "../../contexts/App";
+import { useAuth, useTenant } from "../../contexts/App";
 
 /**
  * The properties for the home layout
@@ -17,19 +17,19 @@ export type HomeLayoutProps = {
  */
 export const HomeLayout = (props: HomeLayoutProps) => {
   const auth = useAuth();
-  const identity = useIdentity();
+  const tenant = useTenant();
   const navigate = useNavigate();
   React.useEffect(() => {
-    if (identity.resolving) {
+    if (tenant.isLoading) {
       return;
     }
 
-    if (identity.nickname) {
+    if (tenant.nickname) {
       if (location.pathname === `/`) {
-        navigate(`/tenants/${identity.nickname}`);
+        navigate(`/tenants/${tenant.nickname}`);
       }
     }
-  }, [location.pathname, identity.nickname]);
+  }, [location.pathname, tenant.nickname]);
 
   return (
     <main className="relative h-screen w-full overflow-hidden bg-white font-proxima">

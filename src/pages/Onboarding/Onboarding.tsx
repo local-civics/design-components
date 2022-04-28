@@ -1,4 +1,4 @@
-import { OnboardingContainer } from "./containers/OnboardingContainer/OnboardingContainer";
+import { OnboardingContainer } from "../../containers/Onboarding/OnboardingContainer";
 
 export const Onboarding = () => {
   const { Onboarding } = OnboardingContainer();

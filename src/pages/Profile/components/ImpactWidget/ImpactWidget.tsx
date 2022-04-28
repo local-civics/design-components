@@ -7,7 +7,7 @@ import { ActivityProgress } from "../ActivityProgress/ActivityProgress";
  * The properties for the impact score widget.
  */
 export type ImpactWidgetProps = ImpactView & {
-  resolving?: boolean;
+  isLoading?: boolean;
 };
 
 /**
@@ -17,7 +17,7 @@ export type ImpactWidgetProps = ImpactView & {
  */
 export const ImpactWidget = (props: ImpactWidgetProps) => {
   return (
-    <Widget height="sm" color="sky" borderless headless resolving={props.resolving}>
+    <Widget height="sm" color="sky" borderless headless isLoading={props.isLoading}>
       <WidgetHeader>
         <WidgetTitle icon="objective">Impact Score</WidgetTitle>
       </WidgetHeader>

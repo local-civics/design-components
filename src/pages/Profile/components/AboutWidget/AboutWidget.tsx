@@ -5,7 +5,7 @@ import { Icon, Widget, WidgetBody, WidgetHeader, WidgetHeaderLink, WidgetTitle }
  * The properties for the about widget.
  */
 export type AboutWidgetProps = {
-  resolving?: boolean;
+  isLoading?: boolean;
   edit?: boolean;
   impactStatement?: string;
   placeName?: string;
@@ -21,7 +21,7 @@ export type AboutWidgetProps = {
 export const AboutWidget = (props: AboutWidgetProps) => {
   const hasContent = props.impactStatement || props.placeName || props.communityName;
   return (
-    <Widget resolving={props.resolving}>
+    <Widget isLoading={props.isLoading}>
       <WidgetHeader>
         <WidgetTitle icon="profile">About Me</WidgetTitle>
         <WidgetHeaderLink onClick={props.onEdit} display={props.edit}>

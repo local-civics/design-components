@@ -1,25 +1,24 @@
-import { TenantPreview } from "@local-civics/js-client";
 import React from "react";
 import { Button, Modal } from "../../../../components";
 
 /**
  * The properties for the edit modal.
  */
-export type EditModalProps = TenantPreview & {
+export type EditModalProps = {
   accessToken?: string;
-  resolving?: boolean;
+  isLoading?: boolean;
   visible?: boolean;
   onClose?: () => void;
   onSave?: (changes?: {
-    newNickname?: string;
-    newGivenName?: string;
-    newFamilyName?: string;
-    newGrade?: number;
-    newSubject?: string;
-    newRole?: string;
-    newImpactStatement?: string;
-    newInterests?: string[];
-    newAvatar?: Blob;
+    name?: string;
+    givenName?: string;
+    familyName?: string;
+    grade?: number;
+    subject?: string;
+    persona?: string;
+    impactStatement?: string;
+    interests?: string[];
+    avatar?: Blob;
   }) => void;
 };
 
@@ -70,7 +69,7 @@ export const EditModal = (props: EditModalProps) => {
     });
 
   return (
-    <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
+    <Modal isLoading={props.isLoading} visible={props.visible} onClose={props.onClose}>
       <div className="grid grid-cols-1 gap-2 -mt-4 md:w-[30rem]">
         <p className="text-sm font-semibold text-slate-500 mb-2 px-2">Settings</p>
 

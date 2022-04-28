@@ -1,12 +1,10 @@
 import { Auth0ContextInterface, Auth0Provider, useAuth0 } from "@auth0/auth0-react";
-import { Client, client, IsBadRequest, IsNotAuthorized, IsNotFound, TenantPreview } from "@local-civics/js-client";
+import { Client, init, errorCode } from "@local-civics/js-client";
 import React from "react";
 import * as Sentry from "@sentry/react";
-import { Simulate } from "react-dom/test-utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorBoundary } from "../Error/Error";
 import { MessageProvider, useMessage } from "../Message";
-import error = Simulate.error;
 
 /* Auth domain for auth0 */
 const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
@@ -20,16 +18,16 @@ const ApiContext = React.createContext(undefined as ApiState | undefined);
 /* Auth context */
 const AuthContext = React.createContext(undefined as AuthState | undefined);
 
-/* Identity context */
-const IdentityContext = React.createContext(undefined as IdentityState | undefined);
+/* Tenant context */
+const TenantContext = React.createContext(undefined as TenantState | undefined);
 
 /**
- * A hook for subscribing to the current identity
+ * A hook for subscribing to the current tenant
  */
-export const useIdentity = () => {
-  const context = React.useContext(IdentityContext);
+export const useTenant = () => {
+  const context = React.useContext(TenantContext);
   if (context === undefined) {
-    throw new Error("useIdentity must be used within a IdentityProvider");
+    throw new Error("useTenant must be used within a TenantProvider");
   }
   return context;
 };
@@ -58,11 +56,13 @@ export const useApi = () => {
 };
 
 /**
- * identity state.
+ * tenant state.
  */
-export type IdentityState = TenantPreview & {
-  resolving: boolean;
-  digest: () => Promise<void>;
+export type TenantState = any & {
+  isLoading: boolean;
+  resolve: () => Promise<void>;
+  configure: (conf: any) => Promise<void>;
+  changePersona: (persona: string) => Promise<void>
 };
 
 /**
@@ -74,7 +74,6 @@ export type ApiState = Client;
  * Auth state.
  */
 export type AuthState = {
-  nickname?: string
   accessToken?: string;
   login?: () => Promise<void>;
   logout?: () => void;
@@ -104,9 +103,9 @@ export const AppProvider = (props: AppProviderProps) => {
       <MessageProvider>
         <AuthProvider accessToken={props.accessToken}>
           <ApiProvider>
-            <IdentityProvider>
+            <TenantProvider>
               <Consumer>{props.children}</Consumer>
-            </IdentityProvider>
+            </TenantProvider>
           </ApiProvider>
         </AuthProvider>
       </MessageProvider>
@@ -115,28 +114,50 @@ export const AppProvider = (props: AppProviderProps) => {
 };
 
 /**
- * Provide identity identity.
+ * Provide tenant tenant.
  */
-export const IdentityProvider = (props: { children?: React.ReactNode }) => {
-  const Identity = () => {
+export const TenantProvider = (props: { children?: React.ReactNode }) => {
+  const Tenant = () => {
     const navigate = useNavigate();
-    const [identity, setIdentity] = React.useState({} as TenantPreview);
-    const [resolving, setResolving] = React.useState(true);
+    const [tenant, setTenant] = React.useState({} as TenantState);
+    const [isLoading, setResolving] = React.useState(true);
     const location = useLocation();
     const api = useApi();
-    const { accessToken, nickname } = useAuth();
+    const { accessToken  } = useAuth();
     const context = {
-      ...identity,
-      resolving: resolving,
-      digest: async () => {
+      ...tenant,
+      isLoading: isLoading,
+      configure: async (body: any) => {
         setResolving(true);
-        const tenant = { nickname: nickname, ...await api.identity.digest() };
-        setIdentity(tenant);
+        const data = {...body}
+        const ctx = {referrer: location.pathname}
+        if (data.avatar !== undefined) {
+          const form = new FormData();
+          form.append("avatar", data.avatar);
+          await api.do(ctx,"PATCH", "identity", `/tenants/${tenant.tenantName}`, {
+            body: form,
+          })
+          delete data.avatar;
+        }
+
+        if (Object.keys(data).length > 0) {
+          await api.do(ctx,"PATCH", "identity", `/tenants/${tenant.tenantName}`, {
+            body: data,
+          })
+        }
+
+        return tenant.resolve()
+      },
+      resolve: async () => {
+        setResolving(true);
+        const ctx = {referrer: location.pathname}
+        const tenant = { ...await api.do(ctx,"GET", "identity", "/me") };
+        setTenant(tenant);
         setResolving(false);
-        Sentry.setUser({ id: tenant.id, tenantName: tenant.nickname });
+        Sentry.setUser({ id: tenant.tenantId, tenantName: tenant.tenantName });
 
         if (location.search && (location.pathname === "/" || !location.pathname)) {
-          navigate(`/tenants/${tenant.nickname}`);
+          navigate(`/tenants/${tenant.tenantName}`);
         }
       },
     };
@@ -145,25 +166,25 @@ export const IdentityProvider = (props: { children?: React.ReactNode }) => {
     React.useEffect(() => {
       if (!accessToken) {
         Sentry.configureScope((scope) => scope.setUser(null));
-        setIdentity({});
+        setTenant({} as TenantState);
         return;
       }
 
       (async () => {
-        await context.digest();
+        await context.resolve();
       })();
 
-      return () => setIdentity({});
+      return () => setTenant({} as TenantState);
     }, [accessToken]);
 
     return (
-      <IdentityContext.Provider value={context}>
+      <TenantContext.Provider value={context}>
         <Consumer>{props.children}</Consumer>
-      </IdentityContext.Provider>
+      </TenantContext.Provider>
     );
   };
 
-  return <Identity />;
+  return <Tenant />;
 };
 
 /**
@@ -178,16 +199,17 @@ export const ApiProvider = (props: { children?: React.ReactNode }) => {
 
   const MessageApi = React.memo<{ send: (err: any) => void }>(({ send }) => {
     const { accessToken } = useAuth();
-    const context = client({
-      apiURL: process.env.REACT_APP_API_URL,
-      accessToken: accessToken,
+    const client = init(accessToken, {
+      gatewayURL: process.env.REACT_APP_API_URL,
       onReject: (e) => {
         send(e);
-        if (IsBadRequest(e)) {
+
+        const code = errorCode(e)
+        if (code === 400) {
           return Promise.resolve(e);
         }
 
-        if (IsNotFound(e) || IsNotAuthorized(e)) {
+        if (code === 404 || code === 401) {
           return Promise.resolve(null);
         }
 
@@ -195,7 +217,7 @@ export const ApiProvider = (props: { children?: React.ReactNode }) => {
       },
     });
     return (
-      <ApiContext.Provider value={context}>
+      <ApiContext.Provider value={client}>
         <Consumer>{props.children}</Consumer>
       </ApiContext.Provider>
     );

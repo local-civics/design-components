@@ -5,7 +5,7 @@
 import { ActivityView, ReactionView } from "@local-civics/js-client";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useApi, useIdentity } from "../../../../contexts/App";
+import { useApi, useTenant } from "../../../../contexts/App";
 import { Card } from "../../components/Card/Card";
 
 /**
@@ -13,7 +13,7 @@ import { Card } from "../../components/Card/Card";
  * @constructor
  */
 export const ReflectionContainer = () => {
-  const identity = useIdentity();
+  const tenant = useTenant();
   const navigate = useNavigate();
   const close = () => navigate(-1);
   const [ref, setRef] = React.useState(null as ReactionView | null);
@@ -21,23 +21,23 @@ export const ReflectionContainer = () => {
   const activityId = parseInt(params.activityId || "");
   const reflection = useReflection();
   const api = useApi();
-  const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
+  const po = tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
   return {
     Reflection: () => (
       <Card
         {...reflection}
         {...ref}
-        resolving={reflection === null}
+        isLoading={reflection === null}
         visible
         unavailable={reflection?.browsing}
         onClose={close}
         onSave={async (ref, rating) => {
-          if (!identity.nickname || !po.nickname || !activityId) {
+          if (!tenant.nickname || !po.nickname || !activityId) {
             return;
           }
 
           return api.curriculum
-            .changeReaction(identity.nickname, po.nickname, activityId, {
+            .changeReaction(tenant.nickname, po.nickname, activityId, {
               reflection: ref,
               rating: rating,
             })
@@ -54,18 +54,18 @@ export const ReflectionContainer = () => {
 };
 
 const useReflection = () => {
-  const identity = useIdentity();
-  const po = identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
+  const tenant = useTenant();
+  const po = tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
   const api = useApi();
   const params = useParams();
   const activityId = parseInt(params.activityId || "");
   const tenantName = params.tenantName;
-  const browsing = identity.nickname !== tenantName;
+  const browsing = tenant.nickname !== tenantName;
   const [experience, setExperience] = React.useState(null as ActivityView | null);
   React.useEffect(() => {
     (async () => {
       if (
-        !identity.nickname ||
+        !tenant.nickname ||
         !po.nickname ||
         !activityId ||
         !tenantName ||
@@ -75,11 +75,11 @@ const useReflection = () => {
         return;
       }
 
-      setExperience(await api.curriculum.viewWorkspaceActivity(identity.nickname, po.nickname || "", activityId));
+      setExperience(await api.curriculum.viewWorkspaceActivity(tenant.nickname, po.nickname || "", activityId));
     })();
     return () => {
       setExperience(null);
     };
-  }, [activityId, tenantName, identity.nickname]);
+  }, [activityId, tenantName, tenant.nickname]);
   return experience ? { ...experience, browsing } : null;
 };

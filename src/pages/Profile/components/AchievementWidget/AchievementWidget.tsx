@@ -6,7 +6,7 @@ import { compact } from "../../../../utils/numbers";
  * The properties for the achievement widget.
  */
 export interface AchievementWidgetProps {
-  resolving?: boolean;
+  isLoading?: boolean;
   badges?: number;
   milestones?: number;
   reflections?: number;
@@ -19,7 +19,7 @@ export interface AchievementWidgetProps {
  */
 export const AchievementWidget = (props: AchievementWidgetProps) => {
   return (
-    <Widget height="sm" resolving={props.resolving}>
+    <Widget height="sm" isLoading={props.isLoading}>
       <WidgetHeader>
         <WidgetTitle icon="achievements">My Achievements</WidgetTitle>
       </WidgetHeader>

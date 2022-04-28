@@ -6,7 +6,7 @@ import { Board, Tab, Widget, WidgetBody } from "../../../../components";
  */
 export type DashboardProps = {
   disabled?: boolean;
-  resolving?: boolean;
+  isLoading?: boolean;
   active?: "badges" | "tasks";
   onBadgeWorkflow?: () => void;
   onTaskWorkflow?: () => void;
@@ -38,7 +38,7 @@ export const Dashboard = (props: DashboardProps) => {
   return (
     <Widget headless>
       <WidgetBody spacing="none">
-        <Board tabs={tabs} workflow={props.children} resolving={props.resolving} />
+        <Board tabs={tabs} workflow={props.children} isLoading={props.isLoading} />
       </WidgetBody>
     </Widget>
   );

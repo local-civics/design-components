@@ -6,14 +6,14 @@ import { builder } from "../../../../utils/classname/classname";
 
 export type CardProps = ActivityView & {
   visible?: boolean;
-  resolving?: boolean;
+  isLoading?: boolean;
   onClose?: () => void;
   unavailable?: boolean;
   onSave?: (reflection: string, rating: number) => Promise<void>;
 };
 
 export const Card = (props: CardProps) => {
-  const className = builder("w-full md:w-[40rem]").if(!!props.resolving, "min-h-[20rem]").build();
+  const className = builder("w-full md:w-[40rem]").if(!!props.isLoading, "min-h-[20rem]").build();
   const message = useMessage();
   const now = new Date();
   const available = !props.unavailable && (!props.startTime || now >= new Date(props.startTime));
@@ -28,7 +28,7 @@ export const Card = (props: CardProps) => {
   }, [props.reaction?.reflection, props.reaction?.reflection]);
 
   return (
-    <Modal resolving={props.resolving} visible={props.visible} onClose={props.onClose}>
+    <Modal isLoading={props.isLoading} visible={props.visible} onClose={props.onClose}>
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">

@@ -5,7 +5,7 @@ import { Widget, WidgetBody } from "../../../../components";
  * The properties for the resident.
  */
 export type ResidentWidgetProps = {
-  resolving?: boolean;
+  isLoading?: boolean;
   avatarURL?: string;
   tenantName?: string;
   givenName?: string;
@@ -23,7 +23,7 @@ export const ResidentWidget = (props: ResidentWidgetProps) => {
   const hasContent = props.givenName || props.familyName;
 
   return (
-    <Widget resolving={props.resolving}>
+    <Widget isLoading={props.isLoading}>
       <WidgetBody>
         {hasContent && (
           <div className="p-2">
