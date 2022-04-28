@@ -1,7 +1,7 @@
 import React from "react";
 import {useLocation, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import { useApi } from "../../contexts/App";
-import { PathwayFilter } from "../../components/Activity/PathwayFilter/PathwayFilter";
+import { PathwayFilter } from "../../components/Pathway/PathwayFilter/PathwayFilter";
 import {ActivityList} from "../../components/Activity/ActivityList/ActivityList";
 
 /**

@@ -1,4 +1,4 @@
-import { TaskContainer } from "./containers/TaskContainer/TaskContainer";
+import { TaskContainer } from "../../containers/Task/TaskContainer";
 
 /**
  * A component for the task page.

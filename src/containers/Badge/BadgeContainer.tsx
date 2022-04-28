@@ -1,7 +1,7 @@
 import React from "react";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useApi} from "../../contexts/App";
-import { TaskPreview } from "../../components/Badge/TaskPreview/TaskPreview";
+import { TaskPreview } from "../../components/Task/TaskPreview/TaskPreview";
 import { OpenBadge } from "../../components/Badge/OpenBadge/OpenBadge";
 
 /**
