@@ -7,7 +7,7 @@
     "build": "rollup -c",
     "watch": "rollup -cw",
     "test": "jest --coverage=true --passWithNoTests",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -h localhost -p 6006",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic",
     "fmt": "npx prettier --write ."
@@ -28,13 +28,13 @@
     "@rollup/plugin-commonjs": "^19.0.2",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-typescript": "^8.2.4",
-    "@storybook/addon-a11y": "^6.3.6",
-    "@storybook/addon-docs": "^6.1.21",
-    "@storybook/addon-essentials": "^6.1.21",
-    "@storybook/addon-links": "^6.3.6",
+    "@storybook/addon-a11y": "^6.5.0-beta.1",
+    "@storybook/addon-docs": "^6.5.0-beta.1",
+    "@storybook/addon-essentials": "^6.5.0-beta.1",
+    "@storybook/addon-links": "^6.5.0-beta.1",
     "@storybook/addon-postcss": "^2.0.0",
-    "@storybook/node-logger": "^6.3.6",
-    "@storybook/react": "^6.4.9",
+    "@storybook/node-logger": "^6.5.0-beta.1",
+    "@storybook/react": "^6.5.0-beta.1",
     "@tailwindcss/line-clamp": "^0.3.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^1.9.0",
-    "@local-civics/js-client": "^1.0.3",
+    "@local-civics/js-client": "^1.0.4",
     "@sentry/react": "^6.17.4",
     "@sentry/tracing": "^6.17.4"
   }

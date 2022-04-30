@@ -22,17 +22,21 @@ export const TaskContainer = () => {
 
   const task = useTask(tenantName, taskId);
   const search = new URLSearchParams();
-  if (task?.activityName !== "") {
-    search.set("headline", task?.activityName);
+  if (task.activityName && task.activityName !== "") {
+    search.set("headline", task.activityName);
   }
 
-  if (task?.directory !== "") {
-    search.set("directory", task?.directory);
+  if (task.directory && task.directory !== "") {
+    search.set("directory", task.directory);
   }
 
   const link = `/tenants/${tenantName}/activities?${search.toString()}`;
   return {
-    TaskModal: () => <OpenTask {...task} onContinue={() => navigate(link)} onStart={() => navigate(link)} />,
+    TaskModal: () => <OpenTask
+        {...task}
+        onExplore={() => navigate(link)}
+        onClose={() => navigate(-1)}
+    />,
   };
 };
 
@@ -48,7 +52,7 @@ const useTask = (tenantName: string, taskId: string) => {
     })();
 
     return () => setTask({});
-  }, [tenantName, taskId]);
+  }, [tenantName, taskId, api.accessToken]);
 
   return task;
 };

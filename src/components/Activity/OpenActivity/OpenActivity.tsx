@@ -26,6 +26,7 @@ export type OpenActivityProps = {
   onLaunch?: () => void;
   onReflect?: () => void;
   onSkillClick?: (skill: string) => void;
+  onClose?: () => void;
 };
 
 /**
@@ -82,7 +83,7 @@ export const OpenActivity = (props: OpenActivityProps) => {
   };
 
   return (
-    <Modal visible isLoading={!props.activityId}>
+    <Modal onClose={props.onClose} visible isLoading={!props.activityId}>
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
@@ -100,7 +101,7 @@ export const OpenActivity = (props: OpenActivityProps) => {
             </div>
           </div>
 
-          <div className="max-h-[12rem]">
+          <div className="max-h-[12rem] flex gap-2">
             <ActionButton />
             <Button
               disabled={!props.canReflect}
@@ -133,7 +134,7 @@ export const OpenActivity = (props: OpenActivityProps) => {
                       <button
                         onClick={() => props.onSkillClick && props.onSkillClick(skill)}
                         key={skill + i}
-                        className="grow-0 cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize bg-gray-100 hover:bg-gray-50 active:bg-gray-50 focus:bg-gray-50 px-4 py-2 text-sm text-gray-600"
+                        className="grow-0 cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md bg-gray-100 hover:bg-gray-50 active:bg-gray-50 focus:bg-gray-50 px-4 py-2 text-sm text-gray-600"
                       >
                         {skill}
                       </button>

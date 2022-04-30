@@ -41,27 +41,21 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/tenants/:tenantName" element={<Profile />}>
+        <Route path="onboarding" element={<Onboarding />} />
         <Route path="settings" element={<Settings />} />
-        <Route path="badges/:marketName/:badgeId" element={<Badge />} />
-        <Route path="badges/:marketName/:badgeId/:level" element={<Badge />} />
-        <Route path="badges/:marketName/:badgeId/tasks/:taskId" element={<Task />} />
-        <Route path="badges/:marketName/:badgeId/:level/tasks/:taskId" element={<Task />} />
-        <Route path="reflections/:marketName/:activityId" element={<Reflection />} />
+        <Route path="badges/:badgeId" element={<Badge />} />
+        <Route path="badges/:badgeId/tasks/:taskId" element={<Task />} />
+        <Route path="tasks/:taskId" element={<Task />} />
+        <Route path="reflections/:activityId" element={<Reflection />} />
       </Route>
-      <Route path="/tenants/:tenantName/:tab" element={<Profile />} />
-      <Route path="/tenants/:tenantName/tasks/:status" element={<Profile />} />
-      <Route path="/marketplace/:marketName/calendar/day/today" element={<Calendar />}>
+      <Route path="/tenants/:tenantName/events" element={<Calendar />}>
         <Route path=":activityId" element={<Activity />} />
       </Route>
-      <Route path="/marketplace/:marketName/calendar/day/:date" element={<Calendar />}>
+      <Route path="/tenants/:tenantName/events/:day" element={<Calendar />}>
         <Route path=":activityId" element={<Activity />} />
       </Route>
-      <Route path="/marketplace/:marketName/activities" element={<Explore />}>
-        <Route path=":activityId" element={<Activity />} />
-      </Route>
-      <Route path="/marketplace/:marketName/skills/:skill" element={<Explore />}>
+      <Route path="/tenants/:tenantName/activities" element={<Explore />}>
         <Route path=":activityId" element={<Activity />} />
       </Route>
       <Route path="*" element={<NotFound />} />

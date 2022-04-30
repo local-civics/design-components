@@ -36,13 +36,14 @@ export const ActivityContainer = () => {
         onSkillClick={(skill: string) =>
           navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
         }
+        onClose={() => navigate(-1)}
       />
     ),
   };
 };
 
 // A hook to fetch an activity
-export const useActivity = (tenantName: string, activityId: string) => {
+export const useActivity = (tenantName: string, activityId: string, refresh?: boolean) => {
   const [activity, setActivity] = React.useState({} as any);
   const api = useApi();
   const location = useLocation();
@@ -53,7 +54,7 @@ export const useActivity = (tenantName: string, activityId: string) => {
       setActivity(await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/activities/${activityId}`));
     })();
     return () => setActivity(null);
-  });
+  }, [tenantName, activityId, api.accessToken, refresh]);
 
   return activity;
 };
@@ -70,7 +71,7 @@ const useSubscription = (activity: any) => {
     if (activity?.activityId) {
       setSubscribed(activity?.isSubscribed);
     }
-  }, [activity?.activityId, activity?.isSubscribed]);
+  }, [activity?.activityId, activity?.isSubscribed, api.accessToken]);
 
   return [
     isSubscribed,
@@ -86,9 +87,15 @@ const useSubscription = (activity: any) => {
             email: tenant.email,
             contactName: tenant.givenName,
             isSubscribed: !isSubscribed,
+            sagaId: activity.sagaId,
           },
         })
-        .then(() => {
+        .then((err) => {
+          if(!!err){
+            return
+          }
+
+          setSubscribed(!isSubscribed);
           if (isSubscribed) {
             if (activity?.rsvpRequired) {
               message.send(`Please be aware that this activity may require additional registration.`, {
@@ -105,7 +112,6 @@ const useSubscription = (activity: any) => {
             }
           }
         });
-      setSubscribed(!isSubscribed);
     },
   ];
 };

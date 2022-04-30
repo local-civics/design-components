@@ -13,6 +13,7 @@ export type OpenReflectionProps = {
   headline?: string;
   imageURL?: string;
   canReflect?: boolean;
+  hasChanges?: boolean
 
   onClose?: () => void;
   onSave?: (reflection: string, rating: number) => Promise<void>;
@@ -20,12 +21,11 @@ export type OpenReflectionProps = {
 
 export const OpenReflection = (props: OpenReflectionProps) => {
   const className = builder("w-full md:w-[40rem]").if(!props.activityId, "min-h-[20rem]").build();
-  const message = useMessage();
   const [reaction, setReaction] = React.useState({
     rating: props.rating,
     reflection: props.reflection,
   });
-  const hasChanges = props.canReflect && (props.rating !== reaction.rating || props.reflection !== reaction.reflection);
+  const hasChanges = props.hasChanges || props.canReflect && (props.rating !== reaction.rating || props.reflection !== reaction.reflection);
   const setFeedback = (feedback: string) => setReaction({ ...reaction, reflection: feedback });
   const setConfidence = (confidence: number) => setReaction({ ...reaction, rating: confidence });
 
@@ -59,15 +59,7 @@ export const OpenReflection = (props: OpenReflectionProps) => {
             <Button
               onClick={() =>
                 props.onSave &&
-                props.onSave(reaction.reflection || "", reaction.rating || 0).then(() => {
-                  if (reaction.reflection && !props.reflection) {
-                    message.send(`You've successfully submitted your reflection and earned your points.`, {
-                      severity: "success",
-                      icon: "reflection",
-                      title: "Nice Work!",
-                    });
-                  }
-                })
+                props.onSave(reaction.reflection || "", reaction.rating || 0)
               }
               theme="dark"
               border="rounded"
@@ -132,14 +124,14 @@ const Confidence = (props: OpenReflectionProps & { setConfidence?: (confidence: 
   });
   const labels = Array.from({ length: maxPoints }, (_, i) => {
     if (i === 0) {
-      return <p className="inline-block text-sm text-monochrome-500">Poor</p>;
+      return <p key={i} className="inline-block text-sm text-monochrome-500">Poor</p>;
     }
 
     if (i === maxPoints - 1) {
-      return <p className="inline-block text-sm text-monochrome-500">Amazing</p>;
+      return <p key={i} className="inline-block text-sm text-monochrome-500">Amazing</p>;
     }
 
-    return <p className="inline-block text-monochrome-500" />;
+    return <p key={i} className="inline-block text-monochrome-500" />;
   });
 
   React.useEffect(() => {

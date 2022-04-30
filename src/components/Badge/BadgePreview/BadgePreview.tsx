@@ -9,7 +9,6 @@ export type BadgePreviewProps = {
   isInProgress?: boolean;
   isAwarded?: boolean;
   isLocked?: boolean;
-  isOpen?: boolean;
 
   headline?: string;
   icon?: IconName;
@@ -43,10 +42,10 @@ export const BadgePreview = (props: BadgePreviewProps) => {
   const className = builder(
     "grid justify-items-center content-center shadow-md bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500"
   )
-    .if(!!props.isOpen, "cursor-pointer hover:bg-gray-50")
+    .if(!!props.onOpen && !props.isLocked, "cursor-pointer hover:bg-gray-50")
     .build();
 
-  const onOpen = () => (props.isAwarded || !props.isLocked) && props.isOpen && props.onOpen && props.onOpen();
+  const onOpen = () => props.onOpen && !props.isLocked && props.onOpen();
 
   return (
     <div className={className}>

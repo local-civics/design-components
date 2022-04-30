@@ -19,7 +19,6 @@ const Template: Story<OpenReflectionProps> = (args) => (
       xp={250}
       pathway="arts & culture"
       imageURL="https://s.yimg.com/os/creatr-uploaded-images/2019-11/7b5b5330-112b-11ea-a77f-7c019be7ecae"
-      visible
       headline="A learning experience"
       startTime={new Date().toString()}
       {...args}

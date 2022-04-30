@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ErrorBoundary } from "../Error/Error";
 import { MessageProvider, useMessage } from "../Message";
+import {Context, Method, RequestOptions, Service} from "@local-civics/js-client/dist/client";
 
 /* Auth domain for auth0 */
 const AuthDomain = process.env.REACT_APP_AUTH_DOMAIN || "auth.localcivics.io";
@@ -60,15 +61,14 @@ export const useApi = () => {
  */
 export type TenantState = any & {
   isLoading: boolean;
-  resolve: () => Promise<void>;
-  configure: (conf: any) => Promise<void>;
-  changePersona: (persona: string) => Promise<void>;
+  resolve: () => Promise<any>;
+  configure: (conf: any) => Promise<any>;
 };
 
 /**
  * The api state.
  */
-export type ApiState = Client;
+export type ApiState = Client & {accessToken?: string};
 
 /**
  * Auth state.
@@ -124,6 +124,7 @@ export const TenantProvider = (props: { children?: React.ReactNode }) => {
     const location = useLocation();
     const api = useApi();
     const { accessToken } = useAuth();
+    const [needsReload, setNeedsReload] = React.useState(false)
     const context = {
       ...tenant,
       isLoading: isLoading,
@@ -131,22 +132,24 @@ export const TenantProvider = (props: { children?: React.ReactNode }) => {
         setResolving(true);
         const data = { ...body };
         const ctx = { referrer: location.pathname };
+        let resp: any
         if (data.avatar !== undefined) {
           const form = new FormData();
           form.append("avatar", data.avatar);
-          await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
+          resp = await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
             body: form,
           });
           delete data.avatar;
         }
 
-        if (Object.keys(data).length > 0) {
-          await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
+        if (!resp && Object.keys(data).length > 0) {
+          resp = await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
             body: data,
           });
         }
 
-        return tenant.resolve();
+        setNeedsReload(true)
+        return resp
       },
       resolve: async () => {
         setResolving(true);
@@ -172,10 +175,11 @@ export const TenantProvider = (props: { children?: React.ReactNode }) => {
 
       (async () => {
         await context.resolve();
+        setNeedsReload(false)
       })();
 
       return () => setTenant({} as TenantState);
-    }, [accessToken]);
+    }, [accessToken, needsReload]);
 
     return (
       <TenantContext.Provider value={context}>
@@ -205,19 +209,21 @@ export const ApiProvider = (props: { children?: React.ReactNode }) => {
         send(e);
 
         const code = errorCode(e);
-        if (code === 400) {
+        if (code >= 400 && code < 500) {
           return Promise.resolve(e);
-        }
-
-        if (code === 404 || code === 401) {
-          return Promise.resolve(null);
         }
 
         return Promise.reject(e);
       },
     });
+
+    const context = {...client, accessToken, do: async (ctx: Context, method: Method, service: Service, endpoint: string, options?: RequestOptions) => {
+      if(accessToken){ return client.do(ctx, method, service, endpoint, options) }
+    }}
+
+
     return (
-      <ApiContext.Provider value={client}>
+      <ApiContext.Provider value={context}>
         <Consumer>{props.children}</Consumer>
       </ApiContext.Provider>
     );

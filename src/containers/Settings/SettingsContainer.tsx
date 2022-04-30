@@ -14,6 +14,12 @@ export const SettingsContainer = () => {
   const navigate = useNavigate();
   const message = useMessage();
   const close = () => navigate(-1);
+  const [prev, setPrev] = React.useState({...tenant} as any)
+
+  React.useEffect(() => {
+    setPrev({...tenant, ...prev, isLoading: tenant.isLoading})
+  }, [tenant.tenantName, tenant.isLoading])
+
   const save = async (changes?: any) => {
     if (!tenant.tenantName || tenant.isLoading) {
       return;
@@ -24,15 +30,23 @@ export const SettingsContainer = () => {
       return;
     }
 
-    await tenant.configure(changes).then(close);
-    message.send(`We've processed your changes.`, {
-      severity: "success",
-      icon: "profile",
-      title: "Success",
+    setPrev({...prev, ...changes, hasChanges: true})
+    await tenant.configure(changes).then((err: any) => {
+      if(!err){
+        tenant.resolve().
+          then(() => {
+            setPrev({...tenant})
+            message.send(`We've processed your changes.`, {
+              severity: "success",
+              icon: "profile",
+              title: "Success",
+            })
+          })
+      }
     });
   };
 
   return {
-    EditModal: () => <OpenSettings {...tenant} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
+    EditModal: () => <OpenSettings {...tenant} {...prev} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
   };
 };

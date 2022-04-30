@@ -7,7 +7,6 @@ import { Button, Search, SearchProps } from "../../index";
 export type CommunitySearchProps = SearchProps & {
   disabled?: boolean;
   name?: string;
-  location?: string;
   accessCode?: string;
   onSearch?: (search: string) => void;
   onJoin?: (accessCode?: string) => void;
@@ -27,7 +26,7 @@ export const CommunitySearch = (props: CommunitySearchProps) => {
         <p className="text-sm">Pick your community.</p>
       </div>
 
-      <Search {...props} placeholder={props.name} />
+      <Search {...props} autofocus={!accessCode} placeholder={props.name} />
 
       {!!props.name && (
         <div className="text-slate-600 grid-cols-1 gap-2">
@@ -40,6 +39,7 @@ export const CommunitySearch = (props: CommunitySearchProps) => {
           <div className="mt-2 content-center grid grid-cols-3 gap-x-2">
             <input
               disabled={props.disabled}
+              autoFocus={!!accessCode}
               type="password"
               onChange={(e) => setAccessCode(e.target.value)}
               defaultValue={props.accessCode}

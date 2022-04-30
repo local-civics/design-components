@@ -20,7 +20,7 @@ export const CalendarContainer = () => {
   if (!tenantName) {
     throw new Error("request is missing required params");
   }
-  const day = (date || new Date()).toISOString().split("T")[0];
+  const day = (date || new Date()).toISOString();
   const events = useEvents(tenantName, day);
   return {
     DateSelection: () => <DateSelection date={date} setDate={setDate} />,
@@ -58,7 +58,7 @@ const useEvents = (tenantName: string, day: string) => {
       );
     })();
     return () => setEvents(null);
-  }, [tenantName, day]);
+  }, [tenantName, day, api.accessToken]);
 
   return events;
 };

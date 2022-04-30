@@ -27,24 +27,15 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const location = useLocation();
   const auth = useAuth();
   const page = props.page || "profile";
-  const primaryOrganization = tenant?.organizations && tenant.organizations.length > 0 ? tenant.organizations[0] : {};
   React.useEffect(() => {
     if (tenant.isLoading) {
       return;
     }
 
-    if (
-      !tenant.organizations ||
-      tenant.organizations?.length == 0 ||
-      !tenant.statement ||
-      !tenant.givenName ||
-      !tenant.persona
-    ) {
-      if (location.pathname !== `/onboarding`) {
-        navigate(`/onboarding`);
-      }
+    if (!tenant.impactStatement && !location.pathname.endsWith("onboarding")) {
+      navigate(`/tenants/${tenant.tenantName}/onboarding`);
     }
-  }, [location.pathname, tenant.nickname, tenant.organizations, tenant.statement, tenant.givenName, tenant.persona]);
+  }, [location.pathname, tenant.tenantName, tenant.impactStatement]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
@@ -65,19 +56,19 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
           <NavLink
             disabled={props.disabled}
             name="profile"
-            path={`/tenants/${tenant.nickname}`}
+            path={`/tenants/${tenant.tenantName}`}
             active={page === "profile"}
           />
           <NavLink
             disabled={props.disabled}
             name="explore"
-            path={`/marketplace/${primaryOrganization.nickname}/activities`}
+            path={`/tenants/${tenant.tenantName}/activities`}
             active={page === "explore"}
           />
           <NavLink
             disabled={props.disabled}
             name="calendar"
-            path={`/marketplace/${primaryOrganization.nickname}/calendar/day/today`}
+            path={`/tenants/${tenant.tenantName}/events`}
             active={page === "calendar"}
           />
           <NavLink name="logout" onClick={auth.logout} />

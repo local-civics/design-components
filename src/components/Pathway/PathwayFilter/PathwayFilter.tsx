@@ -16,29 +16,23 @@ export interface PathwayFilterProps {
  * @constructor
  */
 export const PathwayFilter: FunctionComponent<PathwayFilterProps> = (props) => {
-  const [pathways, setPathways] = React.useState({} as Record<string, boolean>);
+  const pathways = props.pathways || []
   const togglePathway = (pathway: string) => {
-    setPathways({ ...pathways, [pathway]: !pathways[pathway] });
+    const newPathways = [...pathways]
+    const i = newPathways.indexOf(pathway)
+    if(i >= 0){
+        newPathways.splice(i, 1)
+    } else {
+      newPathways.push(pathway)
+    }
     if (props.onChange) {
-      props.onChange(
-        Object.entries(pathways)
-          .filter(([, present]) => present)
-          .map(([v]) => v)
-      );
+      props.onChange(newPathways);
     }
   };
 
-  const pathwaysKey = JSON.stringify(props.pathways);
-  React.useEffect(() => {
-    setPathways({});
-    props.pathways?.map((pathway) => {
-      togglePathway(pathway);
-    });
-  }, [pathwaysKey]);
-
   return (
     <div
-      className="border-gray-200 border shadow-sm rounded-md min-h-48 lg:w-60 w-full overflow-hidden"
+      className="border-gray-200 border shadow-sm rounded-md min-h-48 w-full overflow-hidden"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -56,23 +50,27 @@ export const PathwayFilter: FunctionComponent<PathwayFilterProps> = (props) => {
         <div className="grid grid-cols-1">
           <PathwayButton
             onClick={() => togglePathway("policy & government")}
-            active={pathways["policy & government"]}
+            active={pathways.indexOf("policy & government") >= 0}
             name="policy & government"
           />
           <PathwayButton
             onClick={() => togglePathway("arts & culture")}
-            active={pathways["arts & culture"]}
+            active={pathways.indexOf("arts & culture") >= 0}
             name="arts & culture"
           />
           <PathwayButton
             onClick={() => togglePathway("recreation")}
-            active={pathways["recreation"]}
+            active={pathways.indexOf("recreation") >= 0}
             name="recreation"
           />
-          <PathwayButton onClick={() => togglePathway("volunteer")} active={pathways["volunteer"]} name="volunteer" />
+          <PathwayButton
+              onClick={() => togglePathway("volunteer")}
+              active={pathways.indexOf("volunteer") >= 0}
+              name="volunteer"
+          />
           <PathwayButton
             onClick={() => togglePathway("college & career")}
-            active={pathways["college & career"]}
+            active={pathways.indexOf("college & career") >= 0}
             name="college & career"
           />
         </div>

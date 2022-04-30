@@ -19,12 +19,13 @@ export const ExploreContainer = () => {
 
   const [query, setQuery] = useSearchParams();
   const tags = query.getAll("tag");
+  const pathways = query.getAll("pathway")
   const activities = useActivities(tenantName, {
     headline: query.get("headline"),
     directory: query.get("directory"),
-    pathways: query.getAll("pathway"),
-    skills: query.getAll("skill"),
-    tags: tags,
+    pathway: pathways,
+    skill: query.getAll("skill"),
+    tag: tags,
     day: query.get("day"),
     badgeId: query.get("badgeId"),
     status: query.get("status"),
@@ -33,21 +34,27 @@ export const ExploreContainer = () => {
   const recommendation = useRecommendation(tenantName, {
     headline: query.get("headline"),
     directory: query.get("directory"),
-    pathways: query.getAll("pathway"),
-    skills: query.getAll("skill"),
-    tags: tags,
+    pathway: pathways,
+    skill: query.getAll("skill"),
+    tag: tags,
     day: query.get("day"),
     badgeId: query.get("badgeId"),
     status: query.get("status"),
   });
 
   return {
-    PathwayFilter: () => <PathwayFilter title="Explore" />,
+    PathwayFilter: () => (
+        <PathwayFilter
+            title="Explore"
+            pathways={pathways}
+            onChange={(pathways) => setQuery({...query, pathway: pathways})}
+        />
+    ),
     ActivityList: () => (
       <ActivityList
         isLoading={activities === null && recommendation === null}
-        search={query.get("q") || ""}
-        onSearch={(q) => setQuery({ ...query, q })}
+        search={query.get("headline") || ""}
+        onSearch={(q) => setQuery({ ...query, headline: q || []})}
         tags={tags}
         onTagChange={(tags) => setQuery({ ...query, tag: tags })}
         activities={activities}
@@ -66,9 +73,9 @@ export const ExploreContainer = () => {
 type ActivityQuery = {
   headline: string | null;
   directory: string | null;
-  pathways: string[] | null;
-  skills: string[] | null;
-  tags: string[] | null;
+  pathway: string[] | null;
+  skill: string[] | null;
+  tag: string[] | null;
   day: string | null;
   badgeId: string | null;
   status: string | null;
@@ -86,13 +93,13 @@ const useActivities = (tenantName: string, query: ActivityQuery) => {
     (async () => {
       const ctx = { referrer: location.pathname };
       setActivities(
-        await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/activities`, {
+        await api.do(ctx, "GET", "curriculum", `/activities`, {
           query: query,
         })
       );
     })();
     return () => setActivities(null);
-  }, [tenantName, queryKey]);
+  }, [tenantName, queryKey, api.accessToken]);
 
   return activities;
 };
@@ -109,13 +116,13 @@ const useRecommendation = (tenantName: string, query: ActivityQuery) => {
     (async () => {
       const ctx = { referrer: location.pathname };
       setRecommendation(
-        await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/recommendations`, {
+        await api.do(ctx, "GET", "curriculum", `/recommendations`, {
           query: query,
         })
       );
     })();
     return () => setRecommendation(null);
-  }, [tenantName, queryKey]);
+  }, [tenantName, queryKey, api.accessToken]);
 
   return recommendation;
 };

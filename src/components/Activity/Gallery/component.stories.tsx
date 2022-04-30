@@ -1,7 +1,6 @@
 import { Story } from "@storybook/react";
 import React from "react";
 import { ActivityPreview } from "../ActivityPreview/ActivityPreview";
-import { Exhibition } from "../Exhibition/Exhibition";
 import { Gallery, GalleryProps } from "./Gallery";
 
 /**
@@ -27,7 +26,7 @@ export const Component: Story<GalleryProps> = (props) => (
       />
     }
     top={
-      <Exhibition>
+        <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
         <ActivityPreview
           headline="EventPreview #1"
           pathway="policy & government"
@@ -46,10 +45,10 @@ export const Component: Story<GalleryProps> = (props) => (
           xp={250}
           imageURL="https://bestlifeonline.com/wp-content/uploads/sites/3/2019/12/shutterstock_1120210925.jpg"
         />
-      </Exhibition>
+        </article>
     }
     soonest={
-      <Exhibition>
+        <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
         <ActivityPreview
           headline="EventPreview #1"
           pathway="policy & government"
@@ -68,7 +67,7 @@ export const Component: Story<GalleryProps> = (props) => (
           xp={250}
           imageURL="https://bestlifeonline.com/wp-content/uploads/sites/3/2019/12/shutterstock_1120210925.jpg"
         />
-      </Exhibition>
+        </article>
     }
   />
 );

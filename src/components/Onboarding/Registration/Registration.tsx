@@ -55,7 +55,7 @@ export const Registration = (props: RegistrationProps) => {
               type="text"
               placeholder="Insert your first name"
               onChange={(e) => setGivenName(e.target.value)}
-              defaultValue={props.givenName || ""}
+              defaultValue={givenName || ""}
               className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
@@ -68,7 +68,7 @@ export const Registration = (props: RegistrationProps) => {
               required
               placeholder="Insert your last name"
               onChange={(e) => setFamilyName(e.target.value)}
-              defaultValue={props.familyName}
+              defaultValue={familyName || ""}
               className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
@@ -80,7 +80,7 @@ export const Registration = (props: RegistrationProps) => {
               <p className="mb-2 font-semibold text-slate-500 text-sm">Subject</p>
               <select
                 onChange={(e) => setGrade(parseInt(e.target.value, 10))}
-                defaultValue={props.grade}
+                defaultValue={grade || ""}
                 className="appearance-none mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
@@ -102,7 +102,7 @@ export const Registration = (props: RegistrationProps) => {
             <p className="mb-2 font-semibold text-slate-500 text-sm">Grade</p>
             <select
               onChange={(e) => setGrade(parseInt(e.target.value, 10))}
-              defaultValue={props.grade}
+              defaultValue={grade}
               className="appearance-none mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
@@ -124,7 +124,7 @@ export const Registration = (props: RegistrationProps) => {
               required
               placeholder="E.g., I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure my community is a place where everyone is welcome."
               onChange={(e) => setImpactStatement(e.target.value)}
-              defaultValue={props.impactStatement}
+              defaultValue={impactStatement || ""}
               className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"

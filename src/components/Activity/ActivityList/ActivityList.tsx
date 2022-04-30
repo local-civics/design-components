@@ -3,6 +3,7 @@ import { TagFilter } from "../TagFilter/TagFilter";
 import { Gallery } from "../Gallery/Gallery";
 import { ActivityPreview } from "../ActivityPreview/ActivityPreview";
 import { Button } from "../../Button/Button";
+import {debounce} from "../../../utils/search";
 
 /**
  * ActivityListProps
@@ -27,6 +28,11 @@ export type ActivityListProps = {
  */
 export const ActivityList = (props: ActivityListProps) => {
   const primary = !props.top ? null : props.top.length > 0 ? props?.top[0] : null;
+  const top = props.top ? props.top.filter((a) => !primary || a.activityId !== primary.activityId) : props.top
+  const topMap: any = {}
+  top?.map(a => topMap[a.activityId] = true)
+  const upcoming = props.upcoming ? props.upcoming.filter((a) => !primary && !topMap[a.activityId] || a.activityId !== primary.activityId) : props.upcoming
+
   return (
     <>
       <Search value={props.search} send={(search?: string) => props.onSearch && props.onSearch(search)} />
@@ -44,10 +50,10 @@ export const ActivityList = (props: ActivityListProps) => {
         }
         top={
           !props.search &&
-          props.top &&
-          props.top.length > 0 && (
+          top &&
+          top.length > 0 && (
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
-              {props.top.map((activity) => {
+              {top.map((activity) => {
                 return (
                   <ActivityPreview
                     key={`${activity.activityId}`}
@@ -61,10 +67,10 @@ export const ActivityList = (props: ActivityListProps) => {
         }
         soonest={
           !props.search &&
-          props.upcoming &&
-          props.upcoming.length > 0 && (
+          upcoming &&
+          upcoming.length > 0 && (
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
-              {props.upcoming.map((activity) => {
+              {upcoming.map((activity) => {
                 return (
                   <ActivityPreview
                     key={`${activity.activityId}`}
@@ -95,7 +101,7 @@ export const ActivityList = (props: ActivityListProps) => {
         }
         filteredCount={props.activities?.length}
         filtered={
-          props.activities &&
+          !!props.search && props.activities &&
           props.activities.length > 0 && (
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
               {props.activities.map((activity) => {
@@ -122,7 +128,7 @@ export const ActivityList = (props: ActivityListProps) => {
  * @constructor
  */
 const Search = ({ send, value }: { value?: string; send: (search?: string) => void }) => {
-  const handler = useCallback(debounce(send, 500), []);
+  const handler = useCallback(debounce(send), []);
   return (
     <div className="relative block">
       <label className="relative block">
@@ -141,13 +147,4 @@ const Search = ({ send, value }: { value?: string; send: (search?: string) => vo
       </label>
     </div>
   );
-};
-
-// A utility for debouncing search
-const debounce = (func: (search: string) => void, delay: number) => {
-  let timeout: NodeJS.Timeout;
-  return (search: string) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(search), delay);
-  };
 };

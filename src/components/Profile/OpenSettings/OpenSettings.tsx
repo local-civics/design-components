@@ -14,6 +14,7 @@ export type OpenSettingsProps = {
   accessToken?: string;
   isLoading?: boolean;
   visible?: boolean;
+  hasChanges?: boolean
   onClose?: () => void;
   onSave?: (changes?: {
     name?: string;
@@ -36,31 +37,21 @@ export type OpenSettingsProps = {
 export const OpenSettings = (props: OpenSettingsProps) => {
   // https://stackoverflow.com/questions/55075604/react-hooks-useeffect-only-on-update
   const [avatarFile, setAvatarFile] = React.useState(undefined as Blob | undefined);
-  const [avatarURL, setAvatarURL] = React.useState(undefined as string | undefined);
-  const [tenantName, setResidentName] = React.useState(undefined as string | undefined);
-  const [givenName, setGivenName] = React.useState(undefined as string | undefined);
-  const [familyName, setFamilyName] = React.useState(undefined as string | undefined);
-  const [grade, setGrade] = React.useState(undefined as number | undefined);
-  const [impactStatement, setImpactStatement] = React.useState(undefined as string | undefined);
-  const onAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let reader = new FileReader();
-    const target = e.target as HTMLInputElement;
-    const file: File = (target.files as FileList)[0];
-    reader.onloadend = () => {
-      if (typeof reader.result === "string") {
-        setAvatarURL(reader.result);
-        setAvatarFile(file);
-      }
-    };
-    reader.readAsDataURL(file);
-  };
+  const [avatarURL, setAvatarURL] = React.useState(props.avatarURL);
+  const [tenantName, setTenantName] = React.useState(props.tenantName);
+  const [givenName, setGivenName] = React.useState(props.givenName);
+  const [familyName, setFamilyName] = React.useState(props.familyName);
+  const [grade, setGrade] = React.useState(props.grade);
+  const [impactStatement, setImpactStatement] = React.useState(props.impactStatement);
+  const [focus, setFocus] = React.useState("")
   const hasChanges =
-    (tenantName && tenantName !== props.tenantName) ||
-    (givenName && givenName !== props.givenName) ||
-    (familyName && familyName !== props.familyName) ||
-    (grade && grade !== props.grade) ||
-    (impactStatement && impactStatement !== props.impactStatement) ||
-    (avatarURL && avatarURL !== props.avatarURL);
+      props.hasChanges ||
+    (tenantName !== props.tenantName) ||
+    (givenName !== props.givenName) ||
+    (familyName !== props.familyName) ||
+    (grade !== props.grade) ||
+    (impactStatement !== props.impactStatement) ||
+    (avatarURL !== props.avatarURL);
 
   const onSave = () =>
     hasChanges &&
@@ -73,6 +64,21 @@ export const OpenSettings = (props: OpenSettingsProps) => {
       impactStatement: impactStatement,
       avatar: avatarFile,
     });
+
+  const onAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let reader = new FileReader();
+    const target = e.target as HTMLInputElement;
+    const file: File = (target.files as FileList)[0];
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        setAvatarURL(reader.result);
+        setAvatarFile(file);
+        onSave()
+      }
+    };
+    reader.readAsDataURL(file);
+    setFocus("")
+  };
 
   return (
     <Modal isLoading={props.isLoading} visible={props.visible} onClose={props.onClose}>
@@ -106,12 +112,14 @@ export const OpenSettings = (props: OpenSettingsProps) => {
 
           <div className="grid grid-cols-1 gap-6 h-[18rem] md:h-[24rem] px-1 overflow-y-scroll">
             <div>
-              <p className="mb-2 font-semibold text-slate-500 text-sm">Username</p>
+              <p className="mb-2 font-semibold text-slate-500 text-sm">Tenant Name</p>
+              <p className="mb-2 text-slate-500 text-xs">This is your Local username.</p>
               <input
-                min={6}
-                max={30}
-                onChange={(e) => setResidentName(e.target.value)}
-                defaultValue={props.tenantName}
+                min={100}
+                max={3000}
+                autoFocus={focus === "tenantName"}
+                onChange={(e) => { setFocus("tenantName"); setTenantName(e.target.value)}}
+                defaultValue={tenantName}
                 className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -122,9 +130,11 @@ export const OpenSettings = (props: OpenSettingsProps) => {
 
             <div>
               <p className="mb-2 w-full font-semibold text-slate-500 text-sm">First Name</p>
-              <input
-                onChange={(e) => setGivenName(e.target.value)}
-                defaultValue={props.givenName}
+              <p className="mb-2 text-slate-500 text-xs">What is your given name?</p>
+              <input max={3000}
+                     autoFocus={focus === "givenName"}
+                onChange={(e) => { setFocus("givenName"); setGivenName(e.target.value) }}
+                defaultValue={givenName}
                 className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -135,9 +145,11 @@ export const OpenSettings = (props: OpenSettingsProps) => {
 
             <div className="w-full">
               <p className="mb-2 font-semibold text-slate-500 text-sm">Last Name</p>
-              <input
-                onChange={(e) => setFamilyName(e.target.value)}
-                defaultValue={props.familyName}
+              <p className="mb-2 text-slate-500 text-xs">What is your family name?</p>
+              <input max={3000}
+                     autoFocus={focus === "familyName"}
+                onChange={(e) => { setFocus("familyName"); setFamilyName(e.target.value) }}
+                defaultValue={familyName}
                 className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -148,9 +160,10 @@ export const OpenSettings = (props: OpenSettingsProps) => {
 
             <div>
               <p className="mb-2 font-semibold text-slate-500 text-sm">Grade</p>
+              <p className="mb-2 text-slate-500 text-xs">What grade are you in?</p>
               <select
                 onChange={(e) => setGrade(parseInt(e.target.value, 10))}
-                defaultValue={props.grade}
+                defaultValue={grade}
                 className="appearance-none mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
@@ -168,9 +181,11 @@ export const OpenSettings = (props: OpenSettingsProps) => {
 
             <div>
               <p className="mb-2 font-semibold text-slate-500 text-sm">Impact Statement</p>
-              <textarea
-                onChange={(e) => setImpactStatement(e.target.value)}
-                defaultValue={props.impactStatement}
+              <p className="mb-2 text-slate-500 text-xs">How would you like to contribute to your community?</p>
+              <textarea maxLength={3000}
+                        autoFocus={focus === "impactStatement"}
+                onChange={(e) => { setFocus("impactStatement"); setImpactStatement(e.target.value) }}
+                defaultValue={impactStatement}
                 className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -181,6 +196,7 @@ export const OpenSettings = (props: OpenSettingsProps) => {
 
             <div>
               <p className="mb-2 font-semibold text-slate-500 text-sm">Access Token</p>
+              <p className="mb-2 text-slate-500 text-xs">Treat this like your password, keep it safe.</p>
               <input
                 disabled
                 defaultValue={props.accessToken || ""}

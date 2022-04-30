@@ -15,9 +15,9 @@ export interface TagFilterProps {
  * @constructor
  */
 export const TagFilter = (props: TagFilterProps) => {
-  const timeTags = ["morning", "afternoon", "evening", "weekend"];
-  const skillTags = ["leadership", "speaking", "group", "navigation"];
-  const locationTags = ["online", "in-person", "at-school", "community"];
+  const timeTags = ["15 min", "30 min", "45 min", "60 min"];
+  const skillTags = ["Civic", "College", "Academic", "Personal"];
+  const formatTags = ["Online", "Live", "In-Person"];
   const init: Record<string, boolean> = {};
   props.tags &&
     props.tags.map((tag) => {
@@ -57,11 +57,11 @@ export const TagFilter = (props: TagFilterProps) => {
             <div className="inline-block w-4 h-4 max-w-4 stroke-gray-600 fill-gray-600">
               <Icon name="clock" />
             </div>
-            <span className="ml-2 text-gray-600 font-semibold">Time</span>
+            <span className="ml-2 text-gray-600 font-semibold">Duration</span>
             <div className="mt-5 grid grid-cols-2 gap-3">
               {timeTags.map((tag, i) => {
                 const base =
-                  "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs";
+                  "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs";
                 const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600";
                 const className = [base, bg].join(" ");
                 return (
@@ -81,7 +81,7 @@ export const TagFilter = (props: TagFilterProps) => {
             <div className="mt-5 grid grid-cols-2 gap-3">
               {skillTags.map((tag, i) => {
                 const base =
-                  "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs";
+                  "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs";
                 const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600";
                 const className = [base, bg].join(" ");
                 return (
@@ -97,11 +97,11 @@ export const TagFilter = (props: TagFilterProps) => {
             <div className="inline-block w-4 h-4 max-w-4 stroke-gray-600 fill-gray-600">
               <Icon name="pin" />
             </div>
-            <span className="ml-2 text-gray-600 font-semibold">Location</span>
+            <span className="ml-2 text-gray-600 font-semibold">Format</span>
             <div className="mt-5 grid grid-cols-2 gap-3">
-              {locationTags.map((tag, i) => {
+              {formatTags.map((tag, i) => {
                 const base =
-                  "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md capitalize hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs";
+                  "cursor-pointer shadow-sm text-center font-semibold inline-block rounded-md hover:text-gray-600 hover:bg-gray-50 active:bg-gray-50 px-4 py-2 text-xs";
                 const bg = active[tag] ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-600";
                 const className = [base, bg].join(" ");
                 return (

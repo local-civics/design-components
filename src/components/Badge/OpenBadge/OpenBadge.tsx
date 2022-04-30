@@ -16,6 +16,7 @@ export type OpenBadgeProps = {
   showTasks?: boolean;
   children?: React.ReactNode;
   onStart?: () => void;
+  onClose?: () => void;
 };
 
 /**
@@ -24,7 +25,6 @@ export type OpenBadgeProps = {
  * @constructor
  */
 export const OpenBadge = (props: OpenBadgeProps) => {
-  const className = builder("w-full").if(!!props.badgeId, "min-h-[20rem]").build();
   const BadgeTasks = () => {
     if (!props.showTasks) {
       return null;
@@ -61,8 +61,8 @@ export const OpenBadge = (props: OpenBadgeProps) => {
   };
 
   return (
-    <Modal isLoading={!props.badgeId} visible>
-      <div className={className}>
+    <Modal onClose={props.onClose} isLoading={!props.badgeId} visible>
+      <div>
         <div className="px-4 pb-4 border-b border-gray-200 w-[18rem] md:w-[24rem] lg:w-[28rem]">
           <div className="flex items-center gap-x-2 -mt-4">
             <div className="grow align-middle inline-block">

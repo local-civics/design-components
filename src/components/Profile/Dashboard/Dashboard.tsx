@@ -32,7 +32,7 @@ export const Dashboard = (props: DashboardProps) => {
       {!props.disabled && (
         <Tab icon="activity" title="tasks" active={active === "tasks"} onClick={props.onTaskWorkflow} />
       )}
-      {!props.disabled && <Tab disabled icon="cohort" title="groups" />}
+      {!props.disabled && <Tab disabled icon="cohort" title="cohorts" />}
     </>
   );
   return (

@@ -16,14 +16,18 @@ export const OnboardingContainer = () => {
   if (!tenantName) {
     throw new Error("request is missing required params");
   }
-  const [organizations, searchOrganizations] = useOrganizations();
+  const [search, organizations, searchOrganizations] = useOrganizations();
   const [membership, joinOrganization] = useJoinOrganization(tenantName);
+  const [registration, setRegistration] = React.useState(null as any)
+
   return {
     Onboarding: () => (
       <Onboarding
         {...tenant}
-        isLoading={tenant?.isLoading || organizations === null}
-        hasOrganization={membership && membership.length > 0}
+        {...registration}
+        search={search}
+        isLoading={tenant?.isLoading || membership === null}
+        hasOrganization={!!membership && membership.length > 0}
         hasPersona={!!tenant?.persona}
         hasRegistration={!!tenant?.grade || !!tenant.impactStatement}
         hasInterests={!!tenant.interests || !!tenant.impactStatement}
@@ -31,7 +35,7 @@ export const OnboardingContainer = () => {
         onDeclineLegalAgreement={auth.logout}
         onOrganizationSearch={searchOrganizations}
         onJoinOrganization={joinOrganization}
-        onConfigureTenant={tenant.configure}
+        onConfigureTenant={(conf) => { setRegistration(conf); tenant.configure(conf) }}
         onFinish={() => navigate(`/tenants/${tenant.tenantName}`)}
       />
     ),
@@ -40,20 +44,24 @@ export const OnboardingContainer = () => {
 
 // A hook for searching organizations
 const useOrganizations = () => {
-  const [organizations, setOrganizations] = React.useState(null as any);
+  const [organizations, setOrganizations] = React.useState([] as any);
+  const [search, setSearch] = React.useState(null as string | null)
   const location = useLocation();
   const api = useApi();
 
   return [
+    search,
     organizations,
     async (search: string) => {
       if (!search || search === "undefined") {
-        setOrganizations(null);
+        setSearch("")
+        setOrganizations([]);
         return;
       }
       const ctx = { referrer: location.pathname };
+      setSearch(search);
       setOrganizations(
-        api.do(ctx, "GET", "identity", "/organizations", {
+        await api.do(ctx, "GET", "identity", "/organizations", {
           query: {
             q: search,
           },
@@ -76,7 +84,7 @@ const useJoinOrganization = (tenantName: string) => {
       setOrganizations(await api.do(ctx, "GET", "identity", `/tenants/${tenantName}/organizations`));
     })();
     return () => setOrganizations(null);
-  }, [organizationKey]);
+  }, [!!organizationKey]);
 
   return [
     organizations,
@@ -92,7 +100,13 @@ const useJoinOrganization = (tenantName: string) => {
             accessCode,
           },
         })
-        .then(() => setOrganizations([]));
+        .then(async (err) => {
+          if(!err){
+            setOrganizations(await api.do(ctx, "GET", "identity", `/tenants/${tenantName}/organizations`));
+            return
+          }
+          setOrganizations([])
+        });
     },
   ];
 };
