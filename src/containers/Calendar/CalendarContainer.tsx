@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useApi } from "../../contexts/App";
+import {useApi, useTenant} from "../../contexts/App";
 import { DateSelection } from "../../components/Calendar/DateSelection/DateSelection";
 import { EventPreview } from "../../components/Calendar/EventPreview/EventPreview";
 import { EventList } from "../../components/Calendar/EventList/EventList";
@@ -13,31 +13,38 @@ export const CalendarContainer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
-  const tenantName = params.tenantName;
+  const tenant = useTenant()
+  const tenantName = params.tenantName || tenant.tenantName;
   const [date, setDate] = React.useState(
     params.date && params.date !== "undefined" ? dayDate(params.date) : (new Date() as Date | null)
   );
-  if (!tenantName) {
-    throw new Error("request is missing required params");
-  }
   const day = (date || new Date()).toISOString();
-  const events = useEvents(tenantName, day);
   return {
     DateSelection: () => <DateSelection date={date} setDate={setDate} />,
-    EventList: () => (
-      <EventList isLoading={events === null} date={date} onSetDate={setDate}>
+    EventList: () => {
+      if(tenant.isLoading){
+        return null
+      }
+
+      if (!tenantName) {
+        throw new Error("request is missing required params");
+      }
+
+      const events = useEvents(tenantName, day);
+
+      return <EventList isLoading={events === null} date={date} onSetDate={setDate}>
         {events &&
-          events.map((event: any) => {
-            return (
-              <EventPreview
-                key={event.activityId}
-                {...event}
-                onClick={() => navigate(`${location.pathname}/${event.activityId}`)}
-              />
-            );
-          })}
+            events.map((event: any) => {
+              return (
+                  <EventPreview
+                      key={event.activityId}
+                      {...event}
+                      onClick={() => navigate(`${location.pathname}/${event.activityId}`)}
+                  />
+              );
+            })}
       </EventList>
-    ),
+    },
   };
 };
 

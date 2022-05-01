@@ -13,32 +13,38 @@ import { OpenActivity } from "../../components/Activity/OpenActivity/OpenActivit
  * @constructor
  */
 export const ActivityContainer = () => {
+  const tenant = useTenant()
   const params = useParams();
-  const tenantName = params.tenantName;
+  const tenantName = params.tenantName || tenant.tenantName;
   const activityId = params.activityId;
-  if (!tenantName || !activityId) {
-    throw new Error("request must missing required params");
-  }
-
   const navigate = useNavigate();
-  const activity = useActivity(tenantName, activityId);
-  const [subscribed, toggleSubscription] = useSubscription(activity);
 
   return {
-    OpenActivity: () => (
-      <OpenActivity
-        {...activity}
-        isSubscribed={subscribed}
-        onRegister={toggleSubscription}
-        onReflect={() => navigate(`${location.pathname}/reflection`)}
-        onUnregister={toggleSubscription}
-        onLaunch={() => activity?.link && window.open(activity?.link, "_blank")}
-        onSkillClick={(skill: string) =>
-          navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
-        }
-        onClose={() => navigate(-1)}
+    OpenActivity: () => {
+      if(tenant.isLoading){
+        return null
+      }
+
+      if (!tenantName || !activityId) {
+        throw new Error("request must missing required params");
+      }
+
+      const activity = useActivity(tenantName, activityId);
+      const [subscribed, toggleSubscription] = useSubscription(activity);
+
+      return <OpenActivity
+          {...activity}
+          isSubscribed={subscribed}
+          onRegister={toggleSubscription}
+          onReflect={() => navigate(`${location.pathname}/reflection`)}
+          onUnregister={toggleSubscription}
+          onLaunch={() => activity?.link && window.open(activity?.link, "_blank")}
+          onSkillClick={(skill: string) =>
+              navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
+          }
+          onClose={() => navigate(-1)}
       />
-    ),
+    },
   };
 };
 

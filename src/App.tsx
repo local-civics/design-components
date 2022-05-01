@@ -48,6 +48,10 @@ const AppRoutes = () => {
         <Route path="badges/:badgeId/tasks/:taskId" element={<Task />} />
         <Route path="tasks/:taskId" element={<Task />} />
       </Route>
+        <Route path="/events" element={<Calendar />}>
+            <Route path=":activityId" element={<Activity />} />
+            <Route path=":activityId/reflection" element={<Reflection />} />
+        </Route>
       <Route path="/tenants/:tenantName/events" element={<Calendar />}>
         <Route path=":activityId" element={<Activity />} />
         <Route path=":activityId/reflection" element={<Reflection />} />
