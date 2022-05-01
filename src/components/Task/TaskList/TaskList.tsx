@@ -22,7 +22,7 @@ export const TaskList = (props: TaskListProps) => {
   const active = props.active || "todo";
   const tabs = (
     <>
-      <Tab secondary icon="todo" title="todo" active={active === "todo"} onClick={props.onTodo} />
+      <Tab disabled secondary icon="todo" title="todo" active={active === "todo"} onClick={props.onTodo} />
       <Tab secondary icon="review" title="in-progress" active={active === "in-progress"} onClick={props.onInProgress} />
       <Tab secondary icon="done" title="done" active={active === "done"} onClick={props.onDone} />
     </>

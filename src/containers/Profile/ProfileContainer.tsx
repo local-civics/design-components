@@ -211,11 +211,11 @@ const useTab = () => {
 // A hook for subscribing and updating status
 const useStatus = () => {
   const [query] = useSearchParams();
-  const [status, setStatus] = React.useState(!!query.get("status") ? query.get("status") : "todo");
+  const [status, setStatus] = React.useState(!!query.get("status") ? query.get("status") : "in-progress");
   const queryKey = JSON.stringify(query);
 
   React.useEffect(() => {
-    setStatus(!!query.get("status") ? query.get("status") : "todo");
+    setStatus(!!query.get("status") ? query.get("status") : "in-progress");
   }, [queryKey]);
 
   return [status, setStatus] as [any, any];
