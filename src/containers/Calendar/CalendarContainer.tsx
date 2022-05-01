@@ -30,9 +30,9 @@ export const CalendarContainer = () => {
           events.map((event: any) => {
             return (
               <EventPreview
-                key={event.eventId}
+                key={event.activityId}
                 {...event}
-                onClick={() => navigate(`${location.pathname}/${event.eventId}`)}
+                onClick={() => navigate(`${location.pathname}/${event.activityId}`)}
               />
             );
           })}

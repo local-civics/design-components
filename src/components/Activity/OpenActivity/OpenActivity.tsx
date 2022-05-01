@@ -40,7 +40,7 @@ export const OpenActivity = (props: OpenActivityProps) => {
     const now = new Date();
     const inProgress =
       props.milestone ||
-      (props.startTime && props.endTime && now >= new Date(props.startTime) && now <= new Date(props.endTime));
+      (props.startTime && now >= new Date(props.startTime));
     const status = inProgress ? "in-progress" : props.isSubscribed ? "subscribed" : "unsubscribed";
     switch (status) {
       case "in-progress":
