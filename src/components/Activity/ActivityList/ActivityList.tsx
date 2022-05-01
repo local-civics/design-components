@@ -31,8 +31,7 @@ export const ActivityList = (props: ActivityListProps) => {
   const top = props.top ? props.top.filter((a) => !primary || a.activityId !== primary.activityId) : props.top
   const topMap: any = {}
   top?.map(a => topMap[a.activityId] = true)
-  const upcoming = props.upcoming ? props.upcoming.filter((a) => !primary && !topMap[a.activityId] || a.activityId !== primary.activityId) : props.upcoming
-
+  const upcoming = props.upcoming ? props.upcoming.filter((a) => !topMap[a.activityId] && (!primary || primary && a.activityId !== primary.activityId)) : props.upcoming
   return (
     <>
       <Search value={props.search} send={(search?: string) => props.onSearch && props.onSearch(search)} />

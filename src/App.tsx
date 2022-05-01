@@ -57,6 +57,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="/tenants/:tenantName/activities" element={<Explore />}>
         <Route path=":activityId" element={<Activity />} />
+          <Route path=":activityId/reflection" element={<Reflection />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

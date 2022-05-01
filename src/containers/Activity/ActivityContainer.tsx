@@ -30,7 +30,7 @@ export const ActivityContainer = () => {
         {...activity}
         isSubscribed={subscribed}
         onRegister={toggleSubscription}
-        onReflect={() => navigate(`/tenants/${tenantName}/reflections/${activityId}`)}
+        onReflect={() => navigate(`/tenants/${tenantName}/activities/${activityId}/reflection`)}
         onUnregister={toggleSubscription}
         onLaunch={() => activity?.link && window.open(activity?.link, "_blank")}
         onSkillClick={(skill: string) =>
