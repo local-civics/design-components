@@ -103,7 +103,9 @@ export const Loader = (props: LoaderProps) => {
             </g>
           </svg>
         </div>
-        <div className={contentClassName}>{props.children}</div>
+        <div className={contentClassName}>
+          {props.children}
+        </div>
       </div>
     </>
   );

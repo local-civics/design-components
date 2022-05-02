@@ -34,7 +34,9 @@ const cfg = [
         sourceMap: true,
         minimize: true,
       }),
-      typescript(),
+      typescript({
+        tsconfig: "./tsconfig.json",
+      }),
       terser(),
     ],
   },

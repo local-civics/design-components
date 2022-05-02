@@ -21,7 +21,7 @@ export const NotFoundModal = (props: NotFoundModalProps) => {
         alt="landing"
         src="https://cdn.localcivics.io/hub/landing.jpg"
       />
-      <Modal visible={props.visible}>
+      <Modal onClose={props.onHome} visible={props.visible}>
         <div className="grid grid-cols-1 p-8 justify-items-center text-slate-500 gap-y-4">
           <div className="grid grid-cols-1 justify-items-center gap-y-2">
             <p className="text-sm font-semibold">Not found</p>

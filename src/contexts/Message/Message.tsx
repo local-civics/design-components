@@ -1,4 +1,4 @@
-import { IsBadRequest, IsNotAuthorized, IsNotFound } from "@local-civics/js-client";
+import { errorCode } from "@local-civics/js-client";
 import * as Sentry from "@sentry/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -77,17 +77,16 @@ const useContext = (value?: string) => {
     const msg: Message = { ...context };
     if (message instanceof Error) {
       msg.severity = "error";
-      if (IsBadRequest(message)) {
+      const code = errorCode(message);
+      if (code === 400) {
         msg.title = "Try again";
         msg.description = message.message;
-      } else if (IsNotAuthorized(message)) {
+      } else if (code === 401) {
         msg.title = "Not authorized";
         msg.description = message.message;
-        msg.unrecoverable = true;
-      } else if (IsNotFound(message)) {
+      } else if (code === 404) {
         msg.title = "Not found";
         msg.description = "sorry, we're unable to find this";
-        msg.unrecoverable = true;
       } else {
         msg.title = "Something went wrong";
         msg.description = "If the issue persists, please contact support@localcivics.io.";

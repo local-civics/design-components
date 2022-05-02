@@ -6,7 +6,7 @@ import { Loader } from "../Loader/Loader";
  * The properties for tabs.
  */
 export type BoardProps = {
-  resolving?: boolean;
+  isLoading?: boolean;
   secondary?: boolean;
   tabs?: React.ReactNode;
   workflow?: React.ReactNode;
@@ -28,7 +28,7 @@ export const Board = (props: BoardProps) => {
         <div className={layoutClassName}>{props.tabs}</div>
       </div>
       <div>
-        <Loader isLoading={props.resolving}>
+        <Loader isLoading={props.isLoading}>
           {!hasWorkflow && (
             <div className="grid justify-items-center content-center">
               <p className="text-sm text-center align-middle leading-6 font-semibold text-slate-300">
