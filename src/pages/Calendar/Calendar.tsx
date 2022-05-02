@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import { AuthLayout } from "../../layouts/AuthLayout/AuthLayout";
-import { CalendarContainer } from "./containers/CalendarContainer/CalendarContainer";
+import { CalendarContainer } from "../../containers/Calendar/CalendarContainer";
 
 /**
  * A component for the Calendar page.

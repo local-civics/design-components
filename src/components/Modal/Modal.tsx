@@ -7,7 +7,7 @@ import { Loader } from "../Loader/Loader";
  * The properties for the modal.
  */
 export type ModalProps = {
-  resolving?: boolean;
+  isLoading?: boolean;
   visible?: boolean;
   top?: boolean;
   plain?: boolean;
@@ -32,17 +32,25 @@ export const Modal = (props: ModalProps) => {
 
   const contentClassName = builder().if(!props.plain, "shadow-md bg-white overflow-hidden rounded-md relative").build();
 
+  const close = () => {
+    if (props.onClose) {
+      props.onClose();
+    }
+  };
+
   return (
     <div className={className}>
       <div className={contentClassName}>
         <div className="grid grid-cols-1 gap-y-2">
-          {props.onClose && (
+          {!props.isLoading && props.onClose && (
             <div className="justify-self-end mx-2 mt-2 z-30">
-              <Button size="xs" filter="none" icon="menu-close" onClick={props.onClose} />
+              <Button size="xs" filter="none" icon="menu-close" onClick={close} />
             </div>
           )}
 
-          <Loader isLoading={props.resolving}>{props.children}</Loader>
+          <Loader isLoading={props.isLoading}>
+            {props.children}
+          </Loader>
         </div>
       </div>
     </div>

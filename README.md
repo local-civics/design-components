@@ -41,5 +41,3 @@ or if want to live updates,
 ## Used by
 
 - [Hub](https://hub.localcivics.io)
-
-# todo: fix intro.mdx

@@ -1,10 +1,12 @@
-import React from "react";
+import React, {useCallback} from "react";
 import { Button } from "../Button/Button";
 import { Modal } from "../Modal/Modal";
 import { SearchButton } from "./SearchButton/SearchButton";
 import { SearchResultProps } from "./SearchResult/SearchResult";
+import {debounce} from "../../utils/search";
 
 export type SearchProps = {
+  autofocus?: boolean
   category?: string;
   open?: boolean;
   disabled?: boolean;
@@ -17,19 +19,20 @@ export type SearchProps = {
 };
 
 export const Search = (props: SearchProps) => {
-  const hasResults = props.results && React.Children.count(props.results) > 0;
+  const hasResults = !!props.results && React.Children.count(props.results) > 0;
   const placeholder = props.placeholder || "Quick search...";
   const searchRef = React.useRef<HTMLInputElement>(null);
+  const handler = useCallback(debounce((search) => props.onSearch && props.onSearch(search)), []);
   React.useEffect(() => {
     if (searchRef.current) {
       searchRef.current.focus();
     }
-  }, [props.open]);
+  }, [!!props.open]);
 
   return (
     <>
       <SearchButton disabled={props.disabled} placeholder={placeholder} onClick={props.onOpen} />
-      <Modal visible={props.open}>
+      <Modal onClose={props.onClose} visible={props.open}>
         <div className="w-full md:w-[28rem]">
           <label className="relative block w-full top-4 px-12 border-b border-slate-100">
             <span className="absolute inset-y-0 left-0 top-0 flex items-center px-5">
@@ -37,8 +40,10 @@ export const Search = (props: SearchProps) => {
             </span>
             <input
               ref={searchRef}
+              autoFocus={props.autofocus}
+              defaultValue={props.value}
               autoComplete="off"
-              onChange={(e) => props.onSearch && props.onSearch(e.target.value)}
+              onChange={(e) => handler(e.target.value)}
               className="placeholder:text-slate-400 text-slate-400 block bg-white w-full -mt-4 py-4 pr-7 focus:outline-none text-xs"
               type="text"
               name="search"
@@ -48,7 +53,7 @@ export const Search = (props: SearchProps) => {
               <Button spacing="xs" border="rounded" size="tiny" text="esc" onClick={props.onClose} />
             </span>
           </label>
-          {hasResults && (
+          {!!hasResults && (
             <div className="grid grid-cols-1 w-full gap-1 mt-4 max-h-[24rem] overflow-scroll">{props.results}</div>
           )}
 

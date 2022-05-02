@@ -10,7 +10,7 @@ export type WidgetProps = {
   borderless?: boolean;
   color?: "sky" | "inherit";
   height?: "sm";
-  resolving?: boolean;
+  isLoading?: boolean;
   children?: React.ReactNode;
 };
 
@@ -29,7 +29,7 @@ export const Widget = (props: WidgetProps) => {
   return (
     <article className={className}>
       {!props.headless && <div className="p-2 bg-gray-200" />}
-      <Loader isLoading={props.resolving}>
+      <Loader isLoading={props.isLoading}>
         <div className="relative w-full">{props.children}</div>
       </Loader>
     </article>

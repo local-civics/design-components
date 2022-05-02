@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { NavBar, NavBarProps, NavLink, Loader } from "../../components";
-import { useAuth, useIdentity } from "../../contexts/App";
+import { useAuth, useTenant } from "../../contexts/App";
 
 /**
  * The properties for the auth layout
@@ -22,62 +22,53 @@ export type AuthLayoutProps = {
  * @constructor
  */
 export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
-  const identity = useIdentity();
+  const tenant = useTenant();
   const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuth();
   const page = props.page || "profile";
-  const primaryOrganization =
-    identity?.organizations && identity.organizations.length > 0 ? identity.organizations[0] : {};
   React.useEffect(() => {
-    if (identity.resolving) {
+    if (tenant.isLoading) {
       return;
     }
 
-    if (
-      !identity.organizations ||
-      identity.organizations?.length == 0 ||
-      !identity.statement ||
-      !identity.givenName ||
-      !identity.role
-    ) {
-      if (location.pathname !== `/onboarding`) {
-        navigate(`/onboarding`);
-      }
+    if (!tenant.impactStatement && !location.pathname.endsWith("onboarding")) {
+      navigate(`/tenants/${tenant.tenantName}/onboarding`);
     }
-  }, [
-    location.pathname,
-    identity.nickname,
-    identity.organizations,
-    identity.statement,
-    identity.givenName,
-    identity.role,
-  ]);
+  }, [location.pathname, tenant.tenantName, tenant.impactStatement]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
-      <Loader isLoading={identity.resolving}>
+      <Loader isLoading={tenant.isLoading}>
         <NavBar>
           <NavLink disabled={props.disabled} name="home" path="/" />
-          <NavLink name="faq" onClick={() => window.open("https://docs.google.com/document/d/19d8bO2D_KSxyvT8HPS8RqJTRMla6jgBtVPV5HgcSAk8/view", "_blank")}/>
-          <NavLink name="privacy" onClick={() => window.open("https://www.localcivics.io/privacy-policy", "_blank")}/>
-          <NavLink name="terms" onClick={() => window.open("https://www.localcivics.io/terms-of-service", "_blank")}/>
+          <NavLink
+            name="faq"
+            onClick={() =>
+              window.open(
+                "https://docs.google.com/document/d/19d8bO2D_KSxyvT8HPS8RqJTRMla6jgBtVPV5HgcSAk8/view",
+                "_blank"
+              )
+            }
+          />
+          <NavLink name="privacy" onClick={() => window.open("https://www.localcivics.io/privacy-policy", "_blank")} />
+          <NavLink name="terms" onClick={() => window.open("https://www.localcivics.io/terms-of-service", "_blank")} />
           <NavLink
             disabled={props.disabled}
             name="profile"
-            path={`/tenants/${identity.nickname}`}
+            path={`/tenants/${tenant.tenantName}`}
             active={page === "profile"}
           />
           <NavLink
             disabled={props.disabled}
             name="explore"
-            path={`/marketplace/${primaryOrganization.nickname}/activities`}
+            path={`/tenants/${tenant.tenantName}/activities`}
             active={page === "explore"}
           />
           <NavLink
             disabled={props.disabled}
             name="calendar"
-            path={`/marketplace/${primaryOrganization.nickname}/calendar/day/today`}
+            path={`/tenants/${tenant.tenantName}/events`}
             active={page === "calendar"}
           />
           <NavLink name="logout" onClick={auth.logout} />

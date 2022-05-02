@@ -1,4 +1,4 @@
-import { ReflectionContainer } from "./containers/ReflectionContainer/ReflectionContainer";
+import { ReflectionContainer } from "../../containers/Reflection/ReflectionContainer";
 
 /**
  * A component for the reflection page.
