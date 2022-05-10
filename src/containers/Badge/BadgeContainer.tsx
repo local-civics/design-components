@@ -52,7 +52,11 @@ const useBadge = (tenantName: string, badgeId: string, started: boolean) => {
 
     (async () => {
       const ctx = { referrer: location.pathname };
-      setBadge({ ...(await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/badges/${badgeId}`)) });
+      const promises = await Promise.all([
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/badges/${badgeId}`),
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/badges/${badgeId}/tasks`)
+      ])
+      setBadge({ ...promises[0], tasks: promises[1]});
     })();
 
     return () => setBadge({});
@@ -68,7 +72,7 @@ const useStartBadge = (tenantName: string, sagaId: string, badgeId: string, setS
   const message = useMessage();
   return async () => {
     const ctx = { referrer: location.pathname };
-    await api.do(ctx, "PUT", "curriculum", `/tenants/${tenantName}/badges/${badgeId}`, {
+    await api.do(ctx, "PUT", "curriculum", `/tenants/${tenantName}/badges/${badgeId}/start`, {
       body: {
         sagaId
       }

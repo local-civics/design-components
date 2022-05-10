@@ -27,7 +27,7 @@ export const BadgeList = (props: BadgePreviewProps) => {
         </div>
       )}
       {hasContent && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-2 max-h-[16rem] md:max-h-[22rem] overflow-scroll">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-2 max-h-[16rem] md:max-h-[24rem] overflow-scroll">
           {props.children}
           {count < gridSize &&
             [...Array(gridSize - count).keys()].map((k) => {

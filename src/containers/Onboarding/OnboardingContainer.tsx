@@ -30,7 +30,7 @@ export const OnboardingContainer = () => {
         hasOrganization={!!membership && membership.length > 0}
         hasPersona={!!tenant?.persona}
         hasRegistration={!!tenant?.grade || !!tenant.impactStatement}
-        hasInterests={!!tenant.interests || !!tenant.impactStatement}
+        hasInterests={!!tenant.interests}
         organizations={organizations}
         onDeclineLegalAgreement={auth.logout}
         onOrganizationSearch={searchOrganizations}

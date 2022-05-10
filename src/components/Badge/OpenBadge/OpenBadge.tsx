@@ -6,7 +6,6 @@ import { builder } from "../../../utils/classname/classname";
  * The properties for the badge.
  */
 export type OpenBadgeProps = {
-  badgeId?: string;
   headline?: string;
   imageURL?: string;
   summary?: string;
@@ -31,8 +30,8 @@ export const OpenBadge = (props: OpenBadgeProps) => {
     }
 
     return (
-      <div className="w-full mt-2 grid grid-cols-1 gap-y-5 px-4 pb-4">
-        <p className="text-sm font-bold text-slate-500">Tasks</p>
+      <div className="w-full mt-2 grid grid-cols-1 gap-y-5 px-6 pt-2 pb-4">
+        <p className="text-sm font-semibold text-slate-500">Tasks</p>
         <div className="grid gap-10 w-full max-h-[24rem] overflow-scroll">{props.children}</div>
       </div>
     );
@@ -61,10 +60,10 @@ export const OpenBadge = (props: OpenBadgeProps) => {
   };
 
   return (
-    <Modal onClose={props.onClose} isLoading={!props.badgeId} visible>
+    <Modal onClose={props.onClose} isLoading={!props.headline} visible>
       <div>
-        <div className="px-4 pb-4 border-b border-gray-200 w-[18rem] md:w-[24rem] lg:w-[28rem]">
-          <div className="flex items-center gap-x-2 -mt-4">
+        <div className="px-6 pb-2 border-b border-gray-200 text-center md:min-w-[24rem]">
+          <div className="flex items-center gap-x-2">
             <div className="grow align-middle inline-block">
               <p className="font-semibold capitalize text-slate-500 text-lg">{props.headline}</p>
               {props.summary && (
@@ -78,7 +77,7 @@ export const OpenBadge = (props: OpenBadgeProps) => {
         </div>
 
         {props.isAwarded && !!props.imageURL && (
-          <div className="w-full h-full bg-slate-100">
+          <div className="w-full h-full bg-slate-100 md:min-w-[24rem]">
             <div className="p-14">
               <img
                 className="max-w-[14rem] max-h-[18rem] drop-shadow-lg m-auto w-full h-full object-cover"

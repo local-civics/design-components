@@ -231,35 +231,37 @@ const useImpact = (tenantName: string) => {
     setImpact(null);
     (async () => {
       const ctx = { referrer: location.pathname };
-      const overall = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`)
-      const career = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-        query: {
-          pathway: "college & career"
-        }
-      });
-      const policy = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-        query: {
-          pathway: "policy & government"
-        }
-      });
-      const culture = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-        query: {
-          pathway: "arts & culture"
-        }
-      });
-      const volunteer = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-        query: {
-          pathway: "volunteer"
-        }
-      });
-      const recreation = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-        query: {
-          pathway: "recreation"
-        }
-      });
-
-
-      setImpact({overall, career, policy, culture, volunteer, recreation});
+      const promises = await Promise.all(
+          [
+              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`),
+              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+                query: {
+                  pathway: "college & career"
+                }
+              }),
+              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+                query: {
+                  pathway: "policy & government"
+                }
+              }),
+              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+                query: {
+                  pathway: "arts & culture"
+                }
+              }),
+              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+                query: {
+                  pathway: "volunteer"
+                }
+              }),
+              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+                query: {
+                  pathway: "recreation"
+                }
+              }),
+          ]
+      )
+      setImpact({overall: promises[0], career: promises[1], policy: promises[2], culture: promises[3], volunteer: promises[4], recreation: promises[5]});
     })();
     return () => setImpact(null);
   }, [tenantName, api.accessToken]);

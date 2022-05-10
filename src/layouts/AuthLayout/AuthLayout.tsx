@@ -28,7 +28,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const auth = useAuth();
   const page = props.page || "profile";
   React.useEffect(() => {
-    if (tenant.isLoading) {
+    if (tenant.isLoading || !tenant.tenantName) {
       return;
     }
 

@@ -5,7 +5,6 @@ import {Button, Modal, Progress} from "../../index";
  * The properties for the task.
  */
 export type OpenTaskProps = {
-  taskId?: string
   headline?: string
   summary?: string
   isLoading?: boolean
@@ -45,12 +44,12 @@ export const OpenTask = (props: OpenTaskProps) => {
   };
 
   return (
-    <Modal visible isLoading={!props.taskId} onClose={props.onClose}>
+    <Modal visible isLoading={!props.headline} onClose={props.onClose}>
       <div>
-        <div className="px-4 pb-4 border-b border-gray-200 w-[18rem] md:w-[24rem] lg:w-[28rem]">
-          <div className="flex items-center gap-x-2 -mt-4">
+        <div className="px-6 pb-2 border-b border-gray-200">
+          <div className="flex items-center gap-x-2">
             <div className="grow align-middle inline-block">
-              <p className="font-semibold text-slate-500 text-lg">{props.headline}</p>
+              <p className="font-semibold text-slate-500 text-lg max-w-[20rem]">{props.headline}</p>
               { props.summary && <p className="text-slate-500 text-md">{props.summary}</p> }
             </div>
           </div>

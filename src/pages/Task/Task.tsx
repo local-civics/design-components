@@ -5,6 +5,6 @@ import { TaskContainer } from "../../containers/Task/TaskContainer";
  * @constructor
  */
 export const Task = () => {
-  const { TaskModal } = TaskContainer();
-  return <TaskModal />;
+  const { OpenTask } = TaskContainer();
+  return <OpenTask />;
 };

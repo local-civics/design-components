@@ -61,7 +61,7 @@ export const ReflectionContainer = () => {
             setChanges({reflection: reflection, rating: rating, hasChanges: true})
             const ctx = {referrer: location.pathname};
             return api
-                .do(ctx, "PATCH", "curriculum", `/tenants/${tenantName}/activities/${activity.activityId}`, {
+                .do(ctx, "PATCH", "curriculum", `/tenants/${tenantName}/activities/${activityId}/submit_reflection`, {
                   body: {
                     reflection,
                     rating,

@@ -41,7 +41,6 @@ export type OnboardingProps = {
  * @constructor
  */
 export const Onboarding = (props: OnboardingProps) => {
-  // todo: fix storybook component path
   return (
     <Modal isLoading={props.isLoading} plain visible>
       <Delegate {...props} />
