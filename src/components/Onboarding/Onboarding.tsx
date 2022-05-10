@@ -115,7 +115,7 @@ const Delegate = (props: OnboardingProps) => {
         <ImpactQuiz
             persona={props.persona}
             interests={props.interests}
-            onFinish={(interests) => props.onConfigureTenant && props.onConfigureTenant(interests)}
+            onFinish={(interests) => props.onConfigureTenant && props.onConfigureTenant({interests})}
         />
     );
   }
