@@ -82,6 +82,13 @@ class ErrorBoundaryComponent extends React.Component<ErrorBoundaryProps> {
     super(props);
   }
 
+  static getDerivedStateFromError(error: Error, errorInfo: React.ErrorInfo){
+    return {
+      error: error,
+      errorInfo: errorInfo,
+    }
+  }
+
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     error.stack = errorInfo.componentStack;
     this.props.context.emit(error);

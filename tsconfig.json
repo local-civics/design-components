@@ -1,12 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Js Components",
+  "display": "react-hub",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "target": "es6",
     "allowJs": true,
-    "outDir": "dist",
+    "outDir": "",
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

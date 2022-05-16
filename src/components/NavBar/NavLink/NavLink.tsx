@@ -5,7 +5,18 @@ import { Button, ButtonProps } from "../../Button/Button";
 /**
  * The nav link name.
  */
-export type NavLinkName = "home" | "profile" | "explore" | "calendar" | "login" | "logout" | "menu" | "menu-close" | "faq" | "terms" | "privacy";
+export type NavLinkName =
+  | "home"
+  | "profile"
+  | "explore"
+  | "calendar"
+  | "login"
+  | "logout"
+  | "menu"
+  | "menu-close"
+  | "faq"
+  | "terms"
+  | "privacy";
 
 /**
  * The properties for navigation links.
@@ -90,18 +101,18 @@ const withName = (config: ButtonProps, name?: NavLinkName) => {
     case "menu-close":
       config.icon = name;
       break;
-  case "faq":
-      config.text = "FAQ"
-      config.size = "sm"
-      break
-  case "terms":
-    config.text = "Terms"
-    config.size = "sm"
-    break
-  case "privacy":
-    config.text = "Privacy"
-    config.size = "sm"
-    break
+    case "faq":
+      config.text = "FAQ";
+      config.size = "sm";
+      break;
+    case "terms":
+      config.text = "Terms";
+      config.size = "sm";
+      break;
+    case "privacy":
+      config.text = "Privacy";
+      config.size = "sm";
+      break;
     default:
       config.text = name;
       break;

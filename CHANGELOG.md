@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ENG-199 Added Home layout.
 - ENG-200 Added Badge page.
 - ENG-201 Added Calendar page.
-- ENG-202 Added Experience page.
+- ENG-202 Added Activity page.
 - ENG-203 Added Explore page.
 - ENG-204 Added Home page.
 - ENG-205 Added NotFound page.
@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ENG-207 Added Profile page.
 - ENG-208 Added Reflection page.
 - ENG-209 Added Settings page.
-- ENG-210 Added Task page.
+- ENG-210 Added TaskPreview page.
 
 ## Changed
 
