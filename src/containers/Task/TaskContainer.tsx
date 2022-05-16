@@ -32,7 +32,7 @@ export const TaskContainer = () => {
 
   const link = `/tenants/${tenantName}/activities?${search.toString()}`;
   return {
-    TaskModal: () => <OpenTask
+    OpenTask: () => <OpenTask
         {...task}
         onExplore={() => navigate(link)}
         onClose={() => navigate(-1)}

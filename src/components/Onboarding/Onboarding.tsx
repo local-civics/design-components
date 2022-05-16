@@ -41,7 +41,6 @@ export type OnboardingProps = {
  * @constructor
  */
 export const Onboarding = (props: OnboardingProps) => {
-  // todo: fix storybook component path
   return (
     <Modal isLoading={props.isLoading} plain visible>
       <Delegate {...props} />
@@ -116,7 +115,7 @@ const Delegate = (props: OnboardingProps) => {
         <ImpactQuiz
             persona={props.persona}
             interests={props.interests}
-            onFinish={(interests) => props.onConfigureTenant && props.onConfigureTenant(interests)}
+            onFinish={(interests) => props.onConfigureTenant && props.onConfigureTenant({interests})}
         />
     );
   }

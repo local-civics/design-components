@@ -30,11 +30,11 @@ export const ActivityContainer = () => {
       }
 
       const activity = useActivity(tenantName, activityId);
-      const [subscribed, toggleSubscription] = useSubscription(activity);
+      const [subscribed, toggleSubscription] = useSubscription(activityId, activity);
 
       return <OpenActivity
           {...activity}
-          isSubscribed={subscribed}
+          isBookmarked={subscribed}
           onRegister={toggleSubscription}
           onReflect={() => navigate(`${location.pathname}/reflection`)}
           onUnregister={toggleSubscription}
@@ -66,43 +66,47 @@ export const useActivity = (tenantName: string, activityId: string, refresh?: bo
 };
 
 // A hook to react to an event
-const useSubscription = (activity: any) => {
-  const [isSubscribed, setSubscribed] = React.useState(activity?.isSubscribed || false);
+const useSubscription = (activityId: string, activity: any) => {
+  const [isBookmarked, setSubscribed] = React.useState(activity?.isBookmarked || false);
   const tenant = useTenant();
   const location = useLocation();
   const api = useApi();
   const message = useMessage();
 
   React.useEffect(() => {
-    if (activity?.activityId) {
-      setSubscribed(activity?.isSubscribed);
+    if (activityId) {
+      setSubscribed(activity?.isBookmarked);
     }
-  }, [activity?.activityId, activity?.isSubscribed, api.accessToken]);
+  }, [activityId, activity?.isBookmarked, api.accessToken]);
 
   return [
-    isSubscribed,
+    isBookmarked,
     async () => {
-      if (!tenant.tenantName || !tenant.email || !tenant.givenName || !activity?.activityId) {
+      if (!tenant.tenantName || !tenant.email || !tenant.givenName || !activityId) {
         throw new Error("missing required context for registration");
       }
 
       const ctx = { referrer: location.pathname };
+      let body: any = {
+        sagaId: activity.sagaId,
+      }
+      let method: "PATCH" | "DELETE" = "PATCH"
+      if(isBookmarked){
+        method = "DELETE"
+      } else {
+        body = {...body, email: tenant.email,
+          contactName: tenant.givenName,}
+      }
+
       await api
-        .do(ctx, "PATCH", "curriculum", `/tenants/${tenant.tenantName}/activities/${activity.activityId}`, {
-          body: {
-            email: tenant.email,
-            contactName: tenant.givenName,
-            isSubscribed: !isSubscribed,
-            sagaId: activity.sagaId,
-          },
-        })
+        .do(ctx, method, "curriculum", `/tenants/${tenant.tenantName}/activities/${activityId}/bookmark`, {body})
         .then((err) => {
           if(!!err){
             return
           }
 
-          setSubscribed(!isSubscribed);
-          if (isSubscribed) {
+          setSubscribed(!isBookmarked);
+          if (!isBookmarked) {
             if (activity?.rsvpRequired) {
               message.send(`Please be aware that this activity may require additional registration.`, {
                 severity: "success",

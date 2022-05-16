@@ -18,7 +18,7 @@ export const CalendarContainer = () => {
   const [date, setDate] = React.useState(
     params.date && params.date !== "undefined" ? dayDate(params.date) : (new Date() as Date | null)
   );
-  const day = (date || new Date()).toISOString();
+  const day = (date || new Date());
   return {
     DateSelection: () => <DateSelection date={date} setDate={setDate} />,
     EventList: () => {
@@ -49,17 +49,20 @@ export const CalendarContainer = () => {
 };
 
 // A hook to fetch the calendar events
-const useEvents = (tenantName: string, day: string) => {
+const useEvents = (tenantName: string, day: Date) => {
   const [events, setEvents] = React.useState(null as any);
   const api = useApi();
   React.useEffect(() => {
     setEvents(null);
     (async () => {
       const ctx = { referrer: location.pathname };
+      const endTime = new Date(day)
+      endTime.setDate(endTime.getDate() + 1)
       setEvents(
-        await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/events`, {
+        await api.do(ctx, "GET", "curriculum", `/activities`, {
           query: {
-            day: day,
+            startTime: day.toISOString(),
+            endTime: endTime.toISOString(),
           },
         })
       );

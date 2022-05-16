@@ -91,19 +91,11 @@ const useContext = (value?: string) => {
         msg.title = "Something went wrong";
         msg.description = "If the issue persists, please contact support@localcivics.io.";
         msg.unrecoverable = true;
+        Sentry.captureException(message);
+        console.log(message);
       }
     } else {
       msg.description = message;
-    }
-
-    if (message instanceof AppError) {
-      const error = message as AppError;
-      Sentry.captureException(error.cause);
-      console.log(error.cause);
-    } else {
-      const error = message as Error;
-      Sentry.captureException(error);
-      console.log(error);
     }
 
     setMessage(msg);

@@ -82,8 +82,8 @@ export const OpenSettings = (props: OpenSettingsProps) => {
 
   return (
     <Modal isLoading={props.isLoading} visible={props.visible} onClose={props.onClose}>
-      <div className="grid grid-cols-1 gap-2 -mt-4 md:w-[30rem]">
-        <p className="text-sm font-semibold text-slate-500 mb-2 px-2">Settings</p>
+      <div className="grid grid-cols-1 gap-2 md:w-[30rem]">
+        <p className="text-sm font-semibold text-slate-500 mb-2 px-6">Settings</p>
 
         <div className="grid grid-cols-1 pb-4 px-6 gap-6">
           <div className="flex items-center space-x-6">

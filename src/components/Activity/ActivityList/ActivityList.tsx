@@ -30,7 +30,9 @@ export const ActivityList = (props: ActivityListProps) => {
   const primary = !props.top ? null : props.top.length > 0 ? props?.top[0] : null;
   const top = props.top ? props.top.filter((a) => !primary || a.activityId !== primary.activityId) : props.top
   const topMap: any = {}
-  top?.map(a => topMap[a.activityId] = true)
+  if(top){
+      top.map(a => topMap[a.activityId] = true)
+  }
   const upcoming = props.upcoming ? props.upcoming.filter((a) => !topMap[a.activityId] && (!primary || primary && a.activityId !== primary.activityId)) : props.upcoming
   return (
     <>

@@ -24,7 +24,7 @@ export type BadgePreviewProps = {
  */
 export const BadgePreview = (props: BadgePreviewProps) => {
   const icon = props.icon || "badge";
-  const statusIcon: IconName | "" = props.isLocked ? "lock" : props.isAwarded ? "" : "unlock";
+  const statusIcon: IconName | "" = props.isLocked ? "lock" : props.isAwarded || props.isInProgress ? "" : "unlock";
   const intensity = !props.isLocked ? "normal" : "faded";
   const iconClassName = builder("w-full")
     .if(intensity === "normal", "text-gray-600")
@@ -40,9 +40,12 @@ export const BadgePreview = (props: BadgePreviewProps) => {
     .build();
 
   const className = builder(
-    "grid justify-items-center content-center shadow-md bg-gray-100 transition ease-in-out p-4 rounded-md text-gray-500"
+    "grid justify-items-center content-center shadow-md transition ease-in-out p-4 rounded-md text-gray-500"
   )
-    .if(!!props.onOpen && !props.isLocked, "cursor-pointer hover:bg-gray-50")
+    .if(!!props.onOpen && !!props.isAwarded, "cursor-pointer bg-gray-50 hover:bg-gray-50")
+    .if(!!props.onOpen && !!props.isInProgress, "cursor-pointer bg-gray-100 hover:bg-gray-50")
+    .if(!!props.onOpen && !props.isInProgress && !props.isAwarded && !props.isLocked, "cursor-pointer bg-gray-100 hover:bg-gray-50")
+    .if(!!props.onOpen && !!props.isLocked, "bg-gray-100 hover:bg-gray-50")
     .build();
 
   const onOpen = () => props.onOpen && !props.isLocked && props.onOpen();

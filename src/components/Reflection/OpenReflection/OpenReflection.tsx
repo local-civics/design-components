@@ -1,10 +1,8 @@
 import React from "react";
 import { Button, Icon, IconName, Modal } from "../../index";
-import { useMessage } from "../../../contexts/Message";
 import { builder } from "../../../utils/classname/classname";
 
 export type OpenReflectionProps = {
-  activityId?: string;
   startTime?: string;
   reflection?: string;
   pathway?: string;
@@ -20,7 +18,7 @@ export type OpenReflectionProps = {
 };
 
 export const OpenReflection = (props: OpenReflectionProps) => {
-  const className = builder("w-full md:w-[40rem]").if(!props.activityId, "min-h-[20rem]").build();
+  const className = builder("w-full md:w-[40rem]").if(!!props.headline, "min-h-[20rem]").build();
   const [reaction, setReaction] = React.useState({
     rating: props.rating,
     reflection: props.reflection,
@@ -37,7 +35,7 @@ export const OpenReflection = (props: OpenReflectionProps) => {
   }, [props.reflection]);
 
   return (
-    <Modal isLoading={!props.activityId} visible onClose={props.onClose}>
+    <Modal isLoading={!props.headline} visible onClose={props.onClose}>
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
@@ -47,7 +45,7 @@ export const OpenReflection = (props: OpenReflectionProps) => {
             </div>
 
             <div className="grow align-top ml-2 inline-block leading-none">
-              <p className="font-semibold capitalize text-slate-600 text-lg -mt-1.5">{props.headline}</p>
+              <p className="font-semibold capitalize text-slate-600 text-lg">{props.headline}</p>
               <div>
                 <p className="text-sm inline-block capitalize text-slate-600">{props.pathway}</p>
                 {props.xp && <p className="ml-1 font-semibold inline-block text-sm text-green-500">{props.xp} pts</p>}

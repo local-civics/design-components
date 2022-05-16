@@ -115,11 +115,32 @@ const useRecommendation = (tenantName: string, query: ActivityQuery) => {
     setRecommendation(null);
     (async () => {
       const ctx = { referrer: location.pathname };
-      setRecommendation(
-        await api.do(ctx, "GET", "curriculum", `/recommendations`, {
-          query: query,
-        })
-      );
+      const promises = await Promise.all([
+        api.do(ctx, "GET", "curriculum", `/activities`, {
+          query: {
+            ...query,
+            startTime: (new Date()).toISOString(),
+          }
+        }),
+        api.do(ctx, "GET", "curriculum", `/activities`, {
+          query: {
+            ...query,
+            startTime: (new Date()).toISOString(),
+            endTime: (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
+          }
+        }),
+        api.do(ctx, "GET", "curriculum", `/activities`, {
+          query: {
+            ...query,
+            isMilestone: true,
+          }
+        }),
+      ])
+      setRecommendation({
+        top: promises[0],
+        upcoming: promises[1],
+        milestones: promises[2],
+      });
     })();
     return () => setRecommendation(null);
   }, [tenantName, queryKey, api.accessToken]);

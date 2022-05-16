@@ -28,7 +28,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const auth = useAuth();
   const page = props.page || "profile";
   React.useEffect(() => {
-    if (tenant.isLoading) {
+    if (tenant.isLoading || !tenant.tenantName) {
       return;
     }
 
@@ -84,7 +84,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
             <div className="w-full max-w-[62.5rem] m-auto grid grid-cols-1 gap-y-4 lg:flex lg:gap-x-2">
               {/* Left Panel */}
               {props.sidebar && (
-                <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem]">
+                <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem] shrink-0">
                   <div className="flex flex-col gap-4 lg:gap-2">{props.sidebar}</div>
                   <p className="hidden place-self-center lg:inline-block text-xs text-slate-300">
                     Local Civics © {new Date().getFullYear()}

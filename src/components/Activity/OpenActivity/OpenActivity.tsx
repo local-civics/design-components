@@ -6,7 +6,6 @@ import { builder } from "../../../utils/classname/classname";
  * OpenActivityProps
  */
 export type OpenActivityProps = {
-  activityId?: string;
   headline?: string;
   imageURL?: string;
   pathway?: string;
@@ -18,7 +17,7 @@ export type OpenActivityProps = {
   endTime?: string;
   link?: string;
   address?: string;
-  isSubscribed?: boolean;
+  isBookmarked?: boolean;
   canReflect?: boolean;
   milestone?: boolean;
   onRegister?: () => void;
@@ -35,13 +34,13 @@ export type OpenActivityProps = {
  * @constructor
  */
 export const OpenActivity = (props: OpenActivityProps) => {
-  const className = builder("w-full md:w-[40rem]").if(!!props.activityId, "min-h-[20rem]").build();
+  const className = builder("w-full md:w-[40rem]").if(!!props.headline, "min-h-[20rem]").build();
   const ActionButton = () => {
     const now = new Date();
     const inProgress =
       props.milestone ||
       (props.startTime && now >= new Date(props.startTime));
-    const status = inProgress ? "in-progress" : props.isSubscribed ? "subscribed" : "unsubscribed";
+    const status = inProgress ? "in-progress" : props.isBookmarked ? "subscribed" : "unsubscribed";
     switch (status) {
       case "in-progress":
         return (
@@ -83,7 +82,7 @@ export const OpenActivity = (props: OpenActivityProps) => {
   };
 
   return (
-    <Modal onClose={props.onClose} visible isLoading={!props.activityId}>
+    <Modal onClose={props.onClose} visible isLoading={!props.headline}>
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
         <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
@@ -101,17 +100,17 @@ export const OpenActivity = (props: OpenActivityProps) => {
             </div>
           </div>
 
-          <div className="max-h-[12rem] flex gap-2">
+          <div className="flex shrink-0 items-center gap-2 max-h-[12rem]">
             <ActionButton />
             <Button
-              disabled={!props.canReflect}
-              spacing="md"
-              border="rounded"
-              color="sky"
-              theme="dark"
-              text="Reflect"
-              size="md"
-              onClick={props.onReflect}
+                disabled={!props.canReflect}
+                spacing="md"
+                border="rounded"
+                color="sky"
+                theme="dark"
+                text="Reflect"
+                size="md"
+                onClick={props.onReflect}
             />
           </div>
         </div>
