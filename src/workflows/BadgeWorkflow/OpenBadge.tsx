@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Modal } from "../../index";
-import { builder } from "../../../utils/classname/classname";
+import { Button, Modal } from "../../components";
 
 /**
  * The properties for the badge.

@@ -1,31 +1,26 @@
 import React from "react";
-import { OpenActivity, OpenActivityProps } from "./OpenActivity";
+import { OpenReflection, OpenReflectionProps } from "./OpenReflection";
 import { Story } from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Library/Activity/OpenActivity",
-  component: OpenActivity,
+  title: "Workflow/ReflectionWorkflow",
+  component: OpenReflection,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<OpenActivityProps> = (args) => (
+const Template: Story<OpenReflectionProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <OpenActivity
+    <OpenReflection
       xp={250}
       pathway="arts & culture"
       imageURL="https://s.yimg.com/os/creatr-uploaded-images/2019-11/7b5b5330-112b-11ea-a77f-7c019be7ecae"
-      headline="A learning experience with a really long headline to demonstrate wrapping"
-      summary="A sample summary"
-      milestone={true}
+      headline="A learning experience"
       startTime={new Date().toString()}
-      address="123 Civic Lane, Brooklyn, NY, 12345"
-      link="https://www.localcivics.io"
-      skills={["math", "public speaking", "engineering"]}
       {...args}
     />
     <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
@@ -35,5 +30,5 @@ const Template: Story<OpenActivityProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<OpenActivityProps> = Template.bind({});
+export const Component: Story<OpenReflectionProps> = Template.bind({});
 Component.args = {};

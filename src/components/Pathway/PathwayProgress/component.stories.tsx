@@ -5,7 +5,7 @@ import { PathwayProgress, PathwayProgressProps } from "./PathwayProgress";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Profile/PathwayProgress",
+  title: "Library/Pathway/PathwayProgress",
   component: PathwayProgress,
 };
 

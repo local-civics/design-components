@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Icon, IconName, Modal } from "../../index";
-import { builder } from "../../../utils/classname/classname";
+import { Button, Icon, IconName, Modal } from "../../components";
+import { builder } from "../../utils/classname/classname";
 
 export type OpenReflectionProps = {
   startTime?: string;
@@ -11,7 +11,7 @@ export type OpenReflectionProps = {
   headline?: string;
   imageURL?: string;
   canReflect?: boolean;
-  hasChanges?: boolean
+  hasChanges?: boolean;
 
   onClose?: () => void;
   onSave?: (reflection: string, rating: number) => Promise<void>;
@@ -23,7 +23,9 @@ export const OpenReflection = (props: OpenReflectionProps) => {
     rating: props.rating,
     reflection: props.reflection,
   });
-  const hasChanges = props.hasChanges || props.canReflect && (props.rating !== reaction.rating || props.reflection !== reaction.reflection);
+  const hasChanges =
+    props.hasChanges ||
+    (props.canReflect && (props.rating !== reaction.rating || props.reflection !== reaction.reflection));
   const setFeedback = (feedback: string) => setReaction({ ...reaction, reflection: feedback });
   const setConfidence = (confidence: number) => setReaction({ ...reaction, rating: confidence });
 
@@ -55,10 +57,7 @@ export const OpenReflection = (props: OpenReflectionProps) => {
 
           {hasChanges && (
             <Button
-              onClick={() =>
-                props.onSave &&
-                props.onSave(reaction.reflection || "", reaction.rating || 0)
-              }
+              onClick={() => props.onSave && props.onSave(reaction.reflection || "", reaction.rating || 0)}
               theme="dark"
               border="rounded"
               size="sm"
@@ -122,11 +121,19 @@ const Confidence = (props: OpenReflectionProps & { setConfidence?: (confidence: 
   });
   const labels = Array.from({ length: maxPoints }, (_, i) => {
     if (i === 0) {
-      return <p key={i} className="inline-block text-sm text-monochrome-500">Poor</p>;
+      return (
+        <p key={i} className="inline-block text-sm text-monochrome-500">
+          Poor
+        </p>
+      );
     }
 
     if (i === maxPoints - 1) {
-      return <p key={i} className="inline-block text-sm text-monochrome-500">Amazing</p>;
+      return (
+        <p key={i} className="inline-block text-sm text-monochrome-500">
+          Amazing
+        </p>
+      );
     }
 
     return <p key={i} className="inline-block text-monochrome-500" />;

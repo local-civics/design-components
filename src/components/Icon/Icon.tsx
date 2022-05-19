@@ -31,6 +31,7 @@ export const Icon = (props: IconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox={viewBox}
     >
+      <title>{props.name}</title>
       {contents.map((v, k) => {
         return v.d && <path key={k} {...(v as React.SVGProps<SVGPathElement>)} />;
       })}

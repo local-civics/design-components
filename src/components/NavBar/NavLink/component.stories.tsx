@@ -1,6 +1,6 @@
 import { Story } from "@storybook/react";
 import { NavLink, NavLinkProps } from "./NavLink";
-import {MemoryRouter} from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 /**
  * Storybook component configuration
@@ -13,7 +13,11 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<NavLinkProps> = (args) => <MemoryRouter><NavLink {...args} /></MemoryRouter>;
+const Template: Story<NavLinkProps> = (args) => (
+  <MemoryRouter>
+    <NavLink {...args} />
+  </MemoryRouter>
+);
 
 /**
  * Component stories

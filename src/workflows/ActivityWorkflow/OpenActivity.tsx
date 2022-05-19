@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Icon, IconName, Modal } from "../../index";
-import { builder } from "../../../utils/classname/classname";
+import { Button, Icon, IconName, Modal } from "../../components";
+import { builder } from "../../utils/classname/classname";
 
 /**
  * OpenActivityProps
@@ -37,9 +37,7 @@ export const OpenActivity = (props: OpenActivityProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.headline, "min-h-[20rem]").build();
   const ActionButton = () => {
     const now = new Date();
-    const inProgress =
-      props.milestone ||
-      (props.startTime && now >= new Date(props.startTime));
+    const inProgress = props.milestone || (props.startTime && now >= new Date(props.startTime));
     const status = inProgress ? "in-progress" : props.isBookmarked ? "subscribed" : "unsubscribed";
     switch (status) {
       case "in-progress":
@@ -103,14 +101,14 @@ export const OpenActivity = (props: OpenActivityProps) => {
           <div className="flex shrink-0 items-center gap-2 max-h-[12rem]">
             <ActionButton />
             <Button
-                disabled={!props.canReflect}
-                spacing="md"
-                border="rounded"
-                color="sky"
-                theme="dark"
-                text="Reflect"
-                size="md"
-                onClick={props.onReflect}
+              disabled={!props.canReflect}
+              spacing="md"
+              border="rounded"
+              color="sky"
+              theme="dark"
+              text="Reflect"
+              size="md"
+              onClick={props.onReflect}
             />
           </div>
         </div>

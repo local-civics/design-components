@@ -6,14 +6,14 @@ import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
-import { OpenActivity } from "../../components/Activity/OpenActivity/OpenActivity";
+import { OpenActivity } from "../../workflows/ActivityWorkflow/OpenActivity";
 
 /**
  * Connected container for experience.
  * @constructor
  */
 export const ActivityContainer = () => {
-  const tenant = useTenant()
+  const tenant = useTenant();
   const params = useParams();
   const tenantName = params.tenantName || tenant.tenantName;
   const activityId = params.activityId;
@@ -21,8 +21,8 @@ export const ActivityContainer = () => {
 
   return {
     OpenActivity: () => {
-      if(tenant.isLoading){
-        return null
+      if (tenant.isLoading) {
+        return null;
       }
 
       if (!tenantName || !activityId) {
@@ -32,7 +32,8 @@ export const ActivityContainer = () => {
       const activity = useActivity(tenantName, activityId);
       const [subscribed, toggleSubscription] = useSubscription(activityId, activity);
 
-      return <OpenActivity
+      return (
+        <OpenActivity
           {...activity}
           isBookmarked={subscribed}
           onRegister={toggleSubscription}
@@ -40,10 +41,11 @@ export const ActivityContainer = () => {
           onUnregister={toggleSubscription}
           onLaunch={() => activity?.link && window.open(activity?.link, "_blank")}
           onSkillClick={(skill: string) =>
-              navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
+            navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
           }
           onClose={() => navigate(-1)}
-      />
+        />
+      );
     },
   };
 };
@@ -89,20 +91,19 @@ const useSubscription = (activityId: string, activity: any) => {
       const ctx = { referrer: location.pathname };
       let body: any = {
         sagaId: activity.sagaId,
-      }
-      let method: "PATCH" | "DELETE" = "PATCH"
-      if(isBookmarked){
-        method = "DELETE"
+      };
+      let method: "PATCH" | "DELETE" = "PATCH";
+      if (isBookmarked) {
+        method = "DELETE";
       } else {
-        body = {...body, email: tenant.email,
-          contactName: tenant.givenName,}
+        body = { ...body, email: tenant.email, contactName: tenant.givenName };
       }
 
       await api
-        .do(ctx, method, "curriculum", `/tenants/${tenant.tenantName}/activities/${activityId}/bookmark`, {body})
+        .do(ctx, method, "curriculum", `/tenants/${tenant.tenantName}/activities/${activityId}/bookmark`, { body })
         .then((err) => {
-          if(!!err){
-            return
+          if (!!err) {
+            return;
           }
 
           setSubscribed(!isBookmarked);

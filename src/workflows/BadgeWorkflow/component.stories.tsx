@@ -1,5 +1,5 @@
 import React from "react";
-import { TaskPreview } from "../../Task/TaskPreview/TaskPreview";
+import { TaskPreview } from "../../components/Task/TaskPreview/TaskPreview";
 import { OpenBadge, OpenBadgeProps } from "./OpenBadge";
 import { Story } from "@storybook/react";
 
@@ -7,7 +7,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Library/BadgePreview/OpenBadge",
+  title: "Workflow/BadgeWorkflow",
   component: OpenBadge,
 };
 

@@ -6,7 +6,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Onboarding/Onboarding",
+  title: "Workflow/OnboardingWorkflow",
   component: Onboarding,
 };
 

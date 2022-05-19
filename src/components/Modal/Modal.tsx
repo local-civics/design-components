@@ -11,6 +11,7 @@ export type ModalProps = {
   visible?: boolean;
   top?: boolean;
   plain?: boolean;
+  transparent?: boolean
   children?: React.ReactNode;
   onClose?: () => void;
 };
@@ -22,8 +23,9 @@ export const Modal = (props: ModalProps) => {
   const className = builder(
     "font-proxima grid grid-cols-1 overscroll-contain justify-items-center fixed top-0 left-0 px-4 md:px-2"
   )
-    .append("w-screen h-screen py-5 bg-gray-500/75")
+    .append("w-screen h-screen py-5")
     .append("transition ease-in-out duration-400")
+    .if(!props.transparent, "bg-gray-500/75")
     .if(!!props.visible, "z-30 visible opacity-full")
     .if(!props.visible, "-z-30 invisible opacity-0")
     .if(!props.top, "content-center")
@@ -48,9 +50,7 @@ export const Modal = (props: ModalProps) => {
             </div>
           )}
 
-          <Loader isLoading={props.isLoading}>
-            {props.children}
-          </Loader>
+          <Loader isLoading={props.isLoading}>{props.children}</Loader>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useAuth, useTenant } from "../../contexts/App";
-import { Onboarding } from "../../components/Onboarding/Onboarding";
+import { Onboarding } from "../../workflows/OnboardingWorkflow/Onboarding";
 
 /**
  * A connected container for onboarding tenants
@@ -18,7 +18,7 @@ export const OnboardingContainer = () => {
   }
   const [search, organizations, searchOrganizations] = useOrganizations();
   const [membership, joinOrganization] = useJoinOrganization(tenantName);
-  const [registration, setRegistration] = React.useState(null as any)
+  const [registration, setRegistration] = React.useState(null as any);
 
   return {
     Onboarding: () => (
@@ -35,7 +35,10 @@ export const OnboardingContainer = () => {
         onDeclineLegalAgreement={auth.logout}
         onOrganizationSearch={searchOrganizations}
         onJoinOrganization={joinOrganization}
-        onConfigureTenant={(conf) => { setRegistration(conf); tenant.configure(conf) }}
+        onConfigureTenant={(conf) => {
+          setRegistration(conf);
+          tenant.configure(conf);
+        }}
         onFinish={() => navigate(`/tenants/${tenant.tenantName}`)}
       />
     ),
@@ -45,7 +48,7 @@ export const OnboardingContainer = () => {
 // A hook for searching organizations
 const useOrganizations = () => {
   const [organizations, setOrganizations] = React.useState([] as any);
-  const [search, setSearch] = React.useState(null as string | null)
+  const [search, setSearch] = React.useState(null as string | null);
   const location = useLocation();
   const api = useApi();
 
@@ -54,7 +57,7 @@ const useOrganizations = () => {
     organizations,
     async (search: string) => {
       if (!search || search === "undefined") {
-        setSearch("")
+        setSearch("");
         setOrganizations([]);
         return;
       }
@@ -101,11 +104,11 @@ const useJoinOrganization = (tenantName: string) => {
           },
         })
         .then(async (err) => {
-          if(!err){
+          if (!err) {
             setOrganizations(await api.do(ctx, "GET", "identity", `/tenants/${tenantName}/organizations`));
-            return
+            return;
           }
-          setOrganizations([])
+          setOrganizations([]);
         });
     },
   ];

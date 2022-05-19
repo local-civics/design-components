@@ -1,6 +1,6 @@
 import { MessageProvider, MessageProviderProps } from "./Message";
 import { Story } from "@storybook/react";
-import {MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 /**
  * Storybook component configuration
@@ -14,7 +14,11 @@ export default {
  * Component storybook template
  */
 const Template: Story<MessageProviderProps> = (args) => {
-  return <MemoryRouter><MessageProvider message="This is a message for you" {...args} /></MemoryRouter>;
+  return (
+    <MemoryRouter>
+      <MessageProvider message="This is a message for you" {...args} />
+    </MemoryRouter>
+  );
 };
 
 /**

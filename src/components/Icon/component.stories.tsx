@@ -1,6 +1,7 @@
 import { Icon, IconProps } from "./Icon";
 
 import { Story } from "@storybook/react";
+import {icons} from "./data/icons";
 
 /**
  * Storybook component configuration
@@ -10,7 +11,9 @@ export default {
   component: Icon,
   argTypes: {
     name: {
-      defaultValue: "calendar",
+      table: {
+        disable: true,
+      }
     },
   },
 };
@@ -19,8 +22,14 @@ export default {
  * Component storybook template
  */
 const Template: Story<IconProps> = (args) => (
-  <div className="transition ease-in-out text-slate-400 w-12 h-12">
-    <Icon {...args} />
+  <div className="grid grid-cols-8 gap-x-3 gap-y-6">
+    {
+      icons.map((icon) =>
+        <div key={icon} className="transition ease-in-out text-slate-400 w-8 h-8">
+          <Icon {...args} name={icon}/>
+        </div>
+      )
+    }
   </div>
 );
 

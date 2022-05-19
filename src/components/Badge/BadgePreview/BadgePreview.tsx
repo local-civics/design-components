@@ -44,7 +44,10 @@ export const BadgePreview = (props: BadgePreviewProps) => {
   )
     .if(!!props.onOpen && !!props.isAwarded, "cursor-pointer bg-gray-50 hover:bg-gray-50")
     .if(!!props.onOpen && !!props.isInProgress, "cursor-pointer bg-gray-100 hover:bg-gray-50")
-    .if(!!props.onOpen && !props.isInProgress && !props.isAwarded && !props.isLocked, "cursor-pointer bg-gray-100 hover:bg-gray-50")
+    .if(
+      !!props.onOpen && !props.isInProgress && !props.isAwarded && !props.isLocked,
+      "cursor-pointer bg-gray-100 hover:bg-gray-50"
+    )
     .if(!!props.onOpen && !!props.isLocked, "bg-gray-100 hover:bg-gray-50")
     .build();
 

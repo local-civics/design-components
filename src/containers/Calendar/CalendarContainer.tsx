@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {useApi, useTenant} from "../../contexts/App";
+import { useApi, useTenant } from "../../contexts/App";
 import { DateSelection } from "../../components/Calendar/DateSelection/DateSelection";
 import { EventPreview } from "../../components/Calendar/EventPreview/EventPreview";
 import { EventList } from "../../components/Calendar/EventList/EventList";
@@ -13,17 +13,17 @@ export const CalendarContainer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
-  const tenant = useTenant()
+  const tenant = useTenant();
   const tenantName = params.tenantName || tenant.tenantName;
   const [date, setDate] = React.useState(
     params.date && params.date !== "undefined" ? dayDate(params.date) : (new Date() as Date | null)
   );
-  const day = (date || new Date());
+  const day = date || new Date();
   return {
     DateSelection: () => <DateSelection date={date} setDate={setDate} />,
     EventList: () => {
-      if(tenant.isLoading){
-        return null
+      if (tenant.isLoading) {
+        return null;
       }
 
       if (!tenantName) {
@@ -32,18 +32,20 @@ export const CalendarContainer = () => {
 
       const events = useEvents(tenantName, day);
 
-      return <EventList isLoading={events === null} date={date} onSetDate={setDate}>
-        {events &&
+      return (
+        <EventList isLoading={events === null} date={date} onSetDate={setDate}>
+          {events &&
             events.map((event: any) => {
               return (
-                  <EventPreview
-                      key={event.activityId}
-                      {...event}
-                      onClick={() => navigate(`${location.pathname}/${event.activityId}`)}
-                  />
+                <EventPreview
+                  key={event.activityId}
+                  {...event}
+                  onClick={() => navigate(`${location.pathname}/${event.activityId}`)}
+                />
               );
             })}
-      </EventList>
+        </EventList>
+      );
     },
   };
 };
@@ -56,8 +58,8 @@ const useEvents = (tenantName: string, day: Date) => {
     setEvents(null);
     (async () => {
       const ctx = { referrer: location.pathname };
-      const endTime = new Date(day)
-      endTime.setDate(endTime.getDate() + 1)
+      const endTime = new Date(day);
+      endTime.setDate(endTime.getDate() + 1);
       setEvents(
         await api.do(ctx, "GET", "curriculum", `/activities`, {
           query: {
