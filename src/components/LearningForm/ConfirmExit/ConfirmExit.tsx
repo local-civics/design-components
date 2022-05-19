@@ -7,7 +7,6 @@ import {Modal} from "../../Modal/Modal";
  * Confirm exit props
  */
 export type ConfirmExitProps = {
-    isLoading?: boolean
     onYes?: () => void;
     onNo?: () => void;
     onClose?: () => void;
@@ -20,7 +19,7 @@ export type ConfirmExitProps = {
  */
 export const ConfirmExit = (props: ConfirmExitProps) => {
     return (
-        <Modal visible transparent isLoading={props.isLoading} onClose={props.onClose}>
+        <Modal visible transparent onClose={props.onClose}>
             <div className="w-full md:w-[24rem] px-8 py-5 shadow-sm grid grid-cols-1 gap-4 content-center justify-items-center">
                 <div className="text-slate-500 w-14 h-14">
                     <Icon name="edit" />

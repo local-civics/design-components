@@ -1,5 +1,5 @@
 import React from "react";
-import { OpenActivity, OpenActivityProps } from "./OpenActivity";
+import { ActivityWorkflow, ActivityWorkflowProps } from "./ActivityWorkflow";
 import { Story } from "@storybook/react";
 
 /**
@@ -7,15 +7,15 @@ import { Story } from "@storybook/react";
  */
 export default {
   title: "Workflow/ActivityWorkflow",
-  component: OpenActivity,
+  component: ActivityWorkflow,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<OpenActivityProps> = (args) => (
+const Template: Story<ActivityWorkflowProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <OpenActivity
+    <ActivityWorkflow
       xp={250}
       pathway="arts & culture"
       imageURL="https://s.yimg.com/os/creatr-uploaded-images/2019-11/7b5b5330-112b-11ea-a77f-7c019be7ecae"
@@ -35,5 +35,5 @@ const Template: Story<OpenActivityProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<OpenActivityProps> = Template.bind({});
+export const Component: Story<ActivityWorkflowProps> = Template.bind({});
 Component.args = {};

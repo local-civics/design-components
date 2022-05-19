@@ -1,5 +1,5 @@
 import React from "react";
-import { Onboarding, OnboardingProps } from "./Onboarding";
+import { OnboardingWorkflow, OnboardingWorkflowProps } from "./OnboardingWorkflow";
 import { Story } from "@storybook/react";
 
 /**
@@ -7,20 +7,20 @@ import { Story } from "@storybook/react";
  */
 export default {
   title: "Workflow/OnboardingWorkflow",
-  component: Onboarding,
+  component: OnboardingWorkflow,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<OnboardingProps> = (args) => (
+const Template: Story<OnboardingWorkflowProps> = (args) => (
   <div className="w-max font-proxima m-auto">
-    <Onboarding givenName="Andre" {...args} />
+    <OnboardingWorkflow givenName="Andre" {...args} />
   </div>
 );
 
 /**
  * Component stories
  */
-export const Component: Story<OnboardingProps> = Template.bind({});
+export const Component: Story<OnboardingWorkflowProps> = Template.bind({});
 Component.args = {};

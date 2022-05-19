@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useAuth, useTenant } from "../../contexts/App";
-import { Onboarding } from "../../workflows/OnboardingWorkflow/Onboarding";
+import { OnboardingWorkflow } from "../../workflows/OnboardingWorkflow/OnboardingWorkflow";
 
 /**
  * A connected container for onboarding tenants
@@ -22,7 +22,7 @@ export const OnboardingContainer = () => {
 
   return {
     Onboarding: () => (
-      <Onboarding
+      <OnboardingWorkflow
         {...tenant}
         {...registration}
         search={search}

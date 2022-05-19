@@ -4,7 +4,7 @@ import { Button, Modal } from "../../components";
 /**
  * The properties for the edit modal.
  */
-export type OpenSettingsProps = {
+export type ChangeSettingsWorkflowProps = {
   tenantName?: string;
   givenName?: string;
   familyName?: string;
@@ -34,7 +34,7 @@ export type OpenSettingsProps = {
  * @param props
  * @constructor
  */
-export const OpenSettings = (props: OpenSettingsProps) => {
+export const ChangeSettingsWorkflow = (props: ChangeSettingsWorkflowProps) => {
   // https://stackoverflow.com/questions/55075604/react-hooks-useeffect-only-on-update
   const [avatarFile, setAvatarFile] = React.useState(undefined as Blob | undefined);
   const [avatarURL, setAvatarURL] = React.useState(props.avatarURL);

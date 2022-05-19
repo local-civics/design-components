@@ -3,9 +3,9 @@ import { Button, Icon, IconName, Modal } from "../../components";
 import { builder } from "../../utils/classname/classname";
 
 /**
- * OpenActivityProps
+ * ActivityWorkflowProps
  */
-export type OpenActivityProps = {
+export type ActivityWorkflowProps = {
   headline?: string;
   imageURL?: string;
   pathway?: string;
@@ -33,7 +33,7 @@ export type OpenActivityProps = {
  * @param props
  * @constructor
  */
-export const OpenActivity = (props: OpenActivityProps) => {
+export const ActivityWorkflow = (props: ActivityWorkflowProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.headline, "min-h-[20rem]").build();
   const ActionButton = () => {
     const now = new Date();

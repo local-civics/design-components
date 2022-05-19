@@ -1,5 +1,5 @@
 import React from "react";
-import { OpenTask, OpenTaskProps } from "./OpenTask";
+import { TaskWorkflow, TaskWorkflowProps } from "./TaskWorkflow";
 import { Story } from "@storybook/react";
 
 /**
@@ -7,15 +7,15 @@ import { Story } from "@storybook/react";
  */
 export default {
   title: "Workflow/TaskWorkflow",
-  component: OpenTask,
+  component: TaskWorkflow,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<OpenTaskProps> = (args) => (
+const Template: Story<TaskWorkflowProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <OpenTask headline="Onboarding TaskPreview" {...args} />
+    <TaskWorkflow headline="OnboardingWorkflow TaskPreview" {...args} />
     <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
   </div>
 );
@@ -23,5 +23,5 @@ const Template: Story<OpenTaskProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<OpenTaskProps> = Template.bind({});
+export const Component: Story<TaskWorkflowProps> = Template.bind({});
 Component.args = {};

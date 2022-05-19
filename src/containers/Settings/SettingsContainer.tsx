@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
-import { OpenSettings } from "../../workflows/ChangeSettingsWorkflow/OpenSettings";
+import { ChangeSettingsWorkflow } from "../../workflows/ChangeSettingsWorkflow/ChangeSettingsWorkflow";
 
 /**
  * A connected container for the edit modal.
@@ -47,7 +47,7 @@ export const SettingsContainer = () => {
 
   return {
     EditModal: () => (
-      <OpenSettings {...tenant} {...prev} visible accessToken={auth.accessToken} onClose={close} onSave={save} />
+      <ChangeSettingsWorkflow {...tenant} {...prev} visible accessToken={auth.accessToken} onClose={close} onSave={save} />
     ),
   };
 };

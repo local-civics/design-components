@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Icon, IconName, Modal } from "../../components";
 import { builder } from "../../utils/classname/classname";
 
-export type OpenReflectionProps = {
+export type ReflectionWorkflowProps = {
   startTime?: string;
   reflection?: string;
   pathway?: string;
@@ -17,7 +17,7 @@ export type OpenReflectionProps = {
   onSave?: (reflection: string, rating: number) => Promise<void>;
 };
 
-export const OpenReflection = (props: OpenReflectionProps) => {
+export const ReflectionWorkflow = (props: ReflectionWorkflowProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.headline, "min-h-[20rem]").build();
   const [reaction, setReaction] = React.useState({
     rating: props.rating,
@@ -100,7 +100,7 @@ export const OpenReflection = (props: OpenReflectionProps) => {
  * @param props
  * @constructor
  */
-const Confidence = (props: OpenReflectionProps & { setConfidence?: (confidence: number) => void }) => {
+const Confidence = (props: ReflectionWorkflowProps & { setConfidence?: (confidence: number) => void }) => {
   /**
    * Max points for reflection.
    */

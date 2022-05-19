@@ -6,7 +6,7 @@ import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
-import { OpenActivity } from "../../workflows/ActivityWorkflow/OpenActivity";
+import { ActivityWorkflow } from "../../workflows/ActivityWorkflow/ActivityWorkflow";
 
 /**
  * Connected container for experience.
@@ -33,7 +33,7 @@ export const ActivityContainer = () => {
       const [subscribed, toggleSubscription] = useSubscription(activityId, activity);
 
       return (
-        <OpenActivity
+        <ActivityWorkflow
           {...activity}
           isBookmarked={subscribed}
           onRegister={toggleSubscription}

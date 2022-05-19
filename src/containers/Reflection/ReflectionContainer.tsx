@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { OpenReflection } from "../../workflows/ReflectionWorkflow/OpenReflection";
+import { ReflectionWorkflow } from "../../workflows/ReflectionWorkflow/ReflectionWorkflow";
 import { useActivity } from "../Activity/ActivityContainer";
 import { useApi, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
@@ -54,7 +54,7 @@ export const ReflectionContainer = () => {
       }, [isNewBadge]);
 
       return (
-        <OpenReflection
+        <ReflectionWorkflow
           {...activity}
           reflection={activity?.reflection || changes.reflection}
           rating={activity?.rating || changes.rating}

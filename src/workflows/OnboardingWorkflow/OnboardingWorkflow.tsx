@@ -8,9 +8,9 @@ import { ImpactQuiz } from "../../components/Onboarding/ImpactQuiz/ImpactQuiz";
 import { Welcome } from "../../components/Onboarding/Welcome/Welcome";
 
 /**
- * OnboardingProps
+ * OnboardingWorkflowProps
  */
-export type OnboardingProps = {
+export type OnboardingWorkflowProps = {
   isLoading?: boolean;
   hasOrganization?: boolean;
   hasPersona?: boolean;
@@ -38,7 +38,7 @@ export type OnboardingProps = {
  * @param props
  * @constructor
  */
-export const Onboarding = (props: OnboardingProps) => {
+export const OnboardingWorkflow = (props: OnboardingWorkflowProps) => {
   return (
     <Modal isLoading={props.isLoading} plain visible>
       <Delegate {...props} />
@@ -51,7 +51,7 @@ export const Onboarding = (props: OnboardingProps) => {
  * @param props
  * @constructor
  */
-const Delegate = (props: OnboardingProps) => {
+const Delegate = (props: OnboardingWorkflowProps) => {
   const [agreed, setAgreed] = React.useState(!!props.hasOrganization || props.search !== null);
   const [organization, setOrganization] = React.useState(null as any);
   const [organizationOpen, setOrganizationOpen] = React.useState(!!props.search);

@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi } from "../../contexts/App";
 import { TaskPreview } from "../../components/Task/TaskPreview/TaskPreview";
-import { OpenBadge } from "../../workflows/BadgeWorkflow/OpenBadge";
+import { BadgeWorkflow } from "../../workflows/BadgeWorkflow/BadgeWorkflow";
 import { useMessage } from "../../contexts/Message";
 
 /**
@@ -22,7 +22,7 @@ export const BadgeContainer = () => {
   const startBadge = useStartBadge(tenantName, badge.sagaId, badgeId, setStarted);
   return {
     OpenBadge: () => (
-      <OpenBadge
+      <BadgeWorkflow
         {...badge}
         onStart={startBadge}
         onClose={() => navigate(-1)}
@@ -33,7 +33,7 @@ export const BadgeContainer = () => {
             const link = `/tenants/${tenantName}/tasks/${task.taskId}`;
             return <TaskPreview key={`${task.criterionId}`} action {...task} onAction={() => navigate(link)} />;
           })}
-      </OpenBadge>
+      </BadgeWorkflow>
     ),
   };
 };

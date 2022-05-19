@@ -1,6 +1,6 @@
 import React from "react";
 import { TaskPreview } from "../../components/Task/TaskPreview/TaskPreview";
-import { OpenBadge, OpenBadgeProps } from "./OpenBadge";
+import { BadgeWorkflow, BadgeWorkflowProps } from "./BadgeWorkflow";
 import { Story } from "@storybook/react";
 
 /**
@@ -8,24 +8,24 @@ import { Story } from "@storybook/react";
  */
 export default {
   title: "Workflow/BadgeWorkflow",
-  component: OpenBadge,
+  component: BadgeWorkflow,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<OpenBadgeProps> = (args) => (
+const Template: Story<BadgeWorkflowProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <OpenBadge
+    <BadgeWorkflow
       imageURL="https://cdn.localcivics.io/badges/participation.png"
-      headline="Onboarding Badge"
+      headline="OnboardingWorkflow Badge"
       summary="A sample summary"
       {...args}
     >
       <TaskPreview status="done" headline="TaskPreview #1" />
       <TaskPreview headline="TaskPreview #2" />
       <TaskPreview headline="TaskPreview #3" />
-    </OpenBadge>
+    </BadgeWorkflow>
     <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
   </div>
 );
@@ -33,5 +33,5 @@ const Template: Story<OpenBadgeProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<OpenBadgeProps> = Template.bind({});
+export const Component: Story<BadgeWorkflowProps> = Template.bind({});
 Component.args = {};

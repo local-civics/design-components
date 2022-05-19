@@ -4,7 +4,7 @@ import { Button, Modal, Progress } from "../../components";
 /**
  * The properties for the task.
  */
-export type OpenTaskProps = {
+export type TaskWorkflowProps = {
   headline?: string;
   summary?: string;
   isLoading?: boolean;
@@ -20,7 +20,7 @@ export type OpenTaskProps = {
  * @param props
  * @constructor
  */
-export const OpenTask = (props: OpenTaskProps) => {
+export const TaskWorkflow = (props: TaskWorkflowProps) => {
   const TaskButton = () => {
     if (props.status === "todo" || props.status === "in-progress") {
       return (

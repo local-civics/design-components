@@ -25,7 +25,7 @@ export const Topic = (props: TopicProps) => {
             <div className="w-full shadow-sm">
                 <div className="w-full px-8 py-5 grid grid-cols-1 gap-5">
                     {
-                        props.headline && <div className="pr-32 flex gap-4 md:w-[36rem]">
+                        props.headline && <div className="md:pr-32 flex gap-4 md:w-[36rem]">
                             <div className="shrink-0 text-green-500 w-8 h-8 -ml-2">
                                 <Icon name="positive" />
                             </div>

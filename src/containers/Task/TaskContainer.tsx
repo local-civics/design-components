@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { OpenTask } from "../../workflows/TaskWorkflow/OpenTask";
+import { TaskWorkflow } from "../../workflows/TaskWorkflow/TaskWorkflow";
 import { useApi } from "../../contexts/App";
 
 /**
@@ -32,7 +32,7 @@ export const TaskContainer = () => {
 
   const link = `/tenants/${tenantName}/activities?${search.toString()}`;
   return {
-    OpenTask: () => <OpenTask {...task} onExplore={() => navigate(link)} onClose={() => navigate(-1)} />,
+    OpenTask: () => <TaskWorkflow {...task} onExplore={() => navigate(link)} onClose={() => navigate(-1)} />,
   };
 };
 

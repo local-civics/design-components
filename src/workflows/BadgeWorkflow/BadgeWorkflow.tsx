@@ -4,7 +4,7 @@ import { Button, Modal } from "../../components";
 /**
  * The properties for the badge.
  */
-export type OpenBadgeProps = {
+export type BadgeWorkflowProps = {
   headline?: string;
   imageURL?: string;
   summary?: string;
@@ -22,7 +22,7 @@ export type OpenBadgeProps = {
  * @param props
  * @constructor
  */
-export const OpenBadge = (props: OpenBadgeProps) => {
+export const BadgeWorkflow = (props: BadgeWorkflowProps) => {
   const BadgeTasks = () => {
     if (!props.showTasks) {
       return null;

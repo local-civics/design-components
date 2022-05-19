@@ -63,7 +63,7 @@ export const Question = (props: QuestionProps) => {
 
     return (
         <Modal visible transparent isLoading={props.isLoading} onClose={props.onClose}>
-            <div className="w-full pr-32 shadow-sm">
+            <div className="w-full md:pr-32 shadow-sm">
                 <div className="w-full md:w-[36rem] px-8 py-5 grid grid-cols-1 gap-5">
                     {
                         props.headline && <div className="flex gap-4">
@@ -76,7 +76,7 @@ export const Question = (props: QuestionProps) => {
                         </div>
                     }
 
-                    <Response questionType={questionType} imageURL={imageURL} onImageUpload={onImageUpload} />
+                    <Response {...props} questionType={questionType} imageURL={imageURL} onImageUpload={onImageUpload} />
                 </div>
             </div>
         </Modal>
