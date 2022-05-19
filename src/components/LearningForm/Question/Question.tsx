@@ -70,7 +70,7 @@ export const Question = (props: QuestionProps) => {
                             <div className="shrink-0 text-green-500 w-8 h-8 -ml-2">
                                 <Icon name="positive" />
                             </div>
-                            <div className="text-slate-500 font-bold text-lg">
+                            <div className="text-slate-600 font-bold text-lg">
                                 <span>{props.headline}</span>
                             </div>
                         </div>

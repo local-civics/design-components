@@ -3,7 +3,7 @@ import {Icon} from "../../Icon/Icon";
 import React from "react";
 
 /**
- * Topic props
+ * TitleSequence props
  */
 export type TopicProps = {
     isLoading?: boolean
@@ -15,7 +15,7 @@ export type TopicProps = {
 
 /**
  * <Quesion />
- * Topic component
+ * TitleSequence component
  * @param props
  * @constructor
  */
@@ -29,7 +29,7 @@ export const Topic = (props: TopicProps) => {
                             <div className="shrink-0 text-green-500 w-8 h-8 -ml-2">
                                 <Icon name="positive" />
                             </div>
-                            <div className="text-slate-500 font-bold text-lg">
+                            <div className="text-slate-600 font-bold text-lg">
                                 <span>{props.headline}</span>
                             </div>
                         </div>
