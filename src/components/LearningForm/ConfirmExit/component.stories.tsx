@@ -6,17 +6,17 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-    title: "Library/LearningForm/ConfirmExit",
-    component: ConfirmExit,
+  title: "Library/LearningForm/ConfirmExit",
+  component: ConfirmExit,
 };
 
 /**
  * Component storybook template
  */
 const Template: Story<ConfirmExitProps> = (args) => (
-    <div className="w-max font-proxima m-auto">
-        <ConfirmExit {...args} />
-    </div>
+  <div className="w-max font-proxima m-auto">
+    <ConfirmExit {...args} />
+  </div>
 );
 
 /**

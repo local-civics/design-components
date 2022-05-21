@@ -67,7 +67,7 @@ export type ButtonProps = {
   filter?: ButtonFilter;
   text?: string;
   footer?: string;
-  wide?: boolean
+  wide?: boolean;
   onClick?: () => void;
 };
 
@@ -516,7 +516,7 @@ const withSpacing = (config: ButtonConfig, spacing?: ButtonSpacing, wide?: boole
       break;
   }
 
-  if(wide){
-    config.button.spacing = "py-1 px-12"
+  if (wide) {
+    config.button.spacing = "py-1 px-12";
   }
 };
