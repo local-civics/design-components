@@ -134,15 +134,16 @@ export const TenantProvider = (props: { children?: React.ReactNode }) => {
         const ctx = { referrer: location.pathname };
         let resp: any;
         if (data.avatar !== undefined) {
+          const ctx = { referrer: location.pathname };
           const form = new FormData();
-          form.append("avatar", data.avatar);
-          resp = await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
+          form.append("object", data.avatar);
+          data.avatarURL = await api.do(ctx, "PUT", "media", `/tenants/${tenant.tenantName}/store/avatar`, {
             body: form,
-          });
-          delete data.avatar;
+          })
+          delete data.avatar
         }
 
-        if (!resp && Object.keys(data).length > 0) {
+        if (Object.keys(data).length > 0) {
           resp = await api.do(ctx, "PATCH", "identity", `/tenants/${tenant.tenantName}`, {
             body: data,
           });

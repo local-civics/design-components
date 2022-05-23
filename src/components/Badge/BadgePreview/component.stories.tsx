@@ -14,7 +14,7 @@ export default {
  */
 const Template: Story<BadgePreviewProps & { status?: string }> = (args) => (
   <BadgePreview
-    headline="OnboardingWorkflow Badge"
+    headline="Onboarding Badge"
     status="done"
     imageURL="https://cdn.localcivics.io/badges/onboarding.png"
     {...args}

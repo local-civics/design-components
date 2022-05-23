@@ -18,7 +18,7 @@ const Template: Story<BadgeWorkflowProps> = (args) => (
   <div className="h-full w-full overscroll-none">
     <BadgeWorkflow
       imageURL="https://cdn.localcivics.io/badges/participation.png"
-      headline="OnboardingWorkflow Badge"
+      headline="Onboarding Badge"
       summary="A sample summary"
       {...args}
     >

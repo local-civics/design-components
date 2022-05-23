@@ -39,6 +39,8 @@ export type LearningFormWorkflowProps = {
 export const LearningFormWorkflow = (props: LearningFormWorkflowProps) => {
   const [stage, setStage] = React.useState(props.stage || LearningFormStage.Start);
   const [question, setQuestion] = React.useState(0);
+  const hasAnswer = props.questions && props.questions[question] && props.questions[question].response
+
   const prev = () => {
     switch (stage) {
       case LearningFormStage.Question:
@@ -84,7 +86,7 @@ export const LearningFormWorkflow = (props: LearningFormWorkflowProps) => {
   const [exit, setExit] = React.useState(false);
   return (
     <div>
-      <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
+      <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200 z-40">
         <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
           <div
             onClick={prev}
@@ -102,7 +104,7 @@ export const LearningFormWorkflow = (props: LearningFormWorkflowProps) => {
           <div
             onClick={next}
             className={`text-slate-300 hover:text-slate-500 w-8 h-8 md:w-14 md:h-14 cursor-pointer my-auto ${
-              stage === LearningFormStage.Submit ? "invisible" : ""
+              stage === LearningFormStage.Submit || (stage === LearningFormStage.Question && !hasAnswer) ? "invisible" : ""
             }`}
           >
             <Icon name="rightArrow" />

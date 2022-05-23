@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
 import { ActivityWorkflow } from "../../workflows/ActivityWorkflow/ActivityWorkflow";
+import path from "path";
 
 /**
  * Connected container for experience.
@@ -39,11 +40,17 @@ export const ActivityContainer = () => {
           onRegister={toggleSubscription}
           onReflect={() => navigate(`${location.pathname}/reflection`)}
           onUnregister={toggleSubscription}
-          onLaunch={() => activity?.link && window.open(activity?.link, "_blank")}
+          onLaunch={() => {
+            if (activity.lectureId) {
+              navigate(`${location.pathname}/play`);
+            } else if (activity.link) {
+              window.open(activity?.link, "_blank");
+            }
+          }}
           onSkillClick={(skill: string) =>
             navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
           }
-          onClose={() => navigate(-1)}
+          onClose={() => navigate(path.dirname(location.pathname))}
         />
       );
     },

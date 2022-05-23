@@ -45,6 +45,10 @@ export const Question = (props: QuestionProps) => {
     reader.readAsDataURL(file);
   };
 
+  React.useEffect(() => {
+    setImageURL(props.response)
+  }, [props.questionId, props.response])
+
   const questionType = (() => {
     if (props.imageRequired) {
       return QuestionType.Image;
@@ -95,7 +99,7 @@ const Response = (
     onImageUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   }
 ) => {
-  const imageURL = props.imageURL;
+  const imageURL = props.imageURL||"";
   const onImageUpload = props.onImageUpload;
   switch (props.questionType) {
     case QuestionType.FreeForm:
@@ -140,12 +144,12 @@ const Response = (
             <div className="shrink-0">
               <div
                 className={`${
-                  imageURL || props.response ? "rounded-full -ml-4 p-2" : "rounded-full bg-gray-100 -ml-3 p-2"
+                  imageURL ? "rounded-full -ml-4 p-2" : "rounded-full bg-gray-100 -ml-3 p-2"
                 }`}
               >
                 <img
-                  className={imageURL || props.response ? "h-8 w-8 object-cover rounded-full" : "h-6 w-6 object-cover"}
-                  src={imageURL || props.response || "https://cdn.localcivics.io/hub/camera.png"}
+                  className={imageURL ? "h-8 w-8 object-cover rounded-full" : "h-6 w-6 object-cover"}
+                  src={imageURL || "https://cdn.localcivics.io/hub/camera.png"}
                   alt="Current image answer"
                 />
               </div>
@@ -170,7 +174,7 @@ const Response = (
             <input
               type="url"
               onChange={(e) => props.onAnswerChange && props.onAnswerChange(props.questionId || "", e.target.value)}
-              defaultValue={imageURL}
+              value={imageURL}
               placeholder="Paste a url or select a file above"
               className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
           focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500

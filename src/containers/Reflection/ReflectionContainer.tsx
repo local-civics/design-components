@@ -9,6 +9,7 @@ import { useActivity } from "../Activity/ActivityContainer";
 import { useApi, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
 import { useBadges } from "../Profile/ProfileContainer";
+import path from "path";
 
 /**
  * Connected container for reflection.
@@ -59,7 +60,7 @@ export const ReflectionContainer = () => {
           reflection={activity?.reflection || changes.reflection}
           rating={activity?.rating || changes.rating}
           hasChanges={changes.hasChanges}
-          onClose={() => navigate(-1)}
+          onClose={() => navigate(path.dirname(location.pathname))}
           onSave={async (reflection, rating) => {
             setSubmitted(false);
             setChanges({ reflection: reflection, rating: rating, hasChanges: true });

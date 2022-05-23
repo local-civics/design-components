@@ -169,7 +169,7 @@ export const useBadges = (tenantName: string, refresh?: boolean) => {
       {
         badgeId: "onboarding",
         isAwarded: true,
-        headline: "OnboardingWorkflow Badge",
+        headline: "Onboarding Badge",
         summary: "Getting started with Local",
         imageURL: "https://cdn.localcivics.io/badges/onboarding.png",
       },

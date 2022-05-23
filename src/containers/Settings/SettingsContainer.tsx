@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
 import { ChangeSettingsWorkflow } from "../../workflows/ChangeSettingsWorkflow/ChangeSettingsWorkflow";
+import path from "path";
 
 /**
  * A connected container for the edit modal.
@@ -13,7 +14,7 @@ export const SettingsContainer = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const message = useMessage();
-  const close = () => navigate(-1);
+  const close = () => navigate(path.dirname(location.pathname));
   const [prev, setPrev] = React.useState({ ...tenant } as any);
 
   React.useEffect(() => {
@@ -47,7 +48,14 @@ export const SettingsContainer = () => {
 
   return {
     EditModal: () => (
-      <ChangeSettingsWorkflow {...tenant} {...prev} visible accessToken={auth.accessToken} onClose={close} onSave={save} />
+      <ChangeSettingsWorkflow
+        {...tenant}
+        {...prev}
+        visible
+        accessToken={auth.accessToken}
+        onClose={close}
+        onSave={save}
+      />
     ),
   };
 };
