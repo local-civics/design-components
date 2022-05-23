@@ -15,6 +15,7 @@ import { BrowserTracing } from "@sentry/tracing";
 import { Reflection } from "./pages/Reflection/Reflection";
 import { Settings } from "./pages/Settings/Settings";
 import { Task } from "./pages/Task/Task";
+import { Assessment } from "./pages/Assessment/Assessment";
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -51,10 +52,12 @@ const AppRoutes = () => {
       <Route path="/events" element={<Calendar />}>
         <Route path=":activityId" element={<Activity />} />
         <Route path=":activityId/reflection" element={<Reflection />} />
+        <Route path=":activityId/play" element={<Assessment />} />
       </Route>
       <Route path="/tenants/:tenantName/events" element={<Calendar />}>
         <Route path=":activityId" element={<Activity />} />
         <Route path=":activityId/reflection" element={<Reflection />} />
+        <Route path=":activityId/play" element={<Assessment />} />
       </Route>
       <Route path="/tenants/:tenantName/events/:day" element={<Calendar />}>
         <Route path=":activityId" element={<Activity />} />
@@ -62,6 +65,7 @@ const AppRoutes = () => {
       <Route path="/tenants/:tenantName/activities" element={<Explore />}>
         <Route path=":activityId" element={<Activity />} />
         <Route path=":activityId/reflection" element={<Reflection />} />
+        <Route path=":activityId/play" element={<Assessment />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
