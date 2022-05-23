@@ -6,7 +6,7 @@ import { ActivityPreview, ActivityPreviewProps } from "./ActivityPreview";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Explore/Activity",
+  title: "Library/Activity/ActivityPreview",
   component: ActivityPreview,
 };
 

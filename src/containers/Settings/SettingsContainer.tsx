@@ -2,7 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
-import { OpenSettings } from "../../components/Profile/OpenSettings/OpenSettings";
+import { ChangeSettingsWorkflow } from "../../workflows/ChangeSettingsWorkflow/ChangeSettingsWorkflow";
+import path from "path";
 
 /**
  * A connected container for the edit modal.
@@ -13,12 +14,12 @@ export const SettingsContainer = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const message = useMessage();
-  const close = () => navigate(-1);
-  const [prev, setPrev] = React.useState({...tenant} as any)
+  const close = () => navigate(path.dirname(location.pathname));
+  const [prev, setPrev] = React.useState({ ...tenant } as any);
 
   React.useEffect(() => {
-    setPrev({...tenant, ...prev, isLoading: tenant.isLoading})
-  }, [tenant.tenantName, tenant.isLoading])
+    setPrev({ ...tenant, ...prev, isLoading: tenant.isLoading });
+  }, [tenant.tenantName, tenant.isLoading]);
 
   const save = async (changes?: any) => {
     if (!tenant.tenantName || tenant.isLoading) {
@@ -30,23 +31,31 @@ export const SettingsContainer = () => {
       return;
     }
 
-    setPrev({...prev, ...changes, hasChanges: true})
+    setPrev({ ...prev, ...changes, hasChanges: true });
     await tenant.configure(changes).then((err: any) => {
-      if(!err){
-        tenant.resolve().
-          then(() => {
-            setPrev({...tenant})
-            message.send(`We've processed your changes.`, {
-              severity: "success",
-              icon: "profile",
-              title: "Success",
-            })
-          })
+      if (!err) {
+        tenant.resolve().then(() => {
+          setPrev({ ...tenant });
+          message.send(`We've processed your changes.`, {
+            severity: "success",
+            icon: "profile",
+            title: "Success",
+          });
+        });
       }
     });
   };
 
   return {
-    EditModal: () => <OpenSettings {...tenant} {...prev} visible accessToken={auth.accessToken} onClose={close} onSave={save} />,
+    EditModal: () => (
+      <ChangeSettingsWorkflow
+        {...tenant}
+        {...prev}
+        visible
+        accessToken={auth.accessToken}
+        onClose={close}
+        onSave={save}
+      />
+    ),
   };
 };

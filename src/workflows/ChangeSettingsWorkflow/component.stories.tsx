@@ -1,21 +1,21 @@
 import React from "react";
-import { OpenSettings, OpenSettingsProps } from "./OpenSettings";
+import { ChangeSettingsWorkflow, ChangeSettingsWorkflowProps } from "./ChangeSettingsWorkflow";
 import { Story } from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Library/Settings/OpenSettings",
-  component: OpenSettings,
+  title: "Workflow/ChangeSettingsWorkflow",
+  component: ChangeSettingsWorkflow,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<OpenSettingsProps> = (args) => (
+const Template: Story<ChangeSettingsWorkflowProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <OpenSettings
+    <ChangeSettingsWorkflow
       visible
       tenantName="floyd.miles"
       givenName="floyd"
@@ -32,5 +32,5 @@ const Template: Story<OpenSettingsProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<OpenSettingsProps> = Template.bind({});
+export const Component: Story<ChangeSettingsWorkflowProps> = Template.bind({});
 Component.args = {};

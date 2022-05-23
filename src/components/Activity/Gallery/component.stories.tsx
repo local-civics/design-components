@@ -7,7 +7,7 @@ import { Gallery, GalleryProps } from "./Gallery";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Explore/Gallery",
+  title: "Library/Activity/Gallery",
   component: Gallery,
 };
 
@@ -26,7 +26,7 @@ export const Component: Story<GalleryProps> = (props) => (
       />
     }
     top={
-        <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+      <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
         <ActivityPreview
           headline="EventPreview #1"
           pathway="policy & government"
@@ -45,10 +45,10 @@ export const Component: Story<GalleryProps> = (props) => (
           xp={250}
           imageURL="https://bestlifeonline.com/wp-content/uploads/sites/3/2019/12/shutterstock_1120210925.jpg"
         />
-        </article>
+      </article>
     }
     soonest={
-        <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+      <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
         <ActivityPreview
           headline="EventPreview #1"
           pathway="policy & government"
@@ -67,7 +67,7 @@ export const Component: Story<GalleryProps> = (props) => (
           xp={250}
           imageURL="https://bestlifeonline.com/wp-content/uploads/sites/3/2019/12/shutterstock_1120210925.jpg"
         />
-        </article>
+      </article>
     }
   />
 );

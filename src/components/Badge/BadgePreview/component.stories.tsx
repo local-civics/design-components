@@ -5,7 +5,7 @@ import { BadgePreview, BadgePreviewProps } from "./BadgePreview";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Profile/BadgePreview",
+  title: "Library/Badge/BadgePreview",
   component: BadgePreview,
 };
 

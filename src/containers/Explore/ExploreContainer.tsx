@@ -19,7 +19,7 @@ export const ExploreContainer = () => {
 
   const [query, setQuery] = useSearchParams();
   const tags = query.getAll("tag");
-  const pathways = query.getAll("pathway")
+  const pathways = query.getAll("pathway");
   const activities = useActivities(tenantName, {
     headline: query.get("headline"),
     directory: query.get("directory"),
@@ -44,17 +44,17 @@ export const ExploreContainer = () => {
 
   return {
     PathwayFilter: () => (
-        <PathwayFilter
-            title="Explore"
-            pathways={pathways}
-            onChange={(pathways) => setQuery({...query, pathway: pathways})}
-        />
+      <PathwayFilter
+        title="Explore"
+        pathways={pathways}
+        onChange={(pathways) => setQuery({ ...query, pathway: pathways })}
+      />
     ),
     ActivityList: () => (
       <ActivityList
         isLoading={activities === null && recommendation === null}
         search={query.get("headline") || ""}
-        onSearch={(q) => setQuery({ ...query, headline: q || []})}
+        onSearch={(q) => setQuery({ ...query, headline: q || [] })}
         tags={tags}
         onTagChange={(tags) => setQuery({ ...query, tag: tags })}
         activities={activities}
@@ -119,23 +119,23 @@ const useRecommendation = (tenantName: string, query: ActivityQuery) => {
         api.do(ctx, "GET", "curriculum", `/activities`, {
           query: {
             ...query,
-            startTime: (new Date()).toISOString(),
-          }
+            startTime: new Date().toISOString(),
+          },
         }),
         api.do(ctx, "GET", "curriculum", `/activities`, {
           query: {
             ...query,
-            startTime: (new Date()).toISOString(),
-            endTime: (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
-          }
+            startTime: new Date().toISOString(),
+            endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          },
         }),
         api.do(ctx, "GET", "curriculum", `/activities`, {
           query: {
             ...query,
             isMilestone: true,
-          }
+          },
         }),
-      ])
+      ]);
       setRecommendation({
         top: promises[0],
         upcoming: promises[1],

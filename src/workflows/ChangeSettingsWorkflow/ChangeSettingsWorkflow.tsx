@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, Modal } from "../../index";
+import { Button, Modal } from "../../components";
 
 /**
  * The properties for the edit modal.
  */
-export type OpenSettingsProps = {
+export type ChangeSettingsWorkflowProps = {
   tenantName?: string;
   givenName?: string;
   familyName?: string;
@@ -14,7 +14,7 @@ export type OpenSettingsProps = {
   accessToken?: string;
   isLoading?: boolean;
   visible?: boolean;
-  hasChanges?: boolean
+  hasChanges?: boolean;
   onClose?: () => void;
   onSave?: (changes?: {
     name?: string;
@@ -34,7 +34,7 @@ export type OpenSettingsProps = {
  * @param props
  * @constructor
  */
-export const OpenSettings = (props: OpenSettingsProps) => {
+export const ChangeSettingsWorkflow = (props: ChangeSettingsWorkflowProps) => {
   // https://stackoverflow.com/questions/55075604/react-hooks-useeffect-only-on-update
   const [avatarFile, setAvatarFile] = React.useState(undefined as Blob | undefined);
   const [avatarURL, setAvatarURL] = React.useState(props.avatarURL);
@@ -43,15 +43,15 @@ export const OpenSettings = (props: OpenSettingsProps) => {
   const [familyName, setFamilyName] = React.useState(props.familyName);
   const [grade, setGrade] = React.useState(props.grade);
   const [impactStatement, setImpactStatement] = React.useState(props.impactStatement);
-  const [focus, setFocus] = React.useState("")
+  const [focus, setFocus] = React.useState("");
   const hasChanges =
-      props.hasChanges ||
-    (tenantName !== props.tenantName) ||
-    (givenName !== props.givenName) ||
-    (familyName !== props.familyName) ||
-    (grade !== props.grade) ||
-    (impactStatement !== props.impactStatement) ||
-    (avatarURL !== props.avatarURL);
+    props.hasChanges ||
+    tenantName !== props.tenantName ||
+    givenName !== props.givenName ||
+    familyName !== props.familyName ||
+    grade !== props.grade ||
+    impactStatement !== props.impactStatement ||
+    avatarURL !== props.avatarURL;
 
   const onSave = () =>
     hasChanges &&
@@ -73,11 +73,11 @@ export const OpenSettings = (props: OpenSettingsProps) => {
       if (typeof reader.result === "string") {
         setAvatarURL(reader.result);
         setAvatarFile(file);
-        onSave()
+        onSave();
       }
     };
     reader.readAsDataURL(file);
-    setFocus("")
+    setFocus("");
   };
 
   return (
@@ -115,10 +115,13 @@ export const OpenSettings = (props: OpenSettingsProps) => {
               <p className="mb-2 font-semibold text-slate-500 text-sm">Tenant Name</p>
               <p className="mb-2 text-slate-500 text-xs">This is your Local username.</p>
               <input
-                min={100}
-                max={3000}
+                min={10}
+                max={300}
                 autoFocus={focus === "tenantName"}
-                onChange={(e) => { setFocus("tenantName"); setTenantName(e.target.value)}}
+                onChange={(e) => {
+                  setFocus("tenantName");
+                  setTenantName(e.target.value);
+                }}
                 defaultValue={tenantName}
                 className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
@@ -131,9 +134,13 @@ export const OpenSettings = (props: OpenSettingsProps) => {
             <div>
               <p className="mb-2 w-full font-semibold text-slate-500 text-sm">First Name</p>
               <p className="mb-2 text-slate-500 text-xs">What is your given name?</p>
-              <input max={3000}
-                     autoFocus={focus === "givenName"}
-                onChange={(e) => { setFocus("givenName"); setGivenName(e.target.value) }}
+              <input
+                max={3000}
+                autoFocus={focus === "givenName"}
+                onChange={(e) => {
+                  setFocus("givenName");
+                  setGivenName(e.target.value);
+                }}
                 defaultValue={givenName}
                 className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
@@ -146,9 +153,13 @@ export const OpenSettings = (props: OpenSettingsProps) => {
             <div className="w-full">
               <p className="mb-2 font-semibold text-slate-500 text-sm">Last Name</p>
               <p className="mb-2 text-slate-500 text-xs">What is your family name?</p>
-              <input max={3000}
-                     autoFocus={focus === "familyName"}
-                onChange={(e) => { setFocus("familyName"); setFamilyName(e.target.value) }}
+              <input
+                max={3000}
+                autoFocus={focus === "familyName"}
+                onChange={(e) => {
+                  setFocus("familyName");
+                  setFamilyName(e.target.value);
+                }}
                 defaultValue={familyName}
                 className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
@@ -182,9 +193,13 @@ export const OpenSettings = (props: OpenSettingsProps) => {
             <div>
               <p className="mb-2 font-semibold text-slate-500 text-sm">Impact Statement</p>
               <p className="mb-2 text-slate-500 text-xs">How would you like to contribute to your community?</p>
-              <textarea maxLength={3000}
-                        autoFocus={focus === "impactStatement"}
-                onChange={(e) => { setFocus("impactStatement"); setImpactStatement(e.target.value) }}
+              <textarea
+                maxLength={3000}
+                autoFocus={focus === "impactStatement"}
+                onChange={(e) => {
+                  setFocus("impactStatement");
+                  setImpactStatement(e.target.value);
+                }}
                 defaultValue={impactStatement}
                 className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500

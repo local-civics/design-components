@@ -1,12 +1,12 @@
 import { Story } from "@storybook/react";
 import { TaskList, TaskListProps } from "./TaskList";
-import {TaskPreview} from "../TaskPreview/TaskPreview";
+import { TaskPreview } from "../TaskPreview/TaskPreview";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Library/Profile/TaskList",
+  title: "Library/Task/TaskList",
   component: TaskList,
 };
 

@@ -1,18 +1,18 @@
 import React from "react";
-import {Button, Modal, Progress} from "../../index";
+import { Button, Modal, Progress } from "../../components";
 
 /**
  * The properties for the task.
  */
-export type OpenTaskProps = {
-  headline?: string
-  summary?: string
-  isLoading?: boolean
-  progress?: number
-  target?: number
-  status?: string
-  onExplore?: () => void
-  onClose?: () => void
+export type TaskWorkflowProps = {
+  headline?: string;
+  summary?: string;
+  isLoading?: boolean;
+  progress?: number;
+  target?: number;
+  status?: string;
+  onExplore?: () => void;
+  onClose?: () => void;
 };
 
 /**
@@ -20,7 +20,7 @@ export type OpenTaskProps = {
  * @param props
  * @constructor
  */
-export const OpenTask = (props: OpenTaskProps) => {
+export const TaskWorkflow = (props: TaskWorkflowProps) => {
   const TaskButton = () => {
     if (props.status === "todo" || props.status === "in-progress") {
       return (
@@ -50,15 +50,15 @@ export const OpenTask = (props: OpenTaskProps) => {
           <div className="flex items-center gap-x-2">
             <div className="grow align-middle inline-block">
               <p className="font-semibold text-slate-500 text-lg max-w-[20rem]">{props.headline}</p>
-              { props.summary && <p className="text-slate-500 text-md">{props.summary}</p> }
+              {props.summary && <p className="text-slate-500 text-md">{props.summary}</p>}
             </div>
           </div>
 
-          { props.target &&
-              <div className="py-5">
-                <Progress start={props.progress||0} end={props.target} />
-              </div>
-          }
+          {props.target && (
+            <div className="py-5">
+              <Progress start={props.progress || 0} end={props.target} />
+            </div>
+          )}
 
           <TaskButton />
         </div>

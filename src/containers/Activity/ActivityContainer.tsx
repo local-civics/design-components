@@ -6,14 +6,15 @@ import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApi, useTenant } from "../../contexts/App";
 import { useMessage } from "../../contexts/Message";
-import { OpenActivity } from "../../components/Activity/OpenActivity/OpenActivity";
+import { ActivityWorkflow } from "../../workflows/ActivityWorkflow/ActivityWorkflow";
+import path from "path";
 
 /**
  * Connected container for experience.
  * @constructor
  */
 export const ActivityContainer = () => {
-  const tenant = useTenant()
+  const tenant = useTenant();
   const params = useParams();
   const tenantName = params.tenantName || tenant.tenantName;
   const activityId = params.activityId;
@@ -21,8 +22,8 @@ export const ActivityContainer = () => {
 
   return {
     OpenActivity: () => {
-      if(tenant.isLoading){
-        return null
+      if (tenant.isLoading) {
+        return null;
       }
 
       if (!tenantName || !activityId) {
@@ -32,18 +33,26 @@ export const ActivityContainer = () => {
       const activity = useActivity(tenantName, activityId);
       const [subscribed, toggleSubscription] = useSubscription(activityId, activity);
 
-      return <OpenActivity
+      return (
+        <ActivityWorkflow
           {...activity}
           isBookmarked={subscribed}
           onRegister={toggleSubscription}
           onReflect={() => navigate(`${location.pathname}/reflection`)}
           onUnregister={toggleSubscription}
-          onLaunch={() => activity?.link && window.open(activity?.link, "_blank")}
+          onLaunch={() => {
+            if (activity.lectureId) {
+              navigate(`${location.pathname}/play`);
+            } else if (activity.link) {
+              window.open(activity?.link, "_blank");
+            }
+          }}
           onSkillClick={(skill: string) =>
-              navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
+            navigate(`/tenants/${tenantName}/activities?skill=${encodeURIComponent(skill)}`)
           }
-          onClose={() => navigate(-1)}
-      />
+          onClose={() => navigate(path.dirname(location.pathname))}
+        />
+      );
     },
   };
 };
@@ -89,20 +98,19 @@ const useSubscription = (activityId: string, activity: any) => {
       const ctx = { referrer: location.pathname };
       let body: any = {
         sagaId: activity.sagaId,
-      }
-      let method: "PATCH" | "DELETE" = "PATCH"
-      if(isBookmarked){
-        method = "DELETE"
+      };
+      let method: "PATCH" | "DELETE" = "PATCH";
+      if (isBookmarked) {
+        method = "DELETE";
       } else {
-        body = {...body, email: tenant.email,
-          contactName: tenant.givenName,}
+        body = { ...body, email: tenant.email, contactName: tenant.givenName };
       }
 
       await api
-        .do(ctx, method, "curriculum", `/tenants/${tenant.tenantName}/activities/${activityId}/bookmark`, {body})
+        .do(ctx, method, "curriculum", `/tenants/${tenant.tenantName}/activities/${activityId}/bookmark`, { body })
         .then((err) => {
-          if(!!err){
-            return
+          if (!!err) {
+            return;
           }
 
           setSubscribed(!isBookmarked);
