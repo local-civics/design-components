@@ -1,21 +1,21 @@
 import React from "react";
-import { OpenReflection, OpenReflectionProps } from "./OpenReflection";
+import { ReflectionWorkflow, ReflectionWorkflowProps } from "./ReflectionWorkflow";
 import { Story } from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Library/Reflection/OpenActivity",
-  component: OpenReflection,
+  title: "Workflow/ReflectionWorkflow",
+  component: ReflectionWorkflow,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<OpenReflectionProps> = (args) => (
+const Template: Story<ReflectionWorkflowProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <OpenReflection
+    <ReflectionWorkflow
       xp={250}
       pathway="arts & culture"
       imageURL="https://s.yimg.com/os/creatr-uploaded-images/2019-11/7b5b5330-112b-11ea-a77f-7c019be7ecae"
@@ -30,5 +30,5 @@ const Template: Story<OpenReflectionProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<OpenReflectionProps> = Template.bind({});
+export const Component: Story<ReflectionWorkflowProps> = Template.bind({});
 Component.args = {};

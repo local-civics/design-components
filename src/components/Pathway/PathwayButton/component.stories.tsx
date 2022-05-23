@@ -6,7 +6,7 @@ import { PathwayButton, PathwayButtonProps } from "./PathwayButton";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Explore/PathwayButton",
+  title: "Library/Pathway/PathwayButton",
   component: PathwayButton,
 };
 

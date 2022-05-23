@@ -3,7 +3,7 @@ import { TagFilter } from "../TagFilter/TagFilter";
 import { Gallery } from "../Gallery/Gallery";
 import { ActivityPreview } from "../ActivityPreview/ActivityPreview";
 import { Button } from "../../Button/Button";
-import {debounce} from "../../../utils/search";
+import { debounce } from "../../../utils/search";
 
 /**
  * ActivityListProps
@@ -28,12 +28,16 @@ export type ActivityListProps = {
  */
 export const ActivityList = (props: ActivityListProps) => {
   const primary = !props.top ? null : props.top.length > 0 ? props?.top[0] : null;
-  const top = props.top ? props.top.filter((a) => !primary || a.activityId !== primary.activityId) : props.top
-  const topMap: any = {}
-  if(top){
-      top.map(a => topMap[a.activityId] = true)
+  const top = props.top ? props.top.filter((a) => !primary || a.activityId !== primary.activityId) : props.top;
+  const topMap: any = {};
+  if (top) {
+    top.map((a) => (topMap[a.activityId] = true));
   }
-  const upcoming = props.upcoming ? props.upcoming.filter((a) => !topMap[a.activityId] && (!primary || primary && a.activityId !== primary.activityId)) : props.upcoming
+  const upcoming = props.upcoming
+    ? props.upcoming.filter(
+        (a) => !topMap[a.activityId] && (!primary || (primary && a.activityId !== primary.activityId))
+      )
+    : props.upcoming;
   return (
     <>
       <Search value={props.search} send={(search?: string) => props.onSearch && props.onSearch(search)} />
@@ -102,7 +106,8 @@ export const ActivityList = (props: ActivityListProps) => {
         }
         filteredCount={props.activities?.length}
         filtered={
-          !!props.search && props.activities &&
+          !!props.search &&
+          props.activities &&
           props.activities.length > 0 && (
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
               {props.activities.map((activity) => {
@@ -131,7 +136,7 @@ export const ActivityList = (props: ActivityListProps) => {
 const Search = ({ send, value }: { value?: string; send: (search?: string) => void }) => {
   const handler = useCallback(debounce(send), []);
   return (
-    <div className="relative block">
+    <div className="foo relative block">
       <label className="relative block">
         <span className="absolute inset-y-0 left-0 top-0 flex items-center pl-2">
           <Button icon="search" />

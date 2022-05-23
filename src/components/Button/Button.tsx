@@ -15,7 +15,8 @@ export type ButtonColor =
   | "primary"
   | "secondary"
   | "slate:sky"
-  | "slate:icon";
+  | "slate:icon"
+  | "blue";
 
 /**
  * The button size.
@@ -66,6 +67,7 @@ export type ButtonProps = {
   filter?: ButtonFilter;
   text?: string;
   footer?: string;
+  wide?: boolean;
   onClick?: () => void;
 };
 
@@ -83,7 +85,7 @@ export const Button = (props: ButtonProps) => {
   withFilter(config, props.filter);
   withJustify(config, props.justify);
   withBorder(config, props.border);
-  withSpacing(config, props.spacing);
+  withSpacing(config, props.spacing, props.wide);
 
   const onClick = () => !props.active && !props.disabled && props.onClick && props.onClick();
 
@@ -343,7 +345,24 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
         border: "border-slate-100",
         bg: "bg-slate-50/95",
       };
-      return;
+      break;
+    case "blue":
+      config.button.color = {
+        active: {
+          text: "text-blue-700",
+          border: "border-blue-700",
+          bg: "bg-blue-700",
+        },
+        text: "text-blue-500",
+        border: "border-blue-500",
+        bg: "bg-blue-500",
+        interactive: {
+          text: "focus:text-blue-700 active:text-blue-700 hover:text-blue-700",
+          border: "focus:border-blue-700 active:border-blue-700 hover:border-blue-700",
+          bg: "focus:bg-blue-700 active:bg-blue-700 hover:bg-blue-700",
+        },
+      };
+      break;
   }
 
   switch (theme) {
@@ -478,7 +497,7 @@ const withBorder = (config: ButtonConfig, border?: ButtonBorder) => {
   }
 };
 
-const withSpacing = (config: ButtonConfig, spacing?: ButtonSpacing) => {
+const withSpacing = (config: ButtonConfig, spacing?: ButtonSpacing, wide?: boolean) => {
   switch (spacing) {
     case "xs":
       config.button.spacing = "py-0.5 px-3";
@@ -495,5 +514,9 @@ const withSpacing = (config: ButtonConfig, spacing?: ButtonSpacing) => {
     default:
       config.button.spacing = "";
       break;
+  }
+
+  if (wide) {
+    config.button.spacing = "py-1 px-12";
   }
 };

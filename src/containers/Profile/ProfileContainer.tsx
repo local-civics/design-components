@@ -72,13 +72,14 @@ export const ProfileContainer = () => {
       >
         {tab === "badges" && (
           <BadgeList>
-            {badges && badges.map((badge: any) => (
-              <BadgePreview
-                {...badge}
-                key={`${badge.badgeId}`}
-                onOpen={() => navigate(`/tenants/${tenantName}/badges/${badge.badgeId}`)}
-              />
-            ))}
+            {badges &&
+              badges.map((badge: any) => (
+                <BadgePreview
+                  {...badge}
+                  key={`${badge.badgeId}`}
+                  onOpen={() => navigate(`/tenants/${tenantName}/badges/${badge.badgeId}`)}
+                />
+              ))}
           </BadgeList>
         )}
 
@@ -90,15 +91,18 @@ export const ProfileContainer = () => {
             onTodo={() => setStatus("todo")}
             onInProgress={() => setStatus("in-progress")}
           >
-            {tasks && tasks.map((task: any) => {
-              return <TaskPreview
-                  {...task}
-                  full
-                  status={status}
-                  key={task.taskId}
-                  onAction={() => navigate(`/tenants/${tenantName}/tasks/${task.taskId}`)}
-              />
-            })}
+            {tasks &&
+              tasks.map((task: any) => {
+                return (
+                  <TaskPreview
+                    {...task}
+                    full
+                    status={status}
+                    key={task.taskId}
+                    onAction={() => navigate(`/tenants/${tenantName}/tasks/${task.taskId}`)}
+                  />
+                );
+              })}
           </TaskList>
         )}
       </Dashboard>
@@ -126,49 +130,52 @@ const usePeer = (tenantName: string) => {
 
 // A hook to fetch badges
 export const useBadges = (tenantName: string, refresh?: boolean) => {
-  const [isNewBadge, setIsNewBadge] = React.useState(false)
+  const [isNewBadge, setIsNewBadge] = React.useState(false);
   const [prev, setPrev] = React.useState(null as any);
   const [badges, setBadges] = React.useState(null as any);
   const api = useApi();
   const location = useLocation();
 
   const checkNewBadge = (badges: any) => {
-    if(badges){
-      if(prev && prev?.filter((b: any) => b.isAwarded).length < badges.filter((b: any) => b.isAwarded).length){
-          setIsNewBadge(true)
+    if (badges) {
+      if (prev && prev?.filter((b: any) => b.isAwarded).length < badges.filter((b: any) => b.isAwarded).length) {
+        setIsNewBadge(true);
       } else {
-          setIsNewBadge(false)
+        setIsNewBadge(false);
       }
-      setPrev(badges)
+      setPrev(badges);
     }
-  }
+  };
 
   React.useEffect(() => {
     setBadges(null);
     (async () => {
       const ctx = { referrer: location.pathname };
-      const data = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/badges`)
+      const data = await api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/badges`);
       setBadges(data);
-      checkNewBadge(data)
+      checkNewBadge(data);
     })();
     return () => setBadges(null);
   }, [tenantName, api.accessToken, refresh]);
 
-  if(badges === null){
-    return [isNewBadge, null] as [boolean, any]
+  if (badges === null) {
+    return [isNewBadge, null] as [boolean, any];
   }
 
-  const response = badges && badges.length > 0 ? badges : []
-  return [isNewBadge, [
-    {
-      badgeId: "onboarding",
-      isAwarded: true,
-      headline: "Onboarding Badge",
-      summary: "Getting started with Local",
-      imageURL: "https://cdn.localcivics.io/badges/onboarding.png",
-    },
-    ...response,
-  ]] as [boolean, any]
+  const response = badges && badges.length > 0 ? badges : [];
+  return [
+    isNewBadge,
+    [
+      {
+        badgeId: "onboarding",
+        isAwarded: true,
+        headline: "Onboarding Badge",
+        summary: "Getting started with Local",
+        imageURL: "https://cdn.localcivics.io/badges/onboarding.png",
+      },
+      ...response,
+    ],
+  ] as [boolean, any];
 };
 
 // A hook for fetching tasks
@@ -231,37 +238,42 @@ const useImpact = (tenantName: string) => {
     setImpact(null);
     (async () => {
       const ctx = { referrer: location.pathname };
-      const promises = await Promise.all(
-          [
-              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`),
-              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-                query: {
-                  pathway: "college & career"
-                }
-              }),
-              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-                query: {
-                  pathway: "policy & government"
-                }
-              }),
-              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-                query: {
-                  pathway: "arts & culture"
-                }
-              }),
-              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-                query: {
-                  pathway: "volunteer"
-                }
-              }),
-              api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
-                query: {
-                  pathway: "recreation"
-                }
-              }),
-          ]
-      )
-      setImpact({overall: promises[0], career: promises[1], policy: promises[2], culture: promises[3], volunteer: promises[4], recreation: promises[5]});
+      const promises = await Promise.all([
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`),
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+          query: {
+            pathway: "college & career",
+          },
+        }),
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+          query: {
+            pathway: "policy & government",
+          },
+        }),
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+          query: {
+            pathway: "arts & culture",
+          },
+        }),
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+          query: {
+            pathway: "volunteer",
+          },
+        }),
+        api.do(ctx, "GET", "curriculum", `/tenants/${tenantName}/impact`, {
+          query: {
+            pathway: "recreation",
+          },
+        }),
+      ]);
+      setImpact({
+        overall: promises[0],
+        career: promises[1],
+        policy: promises[2],
+        culture: promises[3],
+        volunteer: promises[4],
+        recreation: promises[5],
+      });
     })();
     return () => setImpact(null);
   }, [tenantName, api.accessToken]);
@@ -279,9 +291,9 @@ const useOrganization = (tenantName: string) => {
     setOrganization(null);
     (async () => {
       const ctx = { referrer: location.pathname };
-      const organizations = await api.do(ctx, "GET", "identity", `/tenants/${tenantName}/organizations`)
-      if(organizations && organizations.length > 0){
-        setOrganization(await api.do(ctx, "GET", "identity", `/organizations/${organizations[0].name}`))
+      const organizations = await api.do(ctx, "GET", "identity", `/tenants/${tenantName}/organizations`);
+      if (organizations && organizations.length > 0) {
+        setOrganization(await api.do(ctx, "GET", "identity", `/organizations/${organizations[0].name}`));
       }
     })();
     return () => setOrganization(null);

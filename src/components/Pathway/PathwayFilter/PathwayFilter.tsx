@@ -16,14 +16,14 @@ export interface PathwayFilterProps {
  * @constructor
  */
 export const PathwayFilter: FunctionComponent<PathwayFilterProps> = (props) => {
-  const pathways = props.pathways || []
+  const pathways = props.pathways || [];
   const togglePathway = (pathway: string) => {
-    const newPathways = [...pathways]
-    const i = newPathways.indexOf(pathway)
-    if(i >= 0){
-        newPathways.splice(i, 1)
+    const newPathways = [...pathways];
+    const i = newPathways.indexOf(pathway);
+    if (i >= 0) {
+      newPathways.splice(i, 1);
     } else {
-      newPathways.push(pathway)
+      newPathways.push(pathway);
     }
     if (props.onChange) {
       props.onChange(newPathways);
@@ -64,9 +64,9 @@ export const PathwayFilter: FunctionComponent<PathwayFilterProps> = (props) => {
             name="recreation"
           />
           <PathwayButton
-              onClick={() => togglePathway("volunteer")}
-              active={pathways.indexOf("volunteer") >= 0}
-              name="volunteer"
+            onClick={() => togglePathway("volunteer")}
+            active={pathways.indexOf("volunteer") >= 0}
+            name="volunteer"
           />
           <PathwayButton
             onClick={() => togglePathway("college & career")}

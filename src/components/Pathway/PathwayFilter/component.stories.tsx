@@ -7,7 +7,7 @@ import { PathwayFilter, PathwayFilterProps } from "./PathwayFilter";
  * Storybook component configuration
  */
 export default {
-  title: "Library/Explore/PathwayFilter",
+  title: "Library/Pathway/PathwayFilter",
   component: PathwayFilter,
 };
 

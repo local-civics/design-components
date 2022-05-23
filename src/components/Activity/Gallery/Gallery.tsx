@@ -57,7 +57,8 @@ export const Gallery = (props: GalleryProps) => {
           <p className="text-gray-600 font-semibold">Results</p>
           <p className="text-gray-600 text-sm">
             {" "}
-            We found {props.filteredCount >= 10 ? "10+" : props.filteredCount} {props.filteredCount === 1 ? "activity" : "activities"}.
+            We found {props.filteredCount >= 10 ? "10+" : props.filteredCount}{" "}
+            {props.filteredCount === 1 ? "activity" : "activities"}.
           </p>
           {props.filtered}
         </label>

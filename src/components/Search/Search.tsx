@@ -1,12 +1,12 @@
-import React, {useCallback} from "react";
+import React, { useCallback } from "react";
 import { Button } from "../Button/Button";
 import { Modal } from "../Modal/Modal";
 import { SearchButton } from "./SearchButton/SearchButton";
 import { SearchResultProps } from "./SearchResult/SearchResult";
-import {debounce} from "../../utils/search";
+import { debounce } from "../../utils/search";
 
 export type SearchProps = {
-  autofocus?: boolean
+  autofocus?: boolean;
   category?: string;
   open?: boolean;
   disabled?: boolean;
@@ -22,7 +22,10 @@ export const Search = (props: SearchProps) => {
   const hasResults = !!props.results && React.Children.count(props.results) > 0;
   const placeholder = props.placeholder || "Quick search...";
   const searchRef = React.useRef<HTMLInputElement>(null);
-  const handler = useCallback(debounce((search) => props.onSearch && props.onSearch(search)), []);
+  const handler = useCallback(
+    debounce((search) => props.onSearch && props.onSearch(search)),
+    []
+  );
   React.useEffect(() => {
     if (searchRef.current) {
       searchRef.current.focus();

@@ -89,9 +89,9 @@ const DaySelection = (props: DaySelectionProps) => {
 
   return (
     <div className="mt-4 grid grid-cols-7 gap-1 text-sm justify-items-center">
-      {WEEKDAYS.map((date, i) => {
+      {WEEKDAYS.map((date) => {
         return (
-          <span key={date + i} className="w-8 text-center text-slate-400">
+          <span key={date} className="w-8 text-center text-slate-400">
             {date}
           </span>
         );
