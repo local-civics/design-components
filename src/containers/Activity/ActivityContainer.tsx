@@ -42,7 +42,7 @@ export const ActivityContainer = () => {
           onUnregister={toggleSubscription}
           onLaunch={() => {
             if (activity.lectureId) {
-              navigate(`${location.pathname}/play`);
+              navigate(`/forms/${activityId}`);
             } else if (activity.link) {
               window.open(activity?.link, "_blank");
             }

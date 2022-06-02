@@ -1,5 +1,5 @@
 /**
- * A connected container for assessments.
+ * A connected container for learning forms.
  * @constructor
  */
 import React from "react";
@@ -9,32 +9,32 @@ import { LearningFormWorkflow } from "../../workflows/LearningFormWorkflow/Learn
 import * as path from "path";
 
 /**
- * Connected container for experience.
+ * Connected container for learning forms.
  * @constructor
  */
-export const AssessmentContainer = () => {
+export const LearningFormContainer = () => {
   const tenant = useTenant();
   const params = useParams();
   const tenantName = params.tenantName || tenant.tenantName;
-  const activityId = params.activityId;
+  const formId = params.formId;
   const navigate = useNavigate();
   const location = useLocation()
 
   return {
-    OpenAssessment: () => {
+    LearningForm: () => {
       if (tenant.isLoading) {
         return null;
       }
 
-      if (!tenantName || !activityId) {
+      if (!tenantName || !formId) {
         throw new Error("request must missing required params");
       }
 
-      const [lecture, onAnswerChange, onSave] = useLecture(tenantName, activityId);
+      const [form, onAnswerChange, onSave] = useForm(tenantName, formId);
       return (
         <LearningFormWorkflow
-          {...lecture}
-          isLoading={lecture === null}
+          {...form}
+          isLoading={form === null}
           onSubmit={() => onSave(true).then((err: any) => {
             if (!err) navigate(path.dirname(location.pathname));
           })}
@@ -48,8 +48,8 @@ export const AssessmentContainer = () => {
   };
 };
 
-// A hook to fetch (and run through) a lecture
-export const useLecture = (tenantName: string, activityId: string, refresh?: boolean) => {
+// A hook to fetch (and run through) a learning form
+export const useForm = (tenantName: string, activityId: string, refresh?: boolean) => {
   const [lecture, setLecture] = React.useState(null as any);
   const api = useApi();
   const location = useLocation();

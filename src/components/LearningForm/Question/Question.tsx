@@ -2,8 +2,8 @@ import { Modal } from "../../Modal/Modal";
 import { Icon } from "../../Icon/Icon";
 import React from "react";
 
-// Question types
-enum QuestionType {
+// Question format
+enum QuestionFormat {
   FreeForm,
   MultipleChoice,
   Image,
@@ -25,7 +25,6 @@ export type QuestionProps = {
 };
 
 /**
- * <Quesion />
  * Question component
  * @param props
  * @constructor
@@ -49,20 +48,20 @@ export const Question = (props: QuestionProps) => {
     setImageURL(props.response)
   }, [props.questionId, props.response])
 
-  const questionType = (() => {
+  const format = (() => {
     if (props.imageRequired) {
-      return QuestionType.Image;
+      return QuestionFormat.Image;
     }
 
     if (props.freeForm) {
-      return QuestionType.FreeForm;
+      return QuestionFormat.FreeForm;
     }
 
     if (props.options && props.options.length > 0) {
-      return QuestionType.MultipleChoice;
+      return QuestionFormat.MultipleChoice;
     }
 
-    return QuestionType.FreeForm;
+    return QuestionFormat.FreeForm;
   })();
 
   return (
@@ -80,7 +79,7 @@ export const Question = (props: QuestionProps) => {
             </div>
           )}
 
-          <Response {...props} questionType={questionType} imageURL={imageURL} onImageUpload={onImageUpload} />
+          <Response {...props} format={format} imageURL={imageURL} onImageUpload={onImageUpload} />
         </div>
       </div>
     </Modal>
@@ -94,21 +93,21 @@ export const Question = (props: QuestionProps) => {
  */
 const Response = (
   props: QuestionProps & {
-    questionType: number;
+    format: number;
     imageURL?: string;
     onImageUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   }
 ) => {
   const imageURL = props.imageURL||"";
   const onImageUpload = props.onImageUpload;
-  switch (props.questionType) {
-    case QuestionType.FreeForm:
+  switch (props.format) {
+    case QuestionFormat.FreeForm:
       return (
         <div>
           <textarea
             maxLength={3000}
             onChange={(e) => props.onAnswerChange && props.onAnswerChange(props.questionId || "", e.target.value)}
-            defaultValue={props.response}
+            value={props.response}
             className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
       focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
@@ -117,7 +116,7 @@ const Response = (
           />
         </div>
       );
-    case QuestionType.MultipleChoice:
+    case QuestionFormat.MultipleChoice:
       return (
         <fieldset className="grid grid-cols-1 gap-3">
           {props.options?.map((option, i) => (
@@ -137,7 +136,7 @@ const Response = (
           ))}
         </fieldset>
       );
-    case QuestionType.Image:
+    case QuestionFormat.Image:
       return (
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center space-x-3">
