@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/react-hub",
-  "version": "0.4.0",
+  "version": "1.0.0-alpha.0",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
