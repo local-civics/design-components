@@ -3,7 +3,7 @@ import React from "react";
 /**
  * The properties for the badge workflow.
  */
-export type BadgePreviewProps = {
+export type BadgeListProps = {
   children?: React.ReactNode;
 };
 
@@ -12,7 +12,7 @@ export type BadgePreviewProps = {
  * @param props
  * @constructor
  */
-export const BadgeList = (props: BadgePreviewProps) => {
+export const BadgeList = (props: BadgeListProps) => {
   const hasContent = props.children && React.Children.count(props.children) > 0;
   const count = React.Children.count(props.children || []);
   const columns = 3;

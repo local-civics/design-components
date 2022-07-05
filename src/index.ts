@@ -1,3 +1,20 @@
 import "./index.css";
 
-export * from "./App";
+export * from "./components/Activity";
+export * from "./components/Badge";
+export * from "./components/Board";
+export * from "./components/Button";
+export * from "./components/Calendar";
+export * from "./components/Icon";
+// todo: export * from "./components/LearningForm";
+export * from "./components/Loader";
+export * from "./components/Logo";
+export * from "./components/Modal";
+export * from "./components/NavBar";
+export * from "./components/Onboarding";
+export * from "./components/Pathway";
+export * from "./components/Profile";
+export * from "./components/Progress";
+export * from "./components/Search";
+export * from "./components/Task";
+export * from "./components/Widget";

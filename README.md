@@ -1,20 +1,20 @@
-# react-hub
+# design-components
 
-React component library for Local Civics Hub
+React component library for Local design components
 
 ## Install
 
 Components are written in React, and its stories are written in [Component Story Format](https://medium.com/storybookjs/component-story-format-66f4c32366df). It requires Storybook version 6 and up.
 
-Add react-hub to your project.
+Add design-components to your project.
 
-`npm install --save @local-civics/react-hub`
+`npm install --save @local-civics/design-components`
 
 ### **Usage**
 
 Import components you want into your UI
 
-`import { Button } from '@local-civics/react-hub';`
+`import { Button } from '@local-civics/design-components';`
 
 and use them like so
 
@@ -24,7 +24,7 @@ const myBtn = () => <Button>Do something</Button>;
 
 ### **Development**
 
-Clone the [react-hub GitHub project](https://github.com/local-civics/react-hub) then start Storybook.
+Clone the [design-components GitHub project](https://github.com/local-civics/design-components) then start Storybook.
 
 `npm install && npm run storybook`
 
