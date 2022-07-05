@@ -1,4 +1,3 @@
-import { MemoryRouter } from "react-router-dom";
 import { NavBar, NavBarProps } from "./NavBar";
 import { Story } from "@storybook/react";
 import { NavLink } from "./NavLink/NavLink";
@@ -15,15 +14,13 @@ export default {
  * Component storybook template
  */
 const Template: Story<NavBarProps> = (args) => (
-  <MemoryRouter>
     <NavBar>
-      <NavLink name="home" />
-      <NavLink name="profile" />
-      <NavLink name="explore" />
-      <NavLink name="calendar" />
-      <NavLink name="logout" />
+        <NavLink name="home" />
+        <NavLink name="profile" />
+        <NavLink name="explore" />
+        <NavLink name="calendar" />
+        <NavLink name="logout" />
     </NavBar>
-  </MemoryRouter>
 );
 
 /**
