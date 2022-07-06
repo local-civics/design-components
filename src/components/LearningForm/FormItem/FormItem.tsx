@@ -130,7 +130,7 @@ const DropDown = (props: FormItemProps) => {
     const responses = props.responses || []
     const values: {[key: string]: boolean} = {}; responses.forEach(key => values[key] = true)
 
-    const onSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         if(props.onResponseChange){
             props.onResponseChange([e.target.value])
         }
@@ -141,7 +141,7 @@ const DropDown = (props: FormItemProps) => {
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none`}
                    required={props.required}
                    name={props.headline}
-                   onSelect={onSelect}>
+                   onChange={onChange}>
         {
             options.map((option) => {
                 return <option selected={values[option]} value={option}>{option}</option>
@@ -155,7 +155,41 @@ const FileUpload = (props: FormItemProps) => {
 }
 
 const Text = (props: FormItemProps) => {
-    throw new Error("not implemented")
+    const minimum = props.paragraph ? 100 : 400
+    const responses = props.responses || []
+    const response = responses.length > 0 ? responses[0] : ""
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+        if(props.onResponseChange){
+            props.onResponseChange([e.target.value])
+        }
+    }
+
+    return <>
+        { !props.paragraph && <input
+            className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
+        focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+        disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+            required={props.required}
+            minLength={minimum}
+            onChange={onChange}
+            name={props.headline}
+            type="text"
+            placeholder="Your answer"
+            value={response}
+        /> }
+        { props.paragraph && <textarea
+            className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
+        focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+        disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+            required={props.required}
+            minLength={minimum}
+            onChange={onChange}
+            name={props.headline}
+            placeholder="Your answer"
+            value={response}
+        /> }
+    </>
 }
 
 const Date = (props: FormItemProps) => {
