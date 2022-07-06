@@ -1,25 +1,24 @@
-import { Icon } from "../../Icon/Icon";
-import { Button } from "../../Button/Button";
-import React from "react";
-import { Modal } from "../../Modal/Modal";
+import React     from "react";
+import { Icon }   from "../../Icon";
+import { Button } from "../../Button";
+import { Modal } from "../../Modal";
 
 /**
- * Confirm exit props
+ * FormExitDialogProps
  */
-export type ConfirmExitProps = {
+export type FormExitDialogProps = {
   onYes?: () => void;
   onNo?: () => void;
-  onClose?: () => void;
 };
 
 /**
- * ConfirmExit component
+ * FormExitDialog
  * @param props
  * @constructor
  */
-export const ConfirmExit = (props: ConfirmExitProps) => {
+export const FormExitDialog = (props: FormExitDialogProps) => {
   return (
-    <Modal visible transparent onClose={props.onClose}>
+    <Modal visible transparent onClose={props.onNo}>
       <div className="w-full md:w-[24rem] px-8 py-5 shadow-sm grid grid-cols-1 gap-4 content-center justify-items-center">
         <div className="text-slate-500 w-14 h-14">
           <Icon name="edit" />

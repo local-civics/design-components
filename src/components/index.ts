@@ -4,7 +4,7 @@ export * from "./Board";
 export * from "./Button";
 export * from "./Calendar";
 export * from "./Icon";
-// todo: export * from "./LearningForm";
+export * from "./LearningForm";
 export * from "./Loader";
 export * from "./Logo";
 export * from "./Modal";
