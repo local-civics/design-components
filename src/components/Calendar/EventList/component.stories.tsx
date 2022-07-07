@@ -1,5 +1,5 @@
 import { Story } from "@storybook/react";
-import { EventPreview } from "../EventPreview/EventPreview";
+import { EventItem } from "../EventItem/EventItem";
 import { EventList, EventListProps } from "./EventList";
 
 /**
@@ -15,9 +15,9 @@ export default {
  */
 const Template: Story<EventListProps> = (args) => (
   <EventList {...args}>
-    <EventPreview headline="EventPreview #1" pathway="policy & government" />
-    <EventPreview headline="EventPreview #2" pathway="arts & culture" />
-    <EventPreview headline="EventPreview #3" pathway="volunteer" />
+    <EventItem headline="Item #1" pathway="policy & government" />
+    <EventItem headline="Item #2" pathway="arts & culture" />
+    <EventItem headline="Item #3" pathway="volunteer" />
   </EventList>
 );
 

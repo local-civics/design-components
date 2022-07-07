@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { TagFilter } from "../TagFilter/TagFilter";
 import { Gallery } from "../Gallery/Gallery";
-import { ActivityPreview } from "../ActivityPreview/ActivityPreview";
-import { Button } from "../../Button/Button";
+import { ActivityItem } from "../ActivityItem/ActivityItem";
+import { Button } from "../..";
 import { debounce } from "../../../utils/search";
 
 /**
@@ -47,7 +47,7 @@ export const ActivityList = (props: ActivityListProps) => {
         primary={
           !props.search &&
           primary && (
-            <ActivityPreview
+            <ActivityItem
               {...primary}
               onClick={() => props.onActivityClick && props.onActivityClick(primary.activityId)}
             />
@@ -60,7 +60,7 @@ export const ActivityList = (props: ActivityListProps) => {
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
               {top.map((activity) => {
                 return (
-                  <ActivityPreview
+                  <ActivityItem
                     key={`${activity.activityId}`}
                     {...activity}
                     onClick={() => props.onActivityClick && props.onActivityClick(activity.activityId)}
@@ -77,7 +77,7 @@ export const ActivityList = (props: ActivityListProps) => {
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
               {upcoming.map((activity) => {
                 return (
-                  <ActivityPreview
+                  <ActivityItem
                     key={`${activity.activityId}`}
                     {...activity}
                     onClick={() => props.onActivityClick && props.onActivityClick(activity.activityId)}
@@ -94,7 +94,7 @@ export const ActivityList = (props: ActivityListProps) => {
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
               {props.milestones.map((activity) => {
                 return (
-                  <ActivityPreview
+                  <ActivityItem
                     key={`${activity.activityId}`}
                     {...activity}
                     onClick={() => props.onActivityClick && props.onActivityClick(activity.activityId)}
@@ -112,7 +112,7 @@ export const ActivityList = (props: ActivityListProps) => {
             <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
               {props.activities.map((activity) => {
                 return (
-                  <ActivityPreview
+                  <ActivityItem
                     key={`${activity.activityId}`}
                     {...activity}
                     onClick={() => props.onActivityClick && props.onActivityClick(activity.activityId)}

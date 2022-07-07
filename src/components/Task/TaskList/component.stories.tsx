@@ -1,6 +1,6 @@
 import { Story } from "@storybook/react";
 import { TaskList, TaskListProps } from "./TaskList";
-import { TaskPreview } from "../TaskPreview/TaskPreview";
+import { TaskItem } from "../TaskItem/TaskItem";
 
 /**
  * Storybook component configuration
@@ -15,12 +15,12 @@ export default {
  */
 const Template: Story<TaskListProps> = (args) => (
   <TaskList {...args}>
-    <TaskPreview headline="task #1" status="done" />
-    <TaskPreview headline="task #2" status="in-progress" />
-    <TaskPreview headline="task #3" />
-    <TaskPreview headline="task #4" />
-    <TaskPreview headline="task #5" />
-    <TaskPreview headline="task #6" />
+    <TaskItem headline="task #1" status="done" />
+    <TaskItem headline="task #2" status="in-progress" />
+    <TaskItem headline="task #3" />
+    <TaskItem headline="task #4" />
+    <TaskItem headline="task #5" />
+    <TaskItem headline="task #6" />
   </TaskList>
 );
 

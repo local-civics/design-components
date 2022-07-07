@@ -3,7 +3,7 @@
 # Workflow name
 name: "Release"
 
-# EventPreview for the workflow
+# Events for the workflow
 on:
   release:
     types: [created]
