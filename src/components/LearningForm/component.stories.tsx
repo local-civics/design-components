@@ -24,6 +24,9 @@ In this Undergrad Spotlight, Sam Lee shares about her Cornell experience! Sam di
             imageURL="https://cdn.localcivics.io/hub/landing.jpg"
             eta="30m"
             {...args}
+            onSubmit={async (reflection, rating) => {
+                args.onSubmit && await args.onSubmit(reflection, rating)
+            }}
         />
     </div>
 );

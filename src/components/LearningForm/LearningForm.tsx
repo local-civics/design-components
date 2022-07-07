@@ -3,6 +3,7 @@ import {Button}                  from "../Button";
 import {Icon}                    from "../Icon";
 import {FormExitDialog}          from "./FormExitDialog/FormExitDialog";
 import {FormItem, FormItemProps} from "./FormItem/FormItem";
+import {FormSubmitDialog}        from "./FormSubmitDialog/FormSubmitDialog";
 
 /**
  * LearningFormProps
@@ -18,7 +19,7 @@ export type LearningFormProps = {
     items?: FormItemProps[]
 
     onBack?: () => void;
-    onSubmit?: (reflection: string, rating?: number) => void
+    onSubmit?: (reflection: string, rating?: number) => Promise<void>
 }
 
 /**
@@ -30,7 +31,8 @@ export const LearningForm = (props: LearningFormProps) => {
     const items = props.items || []
     const [reflection, setReflection] = React.useState(props.reflection||"")
     const [rating, setRating] = React.useState(props.rating)
-    const [exit, setExit] = React.useState(false);
+    const [showExitDialogue, setShowExitDialogue] = React.useState(false);
+    const [showSubmitDialogue, setShowSubmitDialogue] = React.useState(false);
 
     const onChange = (responses?: string[]) => {
         if(!responses || responses.length === 0){
@@ -40,16 +42,24 @@ export const LearningForm = (props: LearningFormProps) => {
         setReflection(responses[0])
     }
 
-    const onSubmit = () => {
+    const onSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
         if(props.onSubmit){
-            props.onSubmit(reflection, rating)
+            props.onSubmit(reflection, rating).then(() => {
+                setShowSubmitDialogue(true)
+            })
         }
     }
-
 
     return <div className="grid grid-cols-1 gap-y-12 bg-gray-100 px-4 pb-12 lg:px-36">
         <div className="grid grid-cols-2 min-h-96 bg-white rounded-b overflow-hidden shadow-sm">
             <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
+                <div onClick={() => setShowExitDialogue(true)} className="flex gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500">
+                    <div className="w-3 h-3 min-w-3">
+                        <Icon name="leftArrow" />
+                    </div>
+                    <span className="text-md">Go back</span>
+                </div>
                 { props.summary && <h2 className="font-semibold text-2xl">{props.headline}</h2> }
                 { props.summary && <p className="whitespace-pre-line">{props.summary}</p> }
                 { props.eta && <p className="text-sm font-semibold">Estimated Completion Time: {props.eta}</p> }
@@ -91,10 +101,18 @@ export const LearningForm = (props: LearningFormProps) => {
             </div>
         </form>
 
-        {exit && (
+        {showExitDialogue && (
             <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
                 <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
-                    <FormExitDialog onYes={props.onBack} onNo={() => setExit(false)}  />
+                    <FormExitDialog onYes={props.onBack} onNo={() => setShowExitDialogue(false)}  />
+                </div>
+            </div>
+        )}
+
+        {showSubmitDialogue && (
+            <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
+                <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
+                    <FormSubmitDialog onReview={() => setShowSubmitDialogue(false)} onExit={props.onBack}  />
                 </div>
             </div>
         )}
