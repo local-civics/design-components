@@ -30,30 +30,30 @@ export type FormItemProps = {
 export const FormItem = (props: FormItemProps) => {
     const checkIconColor = props.responses ? "text-green-500" : "text-gray-300"
     const contentMaxWidth = props.format === "question" ? "max-w-md" : ""
-    const Body = (() => {
+    const Body = () => {
         switch (true){
         case props.format === "embed":
             return <Embed {...props }/>
         case props.format === "image":
             return <Image {...props} />
         case props.questionType === "radio":
-            return <Radio {...props} />
+            return <RadioQuestion {...props} />
         case props.questionType === "checkbox":
-            return <Checkbox {...props} />
+            return <CheckboxQuestion {...props} />
         case props.questionType === "drop down":
-            return <DropDown {...props} />
+            return <DropDownQuestion {...props} />
         case props.questionType === "file upload":
-            return <FileUpload {...props} />
+            return <FileUploadQuestion {...props} />
         case props.questionType === "text":
-            return <Text {...props} />
+            return <TextQuestion {...props} />
         case props.questionType === "date":
-            return <Date {...props} />
+            return <DateQuestion {...props} />
         case props.questionType === "time":
-            return <Time {...props} />
+            return <TimeQuestion {...props} />
         default:
             return null
         }
-    })
+    }
 
     return <div className="bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8">
         <div className="flex gap-x-1">
@@ -75,7 +75,7 @@ export const FormItem = (props: FormItemProps) => {
     </div>
 }
 
-const Radio = (props: FormItemProps) => {
+const RadioQuestion = (props: FormItemProps) => {
     const options = props.options || []
     const responses = props.responses || []
     const values: {[key: string]: boolean} = {}; responses.forEach(key => values[key] = true)
@@ -100,7 +100,7 @@ const Radio = (props: FormItemProps) => {
     </fieldset>
 }
 
-const Checkbox = (props: FormItemProps) => {
+const CheckboxQuestion = (props: FormItemProps) => {
     const options = props.options || []
     const responses = props.responses || []
     const values: {[key: string]: boolean} = {}; responses.forEach(key => values[key] = true)
@@ -125,7 +125,7 @@ const Checkbox = (props: FormItemProps) => {
     </fieldset>
 }
 
-const DropDown = (props: FormItemProps) => {
+const DropDownQuestion = (props: FormItemProps) => {
     const options = props.options || []
     const responses = props.responses || []
     const values: {[key: string]: boolean} = {}; responses.forEach(key => values[key] = true)
@@ -150,11 +150,11 @@ const DropDown = (props: FormItemProps) => {
     </select>
 }
 
-const FileUpload = (props: FormItemProps) => {
+const FileUploadQuestion = (props: FormItemProps) => {
     throw new Error("not implemented")
 }
 
-const Text = (props: FormItemProps) => {
+const TextQuestion = (props: FormItemProps) => {
     const minimum = props.paragraph ? 100 : 400
     const responses = props.responses || []
     const response = responses.length > 0 ? responses[0] : ""
@@ -192,12 +192,48 @@ const Text = (props: FormItemProps) => {
     </>
 }
 
-const Date = (props: FormItemProps) => {
-    throw new Error("not implemented")
+const DateQuestion = (props: FormItemProps) => {
+    const responses = props.responses || []
+    const response = responses.length > 0 ? responses[0] : ""
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+        if(props.onResponseChange){
+            props.onResponseChange([e.target.value])
+        }
+    }
+
+    return <input
+        className="mt-1 block w-full px-3 pt-3 pb-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
+        focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+        disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+        required={props.required}
+        onChange={onChange}
+        name={props.headline}
+        type="date"
+        value={response}
+    />
 }
 
-const Time = (props: FormItemProps) => {
-    throw new Error("not implemented")
+const TimeQuestion = (props: FormItemProps) => {
+    const responses = props.responses || []
+    const response = responses.length > 0 ? responses[0] : ""
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+        if(props.onResponseChange){
+            props.onResponseChange([e.target.value])
+        }
+    }
+
+    return <input
+        className="mt-1 block w-full px-3 pt-3 pb-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
+        focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+        disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+        required={props.required}
+        onChange={onChange}
+        name={props.headline}
+        type="time"
+        value={response}
+    />
 }
 
 const Image = (props: FormItemProps) => {
