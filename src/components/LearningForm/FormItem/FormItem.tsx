@@ -357,6 +357,16 @@ const Image = (props: FormItemProps) => {
 }
 
 const Embed = (props: FormItemProps) => {
-    throw new Error("not implemented")
+    return <div className="max-w-[25rem] md:max-w-[40rem] md:w-[40rem]">
+        <iframe
+            className="w-full"
+            height="315"
+            src={props.url}
+            title={props.headline}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+        />
+    </div>
 }
 
