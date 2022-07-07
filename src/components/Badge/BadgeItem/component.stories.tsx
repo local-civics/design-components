@@ -1,4 +1,4 @@
-import { Story }                        from "@storybook/react";
+import { Story } from "@storybook/react";
 import { BadgeItem, BadgeItemProps } from "./BadgeItem";
 
 /**
@@ -13,11 +13,7 @@ export default {
  * Component storybook template
  */
 const Template: Story<BadgeItemProps> = (args) => (
-  <BadgeItem
-    headline="Onboarding Badge"
-    imageURL="https://cdn.localcivics.io/badges/onboarding.png"
-    {...args}
-  />
+  <BadgeItem headline="Onboarding Badge" imageURL="https://cdn.localcivics.io/badges/onboarding.png" {...args} />
 );
 
 /**

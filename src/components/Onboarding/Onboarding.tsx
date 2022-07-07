@@ -1,11 +1,11 @@
 import React from "react";
 import { SearchResult, Modal } from "../../components";
-import { LegalAgreement }  from "./LegalAgreement/LegalAgreement";
+import { LegalAgreement } from "./LegalAgreement/LegalAgreement";
 import { CommunitySearch } from "./CommunitySearch/CommunitySearch";
 import { RoleSelection } from "./RoleSelection/RoleSelection";
 import { Registration } from "./Registration/Registration";
 import { ImpactQuiz } from "./ImpactQuiz/ImpactQuiz";
-import { Welcome }    from "./Welcome/Welcome";
+import { Welcome } from "./Welcome/Welcome";
 
 /**
  * OnboardingProps

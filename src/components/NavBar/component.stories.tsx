@@ -14,13 +14,13 @@ export default {
  * Component storybook template
  */
 const Template: Story<NavBarProps> = (args) => (
-    <NavBar>
-        <NavLink name="home" />
-        <NavLink name="profile" />
-        <NavLink name="explore" />
-        <NavLink name="calendar" />
-        <NavLink name="logout" />
-    </NavBar>
+  <NavBar>
+    <NavLink name="home" />
+    <NavLink name="profile" />
+    <NavLink name="explore" />
+    <NavLink name="calendar" />
+    <NavLink name="logout" />
+  </NavBar>
 );
 
 /**

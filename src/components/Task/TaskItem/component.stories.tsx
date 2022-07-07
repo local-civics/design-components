@@ -1,4 +1,4 @@
-import { Story }                      from "@storybook/react";
+import { Story } from "@storybook/react";
 import { TaskItem, TaskItemProps } from "./TaskItem";
 
 /**

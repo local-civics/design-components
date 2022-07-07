@@ -16,7 +16,7 @@ export type ButtonColor =
   | "secondary"
   | "slate:sky"
   | "slate:icon"
-  | "blue"
+  | "blue";
 
 /**
  * The button size.

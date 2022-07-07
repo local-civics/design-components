@@ -12,9 +12,7 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<NavLinkProps> = (args) => (
-    <NavLink {...args} />
-);
+const Template: Story<NavLinkProps> = (args) => <NavLink {...args} />;
 
 /**
  * Component stories

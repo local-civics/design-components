@@ -16,8 +16,8 @@ module.exports = {
         },
         "dark-blue": {
           400: "#0170BB",
-          600: "#015f9f"
-        }
+          600: "#015f9f",
+        },
       },
     },
     fontFamily: {
@@ -28,7 +28,7 @@ module.exports = {
     }),
     minWidth: (theme) => ({
       ...theme("spacing"),
-    })
+    }),
   },
   variants: {
     extend: {

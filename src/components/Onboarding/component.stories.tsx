@@ -1,6 +1,6 @@
-import React                                   from "react";
+import React from "react";
 import { Onboarding, OnboardingProps } from "./Onboarding";
-import { Story }                               from "@storybook/react";
+import { Story } from "@storybook/react";
 
 /**
  * Storybook component configuration

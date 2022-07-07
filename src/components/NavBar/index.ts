@@ -1,2 +1,2 @@
-export * from "./NavLink/NavLink"
-export * from "./NavBar"
+export * from "./NavLink/NavLink";
+export * from "./NavBar";

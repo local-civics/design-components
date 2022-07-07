@@ -13,9 +13,11 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story = () => <div className="relative h-screen w-full overflow-hidden bg-white font-proxima">
-  <Home/>
-</div>;
+const Template: Story = () => (
+  <div className="relative h-screen w-full overflow-hidden bg-white font-proxima">
+    <Home />
+  </div>
+);
 
 /**
  * Component view

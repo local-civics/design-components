@@ -1,5 +1,5 @@
-import React           from "react";
-import {Button, Modal} from "../..";
+import React from "react";
+import { Button, Modal } from "../..";
 
 /**
  * NotFoundProps

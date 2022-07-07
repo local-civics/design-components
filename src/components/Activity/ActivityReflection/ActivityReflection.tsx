@@ -1,6 +1,6 @@
-import React                             from "react";
+import React from "react";
 import { Button, Icon, IconName, Modal } from "../..";
-import { builder }                       from "../../../utils/classname/classname";
+import { builder } from "../../../utils/classname/classname";
 
 /**
  * ActivityReflectionProps
@@ -118,10 +118,7 @@ const Rating = (props: ActivityReflectionProps & { setRating?: (rating: number) 
     const color = i < rating ? "text-sky-200" : "text-slate-200";
     return (
       <div key={i} onMouseEnter={() => setRating(i + 1)} onMouseLeave={() => setRating(props.rating || -1)}>
-        <div
-          className={`cursor-pointer h-4 w-4 ${color}`}
-          onClick={() => props.setRating && props.setRating(i + 1)}
-        >
+        <div className={`cursor-pointer h-4 w-4 ${color}`} onClick={() => props.setRating && props.setRating(i + 1)}>
           <Icon name="circle" />
         </div>
       </div>

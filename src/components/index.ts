@@ -10,7 +10,7 @@ export * from "./Loader";
 export * from "./Logo";
 export * from "./Modal";
 export * from "./NavBar";
-export * from "./NotFound"
+export * from "./NotFound";
 export * from "./Onboarding";
 export * from "./Pathway";
 export * from "./Profile";

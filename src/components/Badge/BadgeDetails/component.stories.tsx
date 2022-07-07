@@ -1,7 +1,7 @@
 import React from "react";
-import { TaskPreview }                      from "../..";
+import { TaskPreview } from "../..";
 import { BadgeDetails, BadgeDetailsProps } from "./BadgeDetails";
-import { Story }                            from "@storybook/react";
+import { Story } from "@storybook/react";
 
 /**
  * Storybook component configuration
