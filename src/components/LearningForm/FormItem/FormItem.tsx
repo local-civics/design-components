@@ -234,7 +234,7 @@ const FileUploadQuestion = (props: FormItemProps) => {
 }
 
 const TextQuestion = (props: FormItemProps) => {
-    const minimum = props.paragraph ? 100 : 400
+    const minimum = props.paragraph ? 400 : 100
     const responses = props.responses || []
     const response = responses.length > 0 ? responses[0] : ""
 

@@ -1,4 +1,5 @@
 import React                     from "react";
+import {Button}                  from "../../Button";
 import {Icon}                    from "../../Icon";
 import {FormItem, FormItemProps} from "../FormItem/FormItem";
 
@@ -43,26 +44,50 @@ export const Form = (props: FormProps) => {
     }
 
 
-    return <form className="grid grid-cols-1 gap-y-8 bg-gray-100 px-4 pb-4 lg:px-36" onSubmit={onSubmit}>
-        {
-            items.map((props) => {
-                return <FormItem {...props}/>
-            })
-        }
+    return <div className="grid grid-cols-1 gap-y-12 bg-gray-100 px-4 pb-12 lg:px-36">
+        <div className="grid grid-cols-2 min-h-96 bg-white rounded-b">
+            <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
+                { props.summary && <h2 className="font-semibold text-2xl">{props.headline}</h2> }
+                { props.summary && <p className="whitespace-pre-line">{props.summary}</p> }
+                { props.eta && <p className="text-sm font-semibold">Estimated Completion Time: {props.eta}</p> }
+            </div>
+            <img className="h-full w-full object-cover" alt={props.headline} src={props.imageURL} />
+        </div>
 
-        <FormItem
-            headline="Almost there, write a short reflection to earn your points!"
-            summary="(1-2 sentences)"
-            format="question"
-            questionType="text"
-            onResponseChange={onChange}
-            responses={reflection ? [reflection] : undefined}
-        />
+        <form className="grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
+            {
+                items.map((props) => {
+                    return <FormItem {...props}/>
+                })
+            }
 
-        <FormItem>
-            <Rating rating={rating} setRating={setRating}/>
-        </FormItem>
-    </form>
+            <FormItem
+                headline="Almost there, write a short reflection to earn your points!"
+                summary="(1-2 sentences)"
+                format="question"
+                questionType="text"
+                onResponseChange={onChange}
+                required
+                responses={reflection ? [reflection] : undefined}
+            />
+
+            <FormItem>
+                <Rating rating={rating} setRating={setRating}/>
+            </FormItem>
+
+            <div className="w-max m-auto">
+                <Button
+                    type="submit"
+                    color="blue"
+                    size="md"
+                    spacing="md"
+                    border="rounded"
+                    theme="dark"
+                    text="Submit"
+                />
+            </div>
+        </form>
+    </div>
 }
 
 const Rating = (props: { rating?: number, setRating?: (rating: number) => void }) => {
