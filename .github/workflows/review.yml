@@ -3,7 +3,7 @@
 # Workflow name
 name: "Review"
 
-# EventPreview for the workflow
+# Events for the workflow
 on:
   pull_request:
     branches:
