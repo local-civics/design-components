@@ -1,6 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, ButtonProps } from "../../Button/Button";
+import { Button, ButtonProps } from "../../Button";
 
 /**
  * The nav link name.
@@ -26,7 +25,6 @@ export type NavLinkProps = {
   menu?: boolean;
   active?: boolean;
   disabled?: boolean;
-  path?: string;
   onClick?: () => void;
 };
 
@@ -36,8 +34,7 @@ export type NavLinkProps = {
  * @constructor
  */
 export const NavLink = (props: NavLinkProps) => {
-  const navigate = useNavigate();
-  const onClick = () => (props.onClick && props.onClick()) || (props.path && navigate(props.path));
+  const onClick = () => props.onClick && props.onClick();
   const config = defaultConfig();
   withMenu(config, props.menu);
   withName(config, props.name);

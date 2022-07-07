@@ -1,6 +1,6 @@
 import { Story } from "@storybook/react";
-import { BadgePreview } from "../BadgePreview/BadgePreview";
-import { BadgeList, BadgePreviewProps } from "./BadgeList";
+import { BadgeItem } from "../BadgeItem/BadgeItem";
+import { BadgeList, BadgeListProps } from "./BadgeList";
 
 /**
  * Storybook component configuration
@@ -13,16 +13,16 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<BadgePreviewProps> = (args) => (
+const Template: Story<BadgeListProps> = (args) => (
   <BadgeList {...args}>
-    <BadgePreview headline="onboarding badge" imageURL="https://cdn.localcivics.io/badges/onboarding.png" />
-    <BadgePreview headline="badge #2" />
-    <BadgePreview headline="badge #3" />
+    <BadgeItem headline="Onboarding Badge" imageURL="https://cdn.localcivics.io/badges/onboarding.png" />
+    <BadgeItem headline="Item #2 Badge" />
+    <BadgeItem headline="Item #3 Badge" />
   </BadgeList>
 );
 
 /**
  * Component view
  */
-export const Component: Story<BadgePreviewProps> = Template.bind({});
+export const Component: Story<BadgeListProps> = Template.bind({});
 Component.args = {};

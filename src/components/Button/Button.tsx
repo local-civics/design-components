@@ -349,17 +349,17 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
     case "blue":
       config.button.color = {
         active: {
-          text: "text-blue-700",
-          border: "border-blue-700",
-          bg: "bg-blue-700",
+          text: "text-dark-blue-600",
+          border: "border-dark-blue-600",
+          bg: "bg-dark-blue-600",
         },
-        text: "text-blue-500",
-        border: "border-blue-500",
-        bg: "bg-blue-500",
+        text: "text-dark-blue-400",
+        border: "border-dark-blue-400",
+        bg: "bg-dark-blue-400",
         interactive: {
-          text: "focus:text-blue-700 active:text-blue-700 hover:text-blue-700",
-          border: "focus:border-blue-700 active:border-blue-700 hover:border-blue-700",
-          bg: "focus:bg-blue-700 active:bg-blue-700 hover:bg-blue-700",
+          text: "focus:text-dark-blue-600 active:text-dark-blue-600 hover:text-dark-blue-600",
+          border: "focus:border-dark-blue-600 active:border-dark-blue-600 hover:border-dark-blue-600",
+          bg: "focus:bg-dark-blue-600 active:bg-dark-blue-600 hover:bg-dark-blue-600",
         },
       };
       break;
