@@ -18,6 +18,7 @@ export type FormItemProps = {
     journalId?: string
     questionId?: string
     responses?: string[]
+    children?: React.ReactNode
 
     onResponseChange?: (responses?: string[], file?: Blob) => void;
 }
@@ -29,50 +30,53 @@ export type FormItemProps = {
  */
 export const FormItem = (props: FormItemProps) => {
     const checkIconColor = props.responses ? "text-green-500" : "text-gray-300"
-    const contentMaxWidth = props.format === "question" ? "max-w-md" : ""
-    const Body = () => {
-        switch (true){
-        case props.format === "embed":
-            return <Embed {...props }/>
-        case props.format === "image":
-            return <Image {...props} />
-        case props.questionType === "radio":
-            return <RadioQuestion {...props} />
-        case props.questionType === "checkbox":
-            return <CheckboxQuestion {...props} />
-        case props.questionType === "drop down":
-            return <DropDownQuestion {...props} />
-        case props.questionType === "file upload":
-            return <FileUploadQuestion {...props} />
-        case props.questionType === "text":
-            return <TextQuestion {...props} />
-        case props.questionType === "date":
-            return <DateQuestion {...props} />
-        case props.questionType === "time":
-            return <TimeQuestion {...props} />
-        default:
-            return null
-        }
-    }
+    const contentMaxWidth = props.format === "question" ? "max-w-lg" : ""
 
     return <div className="bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8">
-        <div className="flex gap-x-1">
+        {props.headline && <div className="flex gap-x-1">
             <div className="flex items-start gap-x-4">
                 { props.format === "question" && <div className={`${checkIconColor} w-5 h-5 mt-1`}>
                     <Icon name="positive" />
                 </div> }
-                <div className="grow max-w-md">
+                <div className="grow max-w-lg">
                     { props.headline && <p className="text-lg text-slate-600 font-semibold">{props.headline}</p> }
                     { props.summary && <p className="text-sm text-slate-500">{props.summary}</p> }
                 </div>
             </div>
             { props.required && <p className="text-sm text-rose-600">*</p>}
-        </div>
+        </div>}
 
-        <div className={`${contentMaxWidth} ml-1`}>
-            <Body />
-        </div>
+        { !props.children && <div className={`${contentMaxWidth} ml-1`}>
+            <Switch {...props} />
+        </div> }
+
+        { props.children }
     </div>
+}
+
+const Switch = (props: FormItemProps) => {
+    switch (true){
+    case props.format === "embed":
+        return <Embed {...props }/>
+    case props.format === "image":
+        return <Image {...props} />
+    case props.questionType === "radio":
+        return <RadioQuestion {...props} />
+    case props.questionType === "checkbox":
+        return <CheckboxQuestion {...props} />
+    case props.questionType === "drop down":
+        return <DropDownQuestion {...props} />
+    case props.questionType === "file upload":
+        return <FileUploadQuestion {...props} />
+    case props.questionType === "text":
+        return <TextQuestion {...props} />
+    case props.questionType === "date":
+        return <DateQuestion {...props} />
+    case props.questionType === "time":
+        return <TimeQuestion {...props} />
+    default:
+        return null
+    }
 }
 
 const RadioQuestion = (props: FormItemProps) => {
@@ -251,7 +255,7 @@ const TextQuestion = (props: FormItemProps) => {
             name={props.headline}
             type="text"
             placeholder="Your answer"
-            value={response}
+            defaultValue={response}
         /> }
         { props.paragraph && <textarea
             className="resize-none text-slate-500 focus:text-slate-600 h-24 mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
@@ -261,8 +265,8 @@ const TextQuestion = (props: FormItemProps) => {
             minLength={minimum}
             onChange={onChange}
             name={props.headline}
+            defaultValue={response}
             placeholder="Your answer"
-            value={response}
         /> }
     </>
 }

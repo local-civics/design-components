@@ -14,7 +14,7 @@ export default {
  * Component storybook template
  */
 const Template: Story<FormProps> = (args) => (
-    <div className="w-max font-proxima m-auto">
+    <div className="font-proxima m-auto">
         <Form {...args} />
     </div>
 );
