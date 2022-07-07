@@ -45,7 +45,7 @@ export const Form = (props: FormProps) => {
 
 
     return <div className="grid grid-cols-1 gap-y-12 bg-gray-100 px-4 pb-12 lg:px-36">
-        <div className="grid grid-cols-2 min-h-96 bg-white rounded-b">
+        <div className="grid grid-cols-2 min-h-96 bg-white rounded-b overflow-hidden shadow-sm">
             <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
                 { props.summary && <h2 className="font-semibold text-2xl">{props.headline}</h2> }
                 { props.summary && <p className="whitespace-pre-line">{props.summary}</p> }
@@ -139,8 +139,8 @@ const Rating = (props: { rating?: number, setRating?: (rating: number) => void }
         <div className="m-auto inline-block py-4">
             <h6 className="font-bold pb-2 mb-4 text-md text-slate-600 font-semibold"> Rate your experience from poor to amazing</h6>
             <div className="w-max m-auto">
-                <div className={`w-[17.7rem] grid grid-cols-5 justify-self-center items-center gap-7 mb-2`}>{buttons}</div>
-                <div className={`w-[16.7rem] text-[0.5rem] text-slate-600 grid grid-cols-5 justify-self-center items-center`}>{labels}</div>
+                <div className={`ml-5 w-[17.7rem] grid grid-cols-5 justify-self-center items-center gap-7 mb-2`}>{buttons}</div>
+                <div className={`ml-5 w-[16.7rem] text-[0.5rem] text-slate-600 grid grid-cols-5 justify-self-center items-center`}>{labels}</div>
             </div>
         </div>
     );
