@@ -151,7 +151,82 @@ const DropDownQuestion = (props: FormItemProps) => {
 }
 
 const FileUploadQuestion = (props: FormItemProps) => {
-    throw new Error("not implemented")
+    const responses = props.responses || []
+    const response = responses.length > 0 ? responses[0] : ""
+    const [imageURL, setImageURL] = React.useState(response);
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(props.onResponseChange){
+            props.onResponseChange([e.target.value])
+        }
+    }
+    const onImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let reader = new FileReader();
+        const target = e.target as HTMLInputElement;
+        const file: File = (target.files as FileList)[0];
+        reader.onloadend = () => {
+            if (typeof reader.result === "string") {
+                setImageURL(reader.result);
+                if(props.onResponseChange){
+                    props.onResponseChange(undefined, file)
+                }
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
+    React.useEffect(() => {
+        setImageURL(response)
+    }, [props.questionId, response])
+
+    return (
+        <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center space-x-3">
+                <div className="shrink-0">
+                    <div
+                        className={`${
+                            imageURL ? "rounded-full -ml-4 p-2" : "rounded-full bg-gray-100 -ml-3 p-2"
+                        }`}
+                    >
+                        <img
+                            className={imageURL ? "h-8 w-8 object-cover rounded-full" : "h-6 w-6 object-cover"}
+                            src={imageURL || "https://cdn.localcivics.io/hub/camera.png"}
+                            alt="Current image answer"
+                        />
+                    </div>
+                </div>
+                <label className="block">
+                    <span className="sr-only">Choose image photo</span>
+                    <input
+                        onChange={onImageUpload}
+                        name="image"
+                        type="file"
+                        className="block w-full text-sm text-slate-500
+                                      file:mr-4 file:py-2 file:px-4
+                                      file:rounded-full file:border-0
+                                      file:text-sm file:font-semibold
+                                      file:bg-violet-50 file:text-violet-700
+                                      hover:file:bg-violet-100"
+                    />
+                </label>
+            </div>
+
+            <div className="-ml-2">
+                <input
+                    type="url"
+                    name={props.headline}
+                    required={props.required}
+                    onChange={onChange}
+                    value={imageURL}
+                    placeholder="Paste a url or select a file above"
+                    className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
+          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+          disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+          invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
+                />
+            </div>
+        </div>
+    );
 }
 
 const TextQuestion = (props: FormItemProps) => {
