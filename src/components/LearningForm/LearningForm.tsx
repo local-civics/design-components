@@ -1,12 +1,13 @@
 import React                     from "react";
-import {Button}                  from "../../Button";
-import {Icon}                    from "../../Icon";
-import {FormItem, FormItemProps} from "../FormItem/FormItem";
+import {Button}                  from "../Button";
+import {Icon}                    from "../Icon";
+import {FormExitDialog}          from "./FormExitDialog/FormExitDialog";
+import {FormItem, FormItemProps} from "./FormItem/FormItem";
 
 /**
- * FormProps
+ * LearningFormProps
  */
-export type FormProps = {
+export type LearningFormProps = {
     formId?: string
     headline?: string
     summary?: string
@@ -16,18 +17,20 @@ export type FormProps = {
     rating?: number
     items?: FormItemProps[]
 
+    onBack?: () => void;
     onSubmit?: (reflection: string, rating?: number) => void
 }
 
 /**
- * Form
+ * LearningForm
  * @param props
  * @constructor
  */
-export const Form = (props: FormProps) => {
+export const LearningForm = (props: LearningFormProps) => {
     const items = props.items || []
     const [reflection, setReflection] = React.useState(props.reflection||"")
     const [rating, setRating] = React.useState(props.rating)
+    const [exit, setExit] = React.useState(false);
 
     const onChange = (responses?: string[]) => {
         if(!responses || responses.length === 0){
@@ -87,6 +90,14 @@ export const Form = (props: FormProps) => {
                 />
             </div>
         </form>
+
+        {exit && (
+            <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
+                <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
+                    <FormExitDialog onYes={props.onBack} onNo={() => setExit(false)}  />
+                </div>
+            </div>
+        )}
     </div>
 }
 

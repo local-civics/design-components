@@ -1,11 +1,11 @@
 import React from "react";
-import { Icon, IconName } from "../../index";
+import { Icon, IconName } from "../..";
 import { builder } from "../../../utils/classname/classname";
 
 /**
- * The properties for the badge.
+ * BadgeItemProps
  */
-export type BadgePreviewProps = {
+export type BadgeItemProps = {
   isInProgress?: boolean;
   isAwarded?: boolean;
   isLocked?: boolean;
@@ -18,11 +18,11 @@ export type BadgePreviewProps = {
 };
 
 /**
- * A component for badge achievements.
+ * BadgeItem
  * @param props
  * @constructor
  */
-export const BadgePreview = (props: BadgePreviewProps) => {
+export const BadgeItem = (props: BadgeItemProps) => {
   const icon = props.icon || "badge";
   const statusIcon: IconName | "" = props.isLocked ? "lock" : props.isAwarded || props.isInProgress ? "" : "unlock";
   const intensity = !props.isLocked ? "normal" : "faded";

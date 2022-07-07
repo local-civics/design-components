@@ -1,6 +1,9 @@
-import { Icon, IconName } from "../../index";
+import { Icon, IconName } from "../..";
 
-export type ActivityPreviewProps = {
+/**
+ * ActivityItemProps
+ */
+export type ActivityItemProps = {
   headline?: string;
   pathway?: string;
   xp?: number;
@@ -8,7 +11,12 @@ export type ActivityPreviewProps = {
   onClick?: () => void;
 };
 
-export const ActivityPreview = (props: ActivityPreviewProps) => {
+/**
+ * ActivityItem
+ * @param props
+ * @constructor
+ */
+export const ActivityItem = (props: ActivityItemProps) => {
   return (
     <div onClick={props.onClick} className="grow cursor-pointer relative rounded-md min-w-64 h-[22rem] overflow-hidden">
       <img className="h-full w-full object-cover" alt={props.headline} src={props.imageURL} />

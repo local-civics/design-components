@@ -1,2 +1,2 @@
-export * from "./Form/Form"
+export * from "./LearningForm"
 export * from "./FormItem/FormItem"

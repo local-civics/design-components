@@ -1,10 +1,10 @@
 import React from "react";
-import { Icon, IconName } from "../../index";
+import { Icon, IconName } from "../..";
 
 /**
- * The properties for the badge task.
+ * TaskItemProps
  */
-export type TaskPreviewProps = {
+export type TaskItemProps = {
   headline?: string;
   full?: boolean;
   status?: "todo" | "in-progress" | "done";
@@ -12,11 +12,11 @@ export type TaskPreviewProps = {
 };
 
 /**
- * A component for badge task.
+ * TaskItem
  * @param props
  * @constructor
  */
-export const TaskPreview = (props: TaskPreviewProps) => {
+export const TaskItem = (props: TaskItemProps) => {
   const color =
     props.status === "done" ? "text-green-500" : props.status === "in-progress" ? "text-cyan-100" : "text-gray-300";
   const border = props.full

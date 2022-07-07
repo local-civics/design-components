@@ -1,21 +1,21 @@
-import React from "react";
-import { Form, FormProps } from "./Form";
-import { Story } from "@storybook/react";
+import React                       from "react";
+import { LearningForm, LearningFormProps } from "./LearningForm";
+import { Story }                   from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-    title: "Library/LearningForm/Form",
-    component: Form,
+    title: "Library/LearningForm",
+    component: LearningForm,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<FormProps> = (args) => (
+const Template: Story<LearningFormProps> = (args) => (
     <div className="font-proxima m-auto">
-        <Form
+        <LearningForm
             headline="College Explorer Scavenger Hunt (CUNY)"
             summary={`Undergrad Spotlights are an opportunity to learn about different colleges and universities from the people who know them best— current students! Hear their thoughts on the college search & applications, choosing a major, and more.
 
@@ -31,5 +31,5 @@ In this Undergrad Spotlight, Sam Lee shares about her Cornell experience! Sam di
 /**
  * Component stories
  */
-export const Component: Story<FormProps> = Template.bind({});
+export const Component: Story<LearningFormProps> = Template.bind({});
 Component.args = {};
