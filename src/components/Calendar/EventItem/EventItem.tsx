@@ -1,22 +1,22 @@
 import React from "react";
-import { Icon, IconName } from "../../index";
+import { Icon, IconName } from "../..";
 import { background } from "../../../utils/colors";
 
 /**
- * EventPreview props.
+ * EventItemProps
  */
-export type EventPreviewProps = {
+export type EventItemProps = {
   headline?: string;
   pathway?: string;
   onClick?: () => void;
 };
 
 /**
- * A component for calendar events.
+ * EventItem
  * @param props
  * @constructor
  */
-export const EventPreview = (props: EventPreviewProps) => {
+export const EventItem = (props: EventItemProps) => {
   return (
     <div
       onClick={props.onClick}

@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<TaskDetailsProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <TaskDetails headline="OnboardingDetails TaskPreview" {...args} />
+    <TaskDetails headline="Task #1" {...args} />
     <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
   </div>
 );

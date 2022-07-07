@@ -1,5 +1,5 @@
 import React from "react";
-import { TaskPreview } from "../..";
+import { TaskItem } from "../..";
 import { BadgeDetails, BadgeDetailsProps } from "./BadgeDetails";
 import { Story } from "@storybook/react";
 
@@ -22,9 +22,9 @@ const Template: Story<BadgeDetailsProps> = (args) => (
       summary="A sample summary"
       {...args}
     >
-      <TaskPreview status="done" headline="TaskPreview #1" />
-      <TaskPreview headline="TaskPreview #2" />
-      <TaskPreview headline="TaskPreview #3" />
+      <TaskItem status="done" headline="Item #1" />
+      <TaskItem headline="Item #2" />
+      <TaskItem headline="Item #3" />
     </BadgeDetails>
     <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
   </div>
