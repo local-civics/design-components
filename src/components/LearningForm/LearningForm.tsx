@@ -19,7 +19,7 @@ export type LearningFormProps = {
   items?: FormItemProps[];
 
   onBack?: () => void;
-  onSubmit?: (reflection: string, rating?: number) => Promise<void>;
+  onSubmit?: (reflection: string, rating?: number) => Promise<any>;
 };
 
 /**
@@ -45,8 +45,10 @@ export const LearningForm = (props: LearningFormProps) => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (props.onSubmit) {
-      props.onSubmit(reflection, rating).then(() => {
-        setShowSubmitDialogue(true);
+      props.onSubmit(reflection, rating).then((err) => {
+        if(!err){
+          setShowSubmitDialogue(true);
+        }
       });
     }
   };
