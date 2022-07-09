@@ -41,7 +41,7 @@ export type OnboardingProps = {
  */
 export const Onboarding = (props: OnboardingProps) => {
   return (
-    <Modal isLoading={props.isLoading} plain visible>
+    <Modal isLoading={props.isLoading} inline plain visible>
       <Delegate {...props} />
     </Modal>
   );
