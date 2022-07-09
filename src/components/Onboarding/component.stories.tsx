@@ -14,7 +14,7 @@ export default {
  * Component storybook template
  */
 const Template: Story<OnboardingProps> = (args) => (
-  <div className="w-max font-proxima m-auto">
+  <div className="w-full h-screen font-proxima m-auto">
     <Onboarding givenName="Andre" {...args} />
   </div>
 );
