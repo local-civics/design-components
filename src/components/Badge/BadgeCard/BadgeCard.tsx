@@ -3,9 +3,9 @@ import { Button } from "../../Button";
 import { Modal } from "../../Modal";
 
 /**
- * BadgeDetailsProps
+ * BadgeCardProps
  */
-export type BadgeDetailsProps = {
+export type BadgeCardProps = {
   headline?: string;
   imageURL?: string;
   summary?: string;
@@ -19,11 +19,11 @@ export type BadgeDetailsProps = {
 };
 
 /**
- * BadgeDetails
+ * BadgeCard
  * @param props
  * @constructor
  */
-export const BadgeDetails = (props: BadgeDetailsProps) => {
+export const BadgeCard = (props: BadgeCardProps) => {
   const BadgeTasks = () => {
     if (!props.showTasks) {
       return null;

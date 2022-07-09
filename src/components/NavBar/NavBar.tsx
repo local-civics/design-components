@@ -19,7 +19,7 @@ export const NavBar = (props: NavBarProps) => {
     .build();
 
   const [secondary, setSecondary] = React.useState(false);
-  const secondaryClassName = builder("w-full absolute z-30 top-16 left-0 grid grid-cols-1")
+  const secondaryClassName = builder("w-full shadow-sm absolute z-30 top-11 left-0 grid grid-cols-1 bg-gray-50")
     .append("md:invisible")
     .append("transition duration-500 ease-in-out")
     .if(secondary, "opacity-full visible")

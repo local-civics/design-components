@@ -1,21 +1,21 @@
 import React from "react";
 import { Story } from "@storybook/react";
-import { ChangeSettings, ChangeSettingsProps } from "./ChangeSettings";
+import { SettingsCard, SettingsCardProps } from "./SettingsCard";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Library/Profile/ChangeSettings",
-  component: ChangeSettings,
+  title: "Library/Profile/SettingsCard",
+  component: SettingsCard,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<ChangeSettingsProps> = (args) => (
+const Template: Story<SettingsCardProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <ChangeSettings
+    <SettingsCard
       visible
       tenantName="floyd.miles"
       givenName="floyd"
@@ -32,5 +32,5 @@ const Template: Story<ChangeSettingsProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<ChangeSettingsProps> = Template.bind({});
+export const Component: Story<SettingsCardProps> = Template.bind({});
 Component.args = {};

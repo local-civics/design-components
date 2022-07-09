@@ -332,12 +332,12 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
     case "slate:sky":
       config.button.color = {
         active: {
-          text: "text-white",
+          text: "text-sky-400",
           border: "border-sky-400/95",
           bg: "bg-sky-400/95",
         },
         interactive: {
-          text: "focus:text-slate-600 active:text-slate-600 hover:text-white",
+          text: "focus:text-slate-600 active:text-slate-600 hover:text-sky-400",
           border: "focus:border-sky-300/95 active:border-sky-300/95 hover:border-sky-300/95",
           bg: "hover:bg-sky-400/95",
         },
