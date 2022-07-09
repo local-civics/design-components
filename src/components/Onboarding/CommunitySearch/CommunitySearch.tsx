@@ -21,7 +21,7 @@ export type CommunitySearchProps = SearchProps & {
 export const CommunitySearch = (props: CommunitySearchProps) => {
   const [accessCode, setAccessCode] = React.useState("");
   return (
-    <div className="w-full md:w-[30rem] bg-white grid grid-cols-1 gap-4 rounded-md border border-slate-100 px-8 py-5 shadow-sm">
+    <div className="w-full md:w-[30rem] bg-white grid grid-cols-1 gap-4 rounded-md border border-slate-200 px-8 py-5 shadow-sm">
       <div className="text-slate-600">
         <p className="font-bold text-2xl">Which is your community?</p>
         <p className="text-sm">Pick your community.</p>

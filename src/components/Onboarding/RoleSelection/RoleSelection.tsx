@@ -18,7 +18,7 @@ export type RoleSelectionProps = {
  */
 export const RoleSelection = (props: RoleSelectionProps) => {
   return (
-    <div className="w-full md:w-[24rem] shadow-sm bg-white rounded-md border border-slate-100 px-8 py-5 grid grid-cols-1 gap-4 justify-items-center">
+    <div className="w-full md:w-[24rem] shadow-sm bg-white rounded-md border border-slate-200 px-8 py-5 grid grid-cols-1 gap-4 justify-items-center">
       <div className="text-slate-600 w-14 h-14">
         <Icon name="profile" />
       </div>
