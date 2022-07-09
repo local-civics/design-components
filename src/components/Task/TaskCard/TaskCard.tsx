@@ -4,9 +4,9 @@ import { Modal } from "../../Modal";
 import { Progress } from "../../Progress";
 
 /**
- * TaskDetailsProps
+ * TaskCardProps
  */
-export type TaskDetailsProps = {
+export type TaskCardProps = {
   headline?: string;
   summary?: string;
   isLoading?: boolean;
@@ -18,11 +18,11 @@ export type TaskDetailsProps = {
 };
 
 /**
- * TaskDetails
+ * TaskCard
  * @param props
  * @constructor
  */
-export const TaskDetails = (props: TaskDetailsProps) => {
+export const TaskCard = (props: TaskCardProps) => {
   const TaskButton = () => {
     if (props.status === "todo" || props.status === "in-progress") {
       return (

@@ -5,9 +5,9 @@ import { Icon, IconName } from "../../Icon";
 import { Modal } from "../../Modal";
 
 /**
- * ActivityDetailsProps
+ * ActivityCardProps
  */
-export type ActivityDetailsProps = {
+export type ActivityCardProps = {
   headline?: string;
   imageURL?: string;
   pathway?: string;
@@ -31,11 +31,11 @@ export type ActivityDetailsProps = {
 };
 
 /**
- * ActivityDetails
+ * ActivityCard
  * @param props
  * @constructor
  */
-export const ActivityDetails = (props: ActivityDetailsProps) => {
+export const ActivityCard = (props: ActivityCardProps) => {
   const className = builder("w-full md:w-[40rem]").if(!!props.headline, "min-h-[20rem]").build();
   const ActionButton = () => {
     const now = new Date();

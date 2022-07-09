@@ -1,4 +1,4 @@
-export * from "./ActivityDetails/ActivityDetails";
+export * from "./ActivityCard/ActivityCard";
 export * from "./ActivityItem/ActivityItem";
 export * from "./ActivityList/ActivityList";
 export * from "./ActivityReflection/ActivityReflection";
