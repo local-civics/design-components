@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, IconName } from "../..";
+import { Icon, IconName } from "../../Icon";
 
 /**
  * TaskItemProps

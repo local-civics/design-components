@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Icon, IconName } from "../../index";
+import { Button } from "../../Button";
+import { Icon, IconName } from "../../Icon";
 
 /**
  * ImpactQuizProps

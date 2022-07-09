@@ -1,6 +1,6 @@
 import React from "react";
 import { builder } from "../../utils/classname/classname";
-import { Loader } from "../Loader/Loader";
+import { Loader } from "../Loader";
 
 /**
  * The properties for the widget.

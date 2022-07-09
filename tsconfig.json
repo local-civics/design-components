@@ -1,23 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "design-components",
+  "include": ["src/**/*"],
+  "exclude": ["**/tests", "**/*.test.*", "**/*.stories.tsx"],
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
-    "target": "es6",
-    "allowJs": true,
-    "outDir": "",
+    "target": "es5",
+    "outDir": "dist",
     "declaration": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
     "strict": true
-  },
-  "include": ["src/**/*"]
+  }
 }

@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Search, SearchProps } from "../../index";
+import { Button } from "../../Button";
+import { Search, SearchProps } from "../../Search";
 
 /**
  * CommunitySearchProps

@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchResult } from "../../index";
+import { SearchResult } from "../../Search";
 import { CommunitySearch, CommunitySearchProps } from "./CommunitySearch";
 import { Story } from "@storybook/react";
 

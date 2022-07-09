@@ -1,5 +1,7 @@
 import React from "react";
-import { Icon, Loader, Widget, WidgetBody, WidgetHeader, WidgetHeaderLink, WidgetTitle } from "../../index";
+import { Icon } from "../../Icon";
+import { Loader } from "../../Loader";
+import { Widget, WidgetBody, WidgetHeader, WidgetHeaderLink, WidgetTitle } from "../../Widget";
 
 /**
  * EventList props.

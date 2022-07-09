@@ -1,6 +1,6 @@
 import React from "react";
-import { WidgetHeader, WidgetTitle, WidgetBody, Widget } from "../../index";
-import { PathwayProgress } from "../../Pathway/PathwayProgress/PathwayProgress";
+import { PathwayProgress } from "../../Pathway";
+import { Widget, WidgetBody, WidgetHeader, WidgetTitle } from "../../Widget";
 
 /**
  * The properties for the impact score widget.

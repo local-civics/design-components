@@ -1,6 +1,7 @@
 import React from "react";
-import { Icon, Widget, WidgetBody, WidgetHeader, WidgetTitle } from "../../index";
 import { builder } from "../../../utils/classname/classname";
+import { Icon } from "../../Icon";
+import { Widget, WidgetBody, WidgetHeader, WidgetTitle } from "../../Widget";
 
 /**
  * DateSelection component props.

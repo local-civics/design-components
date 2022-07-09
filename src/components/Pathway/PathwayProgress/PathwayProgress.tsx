@@ -1,7 +1,9 @@
 import React from "react";
-import { Progress, Button, IconName, ButtonSize } from "../../index";
 import { classname } from "../../../utils/classname/classname";
 import { compact } from "../../../utils/numbers";
+import { Button, ButtonSize } from "../../Button";
+import { IconName } from "../../Icon";
+import { Progress } from "../../Progress";
 
 /**
  * The activity progress height.
