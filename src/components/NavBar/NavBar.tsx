@@ -6,7 +6,7 @@ import { NavLink, NavLinkProps } from "./NavLink/NavLink";
  * The properties for the nav bar.
  */
 export type NavBarProps = {
-  children?: React.ReactElement<NavLinkProps>[] | React.ReactElement<NavLinkProps>;
+  children?: (React.ReactElement<NavLinkProps> | undefined)[] | React.ReactElement<NavLinkProps>;
 };
 
 /**
