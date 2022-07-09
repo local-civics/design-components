@@ -34,7 +34,6 @@ export type AuthLayoutProps = {
  */
 export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const onOnboarding = () => props.onOnboarding && props.onOnboarding();
-  const page = props.page || "profile";
 
   React.useEffect(() => {
     if (props.isLoading || !props.tenantName) {
@@ -55,9 +54,9 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
           <NavLink name="faq" onClick={props.onFAQ} />
           <NavLink name="privacy" onClick={props.onPrivacy} />
           <NavLink name="terms" onClick={props.onTerms} />
-          <NavLink disabled={props.disabled} name="profile" onClick={props.onProfile} active={page === "profile"} />
-          <NavLink disabled={props.disabled} name="explore" onClick={props.onExplore} active={page === "explore"} />
-          <NavLink disabled={props.disabled} name="calendar" onClick={props.onCalendar} active={page === "calendar"} />
+          <NavLink disabled={props.disabled} name="profile" onClick={props.onProfile} active={props.page === "profile"} />
+          <NavLink disabled={props.disabled} name="explore" onClick={props.onExplore} active={props.page === "explore"} />
+          <NavLink disabled={props.disabled} name="calendar" onClick={props.onCalendar} active={props.page === "calendar"} />
           <NavLink name="logout" onClick={props.onLogout} />
         </NavBar>
 
