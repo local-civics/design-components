@@ -3,9 +3,9 @@ import { Button } from "../../Button";
 import { Modal } from "../../Modal";
 
 /**
- * ChangeSettingsProps
+ * SettingsCardProps
  */
-export type ChangeSettingsProps = {
+export type SettingsCardProps = {
   tenantName?: string;
   givenName?: string;
   familyName?: string;
@@ -31,11 +31,11 @@ export type ChangeSettingsProps = {
 };
 
 /**
- * ChangeSettings
+ * SettingsCard
  * @param props
  * @constructor
  */
-export const ChangeSettings = (props: ChangeSettingsProps) => {
+export const SettingsCard = (props: SettingsCardProps) => {
   // https://stackoverflow.com/questions/55075604/react-hooks-useeffect-only-on-update
   const [avatarFile, setAvatarFile] = React.useState(undefined as Blob | undefined);
   const [avatarURL, setAvatarURL] = React.useState(props.avatarURL);

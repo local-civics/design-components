@@ -1,21 +1,21 @@
 import React from "react";
-import { ActivityDetails, ActivityDetailsProps } from "./ActivityDetails";
+import { ActivityCard, ActivityCardProps } from "./ActivityCard";
 import { Story } from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Library/Activity/ActivityDetails",
-  component: ActivityDetails,
+  title: "Library/Activity/ActivityCard",
+  component: ActivityCard,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<ActivityDetailsProps> = (args) => (
+const Template: Story<ActivityCardProps> = (args) => (
   <div className="h-full w-full overscroll-none">
-    <ActivityDetails
+    <ActivityCard
       xp={250}
       pathway="arts & culture"
       imageURL="https://s.yimg.com/os/creatr-uploaded-images/2019-11/7b5b5330-112b-11ea-a77f-7c019be7ecae"
@@ -35,5 +35,5 @@ const Template: Story<ActivityDetailsProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<ActivityDetailsProps> = Template.bind({});
+export const Component: Story<ActivityCardProps> = Template.bind({});
 Component.args = {};
