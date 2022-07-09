@@ -1,7 +1,7 @@
 import React from "react";
 import { builder } from "../../utils/classname/classname";
-import { Button } from "../Button/Button";
-import { Loader } from "../Loader/Loader";
+import { Button } from "../Button";
+import { Loader } from "../Loader";
 
 /**
  * The properties for the modal.
@@ -9,6 +9,7 @@ import { Loader } from "../Loader/Loader";
 export type ModalProps = {
   isLoading?: boolean;
   visible?: boolean;
+  inline?: boolean;
   top?: boolean;
   plain?: boolean;
   transparent?: boolean;
@@ -23,7 +24,9 @@ export const Modal = (props: ModalProps) => {
   const className = builder("font-proxima grid grid-cols-1 overscroll-contain justify-items-center px-4 md:px-2")
     .append("py-5")
     .append("transition ease-in-out duration-400")
-    .if(!props.transparent, "bg-gray-500/75 fixed w-screen h-screen top-0 left-0")
+    .if(!props.transparent, "bg-gray-500/75")
+    .if(!props.inline, "fixed w-screen h-screen top-0 left-0")
+    .if(!!props.inline, "w-full h-full")
     .if(!props.transparent && !!props.visible, "z-30")
     .if(!!props.visible, "visible opacity-full")
     .if(!props.transparent && !props.visible, "-z-30 invisible opacity-0")
