@@ -13,7 +13,11 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<HomeLayoutProps> = (args) => <HomeLayout {...args} />;
+const Template: Story<HomeLayoutProps> = (args) => (
+  <HomeLayout {...args}>
+    <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
+  </HomeLayout>
+);
 
 /**
  * Component stories

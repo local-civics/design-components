@@ -13,7 +13,11 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<AuthLayoutProps> = (args) => <AuthLayout {...args} />;
+const Template: Story<AuthLayoutProps> = (args) => (
+  <AuthLayout {...args}>
+    <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
+  </AuthLayout>
+);
 
 /**
  * Component stories
