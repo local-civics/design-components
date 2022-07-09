@@ -1,4 +1,4 @@
-import { Icon, IconName } from "../..";
+import { Icon, IconName } from "../../Icon";
 
 /**
  * ActivityItemProps

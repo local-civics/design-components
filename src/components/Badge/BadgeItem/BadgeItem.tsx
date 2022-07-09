@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon, IconName } from "../..";
 import { builder } from "../../../utils/classname/classname";
+import { Icon, IconName } from "../../Icon";
 
 /**
  * BadgeItemProps

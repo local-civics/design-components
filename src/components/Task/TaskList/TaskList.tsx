@@ -1,5 +1,5 @@
 import React from "react";
-import { Board, Tab } from "../../index";
+import { Board, Tab } from "../../Board";
 
 /**
  * The properties for the task workflow.

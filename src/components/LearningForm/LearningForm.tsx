@@ -46,7 +46,7 @@ export const LearningForm = (props: LearningFormProps) => {
     e.preventDefault();
     if (props.onSubmit) {
       props.onSubmit(reflection, rating).then((err) => {
-        if(!err){
+        if (!err) {
           setShowSubmitDialogue(true);
         }
       });
