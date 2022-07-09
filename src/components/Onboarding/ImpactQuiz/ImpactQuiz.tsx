@@ -163,7 +163,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
 
   if (!started) {
     return (
-      <div className="w-full md:w-[20rem] bg-white rounded-md border border-slate-100 px-8 py-5 shadow-sm grid grid-cols-1 gap-2 content-center justify-items-center">
+      <div className="w-full md:w-[20rem] bg-white rounded-md border border-slate-200 px-8 py-5 shadow-sm grid grid-cols-1 gap-2 content-center justify-items-center">
         <div className="text-slate-600 w-14 h-14">
           <Icon name="goal" />
         </div>
@@ -189,7 +189,7 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
 
   if (finished) {
     return (
-      <div className="w-full md:w-[24rem] rounded-md bg-white border border-slate-100 px-8 py-5 shadow-sm grid grid-cols-1 gap-4 content-center justify-items-center">
+      <div className="w-full md:w-[24rem] rounded-md bg-white border border-slate-200 px-8 py-5 shadow-sm grid grid-cols-1 gap-4 content-center justify-items-center">
         <div className="text-green-600 w-14 h-14">
           <Icon name="positive" />
         </div>

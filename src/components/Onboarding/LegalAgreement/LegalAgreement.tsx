@@ -17,7 +17,7 @@ export type LegalAgreementProps = {
  */
 export const LegalAgreement = (props: LegalAgreementProps) => {
   return (
-    <div className="w-full md:w-[24rem] rounded-md bg-white border border-slate-100 px-8 py-5 shadow-sm grid grid-cols-1 gap-4 justify-items-center">
+    <div className="w-full md:w-[24rem] rounded-md bg-white border border-slate-200 px-8 py-5 shadow-sm grid grid-cols-1 gap-4 justify-items-center">
       <div className="text-slate-600 w-14 h-14">
         <Icon name="shield" />
       </div>
