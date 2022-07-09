@@ -39,7 +39,7 @@ export const Registration = (props: RegistrationProps) => {
         e.preventDefault();
         onRegister();
       }}
-      className="w-full md:w-[32rem] rounded-md border bg-white border-slate-100 shadow-sm px-8 py-5 grid grid-cols-1 gap-4 -mt-4"
+      className="w-full md:w-[32rem] rounded-md border bg-white border-slate-200 shadow-sm px-8 py-5 grid grid-cols-1 gap-4 -mt-4"
     >
       <div className="text-slate-600 text-start">
         <p className="font-bold text-2xl">Welcome to Local!</p>
