@@ -36,7 +36,7 @@ export type AuthLayoutProps = {
 export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const onOnboarding = () => props.onOnboarding && props.onOnboarding();
   React.useEffect(() => {
-    if (props.isLoading || !props.tenantName) {
+    if (!props.tenantName) {
       return;
     }
 
@@ -44,7 +44,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
       onOnboarding();
       return;
     }
-  }, [props.isLoading, props.tenantName, props.impactStatement, props.pathname]);
+  }, [props.tenantName, props.impactStatement, props.pathname]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
