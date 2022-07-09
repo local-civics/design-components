@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
+import { Button } from "../../Button";
 import { TagFilter } from "../TagFilter/TagFilter";
 import { Gallery } from "../Gallery/Gallery";
 import { ActivityItem } from "../ActivityItem/ActivityItem";
-import { Button } from "../..";
 import { debounce } from "../../../utils/search";
 
 /**

@@ -1,5 +1,5 @@
 import React from "react";
-import { TaskItem } from "../..";
+import { TaskItem } from "../../Task";
 import { BadgeDetails, BadgeDetailsProps } from "./BadgeDetails";
 import { Story } from "@storybook/react";
 

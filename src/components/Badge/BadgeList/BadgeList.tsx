@@ -17,6 +17,7 @@ export const BadgeList = (props: BadgeListProps) => {
   const count = React.Children.count(props.children || []);
   const columns = 3;
   const gridSize = columns * 2;
+
   return (
     <>
       {!hasContent && (
@@ -30,7 +31,7 @@ export const BadgeList = (props: BadgeListProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-2 max-h-[16rem] md:max-h-[24rem] overflow-scroll">
           {props.children}
           {count < gridSize &&
-            [...Array(gridSize - count).keys()].map((k) => {
+            [...Array.from(Array(gridSize - count).keys())].map((k) => {
               return <div key={`badge.${k}`} className="bg-gray-100 p-4 shadow-md rounded-md h-28 md:h-36 lg:h-44" />;
             })}
         </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { classname } from "../../utils/classname/classname";
-import { Icon, IconName } from "../Icon/Icon";
-import { Logo } from "../Logo/Logo";
+import { Icon, IconName } from "../Icon";
+import { Logo } from "../Logo";
 
 /**
  * The button color.

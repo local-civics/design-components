@@ -1,5 +1,7 @@
 import React from "react";
-import { Button, Modal, Progress } from "../..";
+import { Button } from "../../Button";
+import { Modal } from "../../Modal";
+import { Progress } from "../../Progress";
 
 /**
  * TaskDetailsProps

@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon, IconName } from "../..";
 import { background } from "../../../utils/colors";
+import { Icon, IconName } from "../../Icon";
 
 /**
  * EventItemProps

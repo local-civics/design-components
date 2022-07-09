@@ -4,13 +4,13 @@
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && tsc",
     "watch": "rollup -cw",
     "test": "jest --coverage=true --passWithNoTests",
     "storybook": "start-storybook -h localhost -p 6006",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic",
-    "fmt": "npx prettier --write ."
+    "fmt": "npx prettier --write src"
   },
   "eslintConfig": {
     "overrides": [

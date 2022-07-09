@@ -1,6 +1,6 @@
 import React from "react";
-import { Widget, WidgetBody, WidgetHeader, WidgetTitle } from "../../index";
 import { compact } from "../../../utils/numbers";
+import { Widget, WidgetBody, WidgetHeader, WidgetTitle } from "../../Widget";
 
 /**
  * The properties for the achievement widget.

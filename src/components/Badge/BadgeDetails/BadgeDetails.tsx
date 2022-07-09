@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Modal } from "../..";
+import { Button } from "../../Button";
+import { Modal } from "../../Modal";
 
 /**
  * BadgeDetailsProps

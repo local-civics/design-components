@@ -1,5 +1,6 @@
 import React from "react";
-import { Board, Tab, Widget, WidgetBody } from "../../index";
+import { Board, Tab } from "../../Board";
+import { Widget, WidgetBody } from "../../Widget";
 
 /**
  * The properties for the dashboard.

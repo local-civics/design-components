@@ -1,5 +1,6 @@
 import React from "react";
-import { SearchResult, Modal } from "../../components";
+import { Modal } from "../Modal";
+import { SearchResult } from "../Search";
 import { LegalAgreement } from "./LegalAgreement/LegalAgreement";
 import { CommunitySearch } from "./CommunitySearch/CommunitySearch";
 import { RoleSelection } from "./RoleSelection/RoleSelection";

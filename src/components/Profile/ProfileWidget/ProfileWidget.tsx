@@ -1,5 +1,5 @@
 import React from "react";
-import { Widget, WidgetBody } from "../../index";
+import { Widget, WidgetBody } from "../../Widget";
 
 /**
  * The properties for the resident.

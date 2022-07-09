@@ -1,5 +1,6 @@
 import React from "react";
-import { Icon, Widget, WidgetBody, WidgetHeader, WidgetHeaderLink, WidgetTitle } from "../../index";
+import { Icon } from "../../Icon";
+import { Widget, WidgetBody, WidgetHeader, WidgetHeaderLink, WidgetTitle } from "../../Widget";
 
 /**
  * The properties for the about widget.

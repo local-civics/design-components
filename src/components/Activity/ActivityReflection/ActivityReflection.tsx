@@ -1,6 +1,8 @@
 import React from "react";
-import { Button, Icon, IconName, Modal } from "../..";
 import { builder } from "../../../utils/classname/classname";
+import { Button } from "../../Button";
+import { Icon, IconName } from "../../Icon";
+import { Modal } from "../../Modal";
 
 /**
  * ActivityReflectionProps
