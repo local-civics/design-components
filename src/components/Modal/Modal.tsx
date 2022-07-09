@@ -13,6 +13,7 @@ export type ModalProps = {
   top?: boolean;
   plain?: boolean;
   transparent?: boolean;
+  stage?: boolean
   children?: React.ReactNode;
   onClose?: () => void;
 };
@@ -24,7 +25,8 @@ export const Modal = (props: ModalProps) => {
   const className = builder("font-proxima grid grid-cols-1 overscroll-contain justify-items-center px-4 md:px-2")
     .append("py-5")
     .append("transition ease-in-out duration-400")
-    .if(!props.transparent, "bg-gray-500/75")
+    .if(!props.transparent && !props.stage, "bg-gray-500/75")
+    .if(!!props.stage, "bg-gray-100")
     .if(!props.inline, "fixed w-screen h-screen top-0 left-0")
     .if(!!props.inline, "w-full h-full")
     .if(!props.transparent && !!props.visible, "z-30")
