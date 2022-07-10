@@ -73,7 +73,7 @@ const Delegate = (props: OnboardingProps) => {
             return (
               <SearchResult
                 key={organization.id}
-                title={organization.name}
+                title={organization.displayName}
                 onClick={() => {
                   setOrganization(organization);
                   setOrganizationOpen(false);
