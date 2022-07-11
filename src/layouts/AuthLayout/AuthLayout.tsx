@@ -82,7 +82,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
         </NavBar>
 
         {props.children && (
-          <section className="absolute top-0 left-0 h-full overflow-hidden pt-16 w-full">{props.children}</section>
+          <section className="absolute top-0 left-0 h-full overflow-scroll pt-16 w-full">{props.children}</section>
         )}
 
         {!props.children && (
