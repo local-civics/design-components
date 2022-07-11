@@ -106,6 +106,7 @@ const RadioQuestion = (props: FormItemProps) => {
           <div key={option}>
             <label className="flex gap-x-4 items-center">
               <input
+                className="cursor-pointer"
                 checked={values[option]}
                 onChange={onChange}
                 required={props.required}
@@ -143,6 +144,7 @@ const CheckboxQuestion = (props: FormItemProps) => {
           <div key={option}>
             <label className="flex gap-x-4 items-center">
               <input
+                className="cursor-pointer"
                 checked={values[option]}
                 onChange={onChange}
                 required={props.required}
@@ -173,13 +175,17 @@ const DropDownQuestion = (props: FormItemProps) => {
 
   return (
     <select
-      className={`appearance-none mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
+      className={`cursor-pointer appearance-none mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none`}
       required={props.required}
       name={props.headline}
       onChange={onChange}
     >
+      <option className="cursor-pointer">
+        Select one
+      </option>
+
       {options.map((option) => {
         return (
           <option selected={values[option]} value={option}>
