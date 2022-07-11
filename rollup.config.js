@@ -9,7 +9,9 @@ const cfg = [
     output: [
       {
         file: pkg.main,
-        format: "cjs",
+        format: "umd",
+        name: "components",
+        globals: { react: "React", "react-dom": "ReactDOM", "react/jsx-runtime": "ReactJSXRuntime"},
       },
       {
         file: pkg.module,
@@ -17,13 +19,12 @@ const cfg = [
       },
     ],
     plugins: [
+      typescript(),
       postcss({
         minimize: true,
       }),
-      typescript(),
       terser(),
     ],
-
     external: ["react", "react-dom", "react/jsx-runtime"],
   },
 ];

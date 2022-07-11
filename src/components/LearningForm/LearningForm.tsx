@@ -55,7 +55,7 @@ export const LearningForm = (props: LearningFormProps) => {
 
   return (
     <div className="grid grid-cols-1 gap-y-12 bg-gray-100 px-4 pb-12 lg:px-48">
-      <div className="lg:grid lg:grid-cols-2 min-h-96 bg-white rounded-b overflow-hidden shadow-sm">
+      <div className="md:grid md:grid-cols-2 min-h-96 bg-white rounded-b overflow-hidden shadow-sm">
         <div className="flex flex-col gap-y-6 px-8 py-8 text-slate-600 max-w-md">
           <div
             onClick={() => setShowExitDialogue(true)}

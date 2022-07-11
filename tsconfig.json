@@ -1,18 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "design-components",
-  "include": ["src/**/*"],
-  "exclude": ["**/tests", "**/*.test.*", "**/*.stories.tsx"],
+  "include": ["src/index.ts"],
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "target": "es5",
-    "outDir": "dist",
-    "declaration": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
     "moduleResolution": "node",
-    "strict": true
+    "declaration": true,
+    "outDir": "dist",
+    "emitDeclarationOnly": true,
+    "strict": true,
+    "jsx": "react-jsx"
   }
 }
