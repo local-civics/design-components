@@ -18,10 +18,12 @@ export type ActivityCardProps = {
   startTime?: string;
   endTime?: string;
   link?: string;
+  formId?: string;
   address?: string;
   isBookmarked?: boolean;
   canReflect?: boolean;
   milestone?: boolean;
+
   onRegister?: () => void;
   onUnregister?: () => void;
   onLaunch?: () => void;
@@ -102,7 +104,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
 
           <div className="flex shrink-0 items-center gap-2 max-h-[12rem]">
             <ActionButton />
-            <Button
+            { !props.formId && <Button
               disabled={!props.canReflect}
               spacing="md"
               border="rounded"
@@ -111,7 +113,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
               text="Reflect"
               size="md"
               onClick={props.onReflect}
-            />
+            /> }
           </div>
         </div>
 
