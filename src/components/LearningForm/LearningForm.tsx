@@ -75,7 +75,7 @@ export const LearningForm = (props: LearningFormProps) => {
 
       <form className="grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
         {items.map((props) => {
-          return <FormItem {...props} />;
+          return <FormItem key={props.itemId} {...props}/>;
         })}
 
         <FormItem
