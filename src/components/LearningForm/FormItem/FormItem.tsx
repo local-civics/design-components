@@ -193,7 +193,7 @@ const DropDownQuestion = (props: FormItemProps) => {
       name={props.headline}
       onChange={onChange}
     >
-      <option className="cursor-pointer">Select one</option>
+      <option className="cursor-pointer" value="">Select one</option>
 
       {options.map((option) => {
         return (
