@@ -133,15 +133,15 @@ const CheckboxQuestion = (props: FormItemProps) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onResponseChange) {
-      const newResponses = []
-      responses.forEach(v => {
-        if(v !== e.target.value){
-          newResponses.push(v)
+      const newResponses = [];
+      responses.forEach((v) => {
+        if (v !== e.target.value) {
+          newResponses.push(v);
         }
-      })
+      });
 
-      if(!responses.includes(e.target.value)){
-        newResponses.push(e.target.value)
+      if (!responses.includes(e.target.value)) {
+        newResponses.push(e.target.value);
       }
 
       props.onResponseChange(newResponses);
@@ -193,9 +193,7 @@ const DropDownQuestion = (props: FormItemProps) => {
       name={props.headline}
       onChange={onChange}
     >
-      <option className="cursor-pointer">
-        Select one
-      </option>
+      <option className="cursor-pointer">Select one</option>
 
       {options.map((option) => {
         return (
