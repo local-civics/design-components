@@ -58,8 +58,8 @@ export const LearningForm = (props: LearningFormProps) => {
       <div className="md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
         <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
           <div
-              onClick={() => setShowExitDialogue(true)}
-              className="flex gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
+            onClick={() => setShowExitDialogue(true)}
+            className="flex gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
           >
             <div className="w-3 h-3 min-w-3">
               <Icon name="leftArrow" />
@@ -75,7 +75,7 @@ export const LearningForm = (props: LearningFormProps) => {
 
       <form className="grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
         {items.map((props) => {
-          return <FormItem key={props.itemId} {...props}/>;
+          return <FormItem key={props.itemId} {...props} />;
         })}
 
         <FormItem
