@@ -133,7 +133,18 @@ const CheckboxQuestion = (props: FormItemProps) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onResponseChange) {
-      props.onResponseChange([e.target.value]);
+      const newResponses = []
+      responses.forEach(v => {
+        if(v !== e.target.value){
+          newResponses.push(v)
+        }
+      })
+
+      if(!responses.includes(e.target.value)){
+        newResponses.push(e.target.value)
+      }
+
+      props.onResponseChange(newResponses);
     }
   };
 
