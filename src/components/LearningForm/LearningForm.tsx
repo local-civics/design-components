@@ -55,22 +55,26 @@ export const LearningForm = (props: LearningFormProps) => {
 
   return (
     <div className="grid grid-cols-1 gap-y-12 bg-gray-100 px-4 pb-12 lg:px-48">
-      <div className="md:grid md:grid-cols-2 min-h-96 bg-white rounded-b overflow-hidden shadow-sm">
-        <div className="flex flex-col gap-y-6 px-8 py-8 text-slate-600 max-w-md">
-          <div
-            onClick={() => setShowExitDialogue(true)}
-            className="flex gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
-          >
-            <div className="w-3 h-3 min-w-3">
-              <Icon name="leftArrow" />
+      <div className="md:flex bg-white rounded-b overflow-hidden shadow-sm">
+        <div className="md:flex md:flex-col">
+          <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 w-full max-w-md">
+            <div
+                onClick={() => setShowExitDialogue(true)}
+                className="flex gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
+            >
+              <div className="w-3 h-3 min-w-3">
+                <Icon name="leftArrow" />
+              </div>
+              <span className="text-md">Go back</span>
             </div>
-            <span className="text-md">Go back</span>
+            {!!props.headline && <h2 className="font-semibold text-2xl">{props.headline}</h2>}
+            {!!props.summary && <p className="whitespace-pre-line">{props.summary}</p>}
+            {!!props.eta && <p className="text-sm font-semibold">Estimated Completion Time: {props.eta}</p>}
           </div>
-          {!!props.headline && <h2 className="font-semibold text-2xl">{props.headline}</h2>}
-          {!!props.summary && <p className="whitespace-pre-line">{props.summary}</p>}
-          {!!props.eta && <p className="text-sm font-semibold">Estimated Completion Time: {props.eta}</p>}
         </div>
-        <img className="h-full w-full object-cover" alt={props.headline} src={props.imageURL} />
+        <div className="md:flex md:flex-col">
+          <img className="grow h-full w-full object-cover max-w-md" alt={props.headline} src={props.imageURL} />
+        </div>
       </div>
 
       <form className="grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>

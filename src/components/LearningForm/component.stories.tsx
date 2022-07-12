@@ -21,7 +21,7 @@ const Template: Story<LearningFormProps> = (args) => (
 
 In this Undergrad Spotlight, Sam Lee shares about her Cornell experience! Sam discusses the importance of authenticity in an application, how homework in college differs from high school, and her life studying engineering/information science in Ithaca.
 `}
-      imageURL="https://cdn.localcivics.io/hub/landing.jpg"
+      imageURL="https://cdn.localcivics.io/area/recreation.jpg"
       eta="30m"
       items={[
           {
