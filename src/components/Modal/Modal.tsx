@@ -13,7 +13,7 @@ export type ModalProps = {
   top?: boolean;
   plain?: boolean;
   transparent?: boolean;
-  stage?: boolean
+  stage?: boolean;
   children?: React.ReactNode;
   onClose?: () => void;
 };
