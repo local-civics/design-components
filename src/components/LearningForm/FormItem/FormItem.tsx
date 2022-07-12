@@ -188,7 +188,7 @@ const DropDownQuestion = (props: FormItemProps) => {
 
       {options.map((option) => {
         return (
-          <option selected={values[option]} value={option}>
+          <option key={option} selected={values[option]} value={option}>
             {option}
           </option>
         );
