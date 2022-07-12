@@ -29,7 +29,7 @@ export type FormItemProps = {
  * @constructor
  */
 export const FormItem = (props: FormItemProps) => {
-  const checkIconColor = props.responses ? "text-green-500" : "text-gray-300";
+  const checkIconColor = props.responses && props.responses.length > 0 && props.responses[0].trim() !== "" ? "text-green-500" : "text-gray-300";
   const contentMaxWidth = props.format === "question" ? "max-w-lg" : "";
 
   return (
