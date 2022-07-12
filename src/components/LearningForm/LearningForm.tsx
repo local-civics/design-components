@@ -66,7 +66,7 @@ export const LearningForm = (props: LearningFormProps) => {
             </div>
             <span className="text-md">Go back</span>
           </div>
-          {!!props.summary && <h2 className="font-semibold text-2xl">{props.headline}</h2>}
+          {!!props.headline && <h2 className="font-semibold text-2xl">{props.headline}</h2>}
           {!!props.summary && <p className="whitespace-pre-line">{props.summary}</p>}
           {!!props.eta && <p className="text-sm font-semibold">Estimated Completion Time: {props.eta}</p>}
         </div>
