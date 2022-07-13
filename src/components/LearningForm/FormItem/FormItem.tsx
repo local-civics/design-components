@@ -21,6 +21,7 @@ export type FormItemProps = {
   children?: React.ReactNode;
 
   onResponseChange?: (responses?: string[], file?: Blob) => void;
+  onTextBlur?: () => void;
 };
 
 /**
@@ -29,14 +30,32 @@ export type FormItemProps = {
  * @constructor
  */
 export const FormItem = (props: FormItemProps) => {
-  const checkIconColor =
-    props.responses && props.responses.length > 0 && props.responses[0].trim() !== ""
-      ? "text-green-500"
-      : "text-gray-300";
+  const responses = props.responses || [];
+  const notEmpty = responses.length > 0 && responses[0].trim() !== "";
+  const isTextError =
+    notEmpty &&
+    props.questionType === "text" &&
+    ((props.paragraph && responses[0].trim().length < 400) || (!props.paragraph && responses[0].trim().length < 100));
+  const isValidAnswer = notEmpty && (props.questionType !== "text" || !isTextError);
+  const checkIconColor = isValidAnswer ? "text-green-500" : "text-gray-300";
   const contentMaxWidth = props.format === "question" ? "max-w-lg" : "";
+  const [showError, setShowError] = React.useState(false);
+  const itemContainerError = showError && isTextError ? "border-2 border-rose-300" : "";
+
+  const onTextBlur = () => {
+    if (isTextError) {
+      setShowError(true);
+    } else {
+      setShowError(false);
+    }
+
+    if (props.onTextBlur) {
+      props.onTextBlur();
+    }
+  };
 
   return (
-    <div className="bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8">
+    <div className={`bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8 ${itemContainerError}`}>
       {props.headline && (
         <div className="flex gap-x-1">
           <div className="flex items-start gap-x-4">
@@ -56,7 +75,15 @@ export const FormItem = (props: FormItemProps) => {
 
       {!props.children && (
         <div className={`${contentMaxWidth} ml-1`}>
-          <Switch {...props} />
+          <Switch {...props} onTextBlur={onTextBlur} />
+          {showError && (
+            <div className="text-rose-300 flex items-center gap-x-2 mt-4">
+              <div className="w-4 h-4">
+                <Icon name="negative" />
+              </div>
+              <span className="grow text-sm">Must be a minimum of {props.paragraph ? 400 : 100} characters.</span>
+            </div>
+          )}
         </div>
       )}
 
@@ -298,6 +325,7 @@ const TextQuestion = (props: FormItemProps) => {
           required={props.required}
           minLength={minimum}
           onChange={onChange}
+          onBlur={props.onTextBlur}
           name={props.headline}
           type="text"
           placeholder="Your answer"
@@ -312,6 +340,7 @@ const TextQuestion = (props: FormItemProps) => {
           required={props.required}
           minLength={minimum}
           onChange={onChange}
+          onBlur={props.onTextBlur}
           name={props.headline}
           value={response}
           placeholder="Your answer"
