@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { FormExitDialog } from "./FormExitDialog/FormExitDialog";
@@ -33,6 +33,14 @@ export const LearningForm = (props: LearningFormProps) => {
   const [rating, setRating] = React.useState(props.rating);
   const [showExitDialogue, setShowExitDialogue] = React.useState(false);
   const [showSubmitDialogue, setShowSubmitDialogue] = React.useState(false);
+
+  React.useEffect(() => {
+    setRating(props.rating);
+  }, [props.rating]);
+
+  React.useEffect(() => {
+    setReflection(props.reflection || "");
+  }, [props.reflection]);
 
   const onChange = (responses?: string[]) => {
     if (!responses || responses.length === 0) {
