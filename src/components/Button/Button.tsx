@@ -517,6 +517,6 @@ const withSpacing = (config: ButtonConfig, spacing?: ButtonSpacing, wide?: boole
   }
 
   if (wide) {
-    config.button.spacing = "py-1 px-12";
+    config.button.spacing = "py-2 px-10";
   }
 };
