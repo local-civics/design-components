@@ -7,8 +7,8 @@ import { Modal } from "../../Modal";
  * FormSubmitDialogProps
  */
 export type FormSubmitDialogProps = {
-  onReview?: () => void;
-  onExit?: () => void;
+  onGoBack?: () => void;
+  onHome?: () => void;
 };
 
 /**
@@ -18,7 +18,7 @@ export type FormSubmitDialogProps = {
  */
 export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
   return (
-    <Modal visible transparent onClose={props.onReview}>
+    <Modal visible transparent onClose={props.onGoBack}>
       <div className="w-full md:w-[24rem] px-8 py-5 shadow-sm grid grid-cols-1 gap-4 content-center justify-items-center">
         <div className="text-green-500 w-14 h-14">
           <Icon name="positive" />
@@ -38,9 +38,9 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
             border="rounded"
             color="blue"
             theme="dark"
-            text="Review"
+            text="Go back"
             size="md"
-            onClick={props.onReview}
+            onClick={props.onGoBack}
           />
 
           <Button
@@ -49,9 +49,9 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
             border="rounded"
             color="blue"
             theme="dark"
-            text="Exit"
+            text="Home"
             size="md"
-            onClick={props.onExit}
+            onClick={props.onHome}
           />
         </div>
       </div>
