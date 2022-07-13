@@ -29,7 +29,10 @@ export type FormItemProps = {
  * @constructor
  */
 export const FormItem = (props: FormItemProps) => {
-  const checkIconColor = props.responses && props.responses.length > 0 && props.responses[0].trim() !== "" ? "text-green-500" : "text-gray-300";
+  const checkIconColor =
+    props.responses && props.responses.length > 0 && props.responses[0].trim() !== ""
+      ? "text-green-500"
+      : "text-gray-300";
   const contentMaxWidth = props.format === "question" ? "max-w-lg" : "";
 
   return (
@@ -193,7 +196,9 @@ const DropDownQuestion = (props: FormItemProps) => {
       name={props.headline}
       onChange={onChange}
     >
-      <option className="cursor-pointer" value="">Select one</option>
+      <option className="cursor-pointer" value="">
+        Select one
+      </option>
 
       {options.map((option) => {
         return (
@@ -237,15 +242,6 @@ const FileUploadQuestion = (props: FormItemProps) => {
   return (
     <div className="grid grid-cols-1 gap-4">
       <div className="flex items-center space-x-3">
-        <div className="shrink-0">
-          <div className={`${imageURL ? "rounded-full -ml-4 p-2" : "rounded-full bg-gray-100 -ml-3 p-2"}`}>
-            <img
-              className={imageURL ? "h-8 w-8 object-cover rounded-full" : "h-6 w-6 object-cover"}
-              src={imageURL || "https://cdn.localcivics.io/hub/camera.png"}
-              alt="Current image answer"
-            />
-          </div>
-        </div>
         <label className="block">
           <span className="sr-only">Choose image photo</span>
           <input
@@ -305,7 +301,7 @@ const TextQuestion = (props: FormItemProps) => {
           name={props.headline}
           type="text"
           placeholder="Your answer"
-          defaultValue={response}
+          value={response}
         />
       )}
       {props.paragraph && (
@@ -317,7 +313,7 @@ const TextQuestion = (props: FormItemProps) => {
           minLength={minimum}
           onChange={onChange}
           name={props.headline}
-          defaultValue={response}
+          value={response}
           placeholder="Your answer"
         />
       )}
