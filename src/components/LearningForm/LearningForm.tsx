@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { FormExitDialog } from "./FormExitDialog/FormExitDialog";
@@ -63,7 +63,7 @@ export const LearningForm = (props: LearningFormProps) => {
 
   return (
     <div className="grid grid-cols-1 gap-y-12 bg-gray-100 px-4 pb-12 lg:px-48">
-      <div className="md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
+      <div className="w-full max-w-[62.5rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
         <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
           <div
             onClick={() => setShowExitDialogue(true)}
@@ -81,7 +81,7 @@ export const LearningForm = (props: LearningFormProps) => {
         <img className="grow h-full w-full object-cover" alt={props.headline} src={props.imageURL} />
       </div>
 
-      <form className="grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
+      <form className="w-full max-w-[62.5rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
         {items.map((props) => {
           return <FormItem key={props.itemId} {...props} />;
         })}
