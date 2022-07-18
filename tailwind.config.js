@@ -5,6 +5,9 @@ module.exports = {
       lineHeight: {
         "extra-loose": "3",
       },
+      fontSize: {
+        "xxs": ".4rem",
+      },
       colors: {
         primary: {
           400: "#61daf5",
