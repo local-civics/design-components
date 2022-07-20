@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../Button/Button";
+import {Button, ButtonSize} from "../../Button/Button";
 import { IconProps } from "../../Icon/Icon";
 
 /**
@@ -7,7 +7,9 @@ import { IconProps } from "../../Icon/Icon";
  */
 export type WidgetHeaderLinkProps = {
   display?: boolean;
+  disabled?: boolean
   onClick?: () => void;
+  size?: ButtonSize
   children: string | React.ReactElement<IconProps>;
 };
 
@@ -22,11 +24,11 @@ export const WidgetHeaderLink = (props: WidgetHeaderLinkProps) => {
   }
 
   if (typeof props.children === "string") {
-    return <Button size="tiny" text={props.children} onClick={props.onClick} />;
+    return <Button size={props.size || "tiny"} text={props.children} onClick={props.onClick} />;
   } else {
     return (
       <div className="flex items-center">
-        <Button size="xs" icon={props.children.props.name} onClick={props.onClick} />
+        <Button size={props.size || "xs"} disabled={props.disabled||!props.onClick} icon={props.children.props.name} onClick={props.onClick} />
       </div>
     );
   }

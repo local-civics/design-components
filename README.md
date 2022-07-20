@@ -26,7 +26,7 @@ const myBtn = () => <Button>Do something</Button>;
 
 Clone the [design-components GitHub project](https://github.com/local-civics/design-components) then start Storybook.
 
-`npm install && npm run storybook`
+`npm install && npm run start`
 
 ## **Publishing**
 
