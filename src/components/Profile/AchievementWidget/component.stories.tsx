@@ -13,7 +13,7 @@ export default {
  * Component storybook template
  */
 const Template: Story<AchievementWidgetProps> = (args) => (
-  <AchievementWidget reflections={12} badges={3} milestones={7} {...args} />
+  <AchievementWidget lessonsCompleted={30} badgesEarned={3} civicMilestones={17} serviceHours={70} {...args} />
 );
 
 /**

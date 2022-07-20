@@ -1,13 +1,13 @@
 {
   "name": "@local-civics/design-components",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
+    "start": "start-storybook -h localhost -p 6006",
     "build": "rollup -c && tsc",
     "watch": "rollup -cw",
     "test": "jest --coverage=true --passWithNoTests",
-    "storybook": "start-storybook -h localhost -p 6006",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic",
     "fmt": "npx prettier --write src"
