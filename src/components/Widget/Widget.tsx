@@ -9,7 +9,7 @@ export type WidgetProps = {
   headless?: boolean;
   borderless?: boolean;
   color?: "sky" | "inherit";
-  height?: "sm";
+  height?: "sm" | "full";
   isLoading?: boolean;
   children?: React.ReactNode;
 };
