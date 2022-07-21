@@ -107,7 +107,7 @@ export const LearningForm = (props: LearningFormProps) => {
       </form>
 
       {showExitDialogue && (
-        <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
+        <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
           <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
             <FormExitDialog onYes={props.onGoBack} onNo={() => setShowExitDialogue(false)} />
           </div>
@@ -115,7 +115,7 @@ export const LearningForm = (props: LearningFormProps) => {
       )}
 
       {showSubmitDialogue && (
-        <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
+        <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
           <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
             <FormSubmitDialog onGoBack={() => setShowSubmitDialogue(false)} onHome={props.onHome} />
           </div>

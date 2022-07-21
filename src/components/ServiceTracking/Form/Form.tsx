@@ -51,7 +51,7 @@ export const Form = (props: FormProps) => {
 
     return (
         <>
-            <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
+            <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-30">
                 <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
                     <Modal visible transparent onClose={() => setShowExitDialogue(true)}>
                         <div className="bg-white w-screen max-w-[62.5rem] px-16 py-4 grid grid-cols-1 gap-y-12">
@@ -152,7 +152,7 @@ export const Form = (props: FormProps) => {
             </div>
 
             { showExitDialogue && (
-                <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
+                <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
                     <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
                         <FormExitDialog onYes={props.onClose} onNo={() => setShowExitDialogue(false)} />
                     </div>
@@ -160,7 +160,7 @@ export const Form = (props: FormProps) => {
             )}
 
             {showSubmitDialogue && (
-                <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-50">
+                <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
                     <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
                         <FormSubmitDialog onGoBack={() => setShowSubmitDialogue(false)} onContinue={props.onClose} />
                     </div>
