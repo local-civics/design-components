@@ -16,5 +16,6 @@ export * from "./Pathway";
 export * from "./Profile";
 export * from "./Progress";
 export * from "./Search";
+export * from "./ServiceTracking";
 export * from "./Task";
 export * from "./Widget";
