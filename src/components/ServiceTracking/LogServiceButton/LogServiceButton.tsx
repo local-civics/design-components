@@ -10,6 +10,7 @@ export type LogServiceButtonProps = {
     isOpen?: boolean
     form?: FormProps
 
+    onSubmit?: (responses: any) => Promise<any>
     onClick?: () => void
 }
 
@@ -50,6 +51,6 @@ export const LogServiceButton = (props: LogServiceButtonProps) => {
             onClick={onOpen}
         />
 
-        {isOpen && <Form {...props.form} onClose={onClose}/>}
+        {isOpen && <Form onSubmit={props.onSubmit} {...props.form} onClose={onClose}/>}
     </>
 }
