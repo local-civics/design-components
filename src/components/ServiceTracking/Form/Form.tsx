@@ -113,6 +113,8 @@ export const Form = (props: FormProps) => {
                                             required
                                             readonly={inReview}
                                             headline="Total Hours"
+                                            min={0}
+                                            max={24}
                                             type="number"
                                             value={responses["totalHours"]}
                                             onChange={(value) => setResponse("totalHours", value)}

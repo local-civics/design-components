@@ -13,6 +13,8 @@ export type FormInputProps = {
     paragraph?: boolean;
     readonly?: boolean
     required?: boolean
+    min?: string | number
+    max?: string | number
 
     onChange?: (value: string) => void;
 }
@@ -108,6 +110,8 @@ const Input = (props: FormInputProps) => {
                     type={type}
                     placeholder={props.placeholder}
                     value={value}
+                    min={props.min}
+                    max={props.max}
                 />
             )}
             {props.paragraph && (
