@@ -68,7 +68,7 @@ export const Form = (props: FormProps) => {
                                 { props.children }
 
                                 { !props.children && <>
-                                    <div className="grid grid-cols-2 gap-x-6 gap-y-8 items-start">
+                                    <div className="grid grid-cols-2 gap-x-6 gap-y-8 items-start max-h-96 overflow-scroll">
                                         <FormInput
                                             required
                                             readonly={inReview}
@@ -100,25 +100,27 @@ export const Form = (props: FormProps) => {
                                             onChange={(value) => setResponse("contactEmail", value)}
                                         />
 
-                                        <FormInput
-                                            required
-                                            readonly={inReview}
-                                            headline="Date"
-                                            type="date"
-                                            value={responses["date"]}
-                                            onChange={(value) => setResponse("date", value)}
-                                        />
+                                        <div className="grid grid-cols-2 gap-x-2">
+                                            <FormInput
+                                                required
+                                                readonly={inReview}
+                                                headline="Service Date"
+                                                type="date"
+                                                value={responses["date"]}
+                                                onChange={(value) => setResponse("date", value)}
+                                            />
 
-                                        <FormInput
-                                            required
-                                            readonly={inReview}
-                                            headline="Total Hours"
-                                            min={0}
-                                            max={24}
-                                            type="number"
-                                            value={responses["totalHours"]}
-                                            onChange={(value) => setResponse("totalHours", value)}
-                                        />
+                                            <FormInput
+                                                required
+                                                readonly={inReview}
+                                                headline="Service Hours"
+                                                min={0}
+                                                max={24}
+                                                type="number"
+                                                value={responses["totalHours"]}
+                                                onChange={(value) => setResponse("totalHours", value)}
+                                            />
+                                        </div>
 
                                         <FormInput
                                             required
@@ -130,14 +132,16 @@ export const Form = (props: FormProps) => {
                                             onChange={(value) => setResponse("type", value)}
                                         />
 
-                                        <FormInput
-                                            required
-                                            readonly={inReview}
-                                            headline="Service Description"
-                                            paragraph
-                                            value={responses["description"]}
-                                            onChange={(value) => setResponse("description", value)}
-                                        />
+                                        <div className="col-span-2">
+                                            <FormInput
+                                                required
+                                                readonly={inReview}
+                                                headline="Tell us about your experience"
+                                                paragraph
+                                                value={responses["description"]}
+                                                onChange={(value) => setResponse("description", value)}
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="flex gap-x-4 w-max m-auto">

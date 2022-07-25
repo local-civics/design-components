@@ -97,7 +97,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
                 {/* Left Panel */}
                 {props.sidebar && (
                   <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem] shrink-0">
-                    <div className="flex flex-col gap-4 lg:gap-2">{props.sidebar}</div>
+                    <div className="flex flex-col gap-4 lg:gap-x-2 lg:gap-y-3">{props.sidebar}</div>
                     <p className="hidden place-self-center lg:inline-block text-xs text-slate-300">
                       Local Civics © {new Date().getFullYear()}
                     </p>
