@@ -26,7 +26,7 @@ export const Component: Story<GalleryProps> = (props) => (
       />
     }
     top={
-      <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+      <article className="grid grid-cols-1 md:flex gap-2 overflow-auto">
         <ActivityItem
           headline="Item #1"
           pathway="policy & government"
@@ -48,7 +48,7 @@ export const Component: Story<GalleryProps> = (props) => (
       </article>
     }
     soonest={
-      <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+      <article className="grid grid-cols-1 md:flex gap-2 overflow-auto">
         <ActivityItem
           headline="Item #1"
           pathway="policy & government"

@@ -36,7 +36,7 @@ export const Modal = (props: ModalProps) => {
     .if(!!props.top, "content-start")
     .build();
 
-  const contentClassName = builder().if(!props.plain, "shadow-md bg-white rounded-md relative").build();
+  const contentClassName = builder().if(!props.plain, "shadow-md bg-white overflow-hidden rounded-md relative").build();
 
   const close = () => {
     if (props.onClose) {

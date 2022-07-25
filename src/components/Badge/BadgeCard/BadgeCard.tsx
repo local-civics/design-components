@@ -32,7 +32,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
     return (
       <div className="w-full mt-2 grid grid-cols-1 gap-y-5 px-6 pt-2 pb-4">
         <p className="text-sm font-semibold text-slate-500">Tasks</p>
-        <div className="grid gap-10 w-full max-h-[24rem] overflow-scroll">{props.children}</div>
+        <div className="grid gap-10 w-full max-h-[24rem] overflow-auto">{props.children}</div>
       </div>
     );
   };

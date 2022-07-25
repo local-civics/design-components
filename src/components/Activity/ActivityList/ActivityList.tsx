@@ -57,7 +57,7 @@ export const ActivityList = (props: ActivityListProps) => {
           !props.search &&
           top &&
           top.length > 0 && (
-            <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+            <article className="grid grid-cols-1 md:flex gap-2 overflow-auto">
               {top.map((activity) => {
                 return (
                   <ActivityItem
@@ -74,7 +74,7 @@ export const ActivityList = (props: ActivityListProps) => {
           !props.search &&
           upcoming &&
           upcoming.length > 0 && (
-            <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+            <article className="grid grid-cols-1 md:flex gap-2 overflow-auto">
               {upcoming.map((activity) => {
                 return (
                   <ActivityItem
@@ -91,7 +91,7 @@ export const ActivityList = (props: ActivityListProps) => {
           !props.search &&
           props.milestones &&
           props.milestones.length > 0 && (
-            <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+            <article className="grid grid-cols-1 md:flex gap-2 overflow-auto">
               {props.milestones.map((activity) => {
                 return (
                   <ActivityItem
@@ -109,7 +109,7 @@ export const ActivityList = (props: ActivityListProps) => {
           !!props.search &&
           props.activities &&
           props.activities.length > 0 && (
-            <article className="grid grid-cols-1 md:flex gap-2 overflow-scroll">
+            <article className="grid grid-cols-1 md:flex gap-2 overflow-auto">
               {props.activities.map((activity) => {
                 return (
                   <ActivityItem

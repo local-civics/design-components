@@ -78,7 +78,7 @@ export const ActivityReflection = (props: ActivityReflectionProps) => {
           )}
         </div>
 
-        <div className="w-full max-h-[20rem] overflow-scroll">
+        <div className="w-full max-h-[20rem] overflow-auto">
           <div className="w-full p-5 border-b border-gray-200 grid grid-cols-1 gap-4">
             <div className="text-slate-600 grid grid-cols-1 gap-4">
               <p className="font-semibold text-lg">Almost there, share your reflection to earn your points!</p>

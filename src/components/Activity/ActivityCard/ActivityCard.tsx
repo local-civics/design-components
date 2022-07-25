@@ -119,7 +119,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
           </div>
         </div>
 
-        <div className="w-full max-h-[20rem] overflow-scroll">
+        <div className="w-full max-h-[20rem] overflow-auto">
           <div className="w-full p-5 border-b border-gray-200 grid grid-cols-1 gap-4">
             {props.summary && (
               <div className="text-slate-600 grid grid-cols-1 gap-4">
