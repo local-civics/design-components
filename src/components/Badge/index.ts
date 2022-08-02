@@ -1,3 +1,2 @@
-export * from "./BadgeCard/BadgeCard";
-export * from "./BadgeItem/BadgeItem";
-export * from "./BadgeList/BadgeList";
+export * from "./Badge";
+export * from "./BadgeSection/BadgeSection";
