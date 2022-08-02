@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, ButtonSize} from "../../Button/Button";
-import { IconProps } from "../../Icon/Icon";
+import { IconProps }        from "../../Icon/v0/Icon";
 
 /**
  * The properties for the widget header link.

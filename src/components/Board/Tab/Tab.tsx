@@ -1,6 +1,6 @@
 import React from "react";
-import { classname } from "../../../utils/classname/classname";
-import { Icon, IconName } from "../../Icon/Icon";
+import { classname }      from "../../../utils/classname/classname";
+import { Icon, IconName } from "../../Icon/v0/Icon";
 
 /**
  * The properties for the tab.

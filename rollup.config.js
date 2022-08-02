@@ -1,6 +1,7 @@
 import postcss from "rollup-plugin-postcss";
 import typescript from "@rollup/plugin-typescript";
 import { terser } from "rollup-plugin-terser";
+import svgr from '@svgr/rollup'
 import pkg from "./package.json";
 
 const cfg = [
@@ -19,6 +20,12 @@ const cfg = [
       },
     ],
     plugins: [
+      svgr({
+        titleProp: true,
+        replaceAttrValues: {
+          "#232A3A": "currentColor",
+        },
+      }),
       typescript(),
       postcss({
         minimize: true,

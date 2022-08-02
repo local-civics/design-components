@@ -1,5 +1,5 @@
-import React from "react";
-import { Icon, IconName } from "../../Icon/Icon";
+import React              from "react";
+import { Icon, IconName } from "../../Icon/v0/Icon";
 
 /**
  * The properties for the widget title.
