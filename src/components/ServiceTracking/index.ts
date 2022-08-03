@@ -1,1 +1,1 @@
-export * from "./LogServiceButton/LogServiceButton"
+export * from "./LogServiceButton/LogServiceButton";

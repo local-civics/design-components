@@ -1,4 +1,4 @@
-import { Button }   from "../../Button/Button";
+import { Button } from "../../Button/Button";
 import { IconName } from "../../Icon/v0/Icon";
 
 export type SearchResultProps = {

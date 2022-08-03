@@ -1,6 +1,6 @@
 import { sprite } from "./data/icons";
-import React      from "react";
-import { icons }  from "./data/icons";
+import React from "react";
+import { icons } from "./data/icons";
 
 /**
  * The name of the icon.

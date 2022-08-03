@@ -15,9 +15,12 @@ export default {
  */
 const Template: Story<FormProps> = (args) => (
   <div className="w-max font-proxima m-auto">
-    <Form {...args} onSubmit={async (value) => {
+    <Form
+      {...args}
+      onSubmit={async (value) => {
         args.onSubmit && (await args.onSubmit(value));
-    }}/>
+      }}
+    />
   </div>
 );
 

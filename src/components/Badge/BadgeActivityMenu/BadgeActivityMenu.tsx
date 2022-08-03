@@ -1,7 +1,13 @@
-export type BadgeActivityMenuProps = {
+import * as React from "react";
 
-}
+/**
+ * BadgeActivityMenuProps
+ */
+export type BadgeActivityMenuProps = {};
 
-export const BadgeActivityMenu = (props: BadgeActivityMenuProps) => {
-
-}
+/**
+ * BadgeActivityMenu
+ * @param props
+ * @constructor
+ */
+export const BadgeActivityMenu = (props: BadgeActivityMenuProps) => {};

@@ -1,8 +1,8 @@
-import * as React from "react"
+import * as React from "react";
 import { Story } from "@storybook/react";
 
 import { Icon, IconProps } from "./Icon";
-import { iconNames }       from "./icons";
+import { iconNames } from "./icons";
 
 /**
  * Storybook component configuration

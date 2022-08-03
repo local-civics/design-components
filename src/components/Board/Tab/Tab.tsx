@@ -1,5 +1,5 @@
 import React from "react";
-import { classname }      from "../../../utils/classname/classname";
+import { classname } from "../../../utils/classname/classname";
 import { Icon, IconName } from "../../Icon/v0/Icon";
 
 /**

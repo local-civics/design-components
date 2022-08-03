@@ -1,25 +1,25 @@
-import * as React       from 'react';
-import {IconName} from "../Icon/Icon";
-import {BadgeButton} from "./BadgeButton/BadgeButton";
+import * as React from "react";
+import { IconName } from "../Icon/Icon";
+import { BadgeButton } from "./BadgeButton/BadgeButton";
 
 export type Criterion = {
-  displayName?: string
-  namespace?: string
-  options?: BadgeActivity[]
+  displayName?: string;
+  namespace?: string;
+  options?: BadgeActivity[];
 };
 
 export type BadgeActivity = {
-  activityId?: string
-  activityName?: string
-  namespace?: string
-  xp?: number
-  formId?: string
-  milestone?: boolean
-  badgeId?: string
-  criterionId?: string
-  completedAt?: string
-  chosenAt?: string
-  startTime?: string
+  activityId?: string;
+  activityName?: string;
+  namespace?: string;
+  xp?: number;
+  formId?: string;
+  milestone?: boolean;
+  badgeId?: string;
+  criterionId?: string;
+  completedAt?: string;
+  chosenAt?: string;
+  startTime?: string;
 };
 
 /**
@@ -59,22 +59,22 @@ const OpenBadge = (props: BadgeProps) => {
  */
 export const Badge = (props: BadgeProps) => {
   const [open, setOpen] = React.useState(props.open || false);
-  const target = props.criteria?.length || 0
-  const progress = props.choices?.map(v => v.completedAt ? 1 : 0).reduce((acc, a) => acc + a, 0) || 0
+  const target = props.criteria?.length || 0;
+  const progress = props.choices?.map((v) => (v.completedAt ? 1 : 0)).reduce((acc, a) => acc + a, 0) || 0;
 
   const onOpen = () => {
-    setOpen(true)
-    if(props.onOpen){
-      props.onOpen()
+    setOpen(true);
+    if (props.onOpen) {
+      props.onOpen();
     }
-  }
+  };
 
   const onClose = () => {
-    setOpen(false)
-    if(props.onClose){
-      props.onClose()
+    setOpen(false);
+    if (props.onClose) {
+      props.onClose();
     }
-  }
+  };
 
   if (open) {
     return <OpenBadge {...props} open={open} onOpen={onOpen} onClose={onClose} />;

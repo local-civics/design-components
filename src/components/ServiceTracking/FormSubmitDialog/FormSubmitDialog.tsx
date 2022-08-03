@@ -35,14 +35,14 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
 
         <div className="px-16 w-full">
           <Button
-              wide
-              spacing="md"
-              border="rounded"
-              color="dark-blue"
-              theme="dark"
-              text="Continue"
-              size="full:md"
-              onClick={props.onContinue}
+            wide
+            spacing="md"
+            border="rounded"
+            color="dark-blue"
+            theme="dark"
+            text="Continue"
+            size="full:md"
+            onClick={props.onContinue}
           />
         </div>
       </div>
