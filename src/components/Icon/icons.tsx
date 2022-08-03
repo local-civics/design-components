@@ -3,6 +3,7 @@ import FourteenPointStar   from "../../../assets/14-point-star.svg";
 import AwardRibbon   from "../../../assets/award-ribbon.svg";
 import UpDownArrow from "../../../assets/up-down-arrow.svg";
 import CheckCircle from "../../../assets/check-circle.svg"
+import CheckCircleDark from "../../../assets/check-circle-dark.svg"
 import Circle from "../../../assets/circle.svg"
 import Lock from "../../../assets/lock.svg"
 import Progress from "../../../assets/progress.svg"
@@ -20,6 +21,7 @@ export const iconNames = [
     "award ribbon",
     "up & down arrow",
     "check & circle",
+    "check & circle dark",
     "lock",
     "circle",
     "progress",
@@ -45,6 +47,9 @@ export const icons: {[key in typeof iconNames[number]]: Icon} = {
     },
     "check & circle": {
         svg: CheckCircle,
+    },
+    "check & circle dark": {
+      svg: CheckCircleDark,
     },
     "lock": {
         svg: Lock,

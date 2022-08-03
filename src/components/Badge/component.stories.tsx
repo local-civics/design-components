@@ -14,8 +14,8 @@ export default {
  * Component storybook template
  */
 const Template: Story<BadgeProps> = (args) => (
-  <div className="h-full w-full overscroll-none">
-    <Badge startedAt="2020-12-22T02:53:05.929149Z" icon="award ribbon" {...args}/>
+  <div className="h-full w-full overscroll-none font-proxima">
+    <Badge displayName="College Explorer" startedAt="2020-12-22T02:53:05.929149Z" icon="award ribbon" {...args}/>
   </div>
 );
 
