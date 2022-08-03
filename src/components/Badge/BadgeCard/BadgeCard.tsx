@@ -1,7 +1,13 @@
+import * as React from "react";
+
+import { Card } from "../../Card";
+
 /**
  * BadgeCardProps
  */
-export type BadgeCardProps = {};
+export type BadgeCardProps = {
+  onClose?: () => void;
+};
 
 /**
  * BadgeCard
@@ -9,5 +15,11 @@ export type BadgeCardProps = {};
  * @constructor
  */
 export const BadgeCard = (props: BadgeCardProps) => {
-  return null;
+  return (
+    <Card onClose={props.onClose}>
+      <div></div>
+      <div></div>
+      <div></div>
+    </Card>
+  );
 };

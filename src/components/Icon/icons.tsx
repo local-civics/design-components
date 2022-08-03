@@ -10,6 +10,7 @@ import Progress from "../../../assets/progress.svg";
 import PartyPopper from "../../../assets/party-popper.svg";
 import PlusCircle from "../../../assets/plus-circle.svg";
 import XCircle from "../../../assets/x-circle.svg";
+import XSquare from "../../../assets/x-square.svg";
 import PenPaper from "../../../assets/pen-paper.svg";
 import CaretLeft from "../../../assets/caret-left.svg";
 
@@ -28,10 +29,14 @@ export const iconNames = [
   "party popper",
   "plus & circle",
   "x & circle",
+  "x & square",
   "pen & paper",
   "caret left",
 ] as const;
 
+/**
+ * List of icon source data
+ */
 export const icons: { [key in typeof iconNames[number]]: Icon } = {
   "14-point star": {
     svg: FourteenPointStar,
@@ -66,6 +71,9 @@ export const icons: { [key in typeof iconNames[number]]: Icon } = {
   "x & circle": {
     svg: XCircle,
   },
+  "x & square": {
+    svg: XSquare,
+  },
   "pen & paper": {
     svg: PenPaper,
   },
@@ -80,5 +88,5 @@ export const icons: { [key in typeof iconNames[number]]: Icon } = {
 export type IconName = typeof iconNames[number];
 
 type Icon = {
-  readonly svg: React.FunctionComponent<React.SVGProps<React.ReactSVGElement> & { title?: string }>;
+  readonly svg: React.FunctionComponent<React.SVGProps<any> & { title?: string }>;
 };

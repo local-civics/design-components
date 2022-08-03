@@ -1,6 +1,7 @@
 import React from "react";
 import { Story } from "@storybook/react";
 import { BadgeSuccessDialog, BadgeSuccessDialogProps } from "./BadgeSuccessDialog";
+import { Overlay } from "../../Overlay";
 
 /**
  * Storybook component configuration
@@ -15,7 +16,9 @@ export default {
  */
 const Template: Story<BadgeSuccessDialogProps> = (args) => (
   <div className="w-max font-proxima m-auto">
-    <BadgeSuccessDialog displayName="College Explorer" xp={1000} {...args} />
+    <Overlay>
+      <BadgeSuccessDialog displayName="College Explorer" xp={1000} {...args} />
+    </Overlay>
   </div>
 );
 

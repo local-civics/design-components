@@ -1,6 +1,6 @@
-import { Modal } from "../../Modal";
-import { Icon } from "../../Icon/Icon";
 import React from "react";
+import { Icon } from "../../Icon/Icon";
+import { Card } from "../../Card";
 
 /**
  * BadgeSuccessDialogProps
@@ -19,8 +19,8 @@ export type BadgeSuccessDialogProps = {
  */
 export const BadgeSuccessDialog = (props: BadgeSuccessDialogProps) => {
   return (
-    <Modal visible transparent onClose={props.onClose}>
-      <div className="w-full md:w-[24rem] px-8 pt-5 pb-12 shadow-sm grid grid-cols-1 gap-4 content-center justify-items-center">
+    <Card onClose={props.onClose}>
+      <div className="w-full px-8 pt-5 pb-12 shadow-sm grid grid-cols-1 gap-4 content-center justify-items-center">
         <div className="text-black w-28 h-28">
           <Icon name="party popper" />
         </div>
@@ -51,6 +51,6 @@ export const BadgeSuccessDialog = (props: BadgeSuccessDialogProps) => {
           </div>
         </div>
       </div>
-    </Modal>
+    </Card>
   );
 };

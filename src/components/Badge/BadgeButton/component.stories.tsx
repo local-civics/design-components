@@ -1,6 +1,7 @@
 import * as React from "react";
-import { BadgeButton, BadgeButtonProps } from "./BadgeButton";
 import { Story } from "@storybook/react";
+
+import { BadgeButton, BadgeButtonProps } from "./BadgeButton";
 
 /**
  * Storybook component configuration

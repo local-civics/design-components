@@ -1,14 +1,21 @@
 import * as React from "react";
 import { IconName } from "../Icon/Icon";
 import { BadgeButton } from "./BadgeButton/BadgeButton";
+import { BadgeCard } from "./BadgeCard/BadgeCard";
 
-export type Criterion = {
+/**
+ * CriterionProps
+ */
+export type CriterionProps = {
   displayName?: string;
   namespace?: string;
-  options?: BadgeActivity[];
+  options?: BadgeActivityProps[];
 };
 
-export type BadgeActivity = {
+/**
+ * BadgeActivityProps
+ */
+export type BadgeActivityProps = {
   activityId?: string;
   activityName?: string;
   namespace?: string;
@@ -37,8 +44,8 @@ export type BadgeProps = {
   code?: string;
   level?: number;
   isLocked?: boolean;
-  criteria?: Criterion[];
-  choices?: BadgeActivity[];
+  criteria?: CriterionProps[];
+  choices?: BadgeActivityProps[];
   editChoices?: boolean;
   open?: boolean;
 
@@ -46,10 +53,6 @@ export type BadgeProps = {
   onSubmit?: () => void;
   onOpen?: () => void;
   onClose?: () => void;
-};
-
-const OpenBadge = (props: BadgeProps) => {
-  return null;
 };
 
 /**
@@ -77,7 +80,7 @@ export const Badge = (props: BadgeProps) => {
   };
 
   if (open) {
-    return <OpenBadge {...props} open={open} onOpen={onOpen} onClose={onClose} />;
+    return <BadgeCard {...props} onClose={onClose} />;
   }
 
   return <BadgeButton {...props} progress={progress} target={target} onClick={onOpen} />;
