@@ -1,6 +1,8 @@
 import * as React          from "react"
 import { icons, IconName } from "./icons";
 
+export { IconName } from "./icons";
+
 /**
  * The properties for the icon.
  */
