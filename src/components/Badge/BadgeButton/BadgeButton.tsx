@@ -26,9 +26,10 @@ export type BadgeButtonProps = {
  */
 export const BadgeButton = (props: BadgeButtonProps) => {
     const hasProgress = props.startedAt
+    const isDisabled = props.isLocked || !props.onClick
     const statusIconName = props.isLocked ? "lock" : props.finishedAt ? "check & circle dark" : hasProgress ? "progress" : "14-point star"
-    const buttonCursor = props.isLocked ? "cursor-default" : "cursor-pointer"
-    const buttonBg = props.isLocked ? "" : props.finishedAt ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50"
+    const buttonCursor = isDisabled ? "cursor-default" : "cursor-pointer"
+    const buttonBg = isDisabled ? "" : props.finishedAt ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50"
     const statusIconColor = props.finishedAt ? "text-green-500" : "text-zinc-800"
     const centerpieceHeight = hasProgress ? "w-16 h-16" : "w-20 h-20"
     const progressPrefix = props.finishedAt ? "Collected" : "Started"

@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<BadgeButtonProps> = (args) => (
   <div className="h-full w-full overscroll-none font-proxima">
-    <BadgeButton displayName="College Explorer" startedAt="2020-12-22T02:53:05.929149Z" icon="award ribbon" {...args}/>
+    <BadgeButton displayName="College Explorer" startedAt="2020-12-22T02:53:05.929149Z" icon="award ribbon" {...args} />
   </div>
 );
 
