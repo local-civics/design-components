@@ -21,7 +21,6 @@ const Template: Story<BadgeCardProps> = (args) => (
       <BadgeCard
         imageURL="https://cdn.localcivics.io/badges/participation.png"
         displayName="Onboarding Badge"
-        xp={1000}
         summary="Build foundational knowledge about the college process, and learn from college students."
         criteria={[
           {

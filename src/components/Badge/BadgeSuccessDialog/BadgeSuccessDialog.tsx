@@ -31,7 +31,7 @@ export const BadgeSuccessDialog = (props: BadgeSuccessDialogProps) => {
           </div>
 
           <div className="max-w-[22rem]">
-            {props.xp && (
+            {!!props.xp && (
               <div className="text-sm">
                 <span>{"You've just earned"}</span>
                 <span className="ml-1 font-semibold text-green-500">{props.xp} XP</span>
@@ -39,7 +39,7 @@ export const BadgeSuccessDialog = (props: BadgeSuccessDialogProps) => {
               </div>
             )}
 
-            {props.displayName && (
+            {!!props.displayName && (
               <div className="mt-2 text-sm">
                 <span>Check out your new</span>
                 <span className="ml-1 font-semibold">{props.displayName}</span>

@@ -15,5 +15,5 @@ export type IconProps = {
  */
 export const Icon = (props: IconProps) => {
   const icon = icons[props.name];
-  return icon && <icon.svg title={props.name} className="w-full h-full drop-shadow-[inherit]" />;
+  return !!icon && <icon.svg title={props.name} className="w-full h-full drop-shadow-[inherit]" />;
 };

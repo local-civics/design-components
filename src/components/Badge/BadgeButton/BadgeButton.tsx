@@ -77,7 +77,7 @@ export const BadgeButton = (props: BadgeButtonProps) => {
         )}
       </div>
 
-      {props.displayName && (
+      {!!props.displayName && (
         <div className="text-sm m-auto flex gap-x-2">
           <span className="font-semibold text-zinc-600">{props.displayName}</span>
           <span className="shrink-0 text-slate-500">Lv. {(props.level || 0) + 1}</span>

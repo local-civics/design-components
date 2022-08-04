@@ -16,8 +16,6 @@ export type BadgeProps = BadgeCardProps & {
   editChoices?: boolean;
   open?: boolean;
 
-  onStart?: () => void;
-  onSubmit?: () => void;
   onOpen?: () => void;
 };
 
