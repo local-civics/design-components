@@ -12,7 +12,7 @@ export default {
 /**
  * Component storybook template
  */
-const Template: Story<ButtonProps> = (args) => <Button icon="send" text="Button" size="sm" {...args} />;
+const Template: Story<ButtonProps> = (args) => <Button text="Button" size="sm" {...args} />;
 
 /**
  * Component stories

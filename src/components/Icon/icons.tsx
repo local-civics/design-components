@@ -13,7 +13,6 @@ import XCircle from "../../../assets/x-circle.svg";
 import XSquare from "../../../assets/x-square.svg";
 import PenPaper from "../../../assets/pen-paper.svg";
 import CaretLeft from "../../../assets/caret-left.svg";
-import PercentWheel from "../../../assets/percent-wheel.svg";
 
 /**
  * List of icons available
@@ -26,7 +25,6 @@ export const iconNames = [
   "check & circle dark",
   "lock",
   "circle",
-  "percent wheel",
   "progress",
   "party popper",
   "plus & circle",
@@ -81,9 +79,6 @@ export const icons: { [key in typeof iconNames[number]]: Icon } = {
   },
   "caret left": {
     svg: CaretLeft,
-  },
-  "percent wheel": {
-    svg: PercentWheel,
   },
 } as const;
 

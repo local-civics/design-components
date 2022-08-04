@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BadgeButton } from "./BadgeButton/BadgeButton";
-import {BadgeCard, BadgeCardProps} from "./BadgeCard/BadgeCard";
+import { BadgeCard, BadgeCardProps } from "./BadgeCard/BadgeCard";
 
 /**
  * BadgeProps
