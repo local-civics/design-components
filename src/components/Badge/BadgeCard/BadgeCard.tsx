@@ -1,29 +1,11 @@
 import * as React from "react";
 
-import { Card } from "../../Card";
-import { BadgeEmblem } from "../BadgeEmblem/BadgeEmblem";
-import { IconName } from "../../Icon/icons";
-import { Icon } from "../../Icon/Icon";
-import { Button } from "../../Button";
-
-/**
- * BadgeActivityProps
- */
-export type BadgeActivityProps = {
-  activityId?: string;
-  activityName?: string;
-  namespace?: string;
-  xp?: number;
-  formId?: string;
-  milestone?: boolean;
-  badgeId?: string;
-  criterionId?: string;
-  completedAt?: string;
-  chosenAt?: string;
-  startTime?: string;
-
-  onClick?: () => void;
-};
+import { Card }             from "../../Card";
+import {BadgeActivityProps} from "../BadgeActivity/BadgeActivity";
+import { BadgeEmblem }      from "../BadgeEmblem/BadgeEmblem";
+import { IconName }         from "../../Icon/icons";
+import { Icon }             from "../../Icon/Icon";
+import { Button }           from "../../Button";
 
 /**
  * CriterionProps
