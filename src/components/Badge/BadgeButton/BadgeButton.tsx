@@ -38,7 +38,7 @@ export const BadgeButton = (props: BadgeButtonProps) => {
     : "14-point star";
   const buttonCursor = isDisabled ? "cursor-default" : "cursor-pointer";
   const buttonBg = isDisabled ? "" : props.finishedAt ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50";
-  const statusIconColor = props.finishedAt ? "text-green-500" : "text-zinc-800";
+  const statusIconColor = props.finishedAt ? "text-green-500" : "text-zinc-600";
   const emblemSize = hasProgress ? "md" : "lg";
   const progressPrefix = props.finishedAt ? "Collected" : "Started";
   const progressDate = new Date(props.finishedAt || props.startedAt || new Date());
@@ -79,7 +79,7 @@ export const BadgeButton = (props: BadgeButtonProps) => {
 
       {props.displayName && (
         <div className="text-sm m-auto flex gap-x-2">
-          <span className="font-semibold text-black">{props.displayName}</span>
+          <span className="font-semibold text-zinc-600">{props.displayName}</span>
           <span className="shrink-0 text-slate-500">Lv. {(props.level || 0) + 1}</span>
         </div>
       )}

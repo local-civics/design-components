@@ -10,7 +10,7 @@ export type BadgeEmblemProps = {
   alt?: string;
   imageURL?: string;
   level?: number;
-  size?: "md" | "lg";
+  size?: "sm" | "md" | "lg";
 };
 
 /**
@@ -21,6 +21,8 @@ export type BadgeEmblemProps = {
 export const BadgeEmblem = (props: BadgeEmblemProps) => {
   const size = (() => {
     switch (props.size) {
+      case "sm":
+        return ["h-24 w-24", "w-12 h-12"];
       case "lg":
         return ["h-56 w-56", "w-24 h-24"];
       default:

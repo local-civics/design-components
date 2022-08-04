@@ -1,7 +1,8 @@
 import React from "react";
-import { TaskItem } from "../../Task";
-import { BadgeCard, BadgeCardProps } from "./BadgeCard";
 import { Story } from "@storybook/react";
+
+import {Overlay} from "../../Overlay";
+import { BadgeCard, BadgeCardProps } from "./BadgeCard";
 
 /**
  * Storybook component configuration
@@ -15,18 +16,43 @@ export default {
  * Component storybook template
  */
 const Template: Story<BadgeCardProps> = (args) => (
-  <div className="h-full w-full overscroll-none">
-    <BadgeCard
-      imageURL="https://cdn.localcivics.io/badges/participation.png"
-      headline="Onboarding Badge"
-      summary="A sample summary"
-      {...args}
-    >
-      <TaskItem status="done" headline="Item #1" />
-      <TaskItem headline="Item #2" />
-      <TaskItem headline="Item #3" />
-    </BadgeCard>
-    <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
+    <div className="w-max font-proxima m-auto">
+        <Overlay>
+            <BadgeCard
+                imageURL="https://cdn.localcivics.io/badges/participation.png"
+                displayName="Onboarding Badge"
+                xp={1000}
+                summary="Build foundational knowledge about the college process, and learn from college students."
+                criteria={[{
+                    displayName: "Live Workshop",
+                },{
+                    displayName: "Self-Led Lesson",
+                },{
+                    displayName: "Guest Speaker",
+                },{
+                    displayName: "Scavenger Hunt",
+                }]}
+                choices={[
+                    {
+                        activityName: "Scavenger Hunt (CUNY)",
+                        xp: 300,
+                    },
+                    {
+                        activityName: "Career Talk: Percee Goings",
+                        xp: 300,
+                    },
+                    {
+                        activityName: "Scavenger Hunt (FIT)",
+                        xp: 300,
+                    },
+                    {
+                        activityName: "Power Mapping",
+                        xp: 300,
+                    },
+                ]}
+                {...args}
+            />
+        </Overlay>
   </div>
 );
 
