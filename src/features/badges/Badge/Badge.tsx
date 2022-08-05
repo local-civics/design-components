@@ -1,23 +1,22 @@
 import * as React from "react";
-import { BadgeButton } from "../BadgeButton/BadgeButton";
+import { BadgeButton, BadgeButtonProps } from "../BadgeButton/BadgeButton";
 import { BadgeCard, BadgeCardProps } from "../BadgeCard/BadgeCard";
+import { Overlay } from "../../../components";
 
 /**
  * BadgeProps
  */
-export type BadgeProps = BadgeCardProps & {
-  badgeId?: string;
-  summary?: string;
-  status?: string;
-  startedAt?: string;
-  finishedAt?: string;
-  code?: string;
-  isLocked?: boolean;
-  editChoices?: boolean;
-  open?: boolean;
+export type BadgeProps = BadgeCardProps &
+  BadgeButtonProps & {
+    badgeId?: string;
+    summary?: string;
+    status?: string;
+    code?: string;
+    editChoices?: boolean;
+    open?: boolean;
 
-  onOpen?: () => void;
-};
+    onOpen?: () => void;
+  };
 
 /**
  * Badge
@@ -26,8 +25,9 @@ export type BadgeProps = BadgeCardProps & {
  */
 export const Badge = (props: BadgeProps) => {
   const [open, setOpen] = React.useState(props.open || false);
-  const target = props.criteria?.length || 0;
-  const progress = props.choices?.map((v) => (v.completedAt ? 1 : 0) as number).reduce((acc, a) => acc + a, 0) || 0;
+  const target = props.target || props.criteria?.length || 0;
+  const progress =
+    props.progress || props.choices?.map((v) => (v.completedAt ? 1 : 0) as number).reduce((acc, a) => acc + a, 0) || 0;
 
   const onOpen = () => {
     setOpen(true);
@@ -43,11 +43,17 @@ export const Badge = (props: BadgeProps) => {
     }
   };
 
-  if (open) {
-    return <BadgeCard {...props} onClose={onClose} />;
-  }
+  return (
+    <>
+      <BadgeButton {...props} progress={progress} target={target} onClick={onOpen} />
 
-  return <BadgeButton {...props} progress={progress} target={target} onClick={onOpen} />;
+      {open && (
+        <Overlay>
+          <BadgeCard {...props} onClose={onClose} />
+        </Overlay>
+      )}
+    </>
+  );
 };
 
 // todo: fix submit button visibility for learning forms

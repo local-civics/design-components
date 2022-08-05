@@ -18,7 +18,7 @@ const Template: Story<BadgeProps> = (args) => (
     <Badge
       displayName="College Explorer"
       startedAt="2020-12-22T02:53:05.929149Z"
-      icon="award ribbon"
+      icon="formal scholar"
       summary="Build foundational knowledge about the college process, and learn from college students."
       criteria={[
         {

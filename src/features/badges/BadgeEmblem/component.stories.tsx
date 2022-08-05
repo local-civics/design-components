@@ -16,7 +16,7 @@ export default {
  */
 const Template: Story<BadgeEmblemProps> = (args) => (
   <div className="h-full w-full overscroll-none font-proxima">
-    <BadgeEmblem alt="College Explorer" icon="award ribbon" {...args} />
+    <BadgeEmblem alt="College Explorer" icon="formal scholar" {...args} />
   </div>
 );
 

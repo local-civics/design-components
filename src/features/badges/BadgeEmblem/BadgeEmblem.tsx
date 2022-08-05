@@ -31,7 +31,7 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
   })();
 
   return (
-    <div className={`relative m-auto overflow-hidden ${size[0]}`}>
+    <div className={`relative overflow-hidden ${size[0]}`}>
       <svg
         className="h-full w-full drop-shadow-[inherit]"
         viewBox="0 0 940 1100"

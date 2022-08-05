@@ -19,7 +19,7 @@ export type CardProps = {
  */
 export const Card = (props: CardProps) => {
   return (
-    <div className="font-proxima grid grid-cols-1 overscroll-contain justify-items-center transition ease-in-out duration-400">
+    <div className="font-proxima m-auto grid grid-cols-1 overscroll-contain justify-items-center transition ease-in-out duration-400">
       <div className="shadow-md bg-white overflow-hidden rounded-md relative">
         <div className="grid grid-cols-1 gap-y-2">
           {!props.isLoading && props.onClose && (

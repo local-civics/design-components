@@ -3,7 +3,7 @@ import * as React from "react";
 import { Icon, IconName } from "../../../components/Icon/Icon";
 import { Progress } from "../../../components";
 import { BadgeEmblem } from "../BadgeEmblem/BadgeEmblem";
-import {ordNumber} from "../../../utils/date";
+import { ordNumber } from "../../../utils/date";
 
 /**
  * BadgeButtonProps
@@ -41,26 +41,29 @@ export const BadgeButton = (props: BadgeButtonProps) => {
   const buttonBg = isDisabled ? "" : props.finishedAt ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50";
   const statusIconColor = props.finishedAt ? "text-green-500" : "text-zinc-600";
   const emblemSize = hasProgress ? "md" : "lg";
+  const emblemOpacity = props.isLocked ? "opacity-50" : "";
   const progressPrefix = props.finishedAt ? "Collected" : "Started";
   const progressDate = new Date(props.finishedAt || props.startedAt || new Date());
 
   return (
-    <div className="grid grid-cols-1 w-64 gap-y-3">
+    <div className="grid grid-cols-1 w-64 gap-y-3 text-zinc-600">
       <div className="flex flex-col h-64 w-64 overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
         <div
           onClick={props.onClick}
-          className={`relative overflow-hidden p-5 drop-shadow-md ${buttonCursor} ${buttonBg}`}
+          className={`relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
         >
           <div className={`absolute top-2 right-2 w-7 h-7 ${statusIconColor}`}>
             <Icon name={statusIconName} />
           </div>
-          <BadgeEmblem
-            icon={props.icon}
-            imageURL={props.imageURL}
-            alt={props.displayName}
-            level={props.level}
-            size={emblemSize}
-          />
+          <div className={`w-max m-auto ${emblemOpacity}`}>
+            <BadgeEmblem
+              icon={props.icon}
+              imageURL={props.imageURL}
+              alt={props.displayName}
+              level={props.level}
+              size={emblemSize}
+            />
+          </div>
         </div>
 
         {hasProgress && (

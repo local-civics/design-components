@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BadgeActivity, BadgeActivityProps } from "../BadgeActivity/BadgeActivity";
 import { Icon } from "../../../components/Icon/Icon";
-import {ordNumber} from "../../../utils/date";
+import { ordNumber } from "../../../utils/date";
 
 /**
  * CriterionProps
@@ -63,15 +63,18 @@ export const BadgeActivityMenu = (props: BadgeActivityMenuProps) => {
               <div className="grid grid-flow-col auto-cols-max gap-4 px-1 pt-1 pb-2 w-full overflow-x-auto">
                 {options.map((o, i) => {
                   const id = o.activityId || i;
-                  const date = o.startTime ? new Date(o.startTime) : null
-                  return <div key={id} className="grid grid-cols-1 gap-y-2">
-                    { date && <p>
-                      {Intl.DateTimeFormat("en-US", { month: "long" }).format(date)}{" "}
-                      {ordNumber(date.getDate())}
-                    </p> }
-                    { !date && <p>Online</p> }
-                    <BadgeActivity {...o} criteriaName={c.displayName} />
-                  </div>;
+                  const date = o.startTime ? new Date(o.startTime) : null;
+                  return (
+                    <div key={id} className="grid grid-cols-1 gap-y-2">
+                      {date && (
+                        <p>
+                          {Intl.DateTimeFormat("en-US", { month: "long" }).format(date)} {ordNumber(date.getDate())}
+                        </p>
+                      )}
+                      {!date && <p className="invisible">Online</p>}
+                      <BadgeActivity {...o} criteriaName={c.displayName} />
+                    </div>
+                  );
                 })}
               </div>
             </div>
