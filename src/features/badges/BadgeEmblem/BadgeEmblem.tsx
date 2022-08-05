@@ -22,11 +22,11 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
   const size = (() => {
     switch (props.size) {
       case "sm":
-        return ["h-24 w-24", "w-12 h-12"];
+        return ["h-max w-24", "w-12 h-12"];
       case "lg":
-        return ["h-56 w-56", "w-24 h-24"];
+        return ["h-max w-40", "w-20 h-20"];
       default:
-        return ["h-32 w-32", "w-16 h-16"];
+        return ["h-max w-32", "w-16 h-16"];
     }
   })();
 

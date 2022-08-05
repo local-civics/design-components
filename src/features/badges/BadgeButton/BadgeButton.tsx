@@ -18,6 +18,7 @@ export type BadgeButtonProps = {
   isLocked?: boolean;
   progress?: number;
   target?: number;
+  readonly?: boolean
 
   onClick?: () => void;
 };
@@ -29,7 +30,7 @@ export type BadgeButtonProps = {
  */
 export const BadgeButton = (props: BadgeButtonProps) => {
   const hasProgress = props.startedAt;
-  const isDisabled = props.isLocked || !props.onClick;
+  const isDisabled = props.readonly || props.isLocked || !props.onClick;
   const statusIconName = props.isLocked
     ? "lock"
     : props.finishedAt
@@ -44,12 +45,13 @@ export const BadgeButton = (props: BadgeButtonProps) => {
   const emblemOpacity = props.isLocked ? "opacity-50" : "";
   const progressPrefix = props.finishedAt ? "Collected" : "Started";
   const progressDate = new Date(props.finishedAt || props.startedAt || new Date());
+  const onClick = () => !isDisabled && props.onClick && props.onClick()
 
   return (
     <div className="grid grid-cols-1 w-64 gap-y-3 text-zinc-600">
-      <div className="flex flex-col h-64 w-64 overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
+      <div className="flex flex-col h-max w-64 overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
         <div
-          onClick={props.onClick}
+          onClick={onClick}
           className={`relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
         >
           <div className={`absolute top-2 right-2 w-7 h-7 ${statusIconColor}`}>
