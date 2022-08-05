@@ -1,7 +1,8 @@
-import { Icon, IconProps } from "./Icon";
-
+import * as React from "react";
 import { Story } from "@storybook/react";
-import { icons } from "./data/icons";
+
+import { Icon, IconProps } from "./Icon";
+import { iconNames } from "./icons";
 
 /**
  * Storybook component configuration
@@ -23,7 +24,7 @@ export default {
  */
 const Template: Story<IconProps> = (args) => (
   <div className="grid grid-cols-8 gap-x-3 gap-y-6">
-    {icons.map((icon) => (
+    {iconNames.map((icon) => (
       <div key={icon} className="transition ease-in-out text-slate-400 w-8 h-8">
         <Icon {...args} name={icon} />
       </div>

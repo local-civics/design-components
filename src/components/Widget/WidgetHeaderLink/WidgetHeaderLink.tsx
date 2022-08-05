@@ -1,15 +1,15 @@
 import React from "react";
-import {Button, ButtonSize} from "../../Button/Button";
-import { IconProps } from "../../Icon/Icon";
+import { Button, ButtonSize } from "../../Button/Button";
+import { IconProps } from "../../Icon/v0/Icon";
 
 /**
  * The properties for the widget header link.
  */
 export type WidgetHeaderLinkProps = {
   display?: boolean;
-  disabled?: boolean
+  disabled?: boolean;
   onClick?: () => void;
-  size?: ButtonSize
+  size?: ButtonSize;
   children: string | React.ReactElement<IconProps>;
 };
 
@@ -28,7 +28,12 @@ export const WidgetHeaderLink = (props: WidgetHeaderLinkProps) => {
   } else {
     return (
       <div className="flex items-center">
-        <Button size={props.size || "xs"} disabled={props.disabled||!props.onClick} icon={props.children.props.name} onClick={props.onClick} />
+        <Button
+          size={props.size || "xs"}
+          disabled={props.disabled || !props.onClick}
+          icon={props.children.props.name}
+          onClick={props.onClick}
+        />
       </div>
     );
   }

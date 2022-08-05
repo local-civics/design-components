@@ -1,5 +1,5 @@
 import { IconName } from "../../components";
-import { icons } from "../../components/Icon/data/icons";
+import { icons } from "../../components/Icon/v0/data/icons";
 
 /**
  * A utility to get an icon name.
