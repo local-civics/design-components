@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon } from "../../../components/Icon";
+import { Icon } from "../../../components";
 
 /**
  * FormItemProps
@@ -8,7 +8,7 @@ export type FormItemProps = {
   itemId?: string;
   headline?: string;
   summary?: string;
-  format?: "question" | "image" | "embed";
+  format?: "question" | "image" | "embed" | "text";
   questionType?: "radio" | "checkbox" | "drop down" | "file upload" | "text" | "date" | "time";
   options?: string[];
   paragraph?: boolean;
@@ -73,7 +73,7 @@ export const FormItem = (props: FormItemProps) => {
         </div>
       )}
 
-      {!props.children && (
+      {!props.children && props.format !== "text" && (
         <div className={`${contentMaxWidth} ml-1`}>
           <Switch {...props} onTextBlur={onTextBlur} />
           {showError && (
@@ -188,7 +188,6 @@ const CheckboxQuestion = (props: FormItemProps) => {
                 className="cursor-pointer"
                 checked={values[option]}
                 onChange={onChange}
-                required={props.required}
                 type="checkbox"
                 value={option}
                 name={props.headline}
