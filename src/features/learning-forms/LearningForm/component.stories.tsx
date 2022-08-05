@@ -43,10 +43,14 @@ In this Undergrad Spotlight, Sam Lee shares about her Cornell experience! Sam di
           format: "question",
           questionType: "checkbox",
           options: ["color 1", "color 2", "color 3", "color 4"],
-        },
-        {
+        },{
+          itemId: "f89c3e8e-548e-48ca-bcf0-dcd763122d20",
+          headline: "Study the images below.",
+          format: "text",
+        },{
           itemId: "f89c3e8e-548e-48ca-bcf0-dcd763122d23",
           headline: "Study this image.",
+          url: "https://cdn.localcivics.io/area/recreation.jpg",
           format: "image",
         },
         {

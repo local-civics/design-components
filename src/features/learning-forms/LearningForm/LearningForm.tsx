@@ -1,6 +1,5 @@
 import React from "react";
-import { Button } from "../../../components/Button";
-import { Icon } from "../../../components/Icon";
+import { Button, Icon } from "../../../components";
 import { FormExitDialog } from "../FormExitDialog/FormExitDialog";
 import { FormItem, FormItemProps } from "../FormItem/FormItem";
 import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";

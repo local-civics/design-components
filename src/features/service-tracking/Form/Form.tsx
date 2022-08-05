@@ -1,7 +1,5 @@
 import React from "react";
-import { Button } from "../../../components/Button";
-import { Modal } from "../../../components/Modal";
-import { Icon } from "../../../components/Icon";
+import {Button, Card, Icon, Modal, Overlay} from "../../../components";
 import { FormInput } from "../FormInput/FormInput";
 import { FormExitDialog } from "../FormExitDialog/FormExitDialog";
 import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";
@@ -51,10 +49,10 @@ export const Form = (props: FormProps) => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 px-4 md:px-2 w-screen overflow-x-hidden h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-30">
-        <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
-          <Modal visible transparent onClose={() => setShowExitDialogue(true)}>
-            <div className="w-screen overflow-x-hidden max-w-[62.5rem] px-16 py-4 grid grid-cols-1 gap-y-12">
+      <Overlay>
+        <div className="flex overflow-auto md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
+          <Card onClose={() => setShowExitDialogue(true)}>
+            <div className="h-max w-max overflow-x-hidden max-w-[62.5rem] px-16 py-4 grid grid-cols-1 gap-y-12">
               <div className="flex gap-x-2 items-center">
                 <div className="text-sky-500 w-14 h-14">
                   <Icon name="service-tracking" />
@@ -172,9 +170,9 @@ export const Form = (props: FormProps) => {
                 )}
               </form>
             </div>
-          </Modal>
+          </Card>
         </div>
-      </div>
+      </Overlay>
 
       {showExitDialogue && (
         <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">

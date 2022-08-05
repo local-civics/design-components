@@ -55,7 +55,3 @@ export const Badge = (props: BadgeProps) => {
     </>
   );
 };
-
-// todo: fix submit button visibility for learning forms
-// todo: add text input type to learning forms
-// todo: fix select all that apply for learning forms
