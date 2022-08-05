@@ -7,6 +7,7 @@ import { Icon } from "../../../components/Icon/Icon";
  */
 export type BadgeSectionProps = {
   isLoading?: boolean;
+  readonly?: boolean;
   showMore?: boolean;
   badges?: BadgeProps[];
 };
@@ -19,13 +20,12 @@ export type BadgeSectionProps = {
 export const BadgeSection = (props: BadgeSectionProps) => {
   const [showMore, setShowMore] = React.useState(props.showMore);
   const badges = props.badges || [];
-  const preview = badges.slice(0, 3);
   const progress: BadgeProps[] = [];
   const locked: BadgeProps[] = [];
   const available: BadgeProps[] = [];
   const collected: BadgeProps[] = [];
   const toggleShowMore = () => {
-    if (badges.length > 0) {
+    if (!props.readonly && badges.length > 0) {
       setShowMore(!showMore);
     }
   };
@@ -45,6 +45,8 @@ export const BadgeSection = (props: BadgeSectionProps) => {
     }
   });
 
+  const preview = props.readonly ? collected.slice(0, 10) : badges.slice(0, 3);
+
   return (
     <div className="max-w-[52rem]">
       <Widget isLoading={props.isLoading}>
@@ -57,7 +59,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
             <div className="shrink-0 mt-auto ml-auto text-sm">
               <span className="font-semibold">
-                {collected.length}/{badges.length} Badges
+                {collected.length}{props.readonly ? "" : "/" + badges.length} Badges
               </span>
               <span className="ml-1">collected</span>
             </div>
@@ -65,22 +67,24 @@ export const BadgeSection = (props: BadgeSectionProps) => {
         </WidgetHeader>
         <WidgetBody>
           <div className="pt-2 pb-5 px-2">
-            <div className="p-2 flex w-full gap-x-2 text-zinc-600">
-              <div
-                onClick={toggleShowMore}
-                className="shrink-0 flex w-max ml-auto text-sm cursor-pointer text-zinc-400 hover:text-zinc-500"
-              >
-                <span>Show more</span>
-                <div className="inline-block ml-1 overflow-hidden h-5 w-5">
-                  <Icon name="up & down arrow" />
+            {!props.readonly &&
+                <div className="p-2 flex w-full gap-x-2 text-zinc-600">
+                  <div
+                      onClick={toggleShowMore}
+                      className="shrink-0 flex w-max ml-auto text-sm cursor-pointer text-zinc-400 hover:text-zinc-500"
+                  >
+                    <span>Show more</span>
+                    <div className="inline-block ml-1 overflow-hidden h-5 w-5">
+                      <Icon name="up & down arrow"/>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+            }
 
             {!showMore && (
               <div className="grid grid-flow-col auto-cols-max gap-4 overflow-x-auto">
                 {preview.map((b, i) => {
-                  return <Badge key={i} {...b} />;
+                  return <Badge key={i} {...b} readonly={props.readonly} />;
                 })}
               </div>
             )}

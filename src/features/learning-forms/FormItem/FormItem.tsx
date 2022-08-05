@@ -54,8 +54,10 @@ export const FormItem = (props: FormItemProps) => {
     }
   };
 
+  const marginBottom = props.format === "text" ? "-mb-7" : ""
+
   return (
-    <div className={`bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8 ${itemContainerError}`}>
+    <div className={`bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8 ${itemContainerError} ${marginBottom}`}>
       {props.headline && (
         <div className="flex gap-x-1">
           <div className="flex items-start gap-x-4">
