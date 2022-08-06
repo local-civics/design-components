@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/design-components",
-  "version": "1.0.8-alpha.1",
+  "version": "1.0.8-alpha.2",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
