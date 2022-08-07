@@ -23,7 +23,7 @@ export const Loader = (props: LoaderProps) => {
     .else("visible opacity-full")
     .build();
 
-  const containerClassName = builder().if(!!props.isLoading, "relative").build();
+  const containerClassName = builder("my-auto").if(!!props.isLoading, "relative").build();
 
   return (
     <>
