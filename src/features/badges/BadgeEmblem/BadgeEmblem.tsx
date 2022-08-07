@@ -33,7 +33,7 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
   return (
     <div className={`relative overflow-hidden ${size[0]}`}>
         {!props.icon && <img className="w-full h-full object-cover" alt={props.alt} src={props.imageURL} />}
-        { props.icon &&
+        { !!props.icon &&
             <>
                 <svg
                 className="h-full w-full drop-shadow-[inherit]"

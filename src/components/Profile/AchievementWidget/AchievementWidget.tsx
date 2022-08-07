@@ -25,7 +25,7 @@ export interface AchievementWidgetProps {
  */
 export const AchievementWidget = (props: AchievementWidgetProps) => {
   return (
-    <Widget height="full" isLoading={props.isLoading}>
+    <Widget isLoading={props.isLoading}>
       <WidgetHeader>
         <WidgetTitle icon="achievements">My Achievements</WidgetTitle>
         <WidgetHeaderLink size="sm" onClick={props.onOpen} disabled={props.openDisabled} display>

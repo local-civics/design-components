@@ -19,7 +19,7 @@ export type ImpactWidgetProps = {
  */
 export const ImpactWidget = (props: ImpactWidgetProps) => {
   return (
-    <Widget height="sm" color="sky" borderless headless isLoading={props.isLoading}>
+    <Widget color="sky" borderless headless isLoading={props.isLoading}>
       <WidgetHeader>
         <WidgetTitle icon="objective">Impact Score</WidgetTitle>
       </WidgetHeader>
