@@ -16,7 +16,7 @@ export default {
  */
 const Template: Story<BadgeEmblemProps> = (args) => (
   <div className="h-full w-full overscroll-none font-proxima">
-    <BadgeEmblem alt="College Explorer" icon="formal scholar" {...args} />
+    <BadgeEmblem alt="College Explorer" imageURL="https://cdn.localcivics.io/badges/civics-lens.png" {...args} />
   </div>
 );
 
