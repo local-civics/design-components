@@ -57,7 +57,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
   return (
     <Card onClose={props.onClose}>
       <div className="pb-5 text-zinc-600">
-        <div className="pb-5 px-5 flex gap-x-2 border-b border-zinc-200">
+        <div className="pb-5 px-5 flex gap-x-2">
           <BadgeEmblem
             icon={props.icon}
             imageURL={props.imageURL}
@@ -80,7 +80,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
           </div>
         </div>
         {criteriaNames.length > 0 && (
-          <div className="p-5 grid grid-cols-1 gap-y-3 max-w-[30rem] border-b border-zinc-200">
+          <div className="p-5 grid grid-cols-1 gap-y-3 max-w-[30rem] border-t border-zinc-200">
             <p className="font-semibold">Badge Criteria</p>
             <p className="text-xs">Complete 1 of each: {criteriaNames.join(", ")}</p>
 
@@ -132,20 +132,22 @@ export const BadgeCard = (props: BadgeCardProps) => {
             </div>
           </div>
         )}
-        <div className="pt-5 px-5 flex">
-          <div className="w-full max-w-[7rem] ml-auto">
-            <Button
-              disabled={!props.canSubmit && completed < criteria.length}
-              onClick={props.onSubmit}
-              spacing="sm"
-              border="rounded"
-              size="full:sm"
-              color="blue"
-              theme="dark"
-              text="Submit"
-            />
-          </div>
-        </div>
+        {criteria.length > 0 &&
+            <div className="pt-5 px-5 flex border-t border-zinc-200">
+              <div className="w-full max-w-[7rem] ml-auto">
+                <Button
+                    disabled={!props.canSubmit && completed < criteria.length}
+                    onClick={props.onSubmit}
+                    spacing="sm"
+                    border="rounded"
+                    size="full:sm"
+                    color="blue"
+                    theme="dark"
+                    text="Submit"
+                />
+              </div>
+            </div>
+        }
       </div>
     </Card>
   );
