@@ -21,7 +21,7 @@ export const Progress = (props: ProgressProps) => {
       case "sky-blue":
         return ["bg-sky-blue-200", "bg-sky-blue-400"];
       default:
-        return ["bg-green-200", "bg-green-400"];
+        return ["bg-gray-200", "bg-green-400"];
     }
   })();
   return (

@@ -108,7 +108,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
                 {(props.subheader || props.main) && (
                   <div className="grow grid grid-cols-1 max-w-full overflow-x-hidden md:flex md:flex-col gap-4 lg:gap-2">
                     {props.subheader && (
-                      <div className="lg:min-h-32 relative grid grid-cols-1 md:flex w-full gap-4 lg:gap-2">
+                      <div className="relative grid grid-cols-1 md:flex w-full gap-4 lg:gap-2">
                         {props.subheader}
                       </div>
                     )}

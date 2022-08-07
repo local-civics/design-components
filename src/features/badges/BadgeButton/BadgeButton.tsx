@@ -29,7 +29,7 @@ export type BadgeButtonProps = {
  * @constructor
  */
 export const BadgeButton = (props: BadgeButtonProps) => {
-  const hasProgress = props.startedAt;
+  const hasProgress = props.startedAt || props.finishedAt || props.progress && props.progress > 0;
   const isDisabled = props.readonly || props.isLocked || !props.onClick;
   const statusIconName = props.isLocked
     ? "lock"
