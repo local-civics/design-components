@@ -1,6 +1,9 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
+    borderWidth: {
+      "1.5": "1.5px",
+    },
     extend: {
       lineHeight: {
         "extra-loose": "3",
@@ -20,6 +23,9 @@ module.exports = {
         "dark-blue": {
           400: "#0170BB",
           600: "#015f9f",
+        },
+        "brown": {
+          600: "#505050",
         },
       },
     },
