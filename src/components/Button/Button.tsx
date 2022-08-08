@@ -16,12 +16,13 @@ export type ButtonColor =
   | "secondary"
   | "slate:sky"
   | "slate:icon"
-  | "blue";
+  | "blue"
+  | "dark-blue";
 
 /**
  * The button size.
  */
-export type ButtonSize = "tiny" | "xs" | "sm" | "md" | "lg" | "xl" | "full:sm";
+export type ButtonSize = "tiny" | "xs" | "sm" | "md" | "lg" | "xl" | "full:sm" | "full:md";
 
 /**
  * The button spacing.
@@ -349,6 +350,23 @@ const withColor = (config: ButtonConfig, color?: ButtonColor, theme?: ButtonThem
     case "blue":
       config.button.color = {
         active: {
+          text: "text-blue-600",
+          border: "border-blue-600",
+          bg: "bg-blue-600",
+        },
+        text: "text-blue-400",
+        border: "border-blue-400",
+        bg: "bg-blue-400",
+        interactive: {
+          text: "focus:text-blue-600 active:text-blue-600 hover:text-blue-600",
+          border: "focus:border-blue-600 active:border-blue-600 hover:border-blue-600",
+          bg: "focus:bg-blue-600 active:bg-blue-600 hover:bg-blue-600",
+        },
+      };
+      break;
+    case "dark-blue":
+      config.button.color = {
+        active: {
           text: "text-dark-blue-600",
           border: "border-dark-blue-600",
           bg: "bg-dark-blue-600",
@@ -517,6 +535,6 @@ const withSpacing = (config: ButtonConfig, spacing?: ButtonSpacing, wide?: boole
   }
 
   if (wide) {
-    config.button.spacing = "py-1 px-12";
+    config.button.spacing = "py-2.5 px-10";
   }
 };

@@ -1,5 +1,5 @@
 import { Button } from "../../Button/Button";
-import { IconName } from "../../Icon/Icon";
+import { IconName } from "../../Icon/v0/Icon";
 
 export type SearchResultProps = {
   title?: string;

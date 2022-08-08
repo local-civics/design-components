@@ -57,7 +57,7 @@ export const Search = (props: SearchProps) => {
             </span>
           </label>
           {!!hasResults && (
-            <div className="grid grid-cols-1 w-full gap-1 mt-4 max-h-[24rem] overflow-scroll">{props.results}</div>
+            <div className="grid grid-cols-1 w-full gap-1 mt-4 max-h-[24rem] overflow-auto">{props.results}</div>
           )}
 
           {!hasResults && <div className="h-4" />}

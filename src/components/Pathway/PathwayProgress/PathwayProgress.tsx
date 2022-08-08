@@ -46,7 +46,7 @@ export const PathwayProgress = (props: PathwayProgressProps) => {
         )}
         <div className="grow grid grid-cols-1 gap-2 items-center">
           <div>
-            {props.title && <p className="capitalize text-sm text-slate-400">{props.title}</p>}
+            {props.title && <p className="capitalize text-xs text-slate-400">{props.title}</p>}
             <div className={classname(config.progress)}>
               <Progress start={proficiency} end={nextProficiency} />
             </div>
@@ -59,7 +59,7 @@ export const PathwayProgress = (props: PathwayProgressProps) => {
                 <p className={classname(config.xp.suffix)}>XP</p>
               </div>
             )}
-            {!!props.level && (
+            {height !== "sm" && !!props.level && (
               <p className={classname(config.magnitude)}>
                 {compact(nextProficiency - proficiency)} exp. until level {props.level + 1}
               </p>

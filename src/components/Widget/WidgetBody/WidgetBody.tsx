@@ -16,7 +16,7 @@ export type WidgetBodyProps = {
  */
 export const WidgetBody = (props: WidgetBodyProps) => {
   const spacing = props.spacing || "sm";
-  const className = builder("lg:min-h-32")
+  const className = builder()
     .if(spacing === "sm", "p-2")
     .if(spacing === "md", "p-5")
     .build();

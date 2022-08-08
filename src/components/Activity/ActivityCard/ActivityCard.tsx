@@ -87,7 +87,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
     <Modal onClose={props.onClose} visible isLoading={!props.headline}>
       <div className={className}>
         <img className="w-full h-60 object-cover" alt={props.headline} src={props.imageURL} />
-        <div className="w-full grid grid-cols-1 gap-2 sm:flex p-5 border-b border-gray-200">
+        <div className="w-full grid grid-cols-1 gap-2 sm:flex sm:place-content-between p-5 border-b border-gray-200">
           <div className="flex items-start grow md:max-w-[22rem]">
             <div className="inline-block min-w-6 w-6 h-6 text-slate-600">
               <Icon name={(props.pathway as IconName) || "explore"} />
@@ -104,20 +104,22 @@ export const ActivityCard = (props: ActivityCardProps) => {
 
           <div className="flex shrink-0 items-center gap-2 max-h-[12rem]">
             <ActionButton />
-            { !props.formId && <Button
-              disabled={!props.canReflect}
-              spacing="md"
-              border="rounded"
-              color="sky"
-              theme="dark"
-              text="Reflect"
-              size="md"
-              onClick={props.onReflect}
-            /> }
+            {!props.formId && (
+              <Button
+                disabled={!props.canReflect}
+                spacing="md"
+                border="rounded"
+                color="sky"
+                theme="dark"
+                text="Reflect"
+                size="md"
+                onClick={props.onReflect}
+              />
+            )}
           </div>
         </div>
 
-        <div className="w-full max-h-[20rem] overflow-scroll">
+        <div className="w-full max-h-[20rem] overflow-auto">
           <div className="w-full p-5 border-b border-gray-200 grid grid-cols-1 gap-4">
             {props.summary && (
               <div className="text-slate-600 grid grid-cols-1 gap-4">

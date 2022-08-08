@@ -1,13 +1,13 @@
 {
   "name": "@local-civics/design-components",
-  "version": "1.0.0-alpha.22",
+  "version": "1.0.8-alpha.5",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
+    "start": "start-storybook -h localhost -p 6006",
     "build": "rollup -c && tsc",
     "watch": "rollup -cw",
     "test": "jest --coverage=true --passWithNoTests",
-    "storybook": "start-storybook -h localhost -p 6006",
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic",
     "fmt": "npx prettier --write src"
@@ -33,6 +33,11 @@
     "@storybook/addon-postcss": "^2.0.0",
     "@storybook/node-logger": "^6.5.9",
     "@storybook/react": "^6.5.9",
+<<<<<<< HEAD
+=======
+    "@svgr/rollup": "^6.3.1",
+    "@svgr/webpack": "^5.5.0",
+>>>>>>> master
     "@tailwindcss/line-clamp": "^0.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.3.0",

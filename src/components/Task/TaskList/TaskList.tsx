@@ -38,7 +38,7 @@ export const TaskList = (props: TaskListProps) => {
           </p>
         </div>
       )}
-      {hasContent && <div className="grid grid-cols-1 overflow-scroll">{props.children}</div>}
+      {hasContent && <div className="grid grid-cols-1 overflow-auto">{props.children}</div>}
     </>
   );
   return (

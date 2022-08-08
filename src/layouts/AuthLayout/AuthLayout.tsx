@@ -82,7 +82,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
         </NavBar>
 
         {props.children && (
-          <section className="absolute top-0 left-0 h-full overflow-scroll pt-16 w-full">{props.children}</section>
+          <section className="absolute top-0 left-0 h-full overflow-auto pt-16 w-full">{props.children}</section>
         )}
 
         {!props.children && (
@@ -97,7 +97,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
                 {/* Left Panel */}
                 {props.sidebar && (
                   <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem] shrink-0">
-                    <div className="flex flex-col gap-4 lg:gap-2">{props.sidebar}</div>
+                    <div className="flex flex-col gap-4 lg:gap-x-2 lg:gap-y-3">{props.sidebar}</div>
                     <p className="hidden place-self-center lg:inline-block text-xs text-slate-300">
                       Local Civics © {new Date().getFullYear()}
                     </p>
@@ -108,7 +108,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
                 {(props.subheader || props.main) && (
                   <div className="grow grid grid-cols-1 max-w-full overflow-x-hidden md:flex md:flex-col gap-4 lg:gap-2">
                     {props.subheader && (
-                      <div className="lg:min-h-32 relative grid grid-cols-1 md:flex w-full gap-4 lg:gap-2">
+                      <div className="relative grid grid-cols-1 md:flex w-full gap-4 lg:gap-2">
                         {props.subheader}
                       </div>
                     )}

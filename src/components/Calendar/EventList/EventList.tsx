@@ -37,7 +37,7 @@ export const EventList = (props: EventListProps) => {
       </WidgetHeader>
       <WidgetBody>
         <Loader isLoading={props.isLoading}>
-          {hasChildren && <div className="grid grid-cols-1 max-h-[30rem] overflow-scroll gap-2">{props.children}</div>}
+          {hasChildren && <div className="grid grid-cols-1 max-h-[30rem] overflow-auto gap-2">{props.children}</div>}
           {!hasChildren && (
             <div className="grid justify-items-center content-center h-[16rem] lg:h-[22rem]">
               <p className="text-sm text-center align-middle leading-6 font-semibold text-slate-300">
