@@ -24,10 +24,8 @@ module.exports = {
           400: "#0170BB",
           600: "#015f9f",
         },
-<<<<<<< HEAD
         "brown": {
           600: "#505050",
-=======
         "sky-blue": {
           200: "#A3E4F3",
           400: "#3BD0F2",
@@ -35,7 +33,6 @@ module.exports = {
         "dark-blue": {
           400: "#232A3A",
           600: "#0a0f2e",
->>>>>>> master
         },
       },
     },

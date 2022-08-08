@@ -33,11 +33,8 @@
     "@storybook/addon-postcss": "^2.0.0",
     "@storybook/node-logger": "^6.5.9",
     "@storybook/react": "^6.5.9",
-<<<<<<< HEAD
-=======
     "@svgr/rollup": "^6.3.1",
     "@svgr/webpack": "^5.5.0",
->>>>>>> master
     "@tailwindcss/line-clamp": "^0.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.3.0",
