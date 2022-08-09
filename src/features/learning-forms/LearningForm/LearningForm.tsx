@@ -67,16 +67,16 @@ export const LearningForm = (props: LearningFormProps) => {
         <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
           <div
             onClick={() => setShowExitDialogue(true)}
-            className="flex gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
+            className="flex h-max gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
           >
             <div className="w-3 h-3 min-w-3">
               <Icon name="leftArrow" />
             </div>
             <span className="text-md">Go back</span>
           </div>
-          {!!props.displayName && <h2 className="font-semibold text-2xl">{props.displayName}</h2>}
-          {!!props.description && <p className="whitespace-pre-line">{props.description}</p>}
-          {!!props.eta && <p className="text-sm font-semibold">Estimated Completion Time: {props.eta}</p>}
+          {!!props.displayName && <h2 className="h-max font-semibold text-2xl">{props.displayName}</h2>}
+          {!!props.description && <p className="h-max whitespace-pre-line">{props.description}</p>}
+          {!!props.eta && <p className="text-sm h-max font-semibold">Estimated Completion Time: {props.eta}</p>}
         </div>
         <img className="grow h-full w-full object-cover" alt={props.displayName} src={props.imageURL} />
       </div>
