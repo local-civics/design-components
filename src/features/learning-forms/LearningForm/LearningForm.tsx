@@ -9,8 +9,8 @@ import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";
  */
 export type LearningFormProps = {
   formId?: string;
-  headline?: string;
-  summary?: string;
+  displayName?: string;
+  description?: string;
   eta?: string;
   imageURL?: string;
   reflection?: string;
@@ -74,11 +74,11 @@ export const LearningForm = (props: LearningFormProps) => {
             </div>
             <span className="text-md">Go back</span>
           </div>
-          {!!props.headline && <h2 className="font-semibold text-2xl">{props.headline}</h2>}
-          {!!props.summary && <p className="whitespace-pre-line">{props.summary}</p>}
+          {!!props.displayName && <h2 className="font-semibold text-2xl">{props.displayName}</h2>}
+          {!!props.description && <p className="whitespace-pre-line">{props.description}</p>}
           {!!props.eta && <p className="text-sm font-semibold">Estimated Completion Time: {props.eta}</p>}
         </div>
-        <img className="grow h-full w-full object-cover" alt={props.headline} src={props.imageURL} />
+        <img className="grow h-full w-full object-cover" alt={props.displayName} src={props.imageURL} />
       </div>
 
       <form className="w-full max-w-[62.5rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>

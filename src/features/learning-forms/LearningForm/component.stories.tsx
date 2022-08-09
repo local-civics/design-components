@@ -16,8 +16,8 @@ export default {
 const Template: Story<LearningFormProps> = (args) => (
   <div className="font-proxima m-auto">
     <LearningForm
-      headline="College Explorer Scavenger Hunt (CUNY)"
-      summary={`Undergrad Spotlights are an opportunity to learn about different colleges and universities from the people who know them best— current students! Hear their thoughts on the college search & applications, choosing a major, and more.
+      displayName="College Explorer Scavenger Hunt (CUNY)"
+      description={`Undergrad Spotlights are an opportunity to learn about different colleges and universities from the people who know them best— current students! Hear their thoughts on the college search & applications, choosing a major, and more.
 
 In this Undergrad Spotlight, Sam Lee shares about her Cornell experience! Sam discusses the importance of authenticity in an application, how homework in college differs from high school, and her life studying engineering/information science in Ithaca.
 `}
