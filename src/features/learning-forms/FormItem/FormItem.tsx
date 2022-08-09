@@ -403,6 +403,12 @@ const Image = (props: FormItemProps) => {
   const [scale, setScale] = React.useState("");
   const scaleUp = () => {
     switch (scale) {
+      case "scale-[0.50]":
+        setScale("scale-[0.75]");
+        return;
+      case "scale-[0.75]":
+        setScale("");
+        return;
       case "":
         setScale("scale-[1.25]");
         return;
@@ -420,6 +426,12 @@ const Image = (props: FormItemProps) => {
 
   const scaleDown = () => {
     switch (scale) {
+      case "scale-[0.75]":
+        setScale("scale-[0.50]");
+        return;
+      case "":
+        setScale("scale-[0.75]");
+        return;
       case "scale-[1.25]":
         setScale("");
         return;
@@ -437,7 +449,7 @@ const Image = (props: FormItemProps) => {
 
   return (
     <div className="relative max-w-[25rem] md:max-w-[40rem] md:w-[40rem] overflow-hidden">
-      <img className={`h-full w-full object-cover ${scale}`} alt={props.headline} src={props.url} />
+      <img className={`h-full max-h-[25rem] w-full object-cover ${scale}`} alt={props.headline} src={props.url} />
       <div className="absolute rounded-sm shadow-md bottom-5 right-5 z-5 bg-gray-100 font-bold">
         <span className="p-5 cursor-pointer text-md text-gray-400 hover:text-gray-600" onClick={scaleUp}>
           +
