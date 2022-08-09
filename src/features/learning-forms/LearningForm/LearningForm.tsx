@@ -75,10 +75,10 @@ export const LearningForm = (props: LearningFormProps) => {
             <span className="text-md">Go back</span>
           </div>
           {!!props.displayName && <h2 className="h-max font-semibold text-2xl">{props.displayName}</h2>}
-          {!!props.description && <p className="h-max whitespace-pre-line">{props.description}</p>}
+          {!!props.description && <p className="h-max max-h-[14rem] overflow-y-auto whitespace-pre-line">{props.description}</p>}
           {!!props.eta && <p className="text-sm h-max font-semibold">Estimated Completion Time: {props.eta}</p>}
         </div>
-        <img className="grow h-full w-full object-cover" alt={props.displayName} src={props.imageURL} />
+        <img className="grow h-full max-h-[30rem] w-full object-cover" alt={props.displayName} src={props.imageURL} />
       </div>
 
       <form className="w-full max-w-[62.5rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
