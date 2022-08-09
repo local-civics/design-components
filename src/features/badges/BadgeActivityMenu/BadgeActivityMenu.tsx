@@ -11,6 +11,8 @@ type CriterionProps = {
   displayName?: string;
   namespace?: string;
   options?: BadgeActivityProps[];
+
+  onClick?: () => void;
 };
 
 /**

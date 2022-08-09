@@ -23,7 +23,7 @@ const Template: Story<BadgeActivityMenuProps> = (args) => (
           displayName: "Live Resume Workshops",
           options: [
             {
-              activityName: "Resume Workshop",
+              activityName: "Civic Skills: Community Engagement Strategies",
               xp: 500,
               startTime: "2022-06-05T02:53:05.929149Z",
               imageURL: "https://cdn.localcivics.io/rc/event/sponsored.jpg",

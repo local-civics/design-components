@@ -104,14 +104,14 @@ export const BadgeCard = (props: BadgeCardProps) => {
                           <span className="font-semibold">{choice.activityName}</span>
                           <span
                             onClick={props.onMoreChoices}
-                            className="align-middle ml-1 text-xs cursor-pointer underline text-sky-600 hover:text-sky-700"
+                            className="align-middle ml-1 text-xs cursor-pointer whitespace-nowrap underline text-sky-600 hover:text-sky-700"
                           >
                             (More Choices)
                           </span>
                         </div>
                         <div className="text-xs">
                           <span>{c.displayName}</span>
-                          {!!choice.xp && <span className="ml-1 text-green-500 font-semibold">{choice.xp} points</span>}
+                          {!!choice.xp && <span className="ml-1 text-green-500 font-semibold whitespace-nowrap">{choice.xp} points</span>}
                         </div>
                       </div>
                       <div className="shrink-0 w-full max-w-[7rem]">
