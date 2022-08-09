@@ -21,6 +21,7 @@ type CriterionProps = {
  */
 export type BadgeCardProps = {
   icon?: IconName;
+  isLoading?: boolean
   displayName?: string;
   imageURL?: string;
   level?: number;
@@ -28,6 +29,7 @@ export type BadgeCardProps = {
   criteria?: CriterionProps[];
   choices?: BadgeActivityProps[];
   canSubmit?: boolean;
+  finishedAt?: string;
 
   onMoreChoices?: () => void;
   onClose?: () => void;
@@ -55,7 +57,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
   });
 
   return (
-    <Card onClose={props.onClose}>
+    <Card isLoading={props.isLoading} onClose={props.onClose}>
       <div className="pb-5 text-zinc-600">
         <div className="pb-5 px-5 flex gap-x-2">
           <BadgeEmblem
@@ -102,12 +104,12 @@ export const BadgeCard = (props: BadgeCardProps) => {
                       <div className="grow">
                         <div>
                           <span className="font-semibold">{choice.activityName}</span>
-                          <span
+                          { !props.finishedAt && <span
                             onClick={props.onMoreChoices}
                             className="align-middle ml-1 text-xs cursor-pointer whitespace-nowrap underline text-sky-600 hover:text-sky-700"
                           >
                             (More Choices)
-                          </span>
+                          </span> }
                         </div>
                         <div className="text-xs">
                           <span>{c.displayName}</span>
@@ -132,7 +134,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
             </div>
           </div>
         )}
-        {criteria.length > 0 &&
+        { !props.finishedAt && criteria.length > 0 &&
             <div className="pt-5 px-5 flex border-t border-zinc-200">
               <div className="w-full max-w-[7rem] ml-auto">
                 <Button
