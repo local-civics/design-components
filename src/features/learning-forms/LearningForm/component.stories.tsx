@@ -10,90 +10,131 @@ export default {
   component: LearningForm,
 };
 
+const publicSpeakingForm: LearningFormProps = {
+    "formId": "5b0c2c0f-5f23-48ee-a0af-ed4f08ab23fc",
+    "displayName": "Public Speaking",
+    "description": "Public speaking is a huge part of getting the job done when it comes to enacting change in the world. We need to be able to effectively communicate our views while keeping in mind the audience and their unique knowledge, point of view, and wants/needs.\n\nIn this activity, you will analyze the effectiveness of content and delivery with regard to a particular purpose and the speaker's intended audience.\n\nEstimated Completion Time: 15-20 min.",
+    "imageURL": "https://uploads-ssl.webflow.com/5ead22f7b41a94042ab113cd/623a0f01f2c0f77af763932c_publicSpeaking.png",
+    "eta": "30m",
+    "items": [
+        {
+            "itemId": "2d8ea25f-cb7b-49c7-a67d-5882b907a7a3",
+            "displayName": "Choose ONE of the 5-min. videos below and respond to the questions that follow.",
+            "description": "You may wish to scroll down and preview the questions so you know what you are looking for in the video!",
+            "format": "text"
+        },
+        {
+            "itemId": "32e327f0-2b07-4524-b302-ce43ba5f1fe2",
+            "displayName": "Graduation Speech at Harvard Graduate School of Education — Donovan Livingston",
+            "format": "embed",
+            "url": "https://www.youtube.com/embed/9XGUpKITeJM"
+        },
+        {
+            "itemId": "08b40fa4-5baf-465c-ad32-90f7a93aa843",
+            "displayName": "Speech at the United Nations — Severn Suzuki",
+            "format": "embed",
+            "url": "https://www.youtube.com/embed/d1I6ljzaY9k"
+        },
+        {
+            "itemId": "967b43f1-31ba-4745-856b-2c8d4ff6944c",
+            "displayName": "Virgin Island History Month Speech at the U.S. House of Representatives — Congresswoman Stacey Plaskett",
+            "format": "embed",
+            "url": "https://www.youtube.com/embed/kQTPT9BFaSU"
+        },
+        {
+            "itemId": "6f2d63e8-cd08-4fad-ab6f-f7b06c4bbd44",
+            "displayName": "Write a brief overview of the speech you chose. Who is the speaker? What is the purpose of their speech? Where and when is the speech being given?",
+            "description": "(2-3 sentences)",
+            "format": "question",
+            "questionType": "text",
+            "paragraph": true,
+            "required": true
+        },
+        {
+            "itemId": "a78fbdf6-640d-458e-ab0b-0d4ff963260c",
+            "displayName": "Who is the *audience* for this speech? What are their \"needs\"/what type of message are they expecting to hear in this space?",
+            "description": "(1-2 sentences)",
+            "format": "question",
+            "questionType": "text",
+            "paragraph": true,
+            "required": true
+        },
+        {
+            "itemId": "7d829693-2fed-4281-b095-666b98b5a697",
+            "displayName": "Which of the following verbal techniques did you hear the speaker use?",
+            "description": "(Select all that apply!)",
+            "format": "question",
+            "questionType": "checkbox",
+            "options": [
+                "Proper volume/loudness",
+                "Proper speed/pace (not too fast or too slow)",
+                "Avoid filler words (few \"ums,\" \"uhs,\" \"ya knows,\" etc.)",
+                "Good voice quality (not breathy, not nasally, not too harsh or raspy)",
+                "Correct pronunciation (saying the words correctly)",
+                "Clear articulation (each word is clear and words do not mix together)",
+                "Expressive (uses emphasis and pauses to highlight important moments)",
+                "Energetic (shows passion and excitement to increase audience engagement)"
+            ],
+            "required": true
+        },
+        {
+            "itemId": "a881cee9-72c1-4015-84cc-bb4443f5edde",
+            "displayName": "Which of the following non-verbal techniques did you see the speaker use?",
+            "description": "(Select all that apply!)",
+            "format": "question",
+            "questionType": "checkbox",
+            "options": [
+                "Eye contact (does not read from notes the entire time)",
+                "Hand gestures (without being too distracting!)",
+                "Facial expression (without being too distracting!)",
+                "Correct posture (stands tall and does not hunch or fidget)",
+                "Professional appearance (looks appropriately dressed for the event)"
+            ],
+            "required": true
+        },
+        {
+            "itemId": "11fe271a-afc7-45b7-a45c-1c4c92fc1020",
+            "displayName": "Overall, do you think the speaker was *effective* in this speech? Why or why not?",
+            "description": "(2-3 sentences)",
+            "format": "question",
+            "questionType": "text",
+            "paragraph": true,
+            "required": true
+        },
+        {
+            "itemId": "658834a6-996e-4df7-b608-f7400e16f43e",
+            "displayName": "How could the speaker have *improved* their speech? Think about both verbal and non-verbal techniques, as well as the actual content.",
+            "description": "(2-3 sentences)",
+            "format": "question",
+            "questionType": "text",
+            "paragraph": true,
+            "required": true
+        },
+        {
+            "itemId": "3903a359-dd04-4789-b659-86e88f6757c4",
+            "displayName": "REFLECTION: What are some public speaking techniques (both verbal & non-verbal) that YOU want to practice? How would practicing those skills improve your confidence and abilities speaking publicly?",
+            "description": "(1-2 sentences)",
+            "format": "question",
+            "questionType": "text",
+            "paragraph": true,
+            "required": true
+        },
+        {
+            "itemId": "e14dab06-d5e9-4da3-b5c2-a6029d02d0f5",
+            "displayName": "After you press \"Submit,\" be sure to submit a reflection and rating for this activity.",
+            "description": "Tell us a bit about what you learned, how this activity helped you on your civic leadership journey, or share any feedback/questions in your reflection!",
+            "format": "text"
+        }
+    ]
+}
+
 /**
  * Component storybook template
  */
 const Template: Story<LearningFormProps> = (args) => (
   <div className="font-proxima m-auto">
     <LearningForm
-      displayName="College Explorer Scavenger Hunt (CUNY)"
-      description={`Undergrad Spotlights are an opportunity to learn about different colleges and universities from the people who know them best— current students! Hear their thoughts on the college search & applications, choosing a major, and more.
-
-In this Undergrad Spotlight, Sam Lee shares about her Cornell experience! Sam discusses the importance of authenticity in an application, how homework in college differs from high school, and her life studying engineering/information science in Ithaca.
-`}
-      imageURL="https://cdn.localcivics.io/area/recreation.jpg"
-      eta="30m"
-      items={[
-        {
-          itemId: "e2eae1bd-a536-4e1a-aad9-933a485bd83b",
-          displayName: "Upload a file as proof.",
-          format: "question",
-          questionType: "file upload",
-        },
-        {
-          itemId: "d2771822-fa11-4b1f-a379-b9bf30e3b395",
-          displayName: "Select one from the dropdown.",
-          format: "question",
-          questionType: "drop down",
-          options: ["Option 1"],
-        },
-        {
-          itemId: "85f481cd-1f4b-47b0-a81a-70fec273ff90",
-          displayName: "What color(s) would you like to order?",
-          format: "question",
-          questionType: "checkbox",
-          options: ["color 1", "color 2", "color 3", "color 4"],
-        },{
-          itemId: "f89c3e8e-548e-48ca-bcf0-dcd763122d20",
-          displayName: "Study the images below.",
-          format: "text",
-        },{
-          itemId: "f89c3e8e-548e-48ca-bcf0-dcd763122d23",
-          displayName: "Study this image.",
-          url: "https://cdn.localcivics.io/area/recreation.jpg",
-          format: "image",
-        },
-        {
-          itemId: "c5e5cf03-6a49-45a5-8330-e415f1954004",
-          displayName: "What date did it occur?",
-          format: "question",
-          questionType: "date",
-        },
-        {
-          itemId: "77655601-7648-4096-b392-01f85dd176a9",
-          displayName: "Listen while you study.",
-          format: "embed",
-          url: "https://www.youtube.com/embed/85HsSNdymo8",
-        },
-        {
-          itemId: "2f6126ad-3a2a-40a7-a442-92afa48700a7",
-          displayName: "Are you a new or existing customer?",
-          format: "question",
-          questionType: "radio",
-          options: ["I am a new customer", "I am an existing customer"],
-        },
-        {
-          itemId: "9750cc0e-7dc2-49bb-9d19-efc6c0c288ec",
-          displayName: "Questions and comments",
-          format: "question",
-          questionType: "text",
-          paragraph: true,
-        },
-        {
-          itemId: "a4b2e738-0f69-40c9-97e0-1602bb3260b1",
-          displayName: "What is the item you would like to order?",
-          summary: "Please enter the product number",
-          format: "question",
-          questionType: "text",
-          required: true,
-        },
-        {
-          itemId: "d986106b-f9ba-40e9-82b9-84e611f7c910",
-          displayName: "What time did it occur?",
-          format: "question",
-          questionType: "time",
-        },
-      ]}
+      {...publicSpeakingForm}
       {...args}
       onSubmit={async (reflection, rating) => {
         args.onSubmit && (await args.onSubmit(reflection, rating));

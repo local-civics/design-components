@@ -7,7 +7,7 @@ import { Icon } from "../../../components";
 export type FormItemProps = {
   itemId?: string;
   displayName?: string;
-  summary?: string;
+  description?: string;
   format?: "question" | "image" | "embed" | "text";
   questionType?: "radio" | "checkbox" | "drop down" | "file upload" | "text" | "date" | "time";
   options?: string[];
@@ -68,7 +68,7 @@ export const FormItem = (props: FormItemProps) => {
             )}
             <div className="grow max-w-lg">
               {props.displayName && <p className="text-lg text-slate-600 font-semibold">{props.displayName}</p>}
-              {props.summary && <p className="text-sm text-slate-500">{props.summary}</p>}
+              {props.description && <p className="text-sm text-slate-500">{props.description}</p>}
             </div>
           </div>
           {props.required && <p className="text-sm text-rose-600">*</p>}

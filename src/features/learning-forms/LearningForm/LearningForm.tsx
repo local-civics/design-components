@@ -88,7 +88,7 @@ export const LearningForm = (props: LearningFormProps) => {
 
         <FormItem
           displayName="Almost there, write a short reflection to earn your points!"
-          summary="(1-2 sentences)"
+          description="(1-2 sentences)"
           format="question"
           questionType="text"
           onResponseChange={onChange}
