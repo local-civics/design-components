@@ -87,7 +87,7 @@ export const LearningForm = (props: LearningFormProps) => {
         })}
 
         <FormItem
-          headline="Almost there, write a short reflection to earn your points!"
+          displayName="Almost there, write a short reflection to earn your points!"
           summary="(1-2 sentences)"
           format="question"
           questionType="text"

@@ -6,7 +6,7 @@ import { Icon } from "../../../components";
  */
 export type FormItemProps = {
   itemId?: string;
-  headline?: string;
+  displayName?: string;
   summary?: string;
   format?: "question" | "image" | "embed" | "text";
   questionType?: "radio" | "checkbox" | "drop down" | "file upload" | "text" | "date" | "time";
@@ -58,7 +58,7 @@ export const FormItem = (props: FormItemProps) => {
 
   return (
     <div className={`bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8 ${itemContainerError} ${marginBottom}`}>
-      {props.headline && (
+      {props.displayName && (
         <div className="flex gap-x-1">
           <div className="flex items-start gap-x-4">
             {props.format === "question" && (
@@ -67,7 +67,7 @@ export const FormItem = (props: FormItemProps) => {
               </div>
             )}
             <div className="grow max-w-lg">
-              {props.headline && <p className="text-lg text-slate-600 font-semibold">{props.headline}</p>}
+              {props.displayName && <p className="text-lg text-slate-600 font-semibold">{props.displayName}</p>}
               {props.summary && <p className="text-sm text-slate-500">{props.summary}</p>}
             </div>
           </div>
@@ -144,7 +144,7 @@ const RadioQuestion = (props: FormItemProps) => {
                 required={props.required}
                 type="radio"
                 value={option}
-                name={props.headline}
+                name={props.displayName}
               />
               <div>
                 <span className="font-bold">{String.fromCharCode(65 + index)}.</span> {option}
@@ -192,7 +192,7 @@ const CheckboxQuestion = (props: FormItemProps) => {
                 onChange={onChange}
                 type="checkbox"
                 value={option}
-                name={props.headline}
+                name={props.displayName}
               />
               <div>{option}</div>
             </label>
@@ -221,7 +221,7 @@ const DropDownQuestion = (props: FormItemProps) => {
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none`}
       required={props.required}
-      name={props.headline}
+      name={props.displayName}
       onChange={onChange}
     >
       <option className="cursor-pointer" value="">
@@ -289,7 +289,7 @@ const FileUploadQuestion = (props: FormItemProps) => {
       <div className="-ml-2">
         <input
           type="url"
-          name={props.headline}
+          name={props.displayName}
           required={props.required}
           onChange={onChange}
           value={imageURL}
@@ -327,7 +327,7 @@ const TextQuestion = (props: FormItemProps) => {
           minLength={minimum}
           onChange={onChange}
           onBlur={props.onTextBlur}
-          name={props.headline}
+          name={props.displayName}
           type="text"
           placeholder="Your answer"
           value={response}
@@ -342,7 +342,7 @@ const TextQuestion = (props: FormItemProps) => {
           minLength={minimum}
           onChange={onChange}
           onBlur={props.onTextBlur}
-          name={props.headline}
+          name={props.displayName}
           value={response}
           placeholder="Your answer"
         />
@@ -368,7 +368,7 @@ const DateQuestion = (props: FormItemProps) => {
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
       required={props.required}
       onChange={onChange}
-      name={props.headline}
+      name={props.displayName}
       type="date"
       value={response}
     />
@@ -392,7 +392,7 @@ const TimeQuestion = (props: FormItemProps) => {
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
       required={props.required}
       onChange={onChange}
-      name={props.headline}
+      name={props.displayName}
       type="time"
       value={response}
     />
@@ -449,7 +449,7 @@ const Image = (props: FormItemProps) => {
 
   return (
     <div className="relative max-w-[25rem] md:max-w-[40rem] md:w-[40rem] overflow-hidden">
-      <img className={`h-full max-h-[25rem] w-full object-cover ${scale}`} alt={props.headline} src={props.url} />
+      <img className={`h-full max-h-[25rem] w-full object-cover ${scale}`} alt={props.displayName} src={props.url} />
       <div className="absolute rounded-sm shadow-md bottom-5 right-5 z-5 bg-gray-100 font-bold">
         <span className="p-5 cursor-pointer text-md text-gray-400 hover:text-gray-600" onClick={scaleUp}>
           +
@@ -469,7 +469,7 @@ const Embed = (props: FormItemProps) => {
         className="w-full"
         height="315"
         src={props.url}
-        title={props.headline}
+        title={props.displayName}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
