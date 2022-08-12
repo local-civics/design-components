@@ -18,6 +18,7 @@ export type FormItemProps = {
   journalId?: string;
   questionId?: string;
   responses?: string[];
+  minText?: number
   children?: React.ReactNode;
 
   onResponseChange?: (responses?: string[], file?: Blob) => void;
@@ -55,6 +56,7 @@ export const FormItem = (props: FormItemProps) => {
   };
 
   const marginBottom = props.format === "text" ? "-mb-7" : ""
+  const minimum = props.minText || 100
 
   return (
     <div className={`bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8 ${itemContainerError} ${marginBottom}`}>
@@ -66,9 +68,9 @@ export const FormItem = (props: FormItemProps) => {
                 <Icon name="positive" />
               </div>
             )}
-            <div className="grow max-w-lg">
+            <div className="grow max-w-lg grid grid-cols-1 gap-y-2">
               {props.displayName && <p className="text-lg text-slate-600 font-semibold">{props.displayName}</p>}
-              {props.description && <p className="text-sm text-slate-500">{props.description}</p>}
+              {props.description && <p className="text-sm text-slate-400">{props.description}</p>}
             </div>
           </div>
           {props.required && <p className="text-sm text-rose-600">*</p>}
@@ -83,7 +85,7 @@ export const FormItem = (props: FormItemProps) => {
               <div className="w-4 h-4">
                 <Icon name="negative" />
               </div>
-              <span className="grow text-sm">Must be a minimum of {props.paragraph ? 400 : 100} characters.</span>
+              <span className="grow text-sm">Must be a minimum of ${minimum} characters.</span>
             </div>
           )}
         </div>
@@ -306,7 +308,7 @@ const FileUploadQuestion = (props: FormItemProps) => {
 };
 
 const TextQuestion = (props: FormItemProps) => {
-  const minimum = props.paragraph ? 400 : 100;
+  const minimum = props.minText || 100
   const responses = props.responses || [];
   const response = responses.length > 0 ? responses[0] : "";
 
