@@ -2,7 +2,6 @@ import React from "react";
 
 export type EmailTemplateProps = {
     name?: string;
-    username?: string;
     imageURL?: string;
     videolink?: string;
     weblink?: string;
