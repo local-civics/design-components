@@ -33,10 +33,10 @@ export type FormItemProps = {
 export const FormItem = (props: FormItemProps) => {
   const responses = props.responses || [];
   const notEmpty = responses.length > 0 && responses[0].trim() !== "";
+  const minimum = props.minText || 100
   const isTextError =
     notEmpty &&
-    props.questionType === "text" &&
-    ((props.paragraph && responses[0].trim().length < 400) || (!props.paragraph && responses[0].trim().length < 100));
+    props.questionType === "text" && responses[0].trim().length < minimum;
   const isValidAnswer = notEmpty && (props.questionType !== "text" || !isTextError);
   const checkIconColor = isValidAnswer ? "text-green-500" : "text-gray-300";
   const contentMaxWidth = props.format === "question" ? "max-w-lg" : "";
@@ -55,8 +55,13 @@ export const FormItem = (props: FormItemProps) => {
     }
   };
 
+  React.useEffect(() => {
+    if(!isTextError){
+      setShowError(false);
+    }
+  }, [isTextError])
+
   const marginBottom = props.format === "text" ? "-mb-7" : ""
-  const minimum = props.minText || 100
 
   return (
     <div className={`bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8 ${itemContainerError} ${marginBottom}`}>
@@ -85,7 +90,7 @@ export const FormItem = (props: FormItemProps) => {
               <div className="w-4 h-4">
                 <Icon name="negative" />
               </div>
-              <span className="grow text-sm">Must be a minimum of ${minimum} characters.</span>
+              <span className="grow text-sm">Must be a minimum of {minimum} characters.</span>
             </div>
           )}
         </div>
@@ -163,19 +168,26 @@ const CheckboxQuestion = (props: FormItemProps) => {
   const options = props.options || [];
   const responses = props.responses || [];
   const values: { [key: string]: boolean } = {};
+  const ref = React.useRef<HTMLInputElement>(null)
+
   responses.forEach((key) => (values[key] = true));
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (props.onResponseChange) {
+  const onOtherChange = (e: React.ChangeEvent<HTMLInputElement>) => setResponseValue(e.target.value ? `other: ${e.target.value}` : "")
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setResponseValue(e.target.value)
+  const setResponseValue = (value: string) => {
+    if (value && props.onResponseChange) {
       const newResponses = [];
       responses.forEach((v) => {
-        if (v !== e.target.value) {
+        const outOfScope = !(v.startsWith("other: ") && value.startsWith("other: "))
+          && v !== value
+
+        if (outOfScope) {
           newResponses.push(v);
         }
       });
 
-      if (!responses.includes(e.target.value)) {
-        newResponses.push(e.target.value);
+      if(!responses.includes(value)){
+        newResponses.push(value);
       }
 
       props.onResponseChange(newResponses);
@@ -190,13 +202,14 @@ const CheckboxQuestion = (props: FormItemProps) => {
             <label className="flex gap-x-4 items-center">
               <input
                 className="cursor-pointer"
-                checked={values[option]}
-                onChange={onChange}
+                checked={values[option] || (!option && values[`other: ${ref.current?.value}`])}
+                onChange={option ? onChange : onOtherChange}
                 type="checkbox"
-                value={option}
+                value={option||ref.current?.value}
                 name={props.displayName}
               />
-              <div>{option}</div>
+              { option && <div>{option}</div> }
+              { !option && <>Other:<input onChange={onOtherChange} placeholder="Input another option" ref={ref}/></>}
             </label>
           </div>
         );

@@ -93,6 +93,7 @@ export const LearningForm = (props: LearningFormProps) => {
           questionType="text"
           onResponseChange={onChange}
           required
+          paragraph
           responses={reflection ? [reflection] : undefined}
         />
 
