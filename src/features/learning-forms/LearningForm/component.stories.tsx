@@ -49,6 +49,7 @@ const parksAndGreenForm: LearningFormProps = {
                 "Benches",
                 ""
             ],
+            "responses": ["Other: Another one"],
             "required": true
         }
     ]
@@ -185,9 +186,8 @@ const Template: Story<LearningFormProps> = (args) => {
             items={args.items?.map(i => {
                 return {
                     ...i,
-                    responses: state[i.itemId||""],
+                    responses: i.responses || state[i.itemId||""],
                     onResponseChange: (responses) => {
-                        console.log({...state, [i.itemId||""]: responses})
                         setState({...state, [i.itemId||""]: responses})
                     }
                 }

@@ -169,16 +169,17 @@ const CheckboxQuestion = (props: FormItemProps) => {
   const responses = props.responses || [];
   const values: { [key: string]: boolean } = {};
   const ref = React.useRef<HTMLInputElement>(null)
+  const response = (responses.length > 0 ? responses[0] : ref.current?.value || "").replace("Other: ", "");
 
   responses.forEach((key) => (values[key] = true));
 
-  const onOtherChange = (e: React.ChangeEvent<HTMLInputElement>) => setResponseValue(e.target.value ? `other: ${e.target.value}` : "")
+  const onOtherChange = (e: React.ChangeEvent<HTMLInputElement>) => setResponseValue(e.target.value ? `Other: ${e.target.value}` : "")
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setResponseValue(e.target.value)
   const setResponseValue = (value: string) => {
     if (value && props.onResponseChange) {
       const newResponses = [];
       responses.forEach((v) => {
-        const outOfScope = !(v.startsWith("other: ") && value.startsWith("other: "))
+        const outOfScope = !(v.startsWith("Other: ") && value.startsWith("Other: "))
           && v !== value
 
         if (outOfScope) {
@@ -202,14 +203,14 @@ const CheckboxQuestion = (props: FormItemProps) => {
             <label className="flex gap-x-4 items-center">
               <input
                 className="cursor-pointer"
-                checked={values[option] || (!option && values[`other: ${ref.current?.value}`])}
+                checked={values[option] || (!option && values[`Other: ${response}`])}
                 onChange={option ? onChange : onOtherChange}
                 type="checkbox"
-                value={option||ref.current?.value}
+                value={option||response}
                 name={props.displayName}
               />
               { option && <div>{option}</div> }
-              { !option && <>Other:<input onChange={onOtherChange} placeholder="Input another option" ref={ref}/></>}
+              { !option && <>Other: <input defaultValue={response} onChange={onOtherChange} placeholder="Input another option" ref={ref}/></>}
             </label>
           </div>
         );
@@ -485,7 +486,6 @@ const Embed = (props: FormItemProps) => {
         height="315"
         src={props.url}
         title={props.displayName}
-        frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       />
