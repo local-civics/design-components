@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Card } from "../../../components/Card";
+import * as React         from "react";
+import { Card }           from "../../../components";
 import { Icon, IconName } from "../../../components/Icon/Icon";
 
 /**
@@ -23,6 +23,7 @@ export type BadgeActivityProps = {
   isSelected?: boolean;
 
   onToggle?: () => void;
+  onClick?: () => void;
 };
 
 /**
@@ -67,7 +68,7 @@ export const BadgeActivity = (props: BadgeActivityProps) => {
               <p className="font-semibold text-sm">{props.activityName}</p>
               <p className="text-xs">{props.criteriaName}</p>
             </div>
-            <div className="h-max py-2 px-5 rounded-md bg-sky-300 font-semibold">{props.xp}pts</div>
+            <div className="text-xs h-max py-2 px-4 rounded-md bg-sky-300 font-semibold">{props.xp}pts</div>
           </div>
 
           <div className="flex">

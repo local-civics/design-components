@@ -38,7 +38,7 @@ const Template: Story<BadgeCardProps> = (args) => (
         ]}
         choices={[
           {
-            activityName: "Scavenger Hunt (CUNY)",
+            activityName: "College Explorer Scav Hunt: SUNY",
             xp: 300,
             completedAt: "2020-12-22T02:53:05.929149Z",
           },

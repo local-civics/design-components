@@ -1,4 +1,5 @@
-import React from "react";
+import {raw}    from "@storybook/react";
+import React    from "react";
 import { Icon } from "../../../components";
 
 /**
@@ -6,8 +7,8 @@ import { Icon } from "../../../components";
  */
 export type FormItemProps = {
   itemId?: string;
-  headline?: string;
-  summary?: string;
+  displayName?: string;
+  description?: string;
   format?: "question" | "image" | "embed" | "text";
   questionType?: "radio" | "checkbox" | "drop down" | "file upload" | "text" | "date" | "time";
   options?: string[];
@@ -18,6 +19,7 @@ export type FormItemProps = {
   journalId?: string;
   questionId?: string;
   responses?: string[];
+  minText?: number
   children?: React.ReactNode;
 
   onResponseChange?: (responses?: string[], file?: Blob) => void;
@@ -32,10 +34,10 @@ export type FormItemProps = {
 export const FormItem = (props: FormItemProps) => {
   const responses = props.responses || [];
   const notEmpty = responses.length > 0 && responses[0].trim() !== "";
+  const minimum = props.minText || 100
   const isTextError =
     notEmpty &&
-    props.questionType === "text" &&
-    ((props.paragraph && responses[0].trim().length < 400) || (!props.paragraph && responses[0].trim().length < 100));
+    props.questionType === "text" && responses[0].trim().length < minimum;
   const isValidAnswer = notEmpty && (props.questionType !== "text" || !isTextError);
   const checkIconColor = isValidAnswer ? "text-green-500" : "text-gray-300";
   const contentMaxWidth = props.format === "question" ? "max-w-lg" : "";
@@ -54,11 +56,17 @@ export const FormItem = (props: FormItemProps) => {
     }
   };
 
+  React.useEffect(() => {
+    if(!isTextError){
+      setShowError(false);
+    }
+  }, [isTextError])
+
   const marginBottom = props.format === "text" ? "-mb-7" : ""
 
   return (
     <div className={`bg-white rounded-md p-5 shadow-sm grid grid-cols-1 gap-y-8 ${itemContainerError} ${marginBottom}`}>
-      {props.headline && (
+      {props.displayName && (
         <div className="flex gap-x-1">
           <div className="flex items-start gap-x-4">
             {props.format === "question" && (
@@ -66,9 +74,9 @@ export const FormItem = (props: FormItemProps) => {
                 <Icon name="positive" />
               </div>
             )}
-            <div className="grow max-w-lg">
-              {props.headline && <p className="text-lg text-slate-600 font-semibold">{props.headline}</p>}
-              {props.summary && <p className="text-sm text-slate-500">{props.summary}</p>}
+            <div className="grow max-w-lg grid grid-cols-1 gap-y-2">
+              {props.displayName && <p className="text-lg text-slate-600 font-semibold">{props.displayName}</p>}
+              {props.description && <p className="text-sm text-slate-400">{props.description}</p>}
             </div>
           </div>
           {props.required && <p className="text-sm text-rose-600">*</p>}
@@ -83,7 +91,7 @@ export const FormItem = (props: FormItemProps) => {
               <div className="w-4 h-4">
                 <Icon name="negative" />
               </div>
-              <span className="grow text-sm">Must be a minimum of {props.paragraph ? 400 : 100} characters.</span>
+              <span className="grow text-sm">Must be a minimum of {minimum} characters.</span>
             </div>
           )}
         </div>
@@ -144,7 +152,7 @@ const RadioQuestion = (props: FormItemProps) => {
                 required={props.required}
                 type="radio"
                 value={option}
-                name={props.headline}
+                name={props.displayName}
               />
               <div>
                 <span className="font-bold">{String.fromCharCode(65 + index)}.</span> {option}
@@ -161,19 +169,29 @@ const CheckboxQuestion = (props: FormItemProps) => {
   const options = props.options || [];
   const responses = props.responses || [];
   const values: { [key: string]: boolean } = {};
+  const ref = React.useRef<HTMLInputElement>(null)
+  const rawResponse = responses.length > 0 ? responses[0] : ref.current?.value || ""
+  const response = rawResponse.replace("Other: ", "")
+  const isOtherResponse = rawResponse.startsWith("Other: ")
+
   responses.forEach((key) => (values[key] = true));
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (props.onResponseChange) {
+  const onOtherChange = (e: React.ChangeEvent<HTMLInputElement>) => setResponseValue(e.target.value ? `Other: ${e.target.value}` : "")
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setResponseValue(e.target.value)
+  const setResponseValue = (value: string) => {
+    if (value && props.onResponseChange) {
       const newResponses = [];
       responses.forEach((v) => {
-        if (v !== e.target.value) {
+        const outOfScope = !(v.startsWith("Other: ") && value.startsWith("Other: "))
+          && v !== value
+
+        if (outOfScope) {
           newResponses.push(v);
         }
       });
 
-      if (!responses.includes(e.target.value)) {
-        newResponses.push(e.target.value);
+      if(!responses.includes(value)){
+        newResponses.push(value);
       }
 
       props.onResponseChange(newResponses);
@@ -187,14 +205,20 @@ const CheckboxQuestion = (props: FormItemProps) => {
           <div key={option}>
             <label className="flex gap-x-4 items-center">
               <input
-                className="cursor-pointer"
-                checked={values[option]}
-                onChange={onChange}
+                className="cursor-pointer shrink-0"
+                checked={values[option] || (!option && values[`Other: ${response}`])}
+                onChange={option ? onChange : onOtherChange}
                 type="checkbox"
-                value={option}
-                name={props.headline}
+                value={option||response}
+                name={props.displayName}
               />
-              <div>{option}</div>
+              { option && <div>{option}</div> }
+              { !option && <>Other: <input className="w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 text-sm placeholder-slate-400 border border-slate-300 rounded-sm shadow-sm
+        focus:outline-none focus:ring-1 focus:ring-sky-500"
+                                           value={isOtherResponse ? response : ""}
+                                           onChange={onOtherChange}
+                                           placeholder="Input another option"
+                                           ref={ref}/></>}
             </label>
           </div>
         );
@@ -221,7 +245,7 @@ const DropDownQuestion = (props: FormItemProps) => {
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none`}
       required={props.required}
-      name={props.headline}
+      name={props.displayName}
       onChange={onChange}
     >
       <option className="cursor-pointer" value="">
@@ -289,16 +313,14 @@ const FileUploadQuestion = (props: FormItemProps) => {
       <div className="-ml-2">
         <input
           type="url"
-          name={props.headline}
+          name={props.displayName}
           required={props.required}
           onChange={onChange}
           value={imageURL}
           placeholder="Paste a url or select a file above"
           className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
           focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-          disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-          invalid:border-pink-500 invalid:text-pink-600
-          focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
+          disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
         />
       </div>
     </div>
@@ -306,7 +328,7 @@ const FileUploadQuestion = (props: FormItemProps) => {
 };
 
 const TextQuestion = (props: FormItemProps) => {
-  const minimum = props.paragraph ? 400 : 100;
+  const minimum = props.minText || 100
   const responses = props.responses || [];
   const response = responses.length > 0 ? responses[0] : "";
 
@@ -320,14 +342,14 @@ const TextQuestion = (props: FormItemProps) => {
     <>
       {!props.paragraph && (
         <input
-          className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
-        focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+          className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 text-sm placeholder-slate-400 border border-slate-300 rounded-sm shadow-sm
+        focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
           required={props.required}
           minLength={minimum}
           onChange={onChange}
           onBlur={props.onTextBlur}
-          name={props.headline}
+          name={props.displayName}
           type="text"
           placeholder="Your answer"
           value={response}
@@ -342,7 +364,7 @@ const TextQuestion = (props: FormItemProps) => {
           minLength={minimum}
           onChange={onChange}
           onBlur={props.onTextBlur}
-          name={props.headline}
+          name={props.displayName}
           value={response}
           placeholder="Your answer"
         />
@@ -368,7 +390,7 @@ const DateQuestion = (props: FormItemProps) => {
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
       required={props.required}
       onChange={onChange}
-      name={props.headline}
+      name={props.displayName}
       type="date"
       value={response}
     />
@@ -392,7 +414,7 @@ const TimeQuestion = (props: FormItemProps) => {
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
       required={props.required}
       onChange={onChange}
-      name={props.headline}
+      name={props.displayName}
       type="time"
       value={response}
     />
@@ -403,6 +425,12 @@ const Image = (props: FormItemProps) => {
   const [scale, setScale] = React.useState("");
   const scaleUp = () => {
     switch (scale) {
+      case "scale-[0.50]":
+        setScale("scale-[0.75]");
+        return;
+      case "scale-[0.75]":
+        setScale("");
+        return;
       case "":
         setScale("scale-[1.25]");
         return;
@@ -420,6 +448,12 @@ const Image = (props: FormItemProps) => {
 
   const scaleDown = () => {
     switch (scale) {
+      case "scale-[0.75]":
+        setScale("scale-[0.50]");
+        return;
+      case "":
+        setScale("scale-[0.75]");
+        return;
       case "scale-[1.25]":
         setScale("");
         return;
@@ -437,7 +471,7 @@ const Image = (props: FormItemProps) => {
 
   return (
     <div className="relative max-w-[25rem] md:max-w-[40rem] md:w-[40rem] overflow-hidden">
-      <img className={`h-full w-full object-cover ${scale}`} alt={props.headline} src={props.url} />
+      <img className={`h-full max-h-[25rem] w-full object-cover ${scale}`} alt={props.displayName} src={props.url} />
       <div className="absolute rounded-sm shadow-md bottom-5 right-5 z-5 bg-gray-100 font-bold">
         <span className="p-5 cursor-pointer text-md text-gray-400 hover:text-gray-600" onClick={scaleUp}>
           +
@@ -457,8 +491,7 @@ const Embed = (props: FormItemProps) => {
         className="w-full"
         height="315"
         src={props.url}
-        title={props.headline}
-        frameBorder="0"
+        title={props.displayName}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       />

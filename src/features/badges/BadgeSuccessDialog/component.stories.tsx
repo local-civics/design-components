@@ -1,7 +1,7 @@
 import React from "react";
 import { Story } from "@storybook/react";
 import { BadgeSuccessDialog, BadgeSuccessDialogProps } from "./BadgeSuccessDialog";
-import { Overlay } from "../../../components/Overlay";
+import { Overlay }                                     from "../../../components";
 
 /**
  * Storybook component configuration
