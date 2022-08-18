@@ -1,4 +1,5 @@
-import React from "react";
+import {raw}    from "@storybook/react";
+import React    from "react";
 import { Icon } from "../../../components";
 
 /**
@@ -169,7 +170,9 @@ const CheckboxQuestion = (props: FormItemProps) => {
   const responses = props.responses || [];
   const values: { [key: string]: boolean } = {};
   const ref = React.useRef<HTMLInputElement>(null)
-  const response = (responses.length > 0 ? responses[0] : ref.current?.value || "").replace("Other: ", "");
+  const rawResponse = responses.length > 0 ? responses[0] : ref.current?.value || ""
+  const response = rawResponse.replace("Other: ", "")
+  const isOtherResponse = rawResponse.startsWith("Other: ")
 
   responses.forEach((key) => (values[key] = true));
 
@@ -202,7 +205,7 @@ const CheckboxQuestion = (props: FormItemProps) => {
           <div key={option}>
             <label className="flex gap-x-4 items-center">
               <input
-                className="cursor-pointer"
+                className="cursor-pointer shrink-0"
                 checked={values[option] || (!option && values[`Other: ${response}`])}
                 onChange={option ? onChange : onOtherChange}
                 type="checkbox"
@@ -210,7 +213,12 @@ const CheckboxQuestion = (props: FormItemProps) => {
                 name={props.displayName}
               />
               { option && <div>{option}</div> }
-              { !option && <>Other: <input defaultValue={response} onChange={onOtherChange} placeholder="Input another option" ref={ref}/></>}
+              { !option && <>Other: <input className="w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 text-sm placeholder-slate-400 border border-slate-300 rounded-sm shadow-sm
+        focus:outline-none focus:ring-1 focus:ring-sky-500"
+                                           value={isOtherResponse ? response : ""}
+                                           onChange={onOtherChange}
+                                           placeholder="Input another option"
+                                           ref={ref}/></>}
             </label>
           </div>
         );
@@ -334,8 +342,8 @@ const TextQuestion = (props: FormItemProps) => {
     <>
       {!props.paragraph && (
         <input
-          className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
-        focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+          className="mt-1 block w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 text-sm placeholder-slate-400 border border-slate-300 rounded-sm shadow-sm
+        focus:outline-none focus:ring-1 focus:ring-sky-500 focus:border-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
           required={props.required}
           minLength={minimum}
