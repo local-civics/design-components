@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/design-components",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
@@ -56,12 +56,10 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "jest": "^28.1.2",
     "jest-config": "^28.0.2",
-    "linkify-it": "^4.0.1",
     "miragejs": "^0.1.43",
     "numeral": "^2.0.6",
     "postcss": "^8.4.5",
     "prettier": "2.7.1",
-    "react-string-replace": "^1.1.0",
     "recharts": "^2.1.9",
     "rollup": "^2.55.1",
     "rollup-plugin-postcss": "^4.0.0",
@@ -72,6 +70,8 @@
     "web-vitals": "^2.1.0"
   },
   "peerDependencies": {
+    "linkify-it": "^4.0.1",
+    "react-string-replace": "^1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
