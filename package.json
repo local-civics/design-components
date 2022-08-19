@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/design-components",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "main": "./dist/index.js",
   "module": "./dist/index.es.js",
   "scripts": {
@@ -40,7 +40,11 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.2.1",
     "@types/jest": "^28.1.4",
+<<<<<<< HEAD
     "@types/node": "^18.0.3",
+=======
+    "@types/linkify-it": "^3.0.2",
+>>>>>>> 826865da487a142ea29f1bbae0d66447ceb308f0
     "@types/numeral": "^2.0.1",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
@@ -56,10 +60,12 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "jest": "^28.1.2",
     "jest-config": "^28.0.2",
+    "linkify-it": "^4.0.1",
     "miragejs": "^0.1.43",
     "numeral": "^2.0.6",
     "postcss": "^8.4.5",
     "prettier": "2.7.1",
+    "react-string-replace": "^1.1.0",
     "recharts": "^2.1.9",
     "rollup": "^2.55.1",
     "rollup-plugin-postcss": "^4.0.0",

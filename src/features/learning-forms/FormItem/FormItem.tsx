@@ -1,4 +1,5 @@
-import {raw}    from "@storybook/react";
+import LinkifyIt    from "linkify-it";
+import reactStringReplace from "react-string-replace"
 import React    from "react";
 import { Icon } from "../../../components";
 
@@ -75,8 +76,8 @@ export const FormItem = (props: FormItemProps) => {
               </div>
             )}
             <div className="grow max-w-lg grid grid-cols-1 gap-y-2">
-              {props.displayName && <p className="text-lg text-slate-600 font-semibold">{props.displayName}</p>}
-              {props.description && <p className="text-sm text-slate-400">{props.description}</p>}
+              {props.displayName && <p className="text-lg text-slate-600 font-semibold whitespace-pre-line">{linkify(props.displayName)}</p>}
+              {props.description && <p className="text-sm text-slate-400 whitespace-pre-line">{linkify(props.description)}</p>}
             </div>
           </div>
           {props.required && <p className="text-sm text-rose-600">*</p>}
@@ -498,3 +499,17 @@ const Embed = (props: FormItemProps) => {
     </div>
   );
 };
+
+const linkify = (text: string) => {
+  const matches = LinkifyIt().match(text)
+  let replacedText = reactStringReplace(text)
+  matches?.forEach(match => {
+      replacedText = reactStringReplace(replacedText, match.raw, () => <a
+          href={match.url}
+          target="_blank"
+          className="hover:underline text-blue-500"
+        >{match.text}</a>)
+  })
+
+  return replacedText
+}
