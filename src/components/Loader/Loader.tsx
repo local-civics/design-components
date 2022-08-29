@@ -13,7 +13,7 @@ export type LoaderProps = {
  * A component for content that is not ready to be displayed.
  */
 export const Loader = (props: LoaderProps) => {
-  const loaderClassName = builder("flex absolute top-0 left-0 h-full w-full m-auto transition ease-in-out duration-500")
+  const loaderClassName = builder("stroke-sky-300 flex absolute top-0 left-0 h-full w-full m-auto transition ease-in-out duration-500")
     .if(!!props.isLoading, "visible opacity-full")
     .else("invisible opacity-0")
     .build();
@@ -30,81 +30,85 @@ export const Loader = (props: LoaderProps) => {
       <div className={containerClassName}>
         {/*<!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->*/}
         <div className={loaderClassName}>
-          <svg
-            className="m-auto stroke-sky-300"
-            width="35"
-            height="35"
-            viewBox="0 0 45 45"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g fill="none" fillRule="evenodd" transform="translate(1 1)" strokeWidth="2">
-              <circle cx="22" cy="22" r="6" strokeOpacity="0">
-                <animate
-                  attributeName="r"
-                  begin="1.5s"
-                  dur="3s"
-                  values="6;22"
-                  calcMode="linear"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="stroke-opacity"
-                  begin="1.5s"
-                  dur="3s"
-                  values="1;0"
-                  calcMode="linear"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="stroke-width"
-                  begin="1.5s"
-                  dur="3s"
-                  values="2;0"
-                  calcMode="linear"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle cx="22" cy="22" r="6" strokeOpacity="0">
-                <animate
-                  attributeName="r"
-                  begin="3s"
-                  dur="3s"
-                  values="6;22"
-                  calcMode="linear"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="stroke-opacity"
-                  begin="3s"
-                  dur="3s"
-                  values="1;0"
-                  calcMode="linear"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="stroke-width"
-                  begin="3s"
-                  dur="3s"
-                  values="2;0"
-                  calcMode="linear"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle cx="22" cy="22" r="8">
-                <animate
-                  attributeName="r"
-                  begin="0s"
-                  dur="1.5s"
-                  values="6;1;2;3;4;5;6"
-                  calcMode="linear"
-                  repeatCount="indefinite"
-                />
-              </circle>
-            </g>
-          </svg>
+          <LoaderIcon />
         </div>
         <div className={contentClassName}>{props.children}</div>
       </div>
     </>
   );
 };
+
+export const LoaderIcon = () => {
+  return <svg
+      className="w-full h-full drop-shadow-[inherit]"
+      width="35"
+      height="35"
+      viewBox="0 0 45 45"
+      xmlns="http://www.w3.org/2000/svg"
+  >
+    <g fill="none" fillRule="evenodd" transform="translate(1 1)" strokeWidth="2">
+      <circle cx="22" cy="22" r="6" strokeOpacity="0">
+        <animate
+            attributeName="r"
+            begin="1.5s"
+            dur="3s"
+            values="6;22"
+            calcMode="linear"
+            repeatCount="indefinite"
+        />
+        <animate
+            attributeName="stroke-opacity"
+            begin="1.5s"
+            dur="3s"
+            values="1;0"
+            calcMode="linear"
+            repeatCount="indefinite"
+        />
+        <animate
+            attributeName="stroke-width"
+            begin="1.5s"
+            dur="3s"
+            values="2;0"
+            calcMode="linear"
+            repeatCount="indefinite"
+        />
+      </circle>
+      <circle cx="22" cy="22" r="6" strokeOpacity="0">
+        <animate
+            attributeName="r"
+            begin="3s"
+            dur="3s"
+            values="6;22"
+            calcMode="linear"
+            repeatCount="indefinite"
+        />
+        <animate
+            attributeName="stroke-opacity"
+            begin="3s"
+            dur="3s"
+            values="1;0"
+            calcMode="linear"
+            repeatCount="indefinite"
+        />
+        <animate
+            attributeName="stroke-width"
+            begin="3s"
+            dur="3s"
+            values="2;0"
+            calcMode="linear"
+            repeatCount="indefinite"
+        />
+      </circle>
+      <circle cx="22" cy="22" r="8">
+        <animate
+            attributeName="r"
+            begin="0s"
+            dur="1.5s"
+            values="6;1;2;3;4;5;6"
+            calcMode="linear"
+            repeatCount="indefinite"
+        />
+      </circle>
+    </g>
+  </svg>
+}

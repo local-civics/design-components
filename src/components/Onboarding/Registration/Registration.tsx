@@ -85,16 +85,16 @@ export const Registration = (props: RegistrationProps) => {
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
               >
-                <option>Select a subject</option>
-                <option value="social-studies-teacher">Social Studies Teacher</option>
-                <option value="english-teacher">English Teacher</option>
-                <option value="math-teacher">Math Teacher</option>
-                <option value="science-teacher">Science Teacher</option>
-                <option value="special-education-teacher">Special Education Teacher (Generalist)</option>
-                <option value="counseling-or-college-and-career">Counseling/College & Career Readiness</option>
-                <option value="non-instructional-staff">Non-Instructional Staff</option>
-                <option value="school-leadership">School Leadership</option>
               </select>
+              <option>Select a subject</option>
+              <option value="social-studies-teacher">Social Studies Teacher</option>
+              <option value="english-teacher">English Teacher</option>
+              <option value="math-teacher">Math Teacher</option>
+              <option value="science-teacher">Science Teacher</option>
+              <option value="special-education-teacher">Special Education Teacher (Generalist)</option>
+              <option value="counseling-or-college-and-career">Counseling/College & Career Readiness</option>
+              <option value="non-instructional-staff">Non-Instructional Staff</option>
+              <option value="school-leadership">School Leadership</option>
             </div>
           )}
 
