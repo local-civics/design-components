@@ -54,6 +54,7 @@ export const Onboarding = (props: OnboardingProps) => {
  */
 const Delegate = (props: OnboardingProps) => {
   const [agreed, setAgreed] = React.useState(!!props.hasOrganization || props.search !== null);
+  const [interests, setInterests] = React.useState(false);
   const [organization, setOrganization] = React.useState(null as any);
   const [organizationOpen, setOrganizationOpen] = React.useState(!!props.search);
 
@@ -112,12 +113,15 @@ const Delegate = (props: OnboardingProps) => {
     );
   }
 
-  if (!props.hasInterests) {
+  if (!interests && !props.hasInterests) {
     return (
       <ImpactQuiz
         persona={props.persona}
         interests={props.interests}
-        onFinish={(interests) => props.onConfigureTenant && props.onConfigureTenant({ interests })}
+        onFinish={(interests) => {
+          setInterests(true)
+          props.onConfigureTenant && props.onConfigureTenant({ interests })
+        }}
       />
     );
   }

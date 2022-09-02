@@ -122,6 +122,7 @@ export const Registration = (props: RegistrationProps) => {
             <p className="mb-2 font-semibold text-slate-500 text-sm">Impact Statement</p>
             <textarea
               required
+              minLength={100}
               placeholder="E.g., I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure my community is a place where everyone is welcome."
               onChange={(e) => setImpactStatement(e.target.value)}
               defaultValue={impactStatement || ""}

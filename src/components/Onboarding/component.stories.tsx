@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<OnboardingProps> = (args) => (
   <div className="w-full h-screen font-proxima m-auto">
-    <Onboarding givenName="Andre" {...args} />
+    <Onboarding persona="student" givenName="Andre" {...args} />
   </div>
 );
 
