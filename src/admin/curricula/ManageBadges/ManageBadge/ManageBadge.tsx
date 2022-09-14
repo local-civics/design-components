@@ -11,6 +11,7 @@ import {ManageCriteria, ManagedCriteria}      from "../../ManageCriteria/ManageC
  */
 export type ManageBadgeProps = {
     loading?: boolean
+    installed?: boolean
     badge?: ManagedBadge
 
     onSubmit?: (badge: ManagedBadge) => Promise<void>;
@@ -130,122 +131,125 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                     </div>
 
                     <form className="mt-5 bg-white border border-zinc-200 p-5 grid grid-cols-1 gap-y-4 rounded-md m-auto text-zinc-600 min-w-[30rem]" onSubmit={onSubmit}>
-                        <h1 className="text-md font-bold">Basic Settings</h1>
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                required
-                                displayName="Name"
-                                description="The display name of the badge."
-                                textValue={badge.displayName}
-                                onTextChange={v => set("displayName", v)}
-                            />
-                        </div>
+                        { !props.installed && <>
+                            <h1 className="text-md font-bold">Basic Settings</h1>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    required
+                                    displayName="Name"
+                                    description="The display name of the badge."
+                                    textValue={badge.displayName}
+                                    onTextChange={v => set("displayName", v)}
+                                />
+                            </div>
 
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                type="paragraph"
-                                displayName="Description"
-                                description="A free form description of the badge. Max character count is 150."
-                                placeholder="Describe the badge in 150 characters or less."
-                                maxLength={150}
-                                textValue={badge.description}
-                                onTextChange={v => set("description", v)}
-                            />
-                        </div>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    type="paragraph"
+                                    displayName="Description"
+                                    description="A free form description of the badge. Max character count is 150."
+                                    placeholder="Describe the badge in 150 characters or less."
+                                    maxLength={150}
+                                    textValue={badge.description}
+                                    onTextChange={v => set("description", v)}
+                                />
+                            </div>
 
-                        <hr className="my-2" />
-                        <h1 className="text-md font-bold">Appearance</h1>
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                type="component"
-                                displayName="Icon"
-                                description="The name of the icon to display for the badge."
-                                componentValue={badge.icon}
-                                options={badgeIconOptions}
-                                onComponentChange={v => set("icon", v)}
-                            />
-                        </div>
+                            <hr className="my-2" />
+                            <h1 className="text-md font-bold">Appearance</h1>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    type="component"
+                                    displayName="Icon"
+                                    description="The name of the icon to display for the badge."
+                                    componentValue={badge.icon}
+                                    options={badgeIconOptions}
+                                    onComponentChange={v => set("icon", v)}
+                                />
+                            </div>
 
-                        <hr className="my-2" />
-                        <h1 className="text-md font-bold">Requirements</h1>
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <ManageCriteria
-                                criteria={badge.criteria}
-                                onCriteriaChange={v => set("criteria", v)}
-                            />
-                        </div>
+                            <hr className="my-2" />
+                            <h1 className="text-md font-bold">Requirements</h1>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <ManageCriteria
+                                    criteria={badge.criteria}
+                                    onCriteriaChange={v => set("criteria", v)}
+                                />
+                            </div>
 
-                        <hr className="my-2" />
-                        <h1 className="text-md font-bold">Pedagogy</h1>
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                type="tags"
-                                displayName="Tags"
-                                description="Comma-separated list of tags describing the badge allowing the badge to be more easily found."
-                                tagsValue={badge.tags}
-                                onTagsChange={v => set("tags", v)}
-                            />
-                        </div>
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                type="tags"
-                                displayName="Skills"
-                                description="Comma-separated list of tags describing which skills a learner can expect to improve upon completing the badge."
-                                tagsValue={badge.skills}
-                                onTagsChange={v => set("skills", v)}
-                            />
-                        </div>
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                type="select"
-                                displayName="Priority"
-                                description="The importance of the badge within the curriculum. Useful for increasing visibility to learners. Allowed values are: Normal, Above Normal, and High."
-                                options={{
-                                    "Normal": "",
-                                    "Above Normal": "",
-                                    "High": "",
-                                }}
-                                selectedOption={badge.priority}
-                                onSelectChange={v => set("priority", v)}
-                            />
-                        </div>
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                required
-                                displayName="Project ID"
-                                description="The ID of the project that the badge belongs to."
-                                textValue={badge.projectId}
-                                onTextChange={v => set("projectId", v)}
-                            />
-                        </div>
+                            <hr className="my-2" />
+                            <h1 className="text-md font-bold">Pedagogy</h1>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    type="tags"
+                                    displayName="Tags"
+                                    description="Comma-separated list of tags describing the badge allowing the badge to be more easily found."
+                                    tagsValue={badge.tags}
+                                    onTagsChange={v => set("tags", v)}
+                                />
+                            </div>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    type="tags"
+                                    displayName="Skills"
+                                    description="Comma-separated list of tags describing which skills a learner can expect to improve upon completing the badge."
+                                    tagsValue={badge.skills}
+                                    onTagsChange={v => set("skills", v)}
+                                />
+                            </div>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    type="select"
+                                    displayName="Priority"
+                                    description="The importance of the badge within the curriculum. Useful for increasing visibility to learners. Allowed values are: Normal, Above Normal, and High."
+                                    options={{
+                                        "Normal": "",
+                                        "Above Normal": "",
+                                        "High": "",
+                                    }}
+                                    selectedOption={badge.priority}
+                                    onSelectChange={v => set("priority", v)}
+                                />
+                            </div>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    required
+                                    displayName="Project ID"
+                                    description="The ID of the project that the badge belongs to."
+                                    textValue={badge.projectId}
+                                    onTextChange={v => set("projectId", v)}
+                                />
+                            </div>
 
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                displayName="Parent ID"
-                                description="The ID of the prerequisite badge needed before this badge can be started."
-                                textValue={badge.parentId}
-                                onTextChange={v => set("parentId", v)}
-                            />
-                        </div>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    displayName="Parent ID"
+                                    description="The ID of the prerequisite badge needed before this badge can be started."
+                                    textValue={badge.parentId}
+                                    onTextChange={v => set("parentId", v)}
+                                />
+                            </div>
 
-                        <div className="ml-auto w-full max-w-[40rem]">
-                            <FormInput
-                                type="number"
-                                displayName="Level"
-                                description="The level of difficulty the learner can expect for the badge."
-                                numberValue={badge.level}
-                                min={1}
-                                onNumberChange={v => set("level", v)}
-                            />
-                        </div>
+                            <div className="ml-auto w-full max-w-[40rem]">
+                                <FormInput
+                                    type="number"
+                                    displayName="Level"
+                                    description="The level of difficulty the learner can expect for the badge."
+                                    numberValue={badge.level}
+                                    min={1}
+                                    onNumberChange={v => set("level", v)}
+                                />
+                            </div>
 
-                        <hr className="my-2" />
+                            <hr className="my-2" />
+                        </>}
+
                         <h1 className="text-md font-bold">Permissions</h1>
                         <div className="ml-auto w-full max-w-[40rem]">
                             <FormInput
                                 type="toggle"
                                 displayName={badge.hidden ? "Hidden" : "Visible"}
-                                description="When visible, the badge will be shown to consumers."
+                                description="When visible, the badge will be shown workspace members."
                                 toggleValue={!badge.hidden}
                                 onToggleChange={v => set("hidden", !v)}
                             />
@@ -261,7 +265,7 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                         </div>
                     </form>
 
-                    <div className="flex flex-col gap-y-3 mt-10 pb-10">
+                    { !props.installed && <div className="flex flex-col gap-y-3 mt-10 pb-10">
                         <h1 className="text-md font-bold">Danger</h1>
                         <div className="flex mt-2 p-6 rounded-md bg-zinc-100">
                             <div>
@@ -277,7 +281,7 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 <span className="my-auto">Delete</span>
                             </button>
                         </div>
-                    </div>
+                    </div>}
                 </div>
             </>
         }
