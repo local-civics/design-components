@@ -1,9 +1,9 @@
 import * as React           from "react"
 import {onScrollBottom}     from "../../../utils/pagination";
 import {Icon}                                from "../../components/Icon/Icon";
-import {CreateOrganization, NewOrganization} from "./CreateOrganization/CreateOrganization";
-import {RemoveOrganization}                  from "./RemoveOrganization/RemoveOrganization";
-import {RenameOrganization} from "./RenameOrganization/RenameOrganization";
+import {CreateOrganization, NewOrganization} from "../CreateOrganization/CreateOrganization";
+import {RemoveOrganization}                  from "../RemoveOrganization/RemoveOrganization";
+import {RenameOrganization}                  from "../RenameOrganization/RenameOrganization";
 
 /**
  * ManageOrganizations

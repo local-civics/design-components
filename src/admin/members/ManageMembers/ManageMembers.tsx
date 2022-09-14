@@ -1,10 +1,10 @@
 import * as React         from "react"
 import {onScrollBottom}   from "../../../utils/pagination";
 import {Icon}                 from "../../components/Icon/Icon";
-import {AddMember, NewMember} from "./AddMember/AddMember";
-import {ChangeMemberRole}     from "./ChangeMemberRole/ChangeMemberRole";
-import {RemoveMember}     from "./RemoveMember/RemoveMember";
-import {RenameMember}     from "./RenameMember/RenameMember";
+import {AddMember, NewMember} from "../AddMember/AddMember";
+import {ChangeMemberRole}     from "../ChangeMemberRole/ChangeMemberRole";
+import {RemoveMember}         from "../RemoveMember/RemoveMember";
+import {RenameMember}         from "../RenameMember/RenameMember";
 
 /**
  * ManageMembers
