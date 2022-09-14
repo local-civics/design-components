@@ -1,23 +1,21 @@
 import * as React                            from "react";
-import { ManageProject, ManageProjectProps } from "./ManageProject";
+import { CreateBucket, CreateBucketProps } from "./CreateBucket";
 import { Story }                             from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Admin/ManageProjects/ManageProject",
-  component: ManageProject,
+  title: "Admin/ManageBuckets/CreateBucket",
+  component: CreateBucket,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<ManageProjectProps> = (args) => (
+const Template: Story<CreateBucketProps> = (args) => (
   <div className="h-full w-full overscroll-none font-proxima">
-      <ManageProject
-          displayName="Project #1"
-          projectId="P3orv6ygAHPWXsmtiqxBQf1t5cRCDQL1"
+      <CreateBucket
           {...args}
       />
       <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
@@ -27,5 +25,5 @@ const Template: Story<ManageProjectProps> = (args) => (
 /**
  * Component stories
  */
-export const Component: Story<ManageProjectProps> = Template.bind({});
+export const Component: Story<CreateBucketProps> = Template.bind({});
 Component.args = {};

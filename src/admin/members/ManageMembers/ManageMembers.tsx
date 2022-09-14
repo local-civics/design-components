@@ -1,8 +1,8 @@
 import * as React         from "react"
 import {onScrollBottom}   from "../../../utils/pagination";
-import {Icon}             from "../../components/Icon/Icon";
-import {AddMember}        from "./AddMember/AddMember";
-import {ChangeMemberRole} from "./ChangeMemberRole/ChangeMemberRole";
+import {Icon}                 from "../../components/Icon/Icon";
+import {AddMember, NewMember} from "./AddMember/AddMember";
+import {ChangeMemberRole}     from "./ChangeMemberRole/ChangeMemberRole";
 import {RemoveMember}     from "./RemoveMember/RemoveMember";
 import {RenameMember}     from "./RenameMember/RenameMember";
 
@@ -15,7 +15,7 @@ export type ManageMembersProps = {
 
     onSearch?: (value: string) => void;
     onMemberClick?: (member: ManagedMember) => void;
-    onAddMember?: (displayName: string) => Promise<void>;
+    onAddMember?: (member: NewMember) => Promise<void>;
     onRenameMember?: (member: ManagedMember, displayName: string) => Promise<void>;
     onChangeMemberRole?: (member: ManagedMember, role: string) => Promise<void>;
     onRemoveMember?: (member: ManagedMember) => Promise<void>;

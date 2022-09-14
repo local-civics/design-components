@@ -1,5 +1,5 @@
 import React                                                               from "react";
-import { compact }                                                         from "../../../../utils/numbers";
+import { compact }                                                         from "../../../../utils/number";
 import { Widget, WidgetBody, WidgetHeader, WidgetHeaderLink, WidgetTitle } from "../../../../components/Widget";
 import { Icon, IconName }                                                  from "../../../../components/Icon";
 

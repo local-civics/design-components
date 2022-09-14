@@ -1,6 +1,7 @@
 import * as React        from "react"
 import {Overlay}         from "../../../../components";
 import {stopPropagation} from "../../../../utils/event";
+import {withKey}         from "../../../../utils/form";
 import {FormDialog}      from "../../../components/Form/FormDialog/FormDialog";
 import {FormInput}       from "../../../components/Form/FormInput/FormInput";
 
@@ -8,9 +9,16 @@ import {FormInput}       from "../../../components/Form/FormInput/FormInput";
  * AddMemberProps
  */
 export type AddMemberProps = {
-    onSubmit?: (email: string) => Promise<void>;
+    onSubmit?: (member: NewMember) => Promise<void>;
     onCancel?: () => void;
     onFinish?: () => void;
+}
+
+/**
+ * NewMember
+ */
+export type NewMember = {
+    email: string
 }
 
 /**
@@ -19,19 +27,20 @@ export type AddMemberProps = {
  * @constructor
  */
 export const AddMember = (props: AddMemberProps) => {
-    const [email, setEmail] = React.useState("")
+    const [member, setMember] = React.useState({} as NewMember)
     const [success, setSuccess] = React.useState(false)
-    const onEmailChange = (value: string) => setEmail(value.trim())
 
+    const submitDisabled = !member.email
+
+    const set = (k: string, v: any) => setMember(withKey(member, k, v))
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        if(props.onSubmit && email){
-            return props.onSubmit(email).then(() => setSuccess(true))
+        if(props.onSubmit && member.email){
+            return props.onSubmit(member)
+                .then(() => setSuccess(true))
         }
     }
-
-    const submitDisabled = !email
     const onFinish = () => {
         setSuccess(false)
         props.onFinish && props.onFinish()
@@ -49,8 +58,8 @@ export const AddMember = (props: AddMemberProps) => {
                 required
                 displayName="Email"
                 description="Enter the email address of the person you'd like to invite."
-                textValue={email}
-                onTextChange={onEmailChange}
+                textValue={member.email}
+                onTextChange={v => set("email", v)}
             />
 
             <div className="flex">

@@ -1,41 +1,49 @@
 import * as React        from "react"
 import {Overlay}         from "../../../../components";
 import {stopPropagation} from "../../../../utils/event";
+import {withKey}         from "../../../../utils/form";
 import {FormDialog}      from "../../../components/Form/FormDialog/FormDialog";
 import {FormInput}       from "../../../components/Form/FormInput/FormInput";
 
 const MIN_DISPLAY_NAME_LENGTH = 5
 
 /**
- * CreateProjectProps
+ * CreateBucketProps
  */
-export type CreateProjectProps = {
-    onSubmit?: (displayName: string, description: string) => Promise<void>;
+export type CreateBucketProps = {
+    onSubmit?: (bucket: NewBucket) => Promise<void>;
     onCancel?: () => void;
     onFinish?: () => void;
 }
 
 /**
- * CreateProject
+ * NewBucket
+ */
+export type NewBucket = {
+    displayName: string
+    description: string
+}
+
+/**
+ * CreateBucket
  * @param props
  * @constructor
  */
-export const CreateProject = (props: CreateProjectProps) => {
-    const [displayName, setDisplayName] = React.useState("")
-    const [description, setDescription] = React.useState("")
+export const CreateBucket = (props: CreateBucketProps) => {
+    const [bucket, setBucket] = React.useState({} as NewBucket)
     const [success, setSuccess] = React.useState(false)
-    const onDisplayNameChange = (value: string) => setDisplayName(value.trim())
-    const onDescriptionChange = (value: string) => setDescription(value.trim())
 
+    const submitDisabled = !bucket.displayName || bucket.displayName.length < MIN_DISPLAY_NAME_LENGTH
+
+    const set = (k: string, v: any) => setBucket(withKey(bucket, k, v))
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        if(props.onSubmit && displayName){
-            return props.onSubmit(displayName, description).then(() => setSuccess(true))
+        if(props.onSubmit && bucket.displayName){
+            return props.onSubmit(bucket).then(() => setSuccess(true))
         }
     }
 
-    const submitDisabled = !displayName || displayName.length < MIN_DISPLAY_NAME_LENGTH
     const onFinish = () => {
         setSuccess(false)
         props.onFinish && props.onFinish()
@@ -44,25 +52,25 @@ export const CreateProject = (props: CreateProjectProps) => {
     return <Overlay onClick={props.onCancel}>
         { success && <FormDialog
             onClose={onFinish}
-            title="Project created!"
-            description="We've received your request to create the project. Please allow up to 5 mins. for changes to complete."
+            title="Bucket created!"
+            description="We've received your request to create the bucket. Please allow up to 5 mins. for changes to complete."
         /> }
         { !success && <form onClick={stopPropagation} className="bg-white p-5 grid grid-cols-1 gap-y-4 rounded-md m-auto text-zinc-600 min-w-[30rem]" onSubmit={onSubmit}>
-            <h1 className="text-xl my-auto grow font-bold">Create project</h1>
+            <h1 className="text-xl my-auto grow font-bold">Create bucket</h1>
             <FormInput
                 required
                 displayName="Name"
                 description="IMPORTANT: You will not be able to change this later."
-                textValue={displayName}
+                textValue={bucket.displayName}
                 minLength={MIN_DISPLAY_NAME_LENGTH}
-                onTextChange={onDisplayNameChange}
+                onTextChange={(v) => set("displayName", v)}
             />
 
             <FormInput
                 type="paragraph"
                 displayName="Description"
-                textValue={description}
-                onTextChange={onDescriptionChange}
+                textValue={bucket.description}
+                onTextChange={(v) => set("description", v)}
             />
 
             <div className="flex">

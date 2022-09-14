@@ -1,8 +1,8 @@
 import * as React           from "react"
 import {onScrollBottom}     from "../../../utils/pagination";
-import {Icon}               from "../../components/Icon/Icon";
-import {CreateOrganization} from "./CreateOrganization/CreateOrganization";
-import {RemoveOrganization} from "./RemoveOrganization/RemoveOrganization";
+import {Icon}                                from "../../components/Icon/Icon";
+import {CreateOrganization, NewOrganization} from "./CreateOrganization/CreateOrganization";
+import {RemoveOrganization}                  from "./RemoveOrganization/RemoveOrganization";
 import {RenameOrganization} from "./RenameOrganization/RenameOrganization";
 
 /**
@@ -14,7 +14,7 @@ export type ManageOrganizationsProps = {
 
     onSearch?: (value: string) => void;
     onOrganizationClick?: (organization: ManagedOrganization) => void;
-    onCreateOrganization?: (displayName: string) => Promise<void>;
+    onCreateOrganization?: (organization: NewOrganization) => Promise<void>;
     onRenameOrganization?: (organization: ManagedOrganization, displayName: string) => Promise<void>;
     onRemoveOrganization?: (organization: ManagedOrganization) => Promise<void>;
     onMoreOrganizations?: () => void;

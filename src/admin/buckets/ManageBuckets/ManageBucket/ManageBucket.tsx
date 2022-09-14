@@ -6,10 +6,10 @@ import {FormDialog}      from "../../../components/Form/FormDialog/FormDialog";
 import {Icon}            from "../../../components/Icon/Icon";
 
 /**
- * ManageProjectProps
+ * ManageBucketProps
  */
-export type ManageProjectProps = {
-    projectId?: string
+export type ManageBucketProps = {
+    bucketId?: string
     displayName?: string
     installed?: boolean
     description?: string
@@ -23,14 +23,14 @@ export type ManageProjectProps = {
 }
 
 /**
- * ManageProject
+ * ManageBucket
  * @param props
  * @constructor
  */
-export const ManageProject = (props: ManageProjectProps) => {
+export const ManageBucket = (props: ManageBucketProps) => {
     const [success, setSuccess] = React.useState(false)
     const [confirmDelete, setConfirmDelete] = React.useState(false)
-    const title = props.workspace ? "Manage project" : props.installed ? "Uninstall project" : "Install project"
+    const title = props.workspace ? "Manage bucket" : props.installed ? "Uninstall bucket" : "Install bucket"
     const commandPastTense = props.workspace ? "deleted" : props.installed ? "uninstalled" : "installed"
     const commandPresentTense = props.workspace ? "delete" : props.installed ? "uninstall" : "install"
     const commandColor = props.workspace ? "bg-rose-400 hover:bg-rose-500" : props.installed ? "bg-rose-400 hover:bg-rose-500" : "bg-indigo-500 hover:bg-indigo-600"
@@ -60,7 +60,7 @@ export const ManageProject = (props: ManageProjectProps) => {
 
     return <Overlay onClick={props.onCancel}>
         { confirmDelete && <ConfirmDialog
-            title="Delete project?"
+            title="Delete bucket?"
             description="This action is permanent and cannot be reversed."
             action="Delete"
             actionColor="bg-rose-500 hover:bg-rose-600"
@@ -75,8 +75,8 @@ export const ManageProject = (props: ManageProjectProps) => {
 
         { success && <FormDialog
             onClose={onFinish}
-            title={`Project ${commandPastTense}!`}
-            description={`We've received your request to ${commandPresentTense} the project. Please allow up to 5 mins. for changes to complete.`}
+            title={`Bucket ${commandPastTense}!`}
+            description={`We've received your request to ${commandPresentTense} the bucket. Please allow up to 5 mins. for changes to complete.`}
         /> }
 
         { !success && !confirmDelete && <div onClick={stopPropagation} className="bg-white p-5 grid grid-cols-1 gap-y-4 rounded-md m-auto text-zinc-600 min-w-[30rem]">
@@ -90,8 +90,8 @@ export const ManageProject = (props: ManageProjectProps) => {
                 <div className="flex flex-col my-auto">
                     <p className="text-lg font-bold">{props.displayName}</p>
                     <div className="flex gap-x-2 text-xs">
-                        <span className="my-auto">Project ID</span>
-                        <span className="my-auto bg-zinc-50 p-1 rounded-sm">{props.projectId}</span>
+                        <span className="my-auto">Bucket ID</span>
+                        <span className="my-auto bg-zinc-50 p-1 rounded-sm">{props.bucketId}</span>
                     </div>
                     <p className="text-sm mt-2 max-w-md text-zinc-400">{props.description||"No description provided"}</p>
                 </div>

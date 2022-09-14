@@ -1,6 +1,7 @@
 import * as React        from "react"
 import {Overlay}         from "../../../../components";
 import {stopPropagation} from "../../../../utils/event";
+import {withKey}         from "../../../../utils/form";
 import {FormDialog}      from "../../../components/Form/FormDialog/FormDialog";
 import {FormInput}       from "../../../components/Form/FormInput/FormInput";
 
@@ -10,9 +11,16 @@ const MIN_DISPLAY_NAME_LENGTH = 5
  * CreateOrganizationProps
  */
 export type CreateOrganizationProps = {
-    onSubmit?: (displayName: string) => Promise<void>;
+    onSubmit?: (organization: NewOrganization) => Promise<void>;
     onCancel?: () => void;
     onFinish?: () => void;
+}
+
+/**
+ * NewOrganization
+ */
+export type NewOrganization = {
+    displayName: string
 }
 
 /**
@@ -21,21 +29,20 @@ export type CreateOrganizationProps = {
  * @constructor
  */
 export const CreateOrganization = (props: CreateOrganizationProps) => {
-    const [displayName, setDisplayName] = React.useState("")
+    const [organization, setOrganization] = React.useState({} as NewOrganization)
     const [success, setSuccess] = React.useState(false)
-    const onDisplayNameChange = (value: string) => {
-        setDisplayName(value.trim())
-    }
 
+    const submitDisabled = !organization.displayName || organization.displayName.length < MIN_DISPLAY_NAME_LENGTH
+
+    const set = (k: string, v: any) => setOrganization(withKey(organization, k, v))
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        if(props.onSubmit && displayName){
-            return props.onSubmit(displayName).then(() => setSuccess(true))
+        if(props.onSubmit && organization.displayName){
+            return props.onSubmit(organization)
+                .then(() => setSuccess(true))
         }
     }
-
-    const submitDisabled = !displayName || displayName.length < MIN_DISPLAY_NAME_LENGTH
     const onFinish = () => {
         setSuccess(false)
         props.onFinish && props.onFinish()
@@ -53,9 +60,9 @@ export const CreateOrganization = (props: CreateOrganizationProps) => {
                 required
                 displayName="Name"
                 description="You can change the organization name later in settings."
-                textValue={displayName}
+                textValue={organization.displayName}
                 minLength={MIN_DISPLAY_NAME_LENGTH}
-                onTextChange={onDisplayNameChange}
+                onTextChange={v => set("displayName", v)}
             />
 
             <div className="flex">

@@ -1,5 +1,5 @@
 import React from "react";
-import { background } from "../../../utils/colors";
+import { background } from "../../../utils/color";
 import { Icon, IconName } from "../../Icon";
 
 /**

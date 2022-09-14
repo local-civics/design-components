@@ -1,8 +1,8 @@
 import * as React                 from "react"
 import {BadgeIcon, BadgeIconName} from "../../../components/Icon/BadgeIcon";
 import {onScrollBottom}           from "../../../utils/pagination";
-import {Icon}           from "../../components/Icon/Icon";
-import {CreateBadge}    from "./CreateBadge/CreateBadge";
+import {Icon}                  from "../../components/Icon/Icon";
+import {CreateBadge, NewBadge} from "./CreateBadge/CreateBadge";
 
 /**
  * ManageBadges
@@ -13,7 +13,7 @@ export type ManageBadgesProps = {
 
     onSearch?: (value: string) => void;
     onBadgeClick?: (badge: ManagedBadge) => void;
-    onCreateBadge?: (displayName: string) => Promise<void>;
+    onCreateBadge?: (badge: NewBadge) => Promise<void>;
     onMoreBadges?: () => void;
 }
 

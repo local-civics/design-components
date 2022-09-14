@@ -1,6 +1,6 @@
 import React from "react";
 import { classname } from "../../../utils/classname/classname";
-import { compact } from "../../../utils/numbers";
+import { compact } from "../../../utils/number";
 import { Button, ButtonSize } from "../../Button";
 import { IconName } from "../../Icon";
 import { Progress } from "../../Progress";

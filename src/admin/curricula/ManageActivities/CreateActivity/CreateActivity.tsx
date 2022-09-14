@@ -1,6 +1,7 @@
 import * as React        from "react"
 import {Overlay}         from "../../../../components";
 import {stopPropagation} from "../../../../utils/event";
+import {withKey}         from "../../../../utils/form";
 import {FormDialog}      from "../../../components/Form/FormDialog/FormDialog";
 import {FormInput}       from "../../../components/Form/FormInput/FormInput";
 
@@ -10,9 +11,16 @@ const MIN_DISPLAY_NAME_LENGTH = 5
  * CreateActivityProps
  */
 export type CreateActivityProps = {
-    onSubmit?: (displayName: string) => Promise<void>;
+    onSubmit?: (activity: NewActivity) => Promise<void>;
     onCancel?: () => void;
     onFinish?: () => void;
+}
+
+/**
+ * NewActivity
+ */
+export type NewActivity = {
+    displayName: string
 }
 
 /**
@@ -21,19 +29,20 @@ export type CreateActivityProps = {
  * @constructor
  */
 export const CreateActivity = (props: CreateActivityProps) => {
-    const [displayName, setDisplayName] = React.useState("")
+    const [activity, setActivity] = React.useState({} as NewActivity)
     const [success, setSuccess] = React.useState(false)
-    const onDisplayNameChange = (value: string) => setDisplayName(value.trim())
 
+    const submitDisabled = !activity.displayName || activity.displayName.length < MIN_DISPLAY_NAME_LENGTH
+
+    const set = (k: string, v: any) => setActivity(withKey(activity, k, v))
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        if(props.onSubmit && displayName){
-            return props.onSubmit(displayName).then(() => setSuccess(true))
+        if(props.onSubmit && activity.displayName){
+            return props.onSubmit(activity)
+                .then(() => setSuccess(true))
         }
     }
-
-    const submitDisabled = !displayName || displayName.length < MIN_DISPLAY_NAME_LENGTH
     const onFinish = () => {
         setSuccess(false)
         props.onFinish && props.onFinish()
@@ -51,9 +60,9 @@ export const CreateActivity = (props: CreateActivityProps) => {
                 required
                 displayName="Name"
                 description="You can change the activity name later in settings."
-                textValue={displayName}
+                textValue={activity.displayName}
                 minLength={MIN_DISPLAY_NAME_LENGTH}
-                onTextChange={onDisplayNameChange}
+                onTextChange={v => set("displayName", v)}
             />
 
             <div className="flex">

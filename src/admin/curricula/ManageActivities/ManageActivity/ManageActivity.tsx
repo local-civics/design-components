@@ -1,6 +1,7 @@
 import * as React      from "react"
-import {LoaderIcon}    from "../../../../components";
-import {ConfirmDialog} from "../../../components/ConfirmDialog/ConfirmDialog";
+import {LoaderIcon}         from "../../../../components";
+import {changeSet, withKey} from "../../../../utils/form";
+import {ConfirmDialog}      from "../../../components/ConfirmDialog/ConfirmDialog";
 import {FormInput}     from "../../../components/Form/FormInput/FormInput";
 
 /**
@@ -10,7 +11,7 @@ export type ManageActivityProps = {
     loading?: boolean
     activity?: ManagedActivity
 
-    onSubmit?: (changes: ManageActivityProps) => Promise<void>;
+    onSubmit?: (activity: ManagedActivity) => Promise<void>;
     onDelete?: () => Promise<void>
     onDownloadForm?: () => Promise<void>
 }
@@ -33,7 +34,14 @@ export type ManagedActivity = {
     hidden?: boolean
 }
 
+/**
+ * ETA
+ */
 export type ETA = "" | "15 min." | "30 min." | "1 hr." | "2 hr." | "4 hr."
+
+/**
+ * Priority
+ */
 export type Priority = "Normal" | "Above Normal" | "High"
 
 /**
@@ -42,58 +50,25 @@ export type Priority = "Normal" | "Above Normal" | "High"
  * @constructor
  */
 export const ManageActivity = (props: ManageActivityProps) => {
-    const activityKey = JSON.stringify(props.activity)
-    const [displayName, setDisplayName] = React.useState(props.activity?.displayName)
-    const [description, setDescription] = React.useState(props.activity?.description)
-    const [imageURL, setImageURL] = React.useState(props.activity?.imageURL)
-    const [tags, setTags] = React.useState(props.activity?.tags)
-    const [skills, setSkills] = React.useState(props.activity?.skills)
-    const [priority, setPriority] = React.useState(props.activity?.priority)
-    const [projectId, setProjectId] = React.useState(props.activity?.projectId)
-    const [googleFormsURL, setGoogleFormsURL] = React.useState(props.activity?.googleFormsURL)
-    const [eta, setETA] = React.useState(props.activity?.eta)
-    const [startTime, setStartTime] = React.useState(props.activity?.startTime)
-    const [hidden, setHidden] = React.useState(props.activity?.hidden)
+    const [activity, setActivity] = React.useState(props.activity || {})
     const [saveWaiting, setSaveWaiting] = React.useState(false)
     const [confirmDelete, setConfirmDelete] = React.useState(false)
     const [deleteWaiting, setDeleteWaiting] = React.useState(false)
     const [downloadFormWaiting, setDownloadFormWaiting] = React.useState(false)
 
-    const onDisplayNameChange = (next: string) => setDisplayName(next.trim())
-    const onDescriptionChange = (next: string) => setDescription(next.trim())
-    const onImageURLChange = (next: string) => setImageURL(next)
-    const onTagsChange = (next: string[]) => setTags(next)
-    const onSkillsChange = (next: string[]) => setSkills(next)
-    const onPriorityChange = (next: string) => setPriority(next as Priority)
-    const onProjectIdChange = (next: string) => setProjectId(next.trim())
-    const onGoogleFormsURLChange = (next: string) => setGoogleFormsURL(next)
-    const onETAChange = (next: string) => setETA(next === "Select estimate" ? "" : next as ETA)
-    const onStartTimeChange = (next: string) => setStartTime(next)
-    const onHiddenChange = (next: boolean) => setHidden(!next)
-    const onDelete = () => setConfirmDelete(true)
-
+    const activityKey = JSON.stringify(props.activity)
     const submitDisabled = saveWaiting || downloadFormWaiting || deleteWaiting
+
+    const set = (k: string, v: any) => setActivity(withKey(activity, k, v))
+    const onDelete = () => setConfirmDelete(true)
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
         setSaveWaiting(true)
         if(props.onSubmit){
-            const changes = changeSet(props.activity, {
-                displayName,
-                description,
-                imageURL,
-                tags,
-                skills,
-                priority,
-                projectId,
-                googleFormsURL,
-                eta,
-                startTime,
-                hidden,
-            })
-
-            return props.onSubmit(changes).then(() => setSaveWaiting(false))
+            return props.onSubmit(changeSet(props.activity, activity))
+                .then(() => setSaveWaiting(false))
         }
     }
 
@@ -111,19 +86,7 @@ export const ManageActivity = (props: ManageActivityProps) => {
         }
     }
 
-    React.useEffect(() => {
-        setDisplayName(props.activity?.displayName)
-        setDescription(props.activity?.description)
-        setImageURL(props.activity?.imageURL)
-        setTags(props.activity?.tags)
-        setSkills(props.activity?.skills)
-        setPriority(props.activity?.priority)
-        setProjectId(props.activity?.projectId)
-        setGoogleFormsURL(props.activity?.googleFormsURL)
-        setETA(props.activity?.eta)
-        setHidden(props.activity?.hidden)
-        setStartTime(props.activity?.startTime)
-    }, [activityKey])
+    React.useEffect(() => setActivity(props.activity || {}), [activityKey])
 
     return <>
         { !!props.loading && <></>}
@@ -169,8 +132,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 required
                                 displayName="Name"
                                 description="The display name of the activity."
-                                textValue={displayName}
-                                onTextChange={onDisplayNameChange}
+                                textValue={activity.displayName}
+                                onTextChange={v => set("displayName", v)}
                             />
                         </div>
 
@@ -181,8 +144,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 description="A free form description of the activity. Max character count is 150."
                                 placeholder="Describe the activity in 150 characters or less."
                                 maxLength={150}
-                                textValue={description}
-                                onTextChange={onDescriptionChange}
+                                textValue={activity.description}
+                                onTextChange={v => set("description", v)}
                             />
                         </div>
 
@@ -193,8 +156,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 type="image"
                                 displayName="Image URL"
                                 description="The URL of the image to display for the activity, if none is set the default image will be shown. Recommended size is at least 500x500 pixels."
-                                imageValue={imageURL}
-                                onImageChange={onImageURLChange}
+                                imageValue={activity.imageURL}
+                                onImageChange={v => set("imageURL", v)}
                             />
                         </div>
 
@@ -205,8 +168,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 type="tags"
                                 displayName="Tags"
                                 description="Comma-separated list of tags describing the activity allowing the activity to be more easily found."
-                                tagsValue={tags}
-                                onTagsChange={onTagsChange}
+                                tagsValue={activity.tags}
+                                onTagsChange={(tags) => set("tags", tags)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -214,8 +177,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 type="tags"
                                 displayName="Skills"
                                 description="Comma-separated list of tags describing which skills a learner can expect to improve upon completing the activity."
-                                tagsValue={skills}
-                                onTagsChange={onSkillsChange}
+                                tagsValue={activity.skills}
+                                onTagsChange={(tags) => set("skills", tags)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -228,8 +191,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                     "Above Normal": "",
                                     "High": "",
                                 }}
-                                selectedOption={priority}
-                                onSelectChange={onPriorityChange}
+                                selectedOption={activity.priority}
+                                onSelectChange={v => set("priority", v)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -237,8 +200,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 required
                                 displayName="Project ID"
                                 description="The ID of the project that the activity belongs to."
-                                textValue={projectId}
-                                onTextChange={onProjectIdChange}
+                                textValue={activity.projectId}
+                                onTextChange={v => set("projectId", v)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -246,8 +209,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 type="url"
                                 displayName="Google Forms URL"
                                 description="The URL of the Google Forms lesson to associate with the activity. It must be of the form: https://docs.google.com/forms/d/:formId/edit."
-                                urlValue={googleFormsURL}
-                                onURLChange={onGoogleFormsURLChange}
+                                urlValue={activity.googleFormsURL}
+                                onURLChange={v => set("googleFormsURL", v)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -256,15 +219,15 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 displayName="Estimated Completion Time"
                                 description="The estimated amount of time required to complete the activity."
                                 options={{
-                                    "Select estimate": "",
+                                    "Select estimate": null,
                                     "15 min.": "",
                                     "30 min.": "",
                                     "1 hr.": "",
                                     "2 hr.": "",
                                     "4 hr.": "",
                                 }}
-                                selectedOption={eta}
-                                onSelectChange={onETAChange}
+                                selectedOption={activity.eta}
+                                onSelectChange={v => set("eta", v)}
                             />
                         </div>
 
@@ -275,8 +238,8 @@ export const ManageActivity = (props: ManageActivityProps) => {
                                 type="datetime"
                                 displayName="Start Time"
                                 description="Make this activity an in-person synchronous event by setting a start time."
-                                dateTimeValue={startTime}
-                                onDateTimeChange={onStartTimeChange}
+                                dateTimeValue={activity.startTime}
+                                onDateTimeChange={v => set("startTime", v)}
                             />
                         </div>
 
@@ -285,10 +248,10 @@ export const ManageActivity = (props: ManageActivityProps) => {
                         <div className="ml-auto w-full max-w-[40rem]">
                             <FormInput
                                 type="toggle"
-                                displayName={hidden ? "Hidden" : "Visible"}
+                                displayName={activity.hidden ? "Hidden" : "Visible"}
                                 description="When visible, the activity will be shown to consumers."
-                                toggleValue={!hidden}
-                                onToggleChange={onHiddenChange}
+                                toggleValue={!activity.hidden}
+                                onToggleChange={v => set("hidden", !v)}
                             />
                         </div>
 
@@ -342,19 +305,4 @@ export const ManageActivity = (props: ManageActivityProps) => {
             </>
         }
   </>
-}
-
-const changeSet = (from?: ManagedActivity, to?: ManagedActivity) => {
-    const fromObj: any = from || {}
-    const toObj: any = to || {}
-    const keys = Object.keys(toObj)
-    const changes: any = {}
-    let hasChanges = false
-    keys.forEach(k => {
-        if(fromObj[k] != toObj[k]){
-            changes[k] = toObj[k]
-            hasChanges = true
-        }
-    })
-    return hasChanges ? changes : null
 }

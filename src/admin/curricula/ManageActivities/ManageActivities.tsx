@@ -1,7 +1,7 @@
 import * as React           from "react"
 import {onScrollBottom}     from "../../../utils/pagination";
-import {Icon}               from "../../components/Icon/Icon";
-import {CreateActivity}     from "./CreateActivity/CreateActivity";
+import {Icon}                        from "../../components/Icon/Icon";
+import {CreateActivity, NewActivity} from "./CreateActivity/CreateActivity";
 
 /**
  * ManageActivities
@@ -12,7 +12,7 @@ export type ManageActivitiesProps = {
 
     onSearch?: (value: string) => void;
     onActivityClick?: (activity: ManagedActivity) => void;
-    onCreateActivity?: (displayName: string) => Promise<void>;
+    onCreateActivity?: (activity: NewActivity) => Promise<void>;
     onMoreActivities?: () => void;
 }
 

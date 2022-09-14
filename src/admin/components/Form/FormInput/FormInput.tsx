@@ -160,7 +160,7 @@ const Select = (props: FormInputProps) => {
   >
     {
       keys.map(k => {
-        return <option key={k}>
+        return <option key={k} value={options[k] === null ? "" : k}>
           {k}
         </option>
       })

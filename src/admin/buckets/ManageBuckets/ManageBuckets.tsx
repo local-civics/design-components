@@ -1,37 +1,37 @@
 import * as React                          from "react"
 import {LoaderIcon}                        from "../../../components";
 import {onScrollBottom}                    from "../../../utils/pagination";
-import {Icon}                              from "../../components/Icon/Icon";
-import {CreateProject}                     from "./CreateProject/CreateProject";
-import {ManageProject, ManageProjectProps} from "./ManageProject/ManageProject";
+import {Icon}                            from "../../components/Icon/Icon";
+import {CreateBucket, NewBucket}         from "./CreateBucket/CreateBucket";
+import {ManageBucket, ManageBucketProps} from "./ManageBucket/ManageBucket";
 
-export type ManageProjectsTab = "All projects" | "My projects" | "Installed projects"
-const TABS: ManageProjectsTab[] = ["All projects", "My projects", "Installed projects"]
-const DEFAULT_TAB: ManageProjectsTab = "All projects"
+export type ManageBucketsTab = "All buckets" | "My buckets" | "Installed buckets"
+const TABS: ManageBucketsTab[] = ["All buckets", "My buckets", "Installed buckets"]
+const DEFAULT_TAB: ManageBucketsTab = "All buckets"
 
 /**
- * ManageProjects
+ * ManageBuckets
  */
-export type ManageProjectsProps = {
+export type ManageBucketsProps = {
     loading?: React.ReactNode
-    tab?: ManageProjectsTab
-    projects?: ManagedProject[]
+    tab?: ManageBucketsTab
+    buckets?: ManagedBucket[]
 
-    onTabChange?: (tab: ManageProjectsTab) => Promise<void>;
+    onTabChange?: (tab: ManageBucketsTab) => Promise<void>;
     onSearch?: (value: string) => void;
-    onProjectClick?: (project: ManagedProject) => void;
-    onCreateProject?: (displayName: string) => Promise<void>;
-    onDeleteProject?: (project: ManagedProject) => Promise<void>;
-    onInstallProject?: (project: ManagedProject) => Promise<void>;
-    onUninstallProject?: (project: ManagedProject) => Promise<void>;
-    onMoreProjects?: () => void;
+    onBucketClick?: (bucket: ManagedBucket) => void;
+    onCreateBucket?: (bucket: NewBucket) => Promise<void>;
+    onDeleteBucket?: (bucket: ManagedBucket) => Promise<void>;
+    onInstallBucket?: (bucket: ManagedBucket) => Promise<void>;
+    onUninstallBucket?: (bucket: ManagedBucket) => Promise<void>;
+    onMoreBuckets?: () => void;
 }
 
 /**
- * ManagedProject
+ * ManagedBucket
  */
-export type ManagedProject = {
-    projectId?: string
+export type ManagedBucket = {
+    bucketId?: string
     displayName?: string
     installed?: boolean
     workspace?: boolean
@@ -39,17 +39,17 @@ export type ManagedProject = {
 
 
 /**
- * ManageProjects
+ * ManageBuckets
  * @param props
  * @constructor
  */
-export const ManageProjects = (props: ManageProjectsProps) => {
-    const [createProject, setCreateProject] = React.useState(false)
+export const ManageBuckets = (props: ManageBucketsProps) => {
+    const [createBucket, setCreateBucket] = React.useState(false)
     const [activeId, setActiveId] = React.useState("")
     const [tab, setTab] = React.useState(props.tab || DEFAULT_TAB)
     const [tabLoading, setTabLoading] = React.useState(false)
 
-    const onTabChange = async (next: ManageProjectsTab) => {
+    const onTabChange = async (next: ManageBucketsTab) => {
         if(tab === next || tabLoading){
             return
         }
@@ -65,23 +65,23 @@ export const ManageProjects = (props: ManageProjectsProps) => {
     }
 
     return <>
-        { createProject && <CreateProject
-            onCancel={() => setCreateProject(false)}
-            onSubmit={props.onCreateProject}
-            onFinish={() => setCreateProject(false)}
+        { createBucket && <CreateBucket
+            onCancel={() => setCreateBucket(false)}
+            onSubmit={props.onCreateBucket}
+            onFinish={() => setCreateBucket(false)}
         /> }
         <div onClick={() => setActiveId("")} className="text-zinc-600 h-full px-20 py-10">
             <div className="flex">
-                <p className="text-2xl font-bold">Projects</p>
+                <p className="text-2xl font-bold">Buckets</p>
                 { !props.loading && <button
-                    onClick={() => setCreateProject(true)}
+                    onClick={() => setCreateBucket(true)}
                     className="ml-auto py-2.5 px-5 rounded-md text-white bg-emerald-500 flex gap-x-2 hover:bg-emerald-600">
                     <div className="my-auto w-2.5 h-2.5">
-                        <Icon title="Create project" name="plus" />
+                        <Icon title="Create bucket" name="plus" />
                     </div>
 
                     <div className="my-auto">
-                        <p className="text-sm text-left">Create Project</p>
+                        <p className="text-sm text-left">Create Bucket</p>
                     </div>
                 </button> }
             </div>
@@ -115,13 +115,13 @@ export const ManageProjects = (props: ManageProjectsProps) => {
   </>
 }
 
-type manageProjectsProps = ManageProjectsProps & {
+type manageBucketsProps = ManageBucketsProps & {
     tabLoading?: boolean
     activeId?: string;
     setActiveId: (activeId: string) => void;
 }
 
-const Navigation = (props: manageProjectsProps) => {
+const Navigation = (props: manageBucketsProps) => {
     return <div className="w-full border-b border-zinc-100 flex gap-x-8">
         {
             TABS.map(t => {
@@ -137,9 +137,9 @@ const Navigation = (props: manageProjectsProps) => {
     </div>
 }
 
-const Body = (props: manageProjectsProps) => {
-    const projects = props.projects || []
-    const [manage, setManage] = React.useState(null as ManageProjectProps | null)
+const Body = (props: manageBucketsProps) => {
+    const buckets = props.buckets || []
+    const [manage, setManage] = React.useState(null as ManageBucketProps | null)
 
     const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         if(props.onSearch){
@@ -147,34 +147,34 @@ const Body = (props: manageProjectsProps) => {
         }
     }
 
-    const onProjectClick = (project: ManagedProject) => {
+    const onBucketClick = (bucket: ManagedBucket) => {
         setManage({
-            ...project,
+            ...bucket,
             onDelete: async () => {
-                if(props.onDeleteProject){
-                    return props.onDeleteProject(project)
+                if(props.onDeleteBucket){
+                    return props.onDeleteBucket(bucket)
                 }
             },
             onInstall: async () => {
-              if(props.onInstallProject){
-                  return props.onInstallProject(project)
+              if(props.onInstallBucket){
+                  return props.onInstallBucket(bucket)
               }
             },
             onUninstall: async () => {
-                if(props.onUninstallProject){
-                    return props.onUninstallProject(project)
+                if(props.onUninstallBucket){
+                    return props.onUninstallBucket(bucket)
                 }
             },
             onFinish: () => setManage(null),
             onCancel: () => setManage(null)
         })
-        props.onProjectClick && props.onProjectClick(project)
+        props.onBucketClick && props.onBucketClick(bucket)
     }
 
     return <>
         {props.tabLoading && <div className="flex h-full"><div className="m-auto w-6 h-6 stroke-zinc-400"><LoaderIcon  /></div></div>}
         {!props.tabLoading && <>
-            { manage && <ManageProject {...manage} />}
+            { manage && <ManageBucket {...manage} />}
 
             <div className="relative px-1">
                 <div className="absolute left-4 top-4 text-zinc-500 h-3.5 w-3.5">
@@ -184,18 +184,18 @@ const Body = (props: manageProjectsProps) => {
                     className="rounded-lg mt-1 block w-full px-8 pr-3 py-2 bg-white hover:border-zinc-500 text-slate-500 focus:text-slate-600 text-sm placeholder-zinc-400 border border-zinc-300 rounded-sm shadow-sm
                                 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-500
                                 disabled:bg-zinc-50 disabled:text-zinc-500 disabled:border-zinc-200 disabled:shadow-none"
-                    placeholder="Search for projects"
+                    placeholder="Search for buckets"
                     type="search"
                     onChange={onSearch}
                 />
             </div>
 
-            <div className="overflow-y-auto px-1 pb-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" onScroll={onScrollBottom(props.onMoreProjects)}>
-                { projects.length > 0 && projects.map(o => <ProjectItem
-                        key={o.projectId}
+            <div className="overflow-y-auto px-1 pb-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" onScroll={onScrollBottom(props.onMoreBuckets)}>
+                { buckets.length > 0 && buckets.map(o => <BucketItem
+                        key={o.bucketId}
                         {...props}
                         {...o}
-                        onProjectClick={onProjectClick}
+                        onBucketClick={onBucketClick}
                         activeId={props.activeId}
                         setActiveId={props.setActiveId}
                     />
@@ -206,14 +206,14 @@ const Body = (props: manageProjectsProps) => {
 
 }
 
-type ProjectItemProps = manageProjectsProps & ManagedProject
+type BucketItemProps = manageBucketsProps & ManagedBucket
 
-const ProjectItem = (props: ProjectItemProps) => {
-    const onClick = () => props.onProjectClick && props.onProjectClick(props)
+const BucketItem = (props: BucketItemProps) => {
+    const onClick = () => props.onBucketClick && props.onBucketClick(props)
     const iconName = props.installed ? "cloudCheck" : props.workspace ? "shieldCheck" : ""
     const iconTitle = props.installed ? "Installed" : "Workspace"
     const iconColor = props.installed ? "text-green-500" : "text-slate-500"
-    const description = props.installed ? "INSTALLED PROJECT" : props.workspace ? "WORKSPACE PROJECT" : "PROJECT"
+    const description = props.installed ? "INSTALLED BUCKET" : props.workspace ? "WORKSPACE BUCKET" : "BUCKET"
 
     return <button onClick={onClick} className="px-5 py-10 w-full text-left rounded-lg border border-zinc-200 hover:shadow-md">
         <div className="flex gap-x-4 text-zinc-600">

@@ -1,9 +1,10 @@
 import * as React                             from "react"
-import {LoaderIcon}                  from "../../../../components";
+import {LoaderIcon}                           from "../../../../components";
 import {BadgeIcon, BadgeIconName, badgeIcons} from "../../../../components/Icon/BadgeIcon";
+import {changeSet, withKey}                   from "../../../../utils/form";
 import {ConfirmDialog}                        from "../../../components/ConfirmDialog/ConfirmDialog";
-import {FormInput}                           from "../../../components/Form/FormInput/FormInput";
-import {ManageCriteria, ManagedCriteria} from "../../ManageCriteria/ManageCriteria";
+import {FormInput}                            from "../../../components/Form/FormInput/FormInput";
+import {ManageCriteria, ManagedCriteria}      from "../../ManageCriteria/ManageCriteria";
 
 /**
  * ManageBadge
@@ -12,7 +13,7 @@ export type ManageBadgeProps = {
     loading?: boolean
     badge?: ManagedBadge
 
-    onSubmit?: (changes: ManageBadgeProps) => Promise<void>;
+    onSubmit?: (badge: ManagedBadge) => Promise<void>;
     onDelete?: () => Promise<void>
     onDownloadForm?: () => Promise<void>
 }
@@ -36,6 +37,9 @@ export type ManagedBadge = {
     hidden?: boolean
 }
 
+/**
+ * Priority
+ */
 export type Priority = "Normal" | "Above Normal" | "High"
 
 /**
@@ -44,37 +48,21 @@ export type Priority = "Normal" | "Above Normal" | "High"
  * @constructor
  */
 export const ManageBadge = (props: ManageBadgeProps) => {
-    const badgeKey = JSON.stringify(props.badge)
-    const [displayName, setDisplayName] = React.useState(props.badge?.displayName)
-    const [description, setDescription] = React.useState(props.badge?.description)
-    const [icon, setIcon] = React.useState(props.badge?.icon)
-    const [tags, setTags] = React.useState(props.badge?.tags)
-    const [skills, setSkills] = React.useState(props.badge?.skills)
-    const [priority, setPriority] = React.useState(props.badge?.priority)
-    const [projectId, setProjectId] = React.useState(props.badge?.projectId)
-    const [parentId, setParentId] = React.useState(props.badge?.parentId)
-    const [level, setLevel] = React.useState((props.badge?.level || 0) + 1)
-    const [hidden, setHidden] = React.useState(props.badge?.hidden)
-    const [criteria, setCriteria] = React.useState(props.badge?.criteria)
+    const [badge, setBadge] = React.useState({...(props.badge || {}),
+        level: (props.badge?.level || 0) + 1,
+    })
     const [saveWaiting, setSaveWaiting] = React.useState(false)
     const [confirmDelete, setConfirmDelete] = React.useState(false)
     const [deleteWaiting, setDeleteWaiting] = React.useState(false)
 
-    const onDisplayNameChange = (next: string) => setDisplayName(next.trim())
-    const onDescriptionChange = (next: string) => setDescription(next.trim())
-    const onIconChange = (next: string) => setIcon(next as BadgeIconName)
-    const onTagsChange = (next: string[]) => setTags(next)
-    const onSkillsChange = (next: string[]) => setSkills(next)
-    const onPriorityChange = (next: string) => setPriority(next as Priority)
-    const onProjectIdChange = (next: string) => setProjectId(next.trim())
-    const onParentIdChange = (next: string) => setParentId(next.trim())
-    const onLevelChange = (next: number) => setLevel(next)
-    const onHiddenChange = (next: boolean) => setHidden(!next)
-    const onCriteriaChange = (next: ManagedCriteria) => setCriteria(next)
-    const onDelete = () => setConfirmDelete(true)
-
+    const badgeKey = JSON.stringify(props.badge)
     const submitDisabled = saveWaiting || deleteWaiting
     const badgeIconOptions: any = {}
+
+    const set = (k: string, v: any) => setBadge(withKey(badge, k, v))
+    const onDelete = () => setConfirmDelete(true)
+
+
     badgeIcons.map(i => {
         badgeIconOptions[i] = <div className="w-16 h-16 m-auto text-slate-600">
             <BadgeIcon title={i} name={i} />
@@ -86,20 +74,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
 
         setSaveWaiting(true)
         if(props.onSubmit){
-            const changes = changeSet(props.badge, {
-                displayName,
-                description,
-                icon,
-                tags,
-                skills,
-                priority,
-                projectId,
-                parentId,
-                level: level - 1,
-                hidden,
-            })
-
-            return props.onSubmit(changes).then(() => setSaveWaiting(false))
+            return props.onSubmit(changeSet(props.badge, {...badge, level: badge.level - 1}))
+                .then(() => setSaveWaiting(false))
         }
     }
 
@@ -110,18 +86,9 @@ export const ManageBadge = (props: ManageBadgeProps) => {
         }
     }
 
-    React.useEffect(() => {
-        setDisplayName(props.badge?.displayName)
-        setDescription(props.badge?.description)
-        setIcon(props.badge?.icon)
-        setTags(props.badge?.tags)
-        setSkills(props.badge?.skills)
-        setPriority(props.badge?.priority)
-        setProjectId(props.badge?.projectId)
-        setParentId(props.badge?.parentId)
-        setLevel((props.badge?.level || 0) + 1)
-        setHidden(props.badge?.hidden)
-    }, [badgeKey])
+    React.useEffect(() => setBadge({...(props.badge || {}),
+        level: (props.badge?.level || 0) + 1,
+    }), [badgeKey])
 
     return <>
         { !!props.loading && <></>}
@@ -169,8 +136,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 required
                                 displayName="Name"
                                 description="The display name of the badge."
-                                textValue={displayName}
-                                onTextChange={onDisplayNameChange}
+                                textValue={badge.displayName}
+                                onTextChange={v => set("displayName", v)}
                             />
                         </div>
 
@@ -181,8 +148,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 description="A free form description of the badge. Max character count is 150."
                                 placeholder="Describe the badge in 150 characters or less."
                                 maxLength={150}
-                                textValue={description}
-                                onTextChange={onDescriptionChange}
+                                textValue={badge.description}
+                                onTextChange={v => set("description", v)}
                             />
                         </div>
 
@@ -193,9 +160,9 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 type="component"
                                 displayName="Icon"
                                 description="The name of the icon to display for the badge."
-                                componentValue={icon}
+                                componentValue={badge.icon}
                                 options={badgeIconOptions}
-                                onComponentChange={onIconChange}
+                                onComponentChange={v => set("icon", v)}
                             />
                         </div>
 
@@ -203,8 +170,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                         <h1 className="text-md font-bold">Requirements</h1>
                         <div className="ml-auto w-full max-w-[40rem]">
                             <ManageCriteria
-                                criteria={criteria}
-                                onCriteriaChange={onCriteriaChange}
+                                criteria={badge.criteria}
+                                onCriteriaChange={v => set("criteria", v)}
                             />
                         </div>
 
@@ -215,8 +182,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 type="tags"
                                 displayName="Tags"
                                 description="Comma-separated list of tags describing the badge allowing the badge to be more easily found."
-                                tagsValue={tags}
-                                onTagsChange={onTagsChange}
+                                tagsValue={badge.tags}
+                                onTagsChange={v => set("tags", v)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -224,8 +191,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 type="tags"
                                 displayName="Skills"
                                 description="Comma-separated list of tags describing which skills a learner can expect to improve upon completing the badge."
-                                tagsValue={skills}
-                                onTagsChange={onSkillsChange}
+                                tagsValue={badge.skills}
+                                onTagsChange={v => set("skills", v)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -238,8 +205,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                     "Above Normal": "",
                                     "High": "",
                                 }}
-                                selectedOption={priority}
-                                onSelectChange={onPriorityChange}
+                                selectedOption={badge.priority}
+                                onSelectChange={v => set("priority", v)}
                             />
                         </div>
                         <div className="ml-auto w-full max-w-[40rem]">
@@ -247,8 +214,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 required
                                 displayName="Project ID"
                                 description="The ID of the project that the badge belongs to."
-                                textValue={projectId}
-                                onTextChange={onProjectIdChange}
+                                textValue={badge.projectId}
+                                onTextChange={v => set("projectId", v)}
                             />
                         </div>
 
@@ -256,8 +223,8 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                             <FormInput
                                 displayName="Parent ID"
                                 description="The ID of the prerequisite badge needed before this badge can be started."
-                                textValue={parentId}
-                                onTextChange={onParentIdChange}
+                                textValue={badge.parentId}
+                                onTextChange={v => set("parentId", v)}
                             />
                         </div>
 
@@ -266,9 +233,9 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                                 type="number"
                                 displayName="Level"
                                 description="The level of difficulty the learner can expect for the badge."
-                                numberValue={level}
+                                numberValue={badge.level}
                                 min={1}
-                                onNumberChange={onLevelChange}
+                                onNumberChange={v => set("level", v)}
                             />
                         </div>
 
@@ -277,10 +244,10 @@ export const ManageBadge = (props: ManageBadgeProps) => {
                         <div className="ml-auto w-full max-w-[40rem]">
                             <FormInput
                                 type="toggle"
-                                displayName={hidden ? "Hidden" : "Visible"}
+                                displayName={badge.hidden ? "Hidden" : "Visible"}
                                 description="When visible, the badge will be shown to consumers."
-                                toggleValue={!hidden}
-                                onToggleChange={onHiddenChange}
+                                toggleValue={!badge.hidden}
+                                onToggleChange={v => set("hidden", !v)}
                             />
                         </div>
 
@@ -357,19 +324,4 @@ const BadgeEmblem = (badge: ManagedBadge) => {
             </div>
         </>
     </div>
-}
-
-const changeSet = (from?: ManagedBadge, to?: ManagedBadge) => {
-    const fromObj: any = from || {}
-    const toObj: any = to || {}
-    const keys = Object.keys(toObj)
-    const changes: any = {}
-    let hasChanges = false
-    keys.forEach(k => {
-        if(fromObj[k] != toObj[k]){
-            changes[k] = toObj[k]
-            hasChanges = true
-        }
-    })
-    return hasChanges ? changes : null
 }
