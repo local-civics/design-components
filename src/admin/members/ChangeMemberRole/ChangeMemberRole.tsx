@@ -1,8 +1,8 @@
 import * as React        from "react"
 import {Overlay}         from "../../../components";
 import {stopPropagation} from "../../../utils/event";
-import {FormDialog}      from "../../components/Form/FormDialog/FormDialog";
-import {FormInput}       from "../../components/Form/FormInput/FormInput";
+import {Dialog}      from "../../components/Dialog/Dialog";
+import {FormInput}       from "../../components/FormInput/FormInput";
 
 /**
  * ChangeMemberRoleProps
@@ -54,7 +54,7 @@ export const ChangeMemberRole = (props: ChangeMemberRoleProps) => {
     }
 
     return <Overlay onClick={props.onCancel}>
-        { success && <FormDialog
+        { success && <Dialog
             onClose={onFinish}
             title="Role changed!"
             description="We've received your request to change the member role. Please allow up to 5 mins. for changes to complete."
@@ -63,6 +63,7 @@ export const ChangeMemberRole = (props: ChangeMemberRoleProps) => {
             <h1 className="text-xl my-auto grow font-bold">Change member role?</h1>
             <FormInput
                 required
+                type="select"
                 displayName="Role"
                 description="Select role to assign to the member."
                 selectedOption={role}

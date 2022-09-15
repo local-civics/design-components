@@ -6,7 +6,7 @@ import { TagFilter, TagFilterProps } from "./TagFilter";
  * Storybook component configuration
  */
 export default {
-  title: "Student/Activity/TagFilter",
+  title: "Student/Activities/TagFilter",
   component: TagFilter,
 };
 

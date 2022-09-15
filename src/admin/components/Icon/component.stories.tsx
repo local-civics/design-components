@@ -7,7 +7,7 @@ import { Icon, IconProps, iconNames } from "./Icon";
  * Storybook component configuration
  */
 export default {
-  title: "Admin/Icon",
+  title: "Admin/Library/Icon",
   component: Icon,
   argTypes: {
     name: {

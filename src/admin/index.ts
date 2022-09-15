@@ -1,5 +1,5 @@
-export * from "./layouts/AdminLayout/AdminLayout"
+export * from "./components/AdminLayout/AdminLayout"
 export * from "./components/Icon/Icon"
 export * from "./members/ManageMembers/ManageMembers"
 export * from "./organizations/ManageOrganizations/ManageOrganizations"
-export * from "./projects/ManageProjects/ManageProjects"
+export * from "./bundles/ManageBundles/ManageBundles"

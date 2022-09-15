@@ -27,7 +27,7 @@ export const Card = (props: CardProps) => {
               onClick={props.onClose}
               className="justify-self-end mx-2 mt-2 h-5 w-5 cursor-pointer text-slate-300 hover:text-slate-400"
             >
-              <Icon name="x & square" />
+              <Icon title="Close" name="x & square" />
             </div>
           )}
 

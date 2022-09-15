@@ -6,7 +6,7 @@ import { ActivityList, ActivityListProps } from "./ActivityList";
  * Storybook component configuration
  */
 export default {
-  title: "Student/Activity/ActivityList",
+  title: "Student/Activities/ActivityList",
   component: ActivityList,
 };
 

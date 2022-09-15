@@ -6,7 +6,7 @@ import { Story }                           from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Admin/ManageBundles/CreateBundle",
+  title: "Admin/Bundles/CreateBundle",
   component: CreateBundle,
 };
 

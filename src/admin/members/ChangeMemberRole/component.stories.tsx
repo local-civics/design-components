@@ -6,7 +6,7 @@ import { Story }                                   from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Admin/ManageMembers/ChangeMemberRole",
+  title: "Admin/Members/ChangeMemberRole",
   component: ChangeMemberRole,
 };
 

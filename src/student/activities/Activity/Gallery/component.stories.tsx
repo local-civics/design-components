@@ -7,7 +7,7 @@ import { Gallery, GalleryProps } from "./Gallery";
  * Storybook component configuration
  */
 export default {
-  title: "Student/Activity/Gallery",
+  title: "Student/Activities/Gallery",
   component: Gallery,
 };
 

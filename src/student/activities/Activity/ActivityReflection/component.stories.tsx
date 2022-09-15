@@ -6,7 +6,7 @@ import { Story }                                       from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Student/Activity/ActivityReflection",
+  title: "Student/Activities/ActivityReflection",
   component: ActivityReflection,
 };
 

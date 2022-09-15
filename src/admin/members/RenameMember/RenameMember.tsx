@@ -1,8 +1,8 @@
 import * as React        from "react"
 import {Overlay}         from "../../../components";
 import {stopPropagation} from "../../../utils/event";
-import {FormDialog}      from "../../components/Form/FormDialog/FormDialog";
-import {FormInput}       from "../../components/Form/FormInput/FormInput";
+import {Dialog}      from "../../components/Dialog/Dialog";
+import {FormInput}       from "../../components/FormInput/FormInput";
 
 /**
  * RenameMemberProps
@@ -40,7 +40,7 @@ export const RenameMember = (props: RenameMemberProps) => {
     }
 
     return <Overlay onClick={props.onCancel}>
-        { success && <FormDialog
+        { success && <Dialog
             onClose={onFinish}
             title="Member renamed!"
             description="We've received your request to rename the member. Please allow up to 5 mins. for changes to complete."

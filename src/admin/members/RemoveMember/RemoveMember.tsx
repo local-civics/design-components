@@ -1,7 +1,7 @@
 import * as React        from "react"
 import {Overlay}         from "../../../components";
 import {stopPropagation} from "../../../utils/event";
-import {FormDialog}      from "../../components/Form/FormDialog/FormDialog";
+import {Dialog}      from "../../components/Dialog/Dialog";
 
 /**
  * RemoveMemberProps
@@ -36,7 +36,7 @@ export const RemoveMember = (props: RemoveMemberProps) => {
     }
 
     return <Overlay onClick={props.onCancel}>
-        { success && <FormDialog
+        { success && <Dialog
             onClose={onFinish}
             title="Member removed!"
             description="We've received your request to remove the member. Please allow up to 5 mins. for changes to complete."

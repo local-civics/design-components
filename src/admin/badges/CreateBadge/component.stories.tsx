@@ -6,7 +6,7 @@ import { Story }                         from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Admin/Badge/CreateBadge",
+  title: "Admin/Badges/CreateBadge",
   component: CreateBadge,
 };
 

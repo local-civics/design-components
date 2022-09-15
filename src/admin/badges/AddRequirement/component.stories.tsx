@@ -6,7 +6,7 @@ import { Story }                               from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Admin/ManageCriteria/AddRequirement",
+  title: "Admin/Badges/AddRequirement",
   component: AddRequirement,
 };
 

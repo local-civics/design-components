@@ -1,9 +1,9 @@
 import * as React        from "react"
 import {Overlay}         from "../../../components";
 import {stopPropagation} from "../../../utils/event";
-import {withKey}         from "../../../utils/form";
-import {FormDialog}      from "../../components/Form/FormDialog/FormDialog";
-import {FormInput}       from "../../components/Form/FormInput/FormInput";
+import {withKey}    from "../../../utils/form";
+import {Dialog} from "../../components/Dialog/Dialog";
+import {FormInput}  from "../../components/FormInput/FormInput";
 
 const MIN_DISPLAY_NAME_LENGTH = 5
 
@@ -49,7 +49,7 @@ export const CreateOrganization = (props: CreateOrganizationProps) => {
     }
 
     return <Overlay onClick={props.onCancel}>
-        { success && <FormDialog
+        { success && <Dialog
             onClose={onFinish}
             title="Organization created!"
             description="We've received your request to create the organization. Please allow up to 5 mins. for changes to complete."

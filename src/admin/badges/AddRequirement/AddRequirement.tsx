@@ -1,7 +1,7 @@
 import * as React        from "react"
 import {Overlay}         from "../../../components";
 import {stopPropagation} from "../../../utils/event";
-import {FormInput}       from "../../components/Form/FormInput/FormInput";
+import {FormInput}       from "../../components/FormInput/FormInput";
 
 const MIN_DISPLAY_NAME_LENGTH = 5
 

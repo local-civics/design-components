@@ -6,7 +6,7 @@ import { ActivityItem, ActivityItemProps } from "./ActivityItem";
  * Storybook component configuration
  */
 export default {
-  title: "Student/Activity/ActivityItem",
+  title: "Student/Activities/ActivityItem",
   component: ActivityItem,
 };
 

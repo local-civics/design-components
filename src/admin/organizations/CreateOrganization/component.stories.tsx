@@ -6,7 +6,7 @@ import { Story }                                       from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Admin/ManageOrganizations/CreateOrganization",
+  title: "Admin/Organizations/CreateOrganization",
   component: CreateOrganization,
 };
 
