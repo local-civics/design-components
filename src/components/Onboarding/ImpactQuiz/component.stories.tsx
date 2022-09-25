@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<ImpactQuizProps> = (args) => (
   <div className="w-max font-proxima m-auto">
-    <ImpactQuiz {...args} />
+    <ImpactQuiz persona="student" {...args} />
   </div>
 );
 
