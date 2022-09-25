@@ -148,7 +148,7 @@ const Body = (props: listBundlesProps) => {
     }
 
     const onBundleClick = (bundle: Bundle) => {
-        setManage({
+        setBundle({
             ...bundle,
             onDelete: async () => {
                 if(props.onDeleteBundle){
@@ -165,8 +165,8 @@ const Body = (props: listBundlesProps) => {
                     return props.onUninstallBundle(bundle)
                 }
             },
-            onFinish: () => setManage(null),
-            onCancel: () => setManage(null)
+            onFinish: () => setBundle(null),
+            onCancel: () => setBundle(null)
         })
         props.onBundleClick && props.onBundleClick(bundle)
     }
