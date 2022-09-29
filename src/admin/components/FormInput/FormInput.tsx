@@ -1,7 +1,6 @@
-import LinkifyIt    from "linkify-it";
-import reactStringReplace from "react-string-replace"
 import React    from "react";
 import { Icon } from "../Icon/Icon";
+import {linkify} from "../../../utils/url";
 
 /**
  * FormInputProps
@@ -595,20 +594,4 @@ const isEmpty = (props: FormInputProps) => {
   }
 
   return false
-}
-
-const linkify = (text: string) => {
-  const matches = LinkifyIt().match(text)
-  let replacedText = reactStringReplace(text)
-  matches?.forEach(match => {
-      replacedText = reactStringReplace(replacedText, match.raw, () => <a
-          key={match.url}
-          href={match.url}
-          target="_blank"
-          rel="noreferrer"
-          className="hover:underline text-blue-500"
-        >{match.text}</a>)
-  })
-
-  return replacedText
 }

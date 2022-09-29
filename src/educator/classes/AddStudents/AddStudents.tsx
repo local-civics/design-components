@@ -1,9 +1,9 @@
-import {LocalFile}       from "papaparse";
 import * as React        from "react"
 import {Overlay}         from "../../../components";
 import {Icon}            from "../../../components/Icon/Icon";
 import {stopPropagation} from "../../../utils/event";
 import * as Papa         from "papaparse"
+import {LocalFile}       from "papaparse";
 
 /**
  * AddStudentsProps
@@ -148,8 +148,8 @@ const AddManually = (props: AddStudentsProps) => {
     const [email, setEmail] = React.useState("")
 
     const submitDisabled = !givenName || !familyName || !email
-    const onGivenNameChange = (value: string) => setGivenName(value.trim())
-    const onFamilyNameChange = (value: string) => setFamilyName(value.trim())
+    const onGivenNameChange = (value: string) => setGivenName(value)
+    const onFamilyNameChange = (value: string) => setFamilyName(value)
     const onEmailChange = (value: string) => setEmail(value.trim())
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

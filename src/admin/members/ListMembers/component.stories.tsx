@@ -46,7 +46,6 @@ const Template: Story<ListMembersProps> = (args) => {
       <ListMembers
           members={members}
           {...args}
-          loading={null}
       />
   </div>
 };

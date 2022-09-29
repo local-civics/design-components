@@ -23,7 +23,7 @@ export type RenameOrganizationProps = {
 export const RenameOrganization = (props: RenameOrganizationProps) => {
     const [displayName, setDisplayName] = React.useState(props.displayName)
     const [success, setSuccess] = React.useState(false)
-    const onDisplayNameChange = (value: string) => setDisplayName(value.trim())
+    const onDisplayNameChange = (value: string) => setDisplayName(value)
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

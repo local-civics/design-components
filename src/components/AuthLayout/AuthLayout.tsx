@@ -1,12 +1,13 @@
 import React                                    from "react";
-import { Loader, NavBar, NavBarProps, NavLink } from "../../../components";
+import {Loader} from "../Loader";
+import { NavBar, NavBarProps, NavLink } from "../NavBar";
 
 /**
  * AuthLayoutProps
  */
 export type AuthLayoutProps = {
   isLoading?: boolean;
-  tenantName?: string;
+  username?: string;
   impactStatement?: string;
   pathname?: string;
   page?: "profile" | "explore" | "calendar";
@@ -36,7 +37,7 @@ export type AuthLayoutProps = {
 export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   const onOnboarding = () => props.onOnboarding && props.onOnboarding();
   React.useEffect(() => {
-    if (!props.tenantName) {
+    if (!props.username) {
       return;
     }
 
@@ -44,7 +45,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
       onOnboarding();
       return;
     }
-  }, [props.tenantName, props.impactStatement, props.pathname]);
+  }, [props.username, props.impactStatement, props.pathname]);
 
   return (
     <main className="relative h-screen w-full bg-white font-proxima">

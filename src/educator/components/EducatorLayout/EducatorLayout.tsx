@@ -7,25 +7,20 @@ import {LoaderIcon, Logo} from "../../../components";
 export type EducatorPageName = "Classes"
 const PAGES: EducatorPageName[] = ["Classes"]
 const DEFAULT_PAGE: EducatorPageName = "Classes"
-export type EducatorPageMap = (params: EducatorPageParams) => React.ReactNode;
-export type EducatorPageParams = {
-    loading?: React.ReactNode
-    pageName: EducatorPageName
-}
 
 /**
  * EducatorLayoutProps
  */
 export type EducatorLayoutProps = {
-    loading?: boolean
+    isLoading?: boolean
     pageName: EducatorPageName
     continueNav?: boolean
-    map?: EducatorPageMap
     givenName?: string
     familyName?: string
     avatarURL?: string
+    children?: React.ReactNode
 
-    onPageChange?: (next: EducatorPageName) => Promise<void>;
+    onPageChange?: (next: EducatorPageName) => void;
     onSignOut?: () => void;
 }
 
@@ -35,50 +30,19 @@ export type EducatorLayoutProps = {
  * @constructor
  */
 export const EducatorLayout = (props: EducatorLayoutProps) => {
-    const map = props.map || (() => null)
-    const [loading, setLoading] = React.useState(props.loading)
-    const [pageName, setPageName] = React.useState(props.pageName || DEFAULT_PAGE)
-    const [page, setPage] = React.useState(map({...props, pageName}))
-
-    const onPageChange = async (next: EducatorPageName) => {
-        if(pageName === next || loading){
-            return
-        }
-
-        setPageName(next)
-        setPage(map({
-            ...props,
-            pageName: next,
-            loading: <div className="flex h-full"><div className="m-auto w-6 h-6 stroke-gray-400"><LoaderIcon  /></div></div>,
-        }))
-        setLoading(true)
-
-        if(props.onPageChange){
-            return props.onPageChange(next).then(() => {
-                setPage(map({...props, pageName: next}))
-                setLoading(false)
-            })
-        }
-    }
-
-    React.useEffect(() => {
-        (async () => {
-            await onPageChange(props.pageName || DEFAULT_PAGE)
-        })()
-    }, [props.loading, props.pageName])
-
     return <div className="h-screen overflow-hidden font-proxima">
-        <Header {...props} onPageChange={onPageChange}/>
+        <Header {...props} onPageChange={props.onPageChange}/>
         <Navigation {...props}
-                    pageName={pageName}
-                    onPageChange={onPageChange}
-                    loading={loading}
+                    pageName={props.pageName}
+                    onPageChange={props.onPageChange}
+                    isLoading={props.isLoading}
         />
         <div className="flex h-full pb-60">
             <main className="h-full w-full">
                 <div className="overflow-y-auto h-full grid grid-cols-1">
                     <div className="flex flex-col h-full w-full px-4 lg:px-36">
-                        { page }
+                        { props.isLoading && <div className="flex h-full"><div className="m-auto w-6 h-6 stroke-gray-400"><LoaderIcon  /></div></div> }
+                        { !props.isLoading && props.children }
                     </div>
                 </div>
             </main>
@@ -86,9 +50,7 @@ export const EducatorLayout = (props: EducatorLayoutProps) => {
     </div>
 }
 
-type HeaderProps = EducatorLayoutProps & {
-
-}
+type HeaderProps = EducatorLayoutProps
 
 const Header = (props: HeaderProps) => {
     const goHome = () => props.onPageChange && props.onPageChange(DEFAULT_PAGE)
@@ -99,10 +61,10 @@ const Header = (props: HeaderProps) => {
     </div>
 }
 
-type NavigationProps = EducatorLayoutProps & EducatorPageParams & {}
+type NavigationProps = EducatorLayoutProps
 
 const Navigation = (props: NavigationProps) => {
-    const hasDetails = !!props.givenName || !!props.familyName
+    const hasDetails = !props.isLoading && (!!props.givenName || !!props.familyName)
     const stopPropagation = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
@@ -120,7 +82,7 @@ const Navigation = (props: NavigationProps) => {
                             <button
                                 type="button"
                                 onClick={() => props.onPageChange && props.onPageChange(p)}
-                                disabled={!!props.loading || props.pageName === p}
+                                disabled={!!props.isLoading || props.pageName === p}
                                 className={`flex font-bold w-full justify-items-start gap-x-2 capitalize p-2 ${active}`}>
 
                                 <p className="text-md my-auto">{ p }</p>
@@ -132,13 +94,13 @@ const Navigation = (props: NavigationProps) => {
             <div className="ml-auto my-auto z-10">
                 <div className="h-10 my-auto">
                     <div onClick={stopPropagation} className="flex ml-auto w-max gap-x-2 justify-end">
-                        <button disabled className="w-11 h-11 border-gray-50 border-4 rounded-full">
+                        { !props.isLoading && <button disabled className="w-11 h-11 border-gray-50 border-4 rounded-full overflow-hidden">
                             <img className="object-contain"
                                  referrerPolicy="no-referrer"
                                  alt="avatar"
                                  src={props.avatarURL}
                             />
-                        </button>
+                        </button> }
                         {hasDetails && <div className="my-auto">
                             <div className="flex gap-x-1 font-bold text-sm text-gray-600">
                                 { props.givenName && <span>{props.givenName}</span> }

@@ -57,7 +57,6 @@ const Template: Story<ListActivitiesProps> = (args) => {
       <ListActivities
           activities={activities}
           {...args}
-          loading={null}
       />
   </div>
 };

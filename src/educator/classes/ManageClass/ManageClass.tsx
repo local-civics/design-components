@@ -3,12 +3,13 @@ import {Icon}           from "../../../components/Icon/Icon";
 import {onScrollBottom}          from "../../../utils/pagination";
 import {AddStudents, NewStudent} from "../AddStudents/AddStudents";
 import {RemoveStudent}           from "../RemoveStudent/RemoveStudent";
+import {LoaderIcon} from "../../../components";
 
 /**
- * PatchClass
+ * ManageClass
  */
-export type PatchClassProps = {
-    loading?: React.ReactNode
+export type ManageClassProps = {
+    isLoading?: boolean
     displayName?: string
     grade?: string
     subject?: string
@@ -37,11 +38,11 @@ export type Student = {
 
 
 /**
- * PatchClass
+ * ManageClass
  * @param props
  * @constructor
  */
-export const PatchClass = (props: PatchClassProps) => {
+export const ManageClass = (props: ManageClassProps) => {
     const roster = props.students || []
     const [createStudent, setAddStudents] = React.useState(false)
     const [activeId, setActiveId] = React.useState("")
@@ -79,7 +80,7 @@ export const PatchClass = (props: PatchClassProps) => {
                         </div>}
                     </div>
                 </div>
-                { !props.loading && <button
+                { !props.isLoading && <button
                     onClick={() => setAddStudents(true)}
                     className="ml-auto py-2.5 px-5 rounded-md text-white flex gap-x-2 text-gray-500 hover:text-gray-600">
                     <div className="my-auto w-5 h-5">
@@ -92,9 +93,9 @@ export const PatchClass = (props: PatchClassProps) => {
                 </button> }
             </div>
 
-            { props.loading }
+            { props.isLoading && <div className="flex h-full"><div className="m-auto w-6 h-6 stroke-gray-400"><LoaderIcon  /></div></div> }
 
-            { !props.loading && <>
+            { !props.isLoading && <>
                 <div className="flex w-full mt-10 py-5">
                     <div className="flex gap-x-5 ml-auto">
                         <button type="button" onClick={props.onCopyClassLink} className="flex gap-x-1 text-sm">
@@ -113,8 +114,8 @@ export const PatchClass = (props: PatchClassProps) => {
                                 <th className="w-4/12 p-5 rounded-tl-md ellipsis">Student</th>
                                 <th className="w-2/12">Last Seen</th>
                                 <th className="w-1/12">Grade</th>
-                                <th></th>
-                                <th className="w-1/12 p-5 rounded-tr-md"></th>
+                                <th/>
+                                <th className="w-1/12 p-5 rounded-tr-md"/>
                             </thead>
                             <tbody>
                                 { roster.length > 0 && roster.map((o, i) => <StudentItem
@@ -135,7 +136,7 @@ export const PatchClass = (props: PatchClassProps) => {
   </>
 }
 
-type StudentItemProps = PatchClassProps & Student & {
+type StudentItemProps = ManageClassProps & Student & {
     number: number
     activeId?: string;
     setActiveId: (activeId: string) => void;

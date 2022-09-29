@@ -1,5 +1,6 @@
 import React               from "react";
-import { NavBar, NavLink } from "../../../components";
+import { NavBar, NavLink } from "../../NavBar";
+import {Loader} from "../../Loader";
 
 /**
  * HomeLayoutProps
@@ -40,15 +41,17 @@ export const HomeLayout = (props: HomeLayoutProps) => {
 
   return (
     <main className="relative h-screen w-full overflow-hidden bg-white font-proxima">
-      <NavBar>
-        <NavLink name="home" onClick={props.onHome} active />
-        <NavLink name="login" onClick={props.onLogin} />
-        <NavLink name="faq" onClick={props.onFAQ} />
-        <NavLink name="privacy" onClick={props.onPrivacy} />
-        <NavLink name="terms" onClick={props.onTerms} />
-      </NavBar>
+      <Loader isLoading={props.isLoading}>
+        <NavBar>
+          <NavLink name="home" onClick={props.onHome} active />
+          <NavLink name="login" onClick={props.onLogin} />
+          <NavLink name="faq" onClick={props.onFAQ} />
+          <NavLink name="privacy" onClick={props.onPrivacy} />
+          <NavLink name="terms" onClick={props.onTerms} />
+        </NavBar>
 
-      <section className="absolute top-0 left-0 h-full overflow-hidden pt-16 w-full">{props.children}</section>
+        <section className="absolute top-0 left-0 h-full overflow-hidden pt-16 w-full">{props.children}</section>
+      </Loader>
     </main>
   );
 };

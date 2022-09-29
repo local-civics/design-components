@@ -13,26 +13,26 @@ export type LoaderProps = {
  * A component for content that is not ready to be displayed.
  */
 export const Loader = (props: LoaderProps) => {
-  const loaderClassName = builder("stroke-sky-300 flex absolute top-0 left-0 h-full w-full m-auto transition ease-in-out duration-500")
+  const loaderClassName = builder("stroke-sky-300 flex w-10 h-10 m-auto transition ease-in-out duration-500")
     .if(!!props.isLoading, "visible opacity-full")
     .else("invisible opacity-0")
     .build();
 
-  const contentClassName = builder("w-full transition ease-in-out duration-500")
-    .if(!!props.isLoading, "invisible opacity-0")
-    .else("visible opacity-full")
+  const contentClassName = builder("transition ease-in-out duration-500")
+    .if(!!props.isLoading, "invisible opacity-0 w-max")
+    .else("visible opacity-full w-full")
     .build();
 
-  const containerClassName = builder("my-auto").if(!!props.isLoading, "relative").build();
+  const containerClassName = builder("my-auto").if(!!props.isLoading, "relative w-full h-full flex").build();
 
   return (
     <>
       <div className={containerClassName}>
         {/*<!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->*/}
-        <div className={loaderClassName}>
+        { !!props.isLoading && <div className={loaderClassName}>
           <LoaderIcon />
-        </div>
-        <div className={contentClassName}>{props.children}</div>
+        </div> }
+        <div className={contentClassName}>{!props.isLoading && props.children}</div>
       </div>
     </>
   );
@@ -41,8 +41,6 @@ export const Loader = (props: LoaderProps) => {
 export const LoaderIcon = () => {
   return <svg
       className="w-full h-full drop-shadow-[inherit]"
-      width="35"
-      height="35"
       viewBox="0 0 45 45"
       xmlns="http://www.w3.org/2000/svg"
   >

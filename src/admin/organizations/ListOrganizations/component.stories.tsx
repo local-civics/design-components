@@ -32,7 +32,6 @@ const Template: Story<ListOrganizationsProps> = (args) => {
       <ListOrganizations
           organizations={organizations}
           {...args}
-          loading={null}
       />
   </div>
 };

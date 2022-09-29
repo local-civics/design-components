@@ -26,13 +26,18 @@ const Template: Story<ListClassesProps> = (args) => {
     },{
         displayName: "Class #4",
         classId: "P3orv6ygAHPWXsmtiqxBQf1t5cRCDQL4"
+    },{
+        displayName: "Class #5",
+        classId: "P3orv6ygAHPWXsmtiqxBQf1t5cRCDQL5"
+    },{
+        displayName: "Class #6",
+        classId: "P3orv6ygAHPWXsmtiqxBQf1t5cRCDQL6"
     }]
 
-    return <div className="h-screen w-full overscroll-none font-proxima pt-10">
+    return <div className="h-screen w-full overscroll-none font-proxima">
       <ListClasses
           classes={classes}
           {...args}
-          loading={null}
       />
   </div>
 };

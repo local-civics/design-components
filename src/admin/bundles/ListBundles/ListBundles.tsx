@@ -13,7 +13,7 @@ const DEFAULT_TAB: ListBundlesTab = "All bundles"
  * ListBundles
  */
 export type ListBundlesProps = {
-    loading?: React.ReactNode
+    isLoading?: boolean
     tab?: ListBundlesTab
     bundles?: Bundle[]
 
@@ -73,7 +73,7 @@ export const ListBundles = (props: ListBundlesProps) => {
         <div onClick={() => setActiveId("")} className="text-zinc-600 h-full px-20 py-10">
             <div className="flex">
                 <p className="text-2xl font-bold">Bundles</p>
-                { !props.loading && <button
+                { !props.isLoading && <button
                     onClick={() => setCreateBundle(true)}
                     className="ml-auto py-2.5 px-5 rounded-md text-white bg-emerald-500 flex gap-x-2 hover:bg-emerald-600">
                     <div className="my-auto w-2.5 h-2.5">
@@ -86,9 +86,9 @@ export const ListBundles = (props: ListBundlesProps) => {
                 </button> }
             </div>
 
-            { props.loading }
+            { props.isLoading }
 
-            { !props.loading && <>
+            { !props.isLoading && <>
                 <p>Create and manage curricula resource groups.</p>
 
                 <div className="h-full mt-5">

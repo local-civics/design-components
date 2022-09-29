@@ -1,4 +1,4 @@
-import React                           from "react";
+import * as React                           from "react";
 import { HomeLayout, HomeLayoutProps } from "./HomeLayout";
 import { Story }                       from "@storybook/react";
 

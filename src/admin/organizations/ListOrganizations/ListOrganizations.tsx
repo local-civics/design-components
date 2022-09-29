@@ -9,7 +9,7 @@ import {RenameOrganization}                  from "../RenameOrganization/RenameO
  * ListOrganizations
  */
 export type ListOrganizationsProps = {
-    loading?: React.ReactNode
+    isLoading?: boolean
     organizations?: Organization[]
 
     onSearch?: (value: string) => void;
@@ -54,7 +54,7 @@ export const ListOrganizations = (props: ListOrganizationsProps) => {
         <div onClick={() => setActiveId("")} className="text-zinc-600 h-full px-20 py-10">
             <div className="flex">
                 <p className="text-2xl font-bold">Organizations</p>
-                { !props.loading && <button
+                { !props.isLoading && <button
                     onClick={() => setCreateOrganization(true)}
                     className="ml-auto py-2.5 px-5 rounded-md text-white bg-emerald-500 flex gap-x-2 hover:bg-emerald-600">
                     <div className="my-auto w-2.5 h-2.5">
@@ -67,9 +67,9 @@ export const ListOrganizations = (props: ListOrganizationsProps) => {
                 </button> }
             </div>
 
-            { props.loading }
+            { props.isLoading }
 
-            { !props.loading && <>
+            { !props.isLoading && <>
                 <p>Create and manage schools, teams, and partners.</p>
 
                 <div className="h-full mt-5">

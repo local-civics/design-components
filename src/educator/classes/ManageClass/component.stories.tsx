@@ -1,19 +1,19 @@
 import * as React                                     from "react";
-import {Student, PatchClass, PatchClassProps} from "./PatchClass";
+import {Student, ManageClass, ManageClassProps} from "./ManageClass";
 import { Story }                                      from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Educator/Classes/PatchClass",
-  component: PatchClass,
+  title: "Educator/Classes/ManageClass",
+  component: ManageClass,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<PatchClassProps> = (args) => {
+const Template: Story<ManageClassProps> = (args) => {
     const now = new Date()
 
     const students: Student[] = [{
@@ -72,14 +72,13 @@ const Template: Story<PatchClassProps> = (args) => {
     },]
 
     return <div className="h-screen w-full overscroll-none font-proxima pt-10">
-      <PatchClass
+      <ManageClass
           displayName="AP History"
           grade="Mixed"
           subject="History"
           size={16}
           students={students}
           {...args}
-          loading={null}
       />
   </div>
 };
@@ -87,5 +86,5 @@ const Template: Story<PatchClassProps> = (args) => {
 /**
  * Component stories
  */
-export const Component: Story<PatchClassProps> = Template.bind({});
+export const Component: Story<ManageClassProps> = Template.bind({});
 Component.args = {};

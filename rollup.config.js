@@ -12,7 +12,14 @@ const cfg = [
         file: pkg.main,
         format: "umd",
         name: "components",
-        globals: { react: "React", "react-dom": "ReactDOM", "react/jsx-runtime": "ReactJSXRuntime"},
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+          "react/jsx-runtime": "ReactJSXRuntime",
+          "linkify-it": "LinkifyIt",
+          "react-string-replace": "ReactStringReplace",
+          papaparse: "PapaParse",
+        },
       },
       {
         file: pkg.module,
@@ -32,7 +39,7 @@ const cfg = [
       }),
       terser(),
     ],
-    external: ["react", "react-dom", "react/jsx-runtime"],
+    external: ["react", "react-dom", "react/jsx-runtime", "linkify-it", "react-string-replace", "papaparse"],
   },
 ];
 

@@ -10,7 +10,7 @@ import {ListCriteria, Criteria} from "../ListCriteria/ListCriteria";
  * PatchBadge
  */
 export type PatchBadgeProps = {
-    loading?: boolean
+    isLoading?: boolean
     installed?: boolean
     badge?: Badge
 
@@ -92,10 +92,10 @@ export const PatchBadge = (props: PatchBadgeProps) => {
     }), [badgeKey])
 
     return <>
-        { !!props.loading && <></>}
+        { !!props.isLoading && <></>}
 
         {
-            !props.loading &&
+            !props.isLoading &&
             <>
                 { confirmDelete && <ConfirmDialog
                     title="Delete badge?"

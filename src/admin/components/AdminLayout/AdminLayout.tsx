@@ -1,7 +1,6 @@
 import * as React                                        from "react"
 import {Icon as LogoIcon, LoaderIcon}                    from "../../../components"
 import {Icon}                                            from "../Icon/Icon";
-import {ManageBundlesTab}                                from "../../bundles/ManageBundles/ManageBundles";
 import {AdminContext, AdminContextProps, WorkspaceProps} from "../AdminContext/AdminContext";
 
 /**
@@ -12,28 +11,17 @@ export type AdminPageName = "Home" | "Organizations" |
     "Curricula" | "Activities" | "Badges"
 const PAGES: AdminPageName[] = ["Home", "Organizations", "Members", "Bundles", "Curricula", "Classes", "Insights", "Settings"]
 const DEFAULT_PAGE: AdminPageName = "Home"
-export type AdminPageMap = (params: AdminPageParams) => React.ReactNode;
-export type AdminPageParams = {
-    loading?: React.ReactNode
-    pageName: AdminPageName
-    projectTab?: ManageBundlesTab
-
-    onManageBundlesTabChange?: (next: ManageBundlesTab) => Promise<void>
-}
-
 const CURRICULA_PAGES: AdminPageName[] = ["Activities", "Badges"]
 
 /**
  * AdminLayoutProps
  */
-export type AdminLayoutProps = {
-    loading?: boolean
+export type AdminLayoutProps = AdminContextProps & {
+    isLoading?: boolean
     pageName: AdminPageName
-    ctx?: AdminContextProps
-    map?: AdminPageMap
+    children?: React.ReactNode
 
-    onPageChange?: (next: AdminPageName) => Promise<void>;
-    onManageBundlesTabChange?: (next: ManageBundlesTab) => Promise<void>
+    onPageChange?: (next: AdminPageName) => void;
 }
 
 /**
@@ -42,12 +30,8 @@ export type AdminLayoutProps = {
  * @constructor
  */
 export const AdminLayout = (props: AdminLayoutProps) => {
-    const map = props.map || (() => null)
-    const workspaceKey = JSON.stringify(props.ctx?.workspaces)
+    const workspaceKey = JSON.stringify(props.workspaces)
     const [workspaceName, setWorkspaceName] = React.useState("")
-    const [pageName, setPageName] = React.useState(props.pageName || DEFAULT_PAGE)
-    const [loading, setLoading] = React.useState(props.loading)
-    const [page, setPage] = React.useState(map({...props, pageName}))
     const [menu, setMenu] = React.useState(false)
     const [subNav, setSubNav] = React.useState("")
 
@@ -55,7 +39,7 @@ export const AdminLayout = (props: AdminLayoutProps) => {
 
     const onWorkspaceClick = (w: WorkspaceProps) => {
         setWorkspaceName(w.displayName||"")
-        props.ctx && props.ctx.onWorkspaceClick && props.ctx.onWorkspaceClick(w)
+        props.onWorkspaceClick && props.onWorkspaceClick(w)
     }
 
     const onPageChange = async (next: AdminPageName) => {
@@ -68,34 +52,17 @@ export const AdminLayout = (props: AdminLayoutProps) => {
             setSubNav("")
         }
 
-        if(pageName === next || loading){
-            return
-        }
-
-        setPageName(next)
-        setPage(map({
-            ...props,
-            pageName: next,
-            loading: <div className="flex h-full"><div className="m-auto w-6 h-6 stroke-zinc-400"><LoaderIcon  /></div></div>,
-        }))
-        setLoading(true)
-
-        if(props.onPageChange){
-            return props.onPageChange(next).then(() => {
-                setPage(map({...props, pageName: next}))
-                setLoading(false)
-            })
-        }
+        props.onPageChange && props.onPageChange(next)
     }
 
     React.useEffect(() => {
         (async () => {
             await onPageChange(props.pageName || DEFAULT_PAGE)
         })()
-    }, [props.loading, props.pageName])
+    }, [props.isLoading, props.pageName])
 
     React.useEffect(() => {
-        props.ctx?.workspaces?.map((w) => {
+        props.workspaces?.map((w) => {
             if(w.active){ setWorkspaceName(w.displayName||"") }
         })
     }, [workspaceKey])
@@ -103,20 +70,23 @@ export const AdminLayout = (props: AdminLayoutProps) => {
     return <div onClick={() => setMenu(false)} className="h-screen overflow-hidden font-proxima">
         <Header {...props}
                 onPageChange={onPageChange}
-                ctx={{...props.ctx, onWorkspaceClick: onWorkspaceClick, menu: menu, onClick: () => setMenu(!menu)}}
+                onWorkspaceClick={onWorkspaceClick}
+                menu={menu}
+                onClick={() => setMenu(!menu)}
                 workspaceName={workspaceName}
         />
         <div className="flex h-full pb-20">
             <Navigation {...props}
-                        pageName={pageName}
+                        pageName={props.pageName}
                         onPageChange={onPageChange}
-                        loading={loading}
+                        isLoading={props.isLoading}
                         subNav={subNav}
             />
             <main className="h-full w-full">
                 <div className="overflow-y-auto h-full grid grid-cols-1">
                     <div className="flex flex-col h-full w-full">
-                        { page }
+                        { props.isLoading && <div className="flex h-full"><div className="m-auto w-6 h-6 stroke-zinc-400"><LoaderIcon  /></div></div> }
+                        { !props.isLoading && props.children }
                     </div>
                 </div>
             </main>
@@ -155,7 +125,7 @@ const Header = (props: HeaderProps) => {
             </div> }
         </div>
         <div className="ml-auto my-auto z-10">
-            <AdminContext {...props.ctx} />
+            <AdminContext {...props } />
         </div>
     </div>
 }
@@ -184,7 +154,7 @@ const Navigation = (props: NavigationProps) => {
                             !hasSubNav(p) && <button
                                 type="button"
                                 onClick={() => props.onPageChange && props.onPageChange(p)}
-                                disabled={props.loading || navDisabled(p) || props.pageName === p}
+                                disabled={props.isLoading || navDisabled(p) || props.pageName === p}
                                 className={`flex w-full justify-items-start gap-x-3 capitalize p-2 hover:text-emerald-500 active:text-emerald-500 ${active}`}>
 
                                 { icon && <div className="w-4 h-4 my-auto"><Icon title={p} name={icon} /></div>}
@@ -233,7 +203,7 @@ const subNavigation = (props: NavigationProps, subNav: string) => {
                 return <li key={p} className="w-full">
                     <button
                         onClick={() => props.onPageChange && props.onPageChange(p)}
-                        disabled={props.loading || navDisabled(p) || props.pageName === p}
+                        disabled={props.isLoading || navDisabled(p) || props.pageName === p}
                         className={`flex w-full justify-items-start gap-x-3 capitalize hover:text-emerald-500 active:text-emerald-500 ${active}`}>
 
                         { icon && <div className="w-4 h-4 my-auto"><Icon title={p} name={icon} /></div>}

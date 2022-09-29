@@ -56,7 +56,6 @@ const Template: Story<ListBundlesProps> = (args) => {
       <ListBundles
           bundles={bundles}
           {...args}
-          loading={null}
           onTabChange={onTabChange}
       />
   </div>

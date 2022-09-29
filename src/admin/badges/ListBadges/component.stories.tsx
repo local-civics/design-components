@@ -59,7 +59,6 @@ const Template: Story<ListBadgesProps> = (args) => {
       <ListBadges
           badges={badges}
           {...args}
-          loading={null}
       />
   </div>
 };

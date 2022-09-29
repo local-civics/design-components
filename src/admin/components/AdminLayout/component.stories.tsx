@@ -1,5 +1,5 @@
 import React                                                           from "react";
-import {AdminLayout, AdminLayoutProps, AdminPageParams, AdminPageName} from "./AdminLayout";
+import {AdminLayout, AdminLayoutProps } from "./AdminLayout";
 import { Story }                                                       from "@storybook/react";
 
 /**
@@ -14,13 +14,7 @@ export default {
  * Component storybook template
  */
 const Template: Story<AdminLayoutProps> = (args) => {
-    const onPageChange = async (next: AdminPageName) => {
-        if(args.onPageChange){
-            await args.onPageChange(next)
-        }
-    }
-
-    return <AdminLayout ctx={adminContext} map={map} {...args} onPageChange={onPageChange}/>
+    return <AdminLayout {...adminContext} {...args} />
 };
 
 /**
@@ -28,12 +22,6 @@ const Template: Story<AdminLayoutProps> = (args) => {
  */
 export const Component: Story<AdminLayoutProps> = Template.bind({});
 Component.args = {};
-
-const map = (params: AdminPageParams) => {
-    return <div className="w-full h-full bg-zinc-100 flex">
-        <span className="m-auto w-max h-max font-bold">Content</span>
-    </div>
-}
 
 /**
  * Testdata

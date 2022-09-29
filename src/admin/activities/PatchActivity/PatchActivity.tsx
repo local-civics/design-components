@@ -8,7 +8,7 @@ import {FormInput}     from "../../components/FormInput/FormInput";
  * PatchActivity
  */
 export type PatchActivityProps = {
-    loading?: boolean
+    isLoading?: boolean
     installed?: boolean
     activity?: Activity
 
@@ -91,10 +91,10 @@ export const PatchActivity = (props: PatchActivityProps) => {
     React.useEffect(() => setActivity(props.activity || {}), [activityKey])
 
     return <>
-        { !!props.loading && <></>}
+        { !!props.isLoading && <></>}
 
         {
-            !props.loading &&
+            !props.isLoading &&
             <>
                 { confirmDelete && <ConfirmDialog
                     title="Delete activity?"

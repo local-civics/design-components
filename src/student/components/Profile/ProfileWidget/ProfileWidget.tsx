@@ -7,7 +7,7 @@ import { Widget, WidgetBody } from "../../../../components/Widget";
 export type ResidentWidgetProps = {
   isLoading?: boolean;
   avatarURL?: string;
-  tenantName?: string;
+  username?: string;
   givenName?: string;
   familyName?: string;
   createdAt?: string;
@@ -41,7 +41,7 @@ export const ProfileWidget = (props: ResidentWidgetProps) => {
               <div className="grid grid-cols-1 content-center align-middle">
                 <div className="grid lg:gap-1">
                   <div className="grid grid-cols-1">
-                    {props.tenantName && <span className="text-slate-300 text-sm">@{props.tenantName}</span>}
+                    {props.username && <span className="text-slate-300 text-sm">@{props.username}</span>}
                     <h4 className="inline-block font-semibold capitalize text-2xl lg:text-4xl text-slate-600">
                       {props.givenName} {props.familyName}
                     </h4>

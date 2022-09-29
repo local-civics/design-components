@@ -10,7 +10,7 @@ import {RenameMember}         from "../RenameMember/RenameMember";
  * ListMembers
  */
 export type ListMembersProps = {
-    loading?: React.ReactNode
+    isLoading?: boolean
     members?: Member[]
 
     onSearch?: (value: string) => void;
@@ -66,7 +66,7 @@ export const ListMembers = (props: ListMembersProps) => {
         <div onClick={() => setActiveId("")} className="text-zinc-600 h-full px-20 py-10">
             <div className="flex">
                 <p className="text-2xl font-bold">Members</p>
-                { !props.loading && <button
+                { !props.isLoading && <button
                     onClick={() => setAddMember(true)}
                     className="ml-auto py-2.5 px-5 rounded-md text-white bg-emerald-500 flex gap-x-2 hover:bg-emerald-600">
                     <div className="my-auto w-2.5 h-2.5">
@@ -79,9 +79,9 @@ export const ListMembers = (props: ListMembersProps) => {
                 </button> }
             </div>
 
-            { props.loading }
+            { props.isLoading }
 
-            { !props.loading && <>
+            { !props.isLoading && <>
                 <p>Manage workspace members.</p>
 
                 <div className="h-full mt-5">

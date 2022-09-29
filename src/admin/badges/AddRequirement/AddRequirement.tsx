@@ -23,7 +23,7 @@ export const AddRequirement = (props: AddRequirementProps) => {
     const [tags, setTags] = React.useState([] as string[])
     const [skills, setSkills] = React.useState([] as string[])
     const [activityIds, setActivityIds] = React.useState([] as string[])
-    const onDisplayNameChange = (value: string) => setDisplayName(value.trim())
+    const onDisplayNameChange = (value: string) => setDisplayName(value)
     const onTagsChange = (next: string[]) => setTags(next)
     const onSkillsChange = (next: string[]) => setSkills(next)
     const onActivityIdsChange = (next: string[]) => setActivityIds(next)

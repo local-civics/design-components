@@ -3,18 +3,17 @@ import {Icon}           from "../../../components/Icon/Icon";
 import {onScrollBottom} from "../../../utils/pagination";
 import {CreateClass} from "../CreateClass/CreateClass";
 import {RemoveClass} from "../RemoveClass/RemoveClass";
+import {LoaderIcon} from "../../../components";
 
 /**
  * ListClasses
  */
 export type ListClassesProps = {
-    loading?: React.ReactNode
+    isLoading?: boolean
     classes?: Class[]
 
-    onSearch?: (value: string) => void;
     onClassClick?: (cls: Class) => void;
     onCreateClass?: (displayName: string) => Promise<void>;
-    onRenameClass?: (cls: Class, displayName: string) => Promise<void>;
     onRemoveClass?: (cls: Class) => Promise<void>;
     onMoreClasses?: () => void;
 }
@@ -54,7 +53,7 @@ export const ListClasses = (props: ListClassesProps) => {
                     </div>
                     <p className="text-xl font-bold">Classes</p>
                 </div>
-                { !props.loading && <button
+                { !props.isLoading && <button
                     onClick={() => setCreateClass(true)}
                     className="ml-auto py-2.5 px-5 rounded-md text-white flex gap-x-2 text-gray-500 hover:text-gray-600">
                     <div className="my-auto w-4 h-4">
@@ -67,13 +66,13 @@ export const ListClasses = (props: ListClassesProps) => {
                 </button> }
             </div>
 
-            { props.loading }
+            { props.isLoading && <div className="flex h-full pb-16"><div className="m-auto w-6 h-6 stroke-gray-400"><LoaderIcon  /></div></div> }
 
-            { !props.loading && <>
-                <div className="h-full pb-10">
-                    <div className="relative flex gap-y-4 flex-col overflow-hidden h-full max-h-full w-full">
-                        <div className="overflow-y-auto" onScroll={onScrollBottom(props.onMoreClasses)}>
-                            { classes.length > 0 && classes.map(o => <ClassItem
+            { !props.isLoading && <>
+                <div className="h-full pb-16">
+                    <div className="relative flex gap-y-4 flex-col overflow-hidden max-h-full w-full">
+                        { classes.length > 0 && <div className="overflow-y-auto" onScroll={onScrollBottom(props.onMoreClasses)}>
+                            { classes.map(o => <ClassItem
                                     key={o.classId}
                                     {...props}
                                     {...o}
@@ -81,7 +80,7 @@ export const ListClasses = (props: ListClassesProps) => {
                                     setActiveId={setActiveId}
                                 />
                             )}
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </>}
