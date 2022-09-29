@@ -1,5 +1,5 @@
-import React from "react";
-import { builder } from "../../utils/classname/classname";
+import React                     from "react";
+import { builder }               from "../../utils/classname/classname";
 import { NavLink, NavLinkProps } from "./NavLink/NavLink";
 
 /**

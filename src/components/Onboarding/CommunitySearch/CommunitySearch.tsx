@@ -7,7 +7,7 @@ import { Search, SearchProps } from "../../Search";
  */
 export type CommunitySearchProps = SearchProps & {
   disabled?: boolean;
-  name?: string;
+  displayName?: string;
   accessCode?: string;
   onSearch?: (search: string) => void;
   onJoin?: (accessCode?: string) => void;
@@ -27,13 +27,13 @@ export const CommunitySearch = (props: CommunitySearchProps) => {
         <p className="text-sm">Pick your community.</p>
       </div>
 
-      <Search {...props} autofocus={!accessCode} placeholder={props.name} />
+      <Search {...props} autofocus={!accessCode} placeholder={props.displayName} />
 
-      {!!props.name && (
+      {!!props.displayName && (
         <div className="text-slate-600 grid-cols-1 gap-2">
           <div>
             <span className="text-sm">Enter the access code for</span>
-            <span className="ml-1 font-semibold text-sm">{props.name}</span>
+            <span className="ml-1 font-semibold text-sm">{props.displayName}</span>
             <span className="text-sm">.</span>
           </div>
 

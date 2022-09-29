@@ -1,12 +1,13 @@
 import * as React from "react";
 import { icons, IconName } from "./icons";
 
-export { IconName } from "./icons";
+export {IconName}
 
 /**
  * The properties for the icon.
  */
 export type IconProps = {
+  title?: string
   name: IconName;
 };
 
@@ -15,5 +16,6 @@ export type IconProps = {
  */
 export const Icon = (props: IconProps) => {
   const icon = icons[props.name];
-  return !!icon && <icon.svg title={props.name} className="w-full h-full drop-shadow-[inherit]" />;
+  const title = props.title || props.name
+  return !!icon && <icon.svg title={title} className="w-full h-full drop-shadow-[inherit]" />;
 };

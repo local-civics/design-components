@@ -54,9 +54,14 @@ export const Onboarding = (props: OnboardingProps) => {
  */
 const Delegate = (props: OnboardingProps) => {
   const [agreed, setAgreed] = React.useState(!!props.hasOrganization || props.search !== null);
+  const [persona, setPersona] = React.useState(props.persona)
   const [interests, setInterests] = React.useState(false);
   const [organization, setOrganization] = React.useState(null as any);
   const [organizationOpen, setOrganizationOpen] = React.useState(!!props.search);
+
+  React.useEffect(() => {
+    setAgreed(!!props.hasOrganization || props.search !== null)
+  }, [props.hasOrganization])
 
   if (!agreed) {
     return <LegalAgreement onDecline={props.onDeclineLegalAgreement} onAccept={() => setAgreed(true)} />;
@@ -73,7 +78,7 @@ const Delegate = (props: OnboardingProps) => {
           props.organizations.map((organization) => {
             return (
               <SearchResult
-                key={organization.id}
+                key={organization.organizationId}
                 title={organization.displayName}
                 onClick={() => {
                   setOrganization(organization);
@@ -84,26 +89,26 @@ const Delegate = (props: OnboardingProps) => {
           })
         }
         onSearch={props.onOrganizationSearch}
-        onJoin={(accessCode) => props.onJoinOrganization && props.onJoinOrganization(organization.name, accessCode)}
+        onJoin={(accessCode) => props.onJoinOrganization && props.onJoinOrganization(organization.organizationId, accessCode)}
         onOpen={() => setOrganizationOpen(true)}
         onClose={() => setOrganizationOpen(false)}
       />
     );
   }
 
-  if (!props.hasPersona) {
+  if((!props.hasRegistration || !props.hasInterests) && !persona){
     return (
-      <RoleSelection
-        onStudent={() => props.onConfigureTenant && props.onConfigureTenant({ persona: "student" })}
-        onEducator={() => props.onConfigureTenant && props.onConfigureTenant({ persona: "educator" })}
-      />
+        <RoleSelection
+            onStudent={() => setPersona("student")}
+            onEducator={() => setPersona("educator")}
+        />
     );
   }
 
   if (!props.hasRegistration) {
     return (
       <Registration
-        persona={props.persona}
+        persona={persona}
         givenName={props.givenName}
         familyName={props.familyName}
         grade={props.grade}
@@ -116,7 +121,7 @@ const Delegate = (props: OnboardingProps) => {
   if (!interests && !props.hasInterests) {
     return (
       <ImpactQuiz
-        persona={props.persona}
+        persona={persona}
         interests={props.interests}
         onFinish={(interests) => {
           setInterests(true)

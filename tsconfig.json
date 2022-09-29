@@ -1,7 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "design-components",
-  "include": ["src/index.ts", "src/index.d.ts"],
+  "include": [
+    "src/index.ts",
+    "src/custom.d.ts",
+    "src/admin/index.ts",
+  ],
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",

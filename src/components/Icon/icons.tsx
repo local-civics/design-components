@@ -13,6 +13,13 @@ import XCircle from "../../../assets/x-circle.svg";
 import XSquare from "../../../assets/x-square.svg";
 import PenPaper from "../../../assets/pen-paper.svg";
 import CaretLeft from "../../../assets/caret-left.svg";
+import Apple from "../../../assets/apple.svg";
+import Trash from "../../../assets/trash.svg";
+import Link from "../../../assets/link.svg";
+import User from "../../../assets/user.svg";
+import Upload from "../../../assets/upload.svg";
+import UploadAlt from "../../../assets/upload-alt.svg";
+
 import FormalBackpack from "../../../assets/formal-backpack.svg";
 import FormalBallotBox from "../../../assets/formal-ballot-box.svg";
 import FormalBarGraph from "../../../assets/formal-bar-graph.svg";
@@ -61,6 +68,12 @@ export const iconNames = [
   "x & square",
   "pen & paper",
   "caret left",
+  "apple",
+  "trash",
+  "link",
+  "user",
+  "upload",
+  "upload alt",
 
   "formal backpack",
   "formal ballot box",
@@ -139,6 +152,25 @@ export const icons: { [key in typeof iconNames[number]]: Icon } = {
   "caret left": {
     svg: CaretLeft,
   },
+  "apple": {
+    svg: Apple,
+  },
+  "trash": {
+    svg: Trash,
+  },
+  "link": {
+    svg: Link,
+  },
+  "user": {
+    svg: User,
+  },
+  "upload": {
+    svg: Upload,
+  },
+  "upload alt": {
+    svg: UploadAlt,
+  },
+
   "formal backpack": {
     svg: FormalBackpack,
   },

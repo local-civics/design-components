@@ -1,6 +1,6 @@
 import { NavBar, NavBarProps } from "./NavBar";
-import { Story } from "@storybook/react";
-import { NavLink } from "./NavLink/NavLink";
+import { Story }               from "@storybook/react";
+import { NavLink }             from "./NavLink/NavLink";
 
 /**
  * Storybook component configuration
