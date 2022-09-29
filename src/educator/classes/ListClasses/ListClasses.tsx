@@ -46,7 +46,7 @@ export const ListClasses = (props: ListClassesProps) => {
             }}
         /> }
         <div onClick={() => setActiveId("")} className="text-gray-600 h-full pb-10">
-            <div className="flex bg-white sticky z-[2] top-0 border-gray-300 py-8">
+            <div className="flex bg-white sticky z-[2] top-0 border-gray-200 py-8">
                 <div className="flex gap-x-2">
                     <div className="w-8 h-8">
                         <Icon title="Classes" name="formal group" />

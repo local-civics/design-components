@@ -164,7 +164,7 @@ const AddManually = (props: AddStudentsProps) => {
     }
 
     return <form onClick={stopPropagation} className="bg-white p-5 grid grid-cols-1 gap-y-4 rounded-md m-auto text-gray-600 min-w-[30rem]" onSubmit={onSubmit}>
-        <h1 className="text-xl my-auto grow font-bold border-b border-gray-300 pb-5">Student Adder</h1>
+        <h1 className="text-xl my-auto grow font-bold border-b border-gray-300 pb-5">Add Student</h1>
 
         <div className="grid grid-cols-1 gap-y-8 mt-2">
             <label>

@@ -27,8 +27,9 @@ export type ManageClassProps = {
  * Student
  */
 export type Student = {
-    studentId?: string
-    displayName?: string
+    accountId?: string
+    givenName?: string
+    familyName?: string
     avatarURL?: string
     email?: string
     lastActivity?: string
@@ -55,7 +56,7 @@ export const ManageClass = (props: ManageClassProps) => {
                 setAddStudents(false)
             }}
         /> }
-        <img className="object-cover sticky z-[2] top-0 w-full h-28 border-gray-300 border-x-2" alt="Abstract" src="https://cdn.localcivics.io/abs/abstract1.jpg"/>
+        <img className="object-cover sticky z-[2] top-0 w-full h-28 border-gray-200 border-x-2" alt="Abstract" src="https://cdn.localcivics.io/abs/abstract1.jpg"/>
         <div onClick={() => setActiveId("")} className="text-gray-600 h-full pb-10">
             <div className="relative bg-white overflow-x-hidden flex flex-wrap sticky z-[2] top-28 border-x-2 border-b-2 rounded-bl-md rounded-br-lg border-gray-300 px-5 py-8">
                 <div className="flex flex-wrap gap-x-2">
@@ -111,17 +112,19 @@ export const ManageClass = (props: ManageClassProps) => {
                     <div className="relative h-full max-h-96 w-full overflow-y-auto" onScroll={onScrollBottom(props.onMoreStudents)}>
                         <table className="w-full">
                             <thead className="text-left sticky top-0 bg-gray-50 p-2 z-[1]">
-                                <th className="w-4/12 p-5 rounded-tl-md ellipsis">Student</th>
-                                <th className="w-2/12">Last Seen</th>
-                                <th className="w-1/12">Grade</th>
-                                <th/>
-                                <th className="w-1/12 p-5 rounded-tr-md"/>
+                                <tr>
+                                    <th className="w-4/12 p-5 rounded-tl-md ellipsis">Student</th>
+                                    <th className="w-2/12">Last Seen</th>
+                                    <th className="w-1/12">Grade</th>
+                                    <th/>
+                                    <th className="w-1/12 p-5 rounded-tr-md"/>
+                                </tr>
                             </thead>
                             <tbody>
-                                { roster.length > 0 && roster.map((o, i) => <StudentItem
-                                        key={o.studentId}
+                                { roster.length > 0 && roster.map((s, i) => <StudentItem
+                                        key={s.accountId}
                                         {...props}
-                                        {...o}
+                                        {...s}
                                         number={i}
                                         activeId={activeId}
                                         setActiveId={setActiveId}
@@ -144,22 +147,23 @@ type StudentItemProps = ManageClassProps & Student & {
 
 const StudentItem = (props: StudentItemProps) => {
     const alt = props.number % 2 === 0 ? "bg-gray-100" : ""
+    const displayName = `${props.givenName || ""} ${props.familyName || ""}`.trim() || props.email
 
     return <tr className={`p-2 w-full text-gray-600 border-b border-gray-100 ${alt}`}>
         <td className="px-5">
             <div className="flex gap-x-2">
-                <div className="flex rounded-md w-max">
+                { props.avatarURL && <div className="flex rounded-md w-max">
                     <div className="my-auto w-8 h-8">
                         <img className="object-contain rounded-full"
                              referrerPolicy="no-referrer"
-                             alt={props.displayName}
-                             src={props.avatarURL}
+                             alt={displayName}
+                             src={props.avatarURL||""}
                         />
                     </div>
-                </div>
+                </div> }
 
                 <div className="my-auto">
-                    <p className="w-max text-md font-bold">{props.displayName}</p>
+                    <p className="w-max text-md font-bold">{displayName}</p>
                     <div className="flex gap-x-2 text-sm">
                         <span className="my-auto">{props.email}</span>
                     </div>
@@ -170,7 +174,7 @@ const StudentItem = (props: StudentItemProps) => {
         <td>{lastSeen(props.lastActivity)}</td>
         <td>{props.grade}</td>
 
-        <td></td>
+        <td/>
         <td>
             <div className="h-full flex items-center gap-x-4">
                 {AltStudentAction(props)}
@@ -181,10 +185,11 @@ const StudentItem = (props: StudentItemProps) => {
 
 const AltStudentAction = (c: StudentItemProps) => {
     const [modal, setModal] = React.useState(null as React.ReactNode)
+    const displayName = `${c.givenName || ""} ${c.familyName || ""}`.trim() || c.email
 
     const confirmRemove = () => {
         setModal(<RemoveStudent
-            displayName={c.displayName}
+            displayName={displayName}
             onCancel={() => setModal(null)}
             onSubmit={() => {
                 if(c.onRemoveStudent){
