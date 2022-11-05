@@ -88,7 +88,7 @@ export const LearningForm = (props: LearningFormProps) => {
 
   React.useEffect(() => {
     if(props.formId){
-      setAnswersKey("")
+      setAnswersKey(currentAnswersKey)
     }
   }, [props.formId])
 
