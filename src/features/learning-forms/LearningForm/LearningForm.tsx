@@ -52,7 +52,7 @@ export const LearningForm = (props: LearningFormProps) => {
   const [showSubmitDialogue, setShowSubmitDialogue] = React.useState(false);
   const [isDraft, setIsDraft] = React.useState(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const autoSaveHandler = useCallback(autoSave(isDraft, props.onSaveDraft, () => setIsDraft(false)), []);
+  const autoSaveHandler = useCallback(autoSave(isDraft, props.onSaveDraft, () => setIsDraft(false)), [isDraft]);
   const saveVisibility = isDraft ? "opacity-100 visible" : "opacity-0 invisible"
   const answers: FormItemProps[] = []
 
