@@ -1,12 +1,12 @@
-import React from "react";
+import React                               from "react";
 import { LearningForm, LearningFormProps } from "./LearningForm";
-import { Story } from "@storybook/react";
+import { Story }                           from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-    title: "Learning Forms/LearningForm",
+    title: "Student/Forms/LearningForm",
     component: LearningForm,
 };
 
@@ -49,7 +49,7 @@ const parksAndGreenForm: LearningFormProps = {
                 "Benches",
                 ""
             ],
-            "responses": ["Other: Another one"],
+            "responses": [],
             "required": true
         }
     ]
@@ -179,14 +179,16 @@ const publicSpeakingForm: LearningFormProps = {
 const Template: Story<LearningFormProps> = (args) => {
 
     const [state, setState] = React.useState({} as any)
-
     return <div className="font-proxima m-auto">
         <LearningForm
             {...args}
+            onSaveDraft={async (items, reflection, rating) => {
+                return args.onSaveDraft && args.onSaveDraft(items, reflection, rating)
+            }}
             items={args.items?.map(i => {
                 return {
                     ...i,
-                    responses: i.responses || state[i.itemId||""],
+                    responses: state[i.itemId||""],
                     onResponseChange: (responses) => {
                         setState({...state, [i.itemId||""]: responses})
                     }

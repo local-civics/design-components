@@ -91,7 +91,7 @@ export const Button = (props: ButtonProps) => {
   const onClick = () => !props.active && !props.disabled && props.onClick && props.onClick();
 
   return (
-    <button type={props.type} className={classname(config.button)} onClick={onClick}>
+    <button disabled={props.disabled} type={props.type} className={classname(config.button)} onClick={onClick}>
       {props.icon && (
         <span className={classname(config.icon)}>
           <Icon name={props.icon} />
