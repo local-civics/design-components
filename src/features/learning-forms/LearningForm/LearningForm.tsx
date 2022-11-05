@@ -85,9 +85,15 @@ export const LearningForm = (props: LearningFormProps) => {
     }
   }, [currentAnswersKey, reflection, rating, isDraft])
 
+
+  React.useEffect(() => {
+    if(props.formId){
+      setAnswersKey("")
+    }
+  }, [props.formId])
+
   React.useEffect(() => {
     if(answersKey === null){
-      setAnswersKey(currentAnswersKey)
       return
     }
 
