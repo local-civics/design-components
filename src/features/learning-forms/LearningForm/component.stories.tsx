@@ -1,4 +1,5 @@
 import React                               from "react";
+import {FormItemProps}                     from "../FormItem/FormItem";
 import { LearningForm, LearningFormProps } from "./LearningForm";
 import { Story }                           from "@storybook/react";
 
@@ -177,7 +178,7 @@ const publicSpeakingForm: LearningFormProps = {
  * Component storybook template
  */
 const Template: Story<LearningFormProps> = (args) => {
-
+    const items = args.items || []
     const [state, setState] = React.useState({} as any)
     return <div className="font-proxima m-auto">
         <LearningForm
@@ -185,10 +186,10 @@ const Template: Story<LearningFormProps> = (args) => {
             onSaveDraft={async (items, reflection, rating) => {
                 return args.onSaveDraft && args.onSaveDraft(items, reflection, rating)
             }}
-            items={args.items?.map(i => {
+            items={items.map((i: any) => {
                 return {
                     ...i,
-                    responses: state[i.itemId||""],
+                    responses: state[i.itemId||""] || i.responses,
                     onResponseChange: (responses) => {
                         setState({...state, [i.itemId||""]: responses})
                     }

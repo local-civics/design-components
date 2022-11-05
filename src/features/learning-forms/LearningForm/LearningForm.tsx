@@ -45,7 +45,7 @@ export type LearningFormProps = {
  * @constructor
  */
 export const LearningForm = (props: LearningFormProps) => {
-  const [answersKey, setAnswersKey] = React.useState("")
+  const [answersKey, setAnswersKey] = React.useState(null as null | string)
   const [reflection, setReflection] = React.useState(props.reflection || "");
   const [rating, setRating] = React.useState(props.rating);
   const [showExitDialogue, setShowExitDialogue] = React.useState(false);
@@ -86,6 +86,11 @@ export const LearningForm = (props: LearningFormProps) => {
   }, [currentAnswersKey, reflection, rating, isDraft])
 
   React.useEffect(() => {
+    if(answersKey === null){
+      setAnswersKey(currentAnswersKey)
+      return
+    }
+
     if(answersKey !== currentAnswersKey){
       setAnswersKey(currentAnswersKey)
       setIsDraft(true)
