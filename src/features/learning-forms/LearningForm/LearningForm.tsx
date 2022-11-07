@@ -5,6 +5,7 @@ import { FormItem, FormItemProps } from "../FormItem/FormItem";
 import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";
 
 const AUTOSAVE_TIMEOUT = 30 * 1000
+const MIN_REFLECTION_LENGTH = 100
 
 // A utility for auto-saving drafts
 const autoSave = (run?: boolean, func?: (items: FormItemProps[], reflection: string, rating?: number) => Promise<any>, callback?: () => void) => {
@@ -59,15 +60,15 @@ export const LearningForm = (props: LearningFormProps) => {
   let answeredAllRequired = true
   props.items?.forEach(item => {
     if(item.format === "question"){
-      answeredAllRequired = answeredAllRequired && !item.required || !!item.responses && item.responses.length > 0
+      answeredAllRequired &&= !item.required || !!item.responses && item.responses.length > 0
       if(item.responses !== undefined){
         answers.push(item)
       }
     }
   })
 
-  const canReflect = reflection || answeredAllRequired
-  const canSubmit = answeredAllRequired && reflection
+  const canReflect = !!reflection || answeredAllRequired
+  const canSubmit = answeredAllRequired && reflection.length >= MIN_REFLECTION_LENGTH
   const items = props.items || []
   const currentAnswersKey = answers && answers.length > 0 ? JSON.stringify(answers) : ""
 
@@ -158,7 +159,7 @@ export const LearningForm = (props: LearningFormProps) => {
               onResponseChange={onReflectionChange}
               required
               paragraph
-              minText={100}
+              minText={MIN_REFLECTION_LENGTH}
               responses={reflection ? [reflection] : undefined}
           />
 
