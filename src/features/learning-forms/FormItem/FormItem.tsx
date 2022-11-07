@@ -75,8 +75,8 @@ export const FormItem = (props: FormItemProps) => {
                       <Icon name="positive" />
                     </div>
                 )}
-                <div className="grow max-w-lg flex gap-x-1">
-                  {props.displayName && <p className="text-lg text-slate-600 font-semibold whitespace-pre-line">{linkify(props.displayName)}</p>}
+                <div className="grow max-w-lg">
+                  {props.displayName && <p className="flex-auto text-lg text-slate-600 font-semibold whitespace-pre-line">{linkify(props.displayName)}</p>}
                   {props.description && <p className="text-sm text-slate-400 whitespace-pre-line">{linkify(props.description)}</p>}
                 </div>
               </div>
