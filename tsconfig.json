@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "design-components",
-  "include": ["src/index.ts", "src/index.d.ts"],
+  "include": ["packages/*/src"],
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
@@ -11,6 +11,7 @@
     "declaration": true,
     "outDir": "dist",
     "emitDeclarationOnly": true,
+    "skipLibCheck": true,
     "strict": true,
     "jsx": "react-jsx"
   }
