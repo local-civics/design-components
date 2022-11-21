@@ -1,17 +1,17 @@
-# .github/workflows/review.yml
+# .github/workflows/publish.yml
 
 # Workflow name
-name: "Review"
+name: "Publish"
 
 # Events for the workflow
 on:
-  pull_request:
+  push:
     branches:
       - master
 
 # List of jobs
 jobs:
-  npm-test:
+  npm-publish:
     # Operating System
     runs-on: ubuntu-latest
     # Job steps
@@ -25,5 +25,7 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build --workspaces
-      - name: NPM test
-        run: npm run test --workspaces
+      - name: Publish to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
