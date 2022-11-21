@@ -11,5 +11,8 @@
     "build-storybook": "build-storybook",
     "chromatic": "npx chromatic",
     "fmt": "npx prettier --write src"
+  },
+  "peerDependencies": {
+    "linkify-it": "^4.0.1"
   }
 }
