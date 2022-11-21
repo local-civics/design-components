@@ -8,14 +8,14 @@ Components are written in React, and its stories are written in [Component Story
 
 Add the specific design-components library to your project.
 
-`npm install --save @local-civics/hub`
-`npm install --save @local-civics/mgmt`
+`npm install --save @local-civics/hub-ui`
+`npm install --save @local-civics/mgmt-ui`
 
 ### **Usage**
 
 Import components you want into your UI
 
-`import { Button } from '@local-civics/hub';`
+`import { Button } from '@local-civics/hub-ui';`
 
 and use them like so
 
@@ -31,11 +31,11 @@ Clone the [design-components GitHub project](https://github.com/local-civics/des
 
 ## **Publishing**
 
-Before publishing you should build the Storybook project.
+Before publishing, you should build the Storybook project.
 
 `NODE_ENV=production npm run build-storybook`
 
-or if want to live updates,
+or if you want to live updates,
 
 `NODE_ENV=production npm run storybook`
 
