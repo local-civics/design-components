@@ -13,6 +13,7 @@ export type BadgeButtonProps = {
   icon?: IconName;
   imageURL?: string;
   startedAt?: string;
+  createdAt?: string
   finishedAt?: string;
   level?: number;
   isLocked?: boolean;
@@ -41,10 +42,9 @@ export const BadgeButton = (props: BadgeButtonProps) => {
   const buttonCursor = isDisabled ? "cursor-default" : "cursor-pointer";
   const buttonBg = isDisabled ? "" : props.finishedAt ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50";
   const statusIconColor = props.finishedAt ? "text-green-500" : "text-zinc-600";
-  const emblemSize = hasProgress ? "md" : "lg";
   const emblemOpacity = props.isLocked ? "opacity-50" : "";
-  const progressPrefix = props.finishedAt ? "Collected" : "Started";
-  const progressDate = new Date(props.finishedAt || props.startedAt || new Date());
+  const progressPrefix = props.finishedAt ? "Collected" : props.startedAt ? "Started" : "Available Since";
+  const progressDate = new Date(props.finishedAt || props.startedAt || props.createdAt || new Date());
   const onClick = () => !isDisabled && props.onClick && props.onClick()
 
   return (
@@ -63,24 +63,20 @@ export const BadgeButton = (props: BadgeButtonProps) => {
               imageURL={props.imageURL}
               alt={props.displayName}
               level={props.level}
-              size={emblemSize}
+              size="md"
             />
           </div>
         </div>
 
-        {hasProgress && (
-          <div className="grow grid grid-cols-1 gap-2 w-full h-20 bg-white shadow-sm p-4">
-            <div className="h-2">
-              <Progress rounded color="sky-blue" start={props.progress || 0} end={props.target || 0} />
-            </div>
-            {
-              <p className="text-xs">
-                {progressPrefix} {Intl.DateTimeFormat("en-US", { month: "long" }).format(progressDate)}{" "}
-                {ordNumber(progressDate.getDate())}
-              </p>
-            }
+        <div className="grow grid grid-cols-1 gap-2 w-full h-20 bg-white shadow-sm p-4">
+          <div className="h-2">
+            <Progress rounded color="sky-blue" start={props.progress || 0} end={props.target || 1} />
           </div>
-        )}
+          <p className="text-xs">
+            {progressPrefix} {Intl.DateTimeFormat("en-US", { month: "long" }).format(progressDate)}{" "}
+            {ordNumber(progressDate.getDate())}
+          </p>
+        </div>
       </div>
 
       {!!props.displayName && (

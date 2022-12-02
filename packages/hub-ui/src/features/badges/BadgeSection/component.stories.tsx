@@ -553,7 +553,6 @@ const Template: Story<BadgeSectionProps> = (args) => (
         {
           displayName: "Data Agent",
           icon: "formal molecule",
-          startedAt: "2020-12-22T02:53:05.929149Z",
           summary: "Build foundational knowledge about the college process, and learn from college students.",
           progress: 4,
           target: 10,
