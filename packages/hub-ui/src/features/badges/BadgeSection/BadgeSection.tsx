@@ -83,7 +83,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
             }
 
             {!showMore && (
-              <div className="grid grid-flow-col auto-cols-max gap-4 overflow-x-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {preview.map((b, i) => {
                   return <Badge key={i} {...b} readonly={props.readonly} />;
                 })}
@@ -94,7 +94,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {progress.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">In Progress</p>
-                    <div className="grid grid-flow-col auto-cols-max gap-4 overflow-x-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {progress.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -105,7 +105,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {collected.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Collected</p>
-                    <div className="grid grid-flow-col auto-cols-max gap-4 overflow-x-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {collected.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -116,7 +116,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {available.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Available</p>
-                    <div className="grid grid-flow-col auto-cols-max gap-4 overflow-x-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {available.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}

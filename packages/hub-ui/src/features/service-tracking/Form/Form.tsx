@@ -55,7 +55,7 @@ export const Form = (props: FormProps) => {
       <Overlay>
         <div className="flex overflow-auto md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
           <Card onClose={() => setShowExitDialogue(true)}>
-            <div className="h-max w-max overflow-x-hidden max-w-[62.5rem] px-16 py-4 grid grid-cols-1 gap-y-12">
+            <div className="h-max w-max overflow-x-hidden md:w-[50rem] px-16 py-4 grid grid-cols-1 gap-y-12">
               <div className="flex gap-x-2 items-center">
                 <div className="text-sky-500 w-14 h-14">
                   <Icon name="service-tracking" />
