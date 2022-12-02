@@ -229,7 +229,7 @@ export const Mgmt = (props: MgmtProps) => {
                         <Text
                             className={classes.link}
                             component="a"
-                            href="https://docs.google.com/document/d/19d8bO2D_KSxyvT8HPS8RqJTRMla6jgBtVPV5HgcSAk8/view"
+                            href="https://localcivics.notion.site/Help-Center-b52300f587b64fc0a61f512686e7626d"
                             target="_blank"
                         >
                             FAQ

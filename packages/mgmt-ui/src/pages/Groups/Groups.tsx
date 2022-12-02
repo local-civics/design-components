@@ -88,7 +88,6 @@ export const Groups = (props: GroupsProps) => {
         />
     }
 
-
     return (
         <>
             <Drawer

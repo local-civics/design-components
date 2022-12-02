@@ -44,7 +44,7 @@ export const Timeline = (props: TimelineProps) => {
         const namespace = item.name.split(/(?=[A-Z])/)
         const lineVariant = namespace[0] === prev ? "dashed" : "solid"
         prev = namespace[0]
-        const title = item.link ?  <Anchor color="dark" unstyled href={item.link} target="_blank">
+        const title = item.link ?  <Anchor color="dark" unstyled href={item.link}>
             {`${namespace[0]} ${namespace[1].toLowerCase()}`}
         </Anchor> : `${namespace[0]} ${namespace[1].toLowerCase()}`
 
