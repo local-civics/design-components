@@ -10,16 +10,14 @@ import {
     Drawer,
     Button, TextInput, Badge,
     ActionIcon,
-    Group as GroupCore, Divider, Modal, Blockquote
+    Group as GroupCore, Divider
 }                                      from '@mantine/core';
 import { Dropzone, MIME_TYPES }        from '@mantine/dropzone';
 import { useForm }                     from '@mantine/form';
 import * as papa                       from 'papaparse'
-import {TenantBanner}                  from "../../../components/banners/TenantBanner/TenantBanner";
 import {Timeline}                      from "../../../components/data/Timeline/Timeline";
 import {StatsGroup}                    from "../../../components/stats/StatsGroup/StatsGroup";
 import {UserInfo}                      from "../../../components/users/UserInfo/UserInfo";
-import {Home, HomeData}                from "../../Home/Home";
 import {GroupUserTable, GroupUserItem} from "./GroupUserTable";
 
 const useStyles = createStyles((theme) => ({
