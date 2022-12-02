@@ -1,7 +1,13 @@
-import * as React              from 'react';
-import { MantineProvider }     from '@mantine/core';
-import { ModalsProvider }      from '@mantine/modals';
+import * as React                            from 'react';
+import {createEmotionCache, MantineProvider} from '@mantine/core';
+import { ModalsProvider }                    from '@mantine/modals';
 import {NotificationsProvider} from "@mantine/notifications";
+
+const mycCache = createEmotionCache({
+    key: 'mantine',
+    prepend: false
+});
+
 
 /**
  * MgmtProviderProps
@@ -17,7 +23,7 @@ export interface MgmtProviderProps {
  * @param props
  */
 export const MgmtProvider = (props: MgmtProviderProps) => {
-    return <MantineProvider withNormalizeCSS withGlobalStyles>
+    return <MantineProvider withNormalizeCSS withGlobalStyles emotionCache={mycCache}>
         <NotificationsProvider limit={props.notificationLimit || 5}>
             <ModalsProvider>
                 { props.children }
