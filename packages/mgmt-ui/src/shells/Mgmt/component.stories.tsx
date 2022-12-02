@@ -28,6 +28,7 @@ const mockdata: MgmtData = {
         }],
     },
     dashboard: {
+        loading: false,
         breakdown: {
             metric: "PROBLEMS SOLVED",
             users: [
@@ -240,13 +241,16 @@ const mockdata: MgmtData = {
         tab: "Overview",
     },
     groups: {
+        loading: false,
         groupOpen: false,
         formOpen: false,
         group: {
+            loading: false,
             name: "My group",
             description: "My special group that I made",
             groupUserHomeOpen: false,
             user: {
+                loading: false,
                 avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
                 givenName: "Jane",
                 familyName: "Lanester",
@@ -396,7 +400,9 @@ const mockdata: MgmtData = {
         ]
     },
     lessons: {
+        loading: false,
         lesson: {
+            loading: false,
             key: "1234",
             name: "Lessons in society",
             description: "A lesson in governing societies",
@@ -461,7 +467,9 @@ const mockdata: MgmtData = {
         ],
     },
     badges: {
+        loading: false,
         badge: {
+            loading: false,
             key: "1234",
             name: "Badges in society",
             description: "A badge in governing societies",

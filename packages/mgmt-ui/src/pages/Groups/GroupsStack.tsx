@@ -1,10 +1,11 @@
-import {openConfirmModal}                                                 from "@mantine/modals";
+import {openConfirmModal}                                 from "@mantine/modals";
 import * as React                                         from 'react';
 import {Table, Group, Text, ActionIcon, ScrollArea, Menu} from '@mantine/core';
 import {
     IconDots,
     IconTrash, IconUsers,
-} from '@tabler/icons';
+}                                                         from '@tabler/icons';
+import {PlaceholderBanner}                                from "../../banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * GroupStackItem
@@ -40,6 +41,16 @@ export function GroupsStack(props: GroupsStackProps) {
         confirmProps: { color: 'red' },
         onConfirm: () => props.onDeleteGroup && props.onDeleteGroup(group),
     });
+
+    if(props.data.length === 0){
+        return <PlaceholderBanner
+            data={{
+                title: "No groups",
+                icon: "groups",
+                description: "You don't have any groups just yet. When your ready, get started by clicking the 'Create group' button above."
+            }}
+        />
+    }
 
     const rows = props.data.map((row) => (
         <tr key={row.name}>

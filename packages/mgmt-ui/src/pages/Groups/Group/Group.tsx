@@ -10,8 +10,8 @@ import {
     Drawer,
     Button, TextInput, Badge,
     ActionIcon,
-    Group as GroupCore, Divider
-}                                      from '@mantine/core';
+    Group as GroupCore, Divider, LoadingOverlay
+} from '@mantine/core';
 import { Dropzone, MIME_TYPES }        from '@mantine/dropzone';
 import { useForm }                     from '@mantine/form';
 import * as papa                       from 'papaparse'
@@ -61,6 +61,7 @@ export interface GroupData {
     name: string
     groupUserHomeOpen: boolean
     user: {
+        loading: boolean
         avatar: string
         givenName: string
         familyName: string
@@ -90,6 +91,7 @@ export interface GroupData {
     }
     timeline: {key: string, name: string, link?: string, description: string, time: string}[],
     users: GroupUserItem[]
+    loading: boolean
 }
 
 /**
@@ -149,27 +151,30 @@ export const Group = (props: GroupProps) => {
                     </Grid.Col>
                 </Grid>
 
-                <Stack spacing="lg">
-                    <StatsGroup data={[
-                        {
-                            title: "PROBLEMS SOLVED",
-                            value: props.data.stats["PROBLEMS SOLVED"].value,
-                            diff: props.data.stats["PROBLEMS SOLVED"].diff,
-                        },
-                        {
-                            title: "LESSONS COMPLETED",
-                            value: props.data.stats["LESSONS COMPLETED"].value,
-                            diff: props.data.stats["LESSONS COMPLETED"].diff,
-                        },
-                        {
-                            title: "BADGES EARNED",
-                            value: props.data.stats["BADGES EARNED"].value,
-                            diff: props.data.stats["BADGES EARNED"].diff,
-                        },
-                    ]}/>
+                <div style={{ position: 'relative' }}>
+                    <LoadingOverlay visible={props.data.user.loading} overlayBlur={2} />
+                    <Stack spacing="lg">
+                        <StatsGroup data={[
+                            {
+                                title: "PROBLEMS SOLVED",
+                                value: props.data.stats["PROBLEMS SOLVED"].value,
+                                diff: props.data.stats["PROBLEMS SOLVED"].diff,
+                            },
+                            {
+                                title: "LESSONS COMPLETED",
+                                value: props.data.stats["LESSONS COMPLETED"].value,
+                                diff: props.data.stats["LESSONS COMPLETED"].diff,
+                            },
+                            {
+                                title: "BADGES EARNED",
+                                value: props.data.stats["BADGES EARNED"].value,
+                                diff: props.data.stats["BADGES EARNED"].diff,
+                            },
+                        ]}/>
 
-                    <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.data.timeline} />
-                </Stack>
+                        <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.data.timeline} />
+                    </Stack>
+                </div>
             </Stack>
         </Container>
     }
@@ -249,14 +254,17 @@ export const Group = (props: GroupProps) => {
                     </Grid.Col>
                 </Grid>
 
-                <GroupUserTable
-                    data={props.data.users}
-                    onDelete={props.onDelete}
-                    onChangeRole={props.onRoleChange}
-                    onViewProfile={(user) => props.onViewProfile(user).then(() => {
-                        setGroupUserOpened(true)
-                    })}
-                />
+                <div style={{ position: 'relative' }}>
+                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <GroupUserTable
+                        data={props.data.users}
+                        onDelete={props.onDelete}
+                        onChangeRole={props.onRoleChange}
+                        onViewProfile={(user) => props.onViewProfile(user).then(() => {
+                            setGroupUserOpened(true)
+                        })}
+                    />
+                </div>
             </Stack>
             </Container>
         </>

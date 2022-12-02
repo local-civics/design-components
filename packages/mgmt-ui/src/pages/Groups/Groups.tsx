@@ -9,8 +9,8 @@ import {
     Container, Stack, Grid,
     Drawer,
     Button, TextInput, ActionIcon,
-    Tooltip, Group as GroupCore,
-}                                    from '@mantine/core';
+    Tooltip, Group as GroupCore, LoadingOverlay,
+} from '@mantine/core';
 import { useForm }                   from '@mantine/form';
 import {Group, GroupData}            from "./Group/Group";
 import {GroupUserItem}               from "./Group/GroupUserTable";
@@ -34,6 +34,7 @@ const useStyles = createStyles((theme) => ({
  * GroupsData
  */
 export interface GroupsData {
+    loading: boolean
     formOpen: boolean
     group: GroupData
     groupOpen: boolean
@@ -153,14 +154,17 @@ export const Groups = (props: GroupsProps) => {
                         </Grid.Col>
                     </Grid>
 
-                    <GroupsStack
-                        data={props.data.groups}
-                        onDeleteGroup={props.onDeleteGroup}
-                        onEditGroup={(g) => {
-                            props.onEditGroup && props.onEditGroup(g)
-                            setGroupOpened(true)
-                        }}
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                        <GroupsStack
+                            data={props.data.groups}
+                            onDeleteGroup={props.onDeleteGroup}
+                            onEditGroup={(g) => {
+                                props.onEditGroup && props.onEditGroup(g)
+                                setGroupOpened(true)
+                            }}
+                        />
+                    </div>
                 </Stack>
             </Container>
         </>

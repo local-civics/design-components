@@ -1,8 +1,11 @@
-import {openConfirmModal}                                                   from "@mantine/modals";
-import * as React                                                           from 'react';
+import {openConfirmModal} from "@mantine/modals";
+import * as React from 'react';
 import { Avatar, Table, Group, Text, ActionIcon, UnstyledButton, ScrollArea, Select } from '@mantine/core';
-import {IconTrash}                                                                           from '@tabler/icons';
-import {relativeTimeFromDates}                                              from "../../../utils/time";
+import {IconTrash} from '@tabler/icons';
+import {
+    PlaceholderBanner
+} from "../../../banners/PlaceholderBanner/PlaceholderBanner";
+import {relativeTimeFromDates} from "../../../utils/time";
 
 const rolesData = ['Member', 'Admin'];
 
@@ -86,6 +89,16 @@ export function GroupUserTable(props: GroupUserTableProps) {
             </td>
         </tr>
     ));
+
+    if(props.data.length === 0){
+        return <PlaceholderBanner
+            data={{
+                title: "No one in group",
+                icon: "thinking",
+                description: "You don't have any people in this group yet. When your ready, get started by clicking the 'Add people' button above."
+            }}
+        />
+    }
 
     return (
         <ScrollArea>

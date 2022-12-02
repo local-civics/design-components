@@ -7,7 +7,7 @@ import {
     Text,
     Container, Stack, Grid,
     Select, TabsValue, ActionIcon, Group,
-    Button, Divider,
+    Button, Divider, LoadingOverlay,
 } from '@mantine/core';
 import {Tabs}                           from "../../../components/navigation/Tabs/Tabs";
 import {BadgeUserTable, BadgeUserItem} from "./BadgeUserTable";
@@ -38,6 +38,7 @@ export interface BadgeData {
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
     users: BadgeUserItem[]
+    loading: boolean
 }
 
 /**
@@ -114,10 +115,13 @@ export const Badge = (props: BadgeProps) => {
                         value={tabs.value}
                         onChange={tabs.onChange}
                     />
-                    <BadgeUserTable
-                        data={props.data.users}
-                        onClick={props.onUserClick}
-                    />
+                    <div style={{ position: 'relative' }}>
+                        <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                        <BadgeUserTable
+                            data={props.data.users}
+                            onClick={props.onUserClick}
+                        />
+                    </div>
                 </div>
             </Stack>
         </Container>

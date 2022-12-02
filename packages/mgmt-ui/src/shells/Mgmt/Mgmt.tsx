@@ -1,4 +1,4 @@
-import {ActionIcon, AppShell, Container, createStyles, Group, Image, LoadingOverlay, TabsValue, Text, Title} from "@mantine/core";
+import {Loader, Center, ActionIcon, AppShell, Container, createStyles, Group, Image, LoadingOverlay, TabsValue, Text, Title} from "@mantine/core";
 import {DateRangePickerValue}                                                                from "@mantine/dates";
 import {IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin}                            from "@tabler/icons";
 import {useState}                                                                            from "react";
@@ -264,8 +264,8 @@ export const Mgmt = (props: MgmtProps) => {
         })}
     >
         <div style={{ position: 'relative' }}>
-            <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
-            <Body {...props} active={navbar.active}/>
+            { props.data.loading && <Center style={{ height: 400 }}><Loader/></Center> }
+            { !props.data.loading && <Body {...props} active={navbar.active}/> }
         </div>
         <SwitchAccount
             data={account.data}

@@ -1,10 +1,13 @@
 import * as React                                               from 'react';
-import {IconCalendar, IconCategory2}                            from "@tabler/icons";
-import {Container, Grid, Select, Stack, TabsValue, Text, Title} from '@mantine/core';
-import {DateRangePicker, DateRangePickerValue}                  from '@mantine/dates';
-import {Tabs}                     from "../../components/navigation/Tabs/Tabs";
-import {Breakdown, BreakdownData} from "./Breakdown/Breakdown";
-import {Overview, OverviewData}   from "./Overview/Overview";
+import {IconCalendar, IconCategory2}                                            from "@tabler/icons";
+import {Container, Grid, LoadingOverlay, Select, Stack, TabsValue, Text, Title} from '@mantine/core';
+import {DateRangePicker, DateRangePickerValue}                                  from '@mantine/dates';
+import {
+    PlaceholderBanner
+}                                                               from "../../banners/PlaceholderBanner/PlaceholderBanner";
+import {Tabs}                                                   from "../../components/navigation/Tabs/Tabs";
+import {Breakdown, BreakdownData}                               from "./Breakdown/Breakdown";
+import {Overview, OverviewData}                                 from "./Overview/Overview";
 
 const tabsData = [{value: "Overview"}, {value: "Breakdown"}]
 
@@ -17,6 +20,7 @@ export interface DashboardData{
     breakdown: BreakdownData
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
+    loading: boolean
 }
 
 /**
@@ -79,19 +83,34 @@ export const Dashboard = (props: DashboardProps) => {
                     value={tabs.value}
                     onChange={tabs.onChange}
                 />
-                <TabBody
-                    {...props}
-                    data={{...props.data, overview: overview.data, breakdown: breakdown.data}}
-                    active={tabs.value}
-                    onBreakdownMetricChange={breakdown.onMetricChange}
-                    onOverviewMetricChange={overview.onMetricChange}
-                />
+
+                <div style={{ position: 'relative' }}>
+                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <TabBody
+                        {...props}
+                        data={{...props.data, overview: overview.data, breakdown: breakdown.data}}
+                        active={tabs.value}
+                        onBreakdownMetricChange={breakdown.onMetricChange}
+                        onOverviewMetricChange={overview.onMetricChange}
+                    />
+                </div>
             </Stack>
         </Stack>
     </Container>
 }
 
 const TabBody = (props: DashboardProps & {active: TabsValue}) => {
+    if(props.data.overview.stats["PROBLEMS SOLVED"].value === 0){
+        return <PlaceholderBanner
+            data={{
+                title: "No data for period",
+                icon: "dashboard",
+                description: "We haven't received any data yet for your group during this period. Check back later once progress has been made."
+            }}
+        />
+    }
+
+
     switch (props.active){
     case 'Overview':
         return <Overview

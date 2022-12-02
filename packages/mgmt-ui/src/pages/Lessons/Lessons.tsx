@@ -5,8 +5,8 @@ import {
     Badge,
     Title,
     Text,
-    Container, Stack, Grid, Autocomplete, TabsValue,
-}                                from '@mantine/core';
+    Container, Stack, Grid, Autocomplete, TabsValue, LoadingOverlay,
+} from '@mantine/core';
 import {Lesson, LessonData}      from "./Lesson/Lesson";
 import {LessonUserItem}          from "./Lesson/LessonUserTable";
 import {LessonTable, LessonItem} from "./LessonTable";
@@ -29,6 +29,7 @@ const useStyles = createStyles((theme) => ({
  * LessonsData
  */
 export interface LessonsData {
+    loading: boolean
     lesson: LessonData
     lessonOpen: boolean
     lessons: LessonItem[]
@@ -93,13 +94,16 @@ export const Lessons = (props: LessonsProps) => {
                     onChange={props.onAutocompleteChange}
                 />
 
-                <LessonTable
-                    data={props.data.lessons}
-                    onClick={(l) => {
-                        props.onLessonClick && props.onLessonClick(l)
-                        setLessonOpened(true)
-                    }}
-                />
+                <div style={{ position: 'relative' }}>
+                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <LessonTable
+                        data={props.data.lessons}
+                        onClick={(l) => {
+                            props.onLessonClick && props.onLessonClick(l)
+                            setLessonOpened(true)
+                        }}
+                    />
+                </div>
             </Stack>
         </Container>
     )

@@ -1,12 +1,13 @@
-import {useState}                from "react";
-import * as React                from 'react';
+import {useState}              from "react";
+import * as React              from 'react';
 import {
     createStyles,
     Badge as BadgeCore,
     Title,
     Text,
-    Container, Stack, Grid, Autocomplete, TabsValue,
-}                                from '@mantine/core';
+    Container, Stack, Grid, Autocomplete, TabsValue, LoadingOverlay,
+} from '@mantine/core';
+import {PlaceholderBanner}     from "../../banners/PlaceholderBanner/PlaceholderBanner";
 import {Badge, BadgeData}      from "./Badge/Badge";
 import {BadgeUserItem}         from "./Badge/BadgeUserTable";
 import {BadgeTable, BadgeItem} from "./BadgeTable";
@@ -29,6 +30,7 @@ const useStyles = createStyles((theme) => ({
  * BadgesData
  */
 export interface BadgesData {
+    loading: boolean
     badge: BadgeData
     badgeOpen: boolean
     badges: BadgeItem[]
@@ -93,13 +95,16 @@ export const Badges = (props: BadgesProps) => {
                     onChange={props.onAutocompleteChange}
                 />
 
-                <BadgeTable
-                    data={props.data.badges}
-                    onClick={(b) => {
-                        props.onBadgeClick && props.onBadgeClick(b)
-                        setBadgeOpened(true)
-                    }}
-                />
+                <div style={{ position: 'relative' }}>
+                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <BadgeTable
+                        data={props.data.badges}
+                        onClick={(b) => {
+                            props.onBadgeClick && props.onBadgeClick(b)
+                            setBadgeOpened(true)
+                        }}
+                    />
+                </div>
             </Stack>
         </Container>
     )

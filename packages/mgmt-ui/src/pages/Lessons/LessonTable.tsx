@@ -1,5 +1,6 @@
-import * as React                                                 from 'react';
+import * as React                                         from 'react';
 import { Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
+import {PlaceholderBanner}                                from "../../banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * LessonItem
@@ -25,6 +26,16 @@ export interface LessonTableProps {
  * @constructor
  */
 export function LessonTable(props: LessonTableProps) {
+    if(props.data.length === 0){
+        return <PlaceholderBanner
+            data={{
+                title: "No lessons available",
+                icon: "lessons",
+                description: "Adjust your search or contact a representative if your expecting results."
+            }}
+        />
+    }
+
     const rows = props.data.map((row) => (
         <tr key={row.key}>
             <td>

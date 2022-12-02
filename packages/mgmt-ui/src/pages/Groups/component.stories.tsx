@@ -12,13 +12,16 @@ export default {
 };
 
 const mockdata: GroupsData = {
+    loading: false,
     groupOpen: false,
     formOpen: false,
     group: {
         name: "My group",
+        loading: false,
         groupUserHomeOpen: false,
         description: "My special group that I made",
         user: {
+            loading: false,
             avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
             givenName: "Jane",
             familyName: "Lanester",
