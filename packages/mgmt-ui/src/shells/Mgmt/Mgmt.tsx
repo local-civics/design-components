@@ -1,21 +1,24 @@
-import {ActionIcon, AppShell, Container, createStyles, Group, Image, TabsValue, Text, Title} from "@mantine/core";
+import {ActionIcon, AppShell, Container, createStyles, Group, Image, LoadingOverlay, TabsValue, Text, Title} from "@mantine/core";
 import {DateRangePickerValue}                                                                from "@mantine/dates";
-import {IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin} from "@tabler/icons";
-import {useState}                                                 from "react";
-import * as React                                                 from 'react';
-import {BadgeUserItem}                                            from "../../pages/Badges/Badge/BadgeUserTable";
-import {Badges, BadgesData}                                       from "../../pages/Badges/Badges";
-import {BadgeItem}                                                from "../../pages/Badges/BadgeTable";
-import {LessonUserItem}                                           from "../../pages/Lessons/Lesson/LessonUserTable";
-import {Lessons, LessonsData}                                     from "../../pages/Lessons/Lessons";
-import {LessonItem}                                               from "../../pages/Lessons/LessonTable";
-import {AccountData, SwitchAccount}        from "./SwitchAccount/SwitchAccount";
-import {isPseudoLink, Navbar} from "../../components/navigation/Navbar/Navbar";
-import {GroupUserItem}                     from "../../pages/Groups/Group/GroupUserTable";
-import {Groups, GroupsData}         from "../../pages/Groups/Groups";
-import {Home}                       from "../../pages/Home/Home";
-import {Dashboard, DashboardData}   from "../../pages/Dashboard/Dashboard";
-import {HomeData}                   from "../../pages/Home/Home";
+import {IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin}                            from "@tabler/icons";
+import {useState}                                                                            from "react";
+import * as React                                                                            from 'react';
+import {BadgeUserItem}                                                                       from "../../pages/Badges/Badge/BadgeUserTable";
+import {Badges, BadgesData}                                                                  from "../../pages/Badges/Badges";
+import {BadgeItem}                                                                           from "../../pages/Badges/BadgeTable";
+import {
+    GroupStackItem
+}                                                                                            from "../../pages/Groups/GroupsStack";
+import {LessonUserItem}                                                                      from "../../pages/Lessons/Lesson/LessonUserTable";
+import {Lessons, LessonsData}                                                                from "../../pages/Lessons/Lessons";
+import {LessonItem}                                                                          from "../../pages/Lessons/LessonTable";
+import {AccountData, SwitchAccount}                                                          from "./SwitchAccount/SwitchAccount";
+import {isPseudoLink, Navbar}                                                                from "../../components/navigation/Navbar/Navbar";
+import {GroupUserItem}                                                                       from "../../pages/Groups/Group/GroupUserTable";
+import {Groups, GroupsData}                                                                  from "../../pages/Groups/Groups";
+import {Home}                                                                                from "../../pages/Home/Home";
+import {Dashboard, DashboardData}                                                            from "../../pages/Dashboard/Dashboard";
+import {HomeData}                                                                            from "../../pages/Home/Home";
 
 const useStyles = createStyles((theme) => ({
     footer: {
@@ -117,6 +120,7 @@ const useStyles = createStyles((theme) => ({
  * MgmtData
  */
 export interface MgmtData {
+    loading: boolean
     navbar: {active: string}
     home: HomeData
     dashboard: DashboardData
@@ -140,11 +144,11 @@ export interface MgmtProps{
     onDashboardTabChange: (next: TabsValue) => void;
     onHomeTimelineScrollBottom: () => void;
     onNavbarClick: (label: string) => void;
-    onCreateGroup: (group: {name: string, description: string}) => void
+    onCreateGroup: (group: GroupStackItem) => void
     onCreateGroupUsers: (users: GroupUserItem[]) => void
-    onDeleteGroup: (group: {name: string, description: string}) => void
+    onDeleteGroup: (group: GroupStackItem) => void
     onDeleteGroupUser: (user: GroupUserItem) => void
-    onEditGroup: (group: {name: string, description: string}) => void
+    onEditGroup: (group: GroupStackItem) => void
     onViewGroupUser: (user: GroupUserItem) => Promise<void>
     onGroupUserRoleChange: (user: GroupUserItem, next: string | null) => void
     onLessonAutocompleteChange: (next: string) => void
@@ -259,7 +263,10 @@ export const Mgmt = (props: MgmtProps) => {
             main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
         })}
     >
-        <Body {...props} active={navbar.active}/>
+        <div style={{ position: 'relative' }}>
+            <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+            <Body {...props} active={navbar.active}/>
+        </div>
         <SwitchAccount
             data={account.data}
             onChange={account.onAccountChange}

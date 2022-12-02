@@ -12,6 +12,7 @@ export default {
 };
 
 const mockdata: MgmtData = {
+    loading: false,
     account: {
         hidden: true,
         active: "1",

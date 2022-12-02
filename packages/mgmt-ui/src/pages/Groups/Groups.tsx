@@ -46,11 +46,11 @@ export interface GroupsData {
 export interface GroupsProps{
     data: GroupsData
 
-    onCreateGroup:  (group: {name: string, description: string}) => void
+    onCreateGroup:  (group: GroupStackItem) => void
     onCreateGroupUsers: (users: GroupUserItem[]) => void
-    onDeleteGroup:  (group: {name: string, description: string}) => void
+    onDeleteGroup:  (group: GroupStackItem) => void
     onDeleteGroupUser: (user: GroupUserItem) => void
-    onEditGroup: (group: {name: string, description: string}) => void
+    onEditGroup: (group: GroupStackItem) => void
     onViewGroupUser: (user: GroupUserItem) => Promise<void>
     onGroupUserRoleChange: (user: GroupUserItem, next: string | null) => void
     onTimelineScrollBottom: () => void;
@@ -65,6 +65,7 @@ export const Groups = (props: GroupsProps) => {
     const { classes } = useStyles();
     const form = useForm({
         initialValues: {
+            key: '',
             name: '',
             description: '',
         },
