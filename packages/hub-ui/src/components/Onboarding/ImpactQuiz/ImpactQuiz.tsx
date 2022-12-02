@@ -33,70 +33,6 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
   const questions = (() => {
     const questions: React.ReactNode[] = [];
     switch (props.persona) {
-      case "student":
-        questions.push(
-          <Question
-            key="policy & government"
-            visible={question === 0}
-            answer={answers["policy & government"]}
-            imageURL="https://cdn.localcivics.io/rc/event/politics.jpg"
-            icon="policy & government"
-            headline="Voter Registration Assistance"
-            summary="Gain the knowledge and technological skills to help friends and family navigate the voter registration process. You can have a civic impact in your immediate circle — every vote counts!"
-            onAnswer={(interest) => setAnswer("policy & government", interest)}
-          />,
-          <Question
-            key="recreation"
-            visible={question === 1}
-            answer={answers["recreation"]}
-            imageURL="https://cdn.localcivics.io/rc/event/recreation.jpg"
-            icon="recreation"
-            headline="Yin Yoga & Social Justice w/ Shayna Johnson"
-            summary="Get in the flow and foster courage in the face of fear. Learn to work through physical and emotional discomfort as you practice balance, meditation, and relaxation."
-            onAnswer={(interest) => setAnswer("recreation", interest)}
-          />,
-          <Question
-            key="volunteer"
-            visible={question === 2}
-            answer={answers["volunteer"]}
-            imageURL="https://cdn.localcivics.io/rc/event/volunteer.jpg"
-            icon="volunteer"
-            headline="Harlem Grown Harvest Volunteer"
-            summary="Don’t mind getting your hands dirty? Lend one and learn about the benefits of farming organic at one of the many community gardens in the Harlem area."
-            onAnswer={(interest) => setAnswer("volunteer", interest)}
-          />,
-          <Question
-            key="arts & culture"
-            visible={question === 3}
-            answer={answers["arts & culture"]}
-            imageURL="https://cdn.localcivics.io/rc/event/culture.jpg"
-            icon="arts & culture"
-            headline="#CreateSeries: Introduction to Drawing & Painting"
-            summary="Flex your creative muscles and pick up some new skills! In our #CreateSeries, learn directly from experienced artists and connect with like-minded students."
-            onAnswer={(interest) => setAnswer("arts & culture", interest)}
-          />,
-          <Question
-            key="college & career"
-            visible={question === 4}
-            answer={answers["college & career"]}
-            imageURL="https://cdn.localcivics.io/rc/event/college.jpg"
-            icon="college & career"
-            headline="Career Journeys: Tech, Law, & Healthcare"
-            summary="Join us each week and meet diverse professionals representing a wide range of careers. Get all your interests answered and explore your dream jobs with the people who know them best!"
-            onAnswer={(interest) => setAnswer("college & career", interest)}
-          />,
-          <Question
-            key="sponsored"
-            visible={question === 5}
-            answer={answers["sponsored"]}
-            imageURL="https://cdn.localcivics.io/rc/event/sponsored.jpg"
-            icon="sponsored"
-            headline="Social Entrepreneurship & Design Thinking"
-            summary="Learn about leaders who have pursued positive social change instead of profits. Then, follow in their footsteps with a design thinking framework to brainstorm innovative solutions for community needs."
-            onAnswer={(interest) => setAnswer("sponsored", interest)}
-          />
-        );
-        break;
       case "educator":
         questions.push(
           <Question
@@ -131,6 +67,70 @@ export const ImpactQuiz = (props: ImpactQuizProps) => {
           />
         );
         break;
+      default:
+      questions.push(
+          <Question
+              key="policy & government"
+              visible={question === 0}
+              answer={answers["policy & government"]}
+              imageURL="https://cdn.localcivics.io/rc/event/politics.jpg"
+              icon="policy & government"
+              headline="Voter Registration Assistance"
+              summary="Gain the knowledge and technological skills to help friends and family navigate the voter registration process. You can have a civic impact in your immediate circle — every vote counts!"
+              onAnswer={(interest) => setAnswer("policy & government", interest)}
+          />,
+          <Question
+              key="recreation"
+              visible={question === 1}
+              answer={answers["recreation"]}
+              imageURL="https://cdn.localcivics.io/rc/event/recreation.jpg"
+              icon="recreation"
+              headline="Yin Yoga & Social Justice w/ Shayna Johnson"
+              summary="Get in the flow and foster courage in the face of fear. Learn to work through physical and emotional discomfort as you practice balance, meditation, and relaxation."
+              onAnswer={(interest) => setAnswer("recreation", interest)}
+          />,
+          <Question
+              key="volunteer"
+              visible={question === 2}
+              answer={answers["volunteer"]}
+              imageURL="https://cdn.localcivics.io/rc/event/volunteer.jpg"
+              icon="volunteer"
+              headline="Harlem Grown Harvest Volunteer"
+              summary="Don’t mind getting your hands dirty? Lend one and learn about the benefits of farming organic at one of the many community gardens in the Harlem area."
+              onAnswer={(interest) => setAnswer("volunteer", interest)}
+          />,
+          <Question
+              key="arts & culture"
+              visible={question === 3}
+              answer={answers["arts & culture"]}
+              imageURL="https://cdn.localcivics.io/rc/event/culture.jpg"
+              icon="arts & culture"
+              headline="#CreateSeries: Introduction to Drawing & Painting"
+              summary="Flex your creative muscles and pick up some new skills! In our #CreateSeries, learn directly from experienced artists and connect with like-minded students."
+              onAnswer={(interest) => setAnswer("arts & culture", interest)}
+          />,
+          <Question
+              key="college & career"
+              visible={question === 4}
+              answer={answers["college & career"]}
+              imageURL="https://cdn.localcivics.io/rc/event/college.jpg"
+              icon="college & career"
+              headline="Career Journeys: Tech, Law, & Healthcare"
+              summary="Join us each week and meet diverse professionals representing a wide range of careers. Get all your interests answered and explore your dream jobs with the people who know them best!"
+              onAnswer={(interest) => setAnswer("college & career", interest)}
+          />,
+          <Question
+              key="sponsored"
+              visible={question === 5}
+              answer={answers["sponsored"]}
+              imageURL="https://cdn.localcivics.io/rc/event/sponsored.jpg"
+              icon="sponsored"
+              headline="Social Entrepreneurship & Design Thinking"
+              summary="Learn about leaders who have pursued positive social change instead of profits. Then, follow in their footsteps with a design thinking framework to brainstorm innovative solutions for community needs."
+              onAnswer={(interest) => setAnswer("sponsored", interest)}
+          />
+      );
+      break;
     }
     return questions;
   })();

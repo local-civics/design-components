@@ -117,7 +117,7 @@ const Delegate = (props: OnboardingProps) => {
   if (!interests && !props.hasInterests) {
     return (
       <ImpactQuiz
-        persona={props.persona}
+        persona={persona}
         interests={props.interests}
         onFinish={(interests) => {
           setInterests(true)
