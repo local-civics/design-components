@@ -551,11 +551,9 @@ const Template: Story<BadgeSectionProps> = (args) => (
           ],
         },
         {
-          displayName: "Data Agent",
+          displayName: "Data Agent (Not Started)",
           icon: "formal molecule",
           summary: "Build foundational knowledge about the college process, and learn from college students.",
-          progress: 4,
-          target: 10,
           criteria: [
             {
               displayName: "Live Workshop",
@@ -574,7 +572,6 @@ const Template: Story<BadgeSectionProps> = (args) => (
             {
               activityName: "Scavenger Hunt (CUNY)",
               xp: 300,
-              completedAt: "2020-12-22T02:53:05.929149Z",
             },
             {
               activityName: "Career Talk: Percee Goings",

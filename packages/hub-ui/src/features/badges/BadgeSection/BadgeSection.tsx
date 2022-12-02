@@ -49,7 +49,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
   const preview = props.readonly ? collected.slice(0, 10) : badges.slice(0, 3);
 
   return (
-    <div className="max-w-[52rem]">
+    <div>
       <Widget isLoading={props.isLoading}>
         <WidgetHeader divide>
           <div className="p-2 flex w-full gap-x-2 text-zinc-600">
@@ -83,7 +83,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
             }
 
             {!showMore && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <div className="flex flex-wrap gap-4">
                 {preview.map((b, i) => {
                   return <Badge key={i} {...b} readonly={props.readonly} />;
                 })}
@@ -94,7 +94,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {progress.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">In Progress</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div className="flex flex-wrap gap-4">
                       {progress.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -105,7 +105,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {collected.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Collected</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div className="flex flex-wrap gap-4">
                       {collected.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -116,7 +116,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {available.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Available</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div className="flex flex-wrap gap-4">
                       {available.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -127,7 +127,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {locked.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Locked</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div className="flex flex-wrap gap-4">
                       {locked.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
