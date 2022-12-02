@@ -21,7 +21,7 @@ export type NavLinkName =
  * The properties for navigation links.
  */
 export type NavLinkProps = {
-  name?: NavLinkName;
+  name?: NavLinkName | string;
   menu?: boolean;
   active?: boolean;
   disabled?: boolean;
@@ -54,7 +54,7 @@ const withMenu = (config: ButtonProps, menu?: boolean) => {
   }
 };
 
-const withName = (config: ButtonProps, name?: NavLinkName) => {
+const withName = (config: ButtonProps, name?: NavLinkName | string) => {
   if (config.size === "full:sm") {
     config.text = name;
     return;
@@ -86,12 +86,6 @@ const withName = (config: ButtonProps, name?: NavLinkName) => {
       config.text = "Login";
       config.border = "rounded";
       break;
-    case "logout":
-      config.size = "sm";
-      config.spacing = "sm";
-      config.text = "Logout";
-      config.border = "rounded";
-      break;
     case "menu":
       config.icon = name;
       break;
@@ -111,7 +105,10 @@ const withName = (config: ButtonProps, name?: NavLinkName) => {
       config.size = "sm";
       break;
     default:
+      config.size = "sm";
+      config.spacing = "sm";
       config.text = name;
-      break;
+      config.border = "rounded";
+      break
   }
 };

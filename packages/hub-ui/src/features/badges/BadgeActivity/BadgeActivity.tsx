@@ -16,6 +16,7 @@ export type BadgeActivityProps = {
   milestone?: boolean;
   badgeId?: string;
   criterionId?: string;
+  startedAt?: string;
   completedAt?: string;
   chosenAt?: string;
   tags?: string[];

@@ -6,7 +6,6 @@ import { Modal } from "../../Modal";
  * SettingsCardProps
  */
 export type SettingsCardProps = {
-  tenantName?: string;
   givenName?: string;
   familyName?: string;
   grade?: number;
@@ -39,7 +38,6 @@ export const SettingsCard = (props: SettingsCardProps) => {
   // https://stackoverflow.com/questions/55075604/react-hooks-useeffect-only-on-update
   const [avatarFile, setAvatarFile] = React.useState(undefined as Blob | undefined);
   const [avatarURL, setAvatarURL] = React.useState(props.avatarURL);
-  const [tenantName, setTenantName] = React.useState(props.tenantName);
   const [givenName, setGivenName] = React.useState(props.givenName);
   const [familyName, setFamilyName] = React.useState(props.familyName);
   const [grade, setGrade] = React.useState(props.grade);
@@ -47,7 +45,6 @@ export const SettingsCard = (props: SettingsCardProps) => {
   const [focus, setFocus] = React.useState("");
   const hasChanges =
     props.hasChanges ||
-    tenantName !== props.tenantName ||
     givenName !== props.givenName ||
     familyName !== props.familyName ||
     grade !== props.grade ||
@@ -58,7 +55,6 @@ export const SettingsCard = (props: SettingsCardProps) => {
     hasChanges &&
     props.onSave &&
     props.onSave({
-      name: tenantName,
       givenName: givenName,
       familyName: familyName,
       grade: grade,
@@ -112,26 +108,6 @@ export const SettingsCard = (props: SettingsCardProps) => {
           </div>
 
           <div className="grid grid-cols-1 gap-6 h-[18rem] md:h-[24rem] px-1 overflow-y-scroll">
-            <div>
-              <p className="mb-2 font-semibold text-slate-500 text-sm">Tenant Name</p>
-              <p className="mb-2 text-slate-500 text-xs">This is your Local username.</p>
-              <input
-                min={10}
-                max={300}
-                autoFocus={focus === "tenantName"}
-                onChange={(e) => {
-                  setFocus("tenantName");
-                  setTenantName(e.target.value);
-                }}
-                defaultValue={tenantName}
-                className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
-              />
-            </div>
-
             <div>
               <p className="mb-2 w-full font-semibold text-slate-500 text-sm">First Name</p>
               <p className="mb-2 text-slate-500 text-xs">What is your given name?</p>

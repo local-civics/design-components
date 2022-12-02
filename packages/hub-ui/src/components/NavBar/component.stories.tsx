@@ -19,7 +19,7 @@ const Template: Story<NavBarProps> = (args) => (
     <NavLink name="profile" />
     <NavLink name="explore" />
     <NavLink name="calendar" />
-    <NavLink name="logout" />
+    <NavLink name="Logout" />
   </NavBar>
 );
 

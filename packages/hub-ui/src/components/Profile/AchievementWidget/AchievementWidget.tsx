@@ -28,9 +28,6 @@ export const AchievementWidget = (props: AchievementWidgetProps) => {
     <Widget isLoading={props.isLoading}>
       <WidgetHeader>
         <WidgetTitle icon="achievements">My Achievements</WidgetTitle>
-        <WidgetHeaderLink size="sm" onClick={props.onOpen} disabled={props.openDisabled} display>
-          <Icon name={props.openIcon || "export"} />
-        </WidgetHeaderLink>
       </WidgetHeader>
       <WidgetBody>
         <div className="flex justify-between gap-x-2 justify-items-center">

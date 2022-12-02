@@ -33,7 +33,6 @@ export type BadgeCardProps = {
   finishedAt?: string;
   preview?: boolean
 
-  onMoreChoices?: () => void;
   onClose?: () => void;
   onSubmit?: () => void;
 };
@@ -92,7 +91,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
               {criteria.map((c, i) => {
                 const id = c.criterionId || i;
                 const choice = choices[id];
-                const buttonText = choice?.completedAt ? "Review" : "Start";
+                const buttonText = choice?.completedAt ? "Review" : choice?.startedAt ? "Continue" : "Start";
                 const buttonTheme = choice?.completedAt ? "light" : "dark";
                 const iconName = choice?.completedAt ? "check & circle" : "circle";
                 const iconColor = choice?.completedAt ? "text-green-500" : "text-zinc-300";
@@ -106,12 +105,6 @@ export const BadgeCard = (props: BadgeCardProps) => {
                       <div className="grow">
                         <div>
                           <span className="font-semibold">{choice.activityName}</span>
-                          { !props.preview && !props.finishedAt && <span
-                            onClick={props.onMoreChoices}
-                            className="align-middle ml-1 text-xs cursor-pointer whitespace-nowrap underline text-sky-600 hover:text-sky-700"
-                          >
-                            (More Choices)
-                          </span> }
                         </div>
                         <div className="text-xs">
                           <span>{c.displayName}</span>
