@@ -133,7 +133,7 @@ export interface MgmtData {
  * MgmtProps
  */
 export interface MgmtProps{
-    loading?: boolean
+    loading: boolean | null
     data: MgmtData
 
     onAccountChange: (next: string) => void;
@@ -264,8 +264,8 @@ export const Mgmt = (props: MgmtProps) => {
         })}
     >
         <div style={{ position: 'relative' }}>
-            { (props.loading === undefined || account.opened) && <Center style={{ height: 400 }}><Loader/></Center> }
-            { (props.loading !== undefined && !account.opened) && <Body {...props} active={navbar.active}/> }
+            { (props.loading === null || account.opened) && <Center style={{ height: 400 }}><Loader/></Center> }
+            { (props.loading !== null && !account.opened) && <Body {...props} active={navbar.active}/> }
         </div>
         <SwitchAccount
             opened={account.opened}
