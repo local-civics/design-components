@@ -123,6 +123,7 @@ export const Group = (props: GroupProps) => {
             familyName: '',
             avatar: '',
             role: '',
+            readonly: false,
             lastActivity: null,
         },
 

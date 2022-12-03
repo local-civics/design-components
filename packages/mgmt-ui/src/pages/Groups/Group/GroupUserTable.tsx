@@ -7,7 +7,7 @@ import {
 } from "../../../banners/PlaceholderBanner/PlaceholderBanner";
 import {relativeTimeFromDates} from "../../../utils/time";
 
-const rolesData = ['Member', 'Admin'];
+const rolesData = [{value: 'Member', label: 'Member'}, {value: 'Admin', label: 'Admin'}];
 
 /**
  * GroupUserItem
@@ -20,6 +20,7 @@ export type GroupUserItem = {
     familyName: string,
     role: string,
     lastActivity: Date | null
+    readonly: boolean
 }
 
 /**
@@ -73,18 +74,18 @@ export function GroupUserTable(props: GroupUserTableProps) {
             </td>
             <td>
                 <Select
-                    data={rolesData}
+                    data={[...rolesData].map(role => row.readonly ? {...role, disabled: role.value !== row.role} : role)}
                     defaultValue={row.role}
                     variant="unstyled"
-                    onChange={v => props.onChangeRole && props.onChangeRole(row, v)}
+                    onChange={v => !row.readonly && props.onChangeRole && props.onChangeRole(row, v)}
                 />
             </td>
             <td>{row.lastActivity ? relativeTimeFromDates(row.lastActivity) : ""}</td>
             <td>
                 <Group noWrap spacing={0} position="right">
-                    <ActionIcon color="red">
+                    { !row.readonly && <ActionIcon color="red">
                         <IconTrash onClick={() => openDeleteModal(row)} size={16} stroke={1.5} />
-                    </ActionIcon>
+                    </ActionIcon> }
                 </Group>
             </td>
         </tr>
