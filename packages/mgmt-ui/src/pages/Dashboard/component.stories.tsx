@@ -11,7 +11,6 @@ export default {
 };
 
 const mockdata: DashboardData = {
-    loading: false,
     breakdown: {
         metric: "PROBLEMS SOLVED",
         users: [

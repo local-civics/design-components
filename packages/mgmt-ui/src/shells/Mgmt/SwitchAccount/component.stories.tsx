@@ -12,7 +12,6 @@ export default {
 };
 
 const mockdata: AccountData = {
-        hidden: false,
         active: "1",
         accounts: [{
             key: "1",
@@ -33,6 +32,7 @@ const Template: Story<SwitchAccountProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
         <SwitchAccount
             {...args}
+            opened
             data={args.data || mockdata}
         />
     </div>

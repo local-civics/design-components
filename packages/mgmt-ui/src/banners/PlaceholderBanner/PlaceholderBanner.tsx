@@ -71,6 +71,7 @@ export interface PlaceholderBannerData {
 }
 
 export interface PlaceholderBannerProps {
+    loading: boolean
     data: PlaceholderBannerData
 }
 
@@ -79,8 +80,8 @@ export const PlaceholderBanner = (props: PlaceholderBannerProps) => {
     return (
         <div className={classes.wrapper}>
             <div className={classes.body}>
-                <Title className={classes.title}>{props.data.title}</Title>
-                <Text size="sm" color="dimmed">{props.data.description}</Text>
+                <Title className={classes.title}>{props.loading ? "Loading..." : props.data.title}</Title>
+                <Text size="sm" color="dimmed">{props.loading ? "We're loading your data." : props.data.description}</Text>
             </div>
 
             <Image src={`https://cdn.localcivics.io/illustrations/${props.data.icon}.svg`} className={classes.image} />

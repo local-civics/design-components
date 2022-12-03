@@ -20,13 +20,13 @@ export interface DashboardData{
     breakdown: BreakdownData
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
-    loading: boolean
 }
 
 /**
  * DashboardProps
  */
 export interface DashboardProps {
+    loading: boolean
     data: DashboardData
 
     onBreakdownMetricChange: (next: string) => void;
@@ -85,7 +85,7 @@ export const Dashboard = (props: DashboardProps) => {
                 />
 
                 <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <TabBody
                         {...props}
                         data={{...props.data, overview: overview.data, breakdown: breakdown.data}}
@@ -102,6 +102,7 @@ export const Dashboard = (props: DashboardProps) => {
 const TabBody = (props: DashboardProps & {active: TabsValue}) => {
     if(props.data.overview.stats["PROBLEMS SOLVED"].value === 0){
         return <PlaceholderBanner
+            loading={props.loading}
             data={{
                 title: "No data for period",
                 icon: "dashboard",

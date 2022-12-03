@@ -12,9 +12,7 @@ export default {
 };
 
 const mockdata: BadgesData = {
-    loading: false,
     badge: {
-        loading: false,
         key: "1234",
         name: "Badges in society",
         description: "A badge in governing societies",

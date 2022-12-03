@@ -7,7 +7,6 @@ import {
     Text,
     Container, Stack, Grid, Autocomplete, TabsValue, LoadingOverlay,
 } from '@mantine/core';
-import {PlaceholderBanner}     from "../../banners/PlaceholderBanner/PlaceholderBanner";
 import {Badge, BadgeData}      from "./Badge/Badge";
 import {BadgeUserItem}         from "./Badge/BadgeUserTable";
 import {BadgeTable, BadgeItem} from "./BadgeTable";
@@ -30,7 +29,6 @@ const useStyles = createStyles((theme) => ({
  * BadgesData
  */
 export interface BadgesData {
-    loading: boolean
     badge: BadgeData
     badgeOpen: boolean
     badges: BadgeItem[]
@@ -40,6 +38,7 @@ export interface BadgesData {
  * BadgesProps
  */
 export interface BadgesProps{
+    loading: boolean
     data: BadgesData
 
     onAutocompleteChange: (next: string) => void
@@ -62,6 +61,7 @@ export const Badges = (props: BadgesProps) => {
 
     if(badgeOpened){
         return <Badge
+            loading={props.loading}
             data={props.data.badge}
             onBackClick={() => setBadgeOpened(false)}
             onGroupChange={props.onGroupChange}
@@ -96,8 +96,9 @@ export const Badges = (props: BadgesProps) => {
                 />
 
                 <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <BadgeTable
+                        loading={props.loading}
                         data={props.data.badges}
                         onClick={(b) => {
                             props.onBadgeClick && props.onBadgeClick(b)

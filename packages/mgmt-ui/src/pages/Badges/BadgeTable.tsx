@@ -15,6 +15,7 @@ export interface BadgeItem {
  * BadgeTableProps
  */
 export interface BadgeTableProps {
+    loading: boolean
     data: BadgeItem[];
 
     onClick: (badge: BadgeItem) => void
@@ -28,6 +29,7 @@ export interface BadgeTableProps {
 export function BadgeTable(props: BadgeTableProps) {
     if(props.data.length === 0){
         return <PlaceholderBanner
+            loading={props.loading}
             data={{
                 title: "No badges available",
                 icon: "badges",

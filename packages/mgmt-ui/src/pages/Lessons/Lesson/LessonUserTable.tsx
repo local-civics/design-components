@@ -1,5 +1,8 @@
-import * as React                                                         from 'react';
+import * as React from 'react';
 import { Avatar, Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
+import {
+    PlaceholderBanner
+} from "../../../banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * LessonUserItem
@@ -15,6 +18,7 @@ export interface LessonUserItem {
  * LessonUserTableProps
  */
 export interface LessonUserTableProps {
+    loading: boolean
     data: LessonUserItem[];
 
     onClick: (user: LessonUserItem) => void
@@ -26,6 +30,17 @@ export interface LessonUserTableProps {
  * @param props
  */
 export function LessonUserTable(props: LessonUserTableProps) {
+    if(props.data.length === 0){
+        return <PlaceholderBanner
+            loading={props.loading}
+            data={{
+                title: "No data for group",
+                icon: "thinking",
+                description: "You don't have any data for people in this group yet. Check back later or adjust your search."
+            }}
+        />
+    }
+
     const rows = props.data.map((row) => (
         <tr key={row.name}>
             <td>

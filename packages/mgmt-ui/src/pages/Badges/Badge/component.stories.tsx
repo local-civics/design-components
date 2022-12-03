@@ -14,7 +14,6 @@ export default {
 const mockdata: BadgeData = {
     key: "1",
     name: "Badges in society",
-    loading: false,
     description: "A badge in governing societies",
     groups: [
         {name: 'Group 1', active: true},

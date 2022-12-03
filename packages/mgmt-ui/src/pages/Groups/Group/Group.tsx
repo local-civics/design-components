@@ -61,7 +61,6 @@ export interface GroupData {
     name: string
     groupUserHomeOpen: boolean
     user: {
-        loading: boolean
         avatar: string
         givenName: string
         familyName: string
@@ -91,13 +90,13 @@ export interface GroupData {
     }
     timeline: {key: string, name: string, link?: string, description: string, time: string}[],
     users: GroupUserItem[]
-    loading: boolean
 }
 
 /**
  * GroupProps
  */
 export interface GroupProps{
+    loading: boolean
     data: GroupData
 
     onBackClick: () => void
@@ -153,7 +152,7 @@ export const Group = (props: GroupProps) => {
                 </Grid>
 
                 <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.data.user.loading} overlayBlur={2} />
+                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <Stack spacing="lg">
                         <StatsGroup data={[
                             {
@@ -247,17 +246,18 @@ export const Group = (props: GroupProps) => {
                         </Text>
                     </Grid.Col>
                     <Grid.Col sm="content">
-                        <Button
+                        { !props.loading && <Button
                             onClick={() => setOpened(true)}
                             leftIcon={<IconPlaylistAdd size={14} />}>
                             Add people
-                        </Button>
+                        </Button> }
                     </Grid.Col>
                 </Grid>
 
                 <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <GroupUserTable
+                        loading={props.loading}
                         data={props.data.users}
                         onDelete={props.onDelete}
                         onChangeRole={props.onRoleChange}

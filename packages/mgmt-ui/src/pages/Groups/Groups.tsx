@@ -34,7 +34,6 @@ const useStyles = createStyles((theme) => ({
  * GroupsData
  */
 export interface GroupsData {
-    loading: boolean
     formOpen: boolean
     group: GroupData
     groupOpen: boolean
@@ -45,6 +44,7 @@ export interface GroupsData {
  * GroupsProps
  */
 export interface GroupsProps{
+    loading: boolean
     data: GroupsData
 
     onCreateGroup:  (group: GroupStackItem) => void
@@ -80,6 +80,7 @@ export const Groups = (props: GroupsProps) => {
 
     if(groupOpened){
         return <Group
+            loading={props.loading}
             data={props.data.group}
             onBackClick={() => setGroupOpened(false)}
             onCreateUsers={props.onCreateGroupUsers}
@@ -146,17 +147,18 @@ export const Groups = (props: GroupsProps) => {
                             </Text>
                         </Grid.Col>
                         <Grid.Col sm="content">
-                            <Button
+                            { !props.loading && <Button
                                 onClick={() => setOpened(true)}
                                 leftIcon={<IconPlaylistAdd size={14} />}>
                                 Create group
-                            </Button>
+                            </Button> }
                         </Grid.Col>
                     </Grid>
 
                     <div style={{ position: 'relative' }}>
-                        <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                        <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <GroupsStack
+                            loading={props.loading}
                             data={props.data.groups}
                             onDeleteGroup={props.onDeleteGroup}
                             onEditGroup={(g) => {

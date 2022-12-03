@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { Avatar, Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
+import {
+    PlaceholderBanner
+} from "../../../banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * BadgeUserItem
@@ -15,6 +18,7 @@ export interface BadgeUserItem {
  * BadgeUserTableProps
  */
 export interface BadgeUserTableProps {
+    loading: boolean
     data: BadgeUserItem[];
 
     onClick: (user: BadgeUserItem) => void
@@ -26,6 +30,17 @@ export interface BadgeUserTableProps {
  * @param props
  */
 export function BadgeUserTable(props: BadgeUserTableProps) {
+    if(props.data.length === 0){
+        return <PlaceholderBanner
+            loading={props.loading}
+            data={{
+                title: "No data for group",
+                icon: "thinking",
+                description: "You don't have any data for people in this group yet. Check back later or adjust your search."
+            }}
+        />
+    }
+
     const rows = props.data.map((row) => (
         <tr key={row.name}>
             <td>

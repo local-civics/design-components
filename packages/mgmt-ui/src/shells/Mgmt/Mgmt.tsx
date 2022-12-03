@@ -120,7 +120,6 @@ const useStyles = createStyles((theme) => ({
  * MgmtData
  */
 export interface MgmtData {
-    loading: boolean
     navbar: {active: string}
     home: HomeData
     dashboard: DashboardData
@@ -134,6 +133,7 @@ export interface MgmtData {
  * MgmtProps
  */
 export interface MgmtProps{
+    loading?: boolean
     data: MgmtData
 
     onAccountChange: (next: string) => void;
@@ -191,7 +191,7 @@ export const Mgmt = (props: MgmtProps) => {
             active={navbar.active}
             onClick={navbar.onClick}/>
         }
-        footer={<footer className={classes.footer}>
+        footer={<>{!account.opened && <footer className={classes.footer}>
             <Container className={classes.inner}>
                 <div className={classes.logo}>
                     <Group spacing="xs">
@@ -258,16 +258,17 @@ export const Mgmt = (props: MgmtProps) => {
                     </ActionIcon>
                 </Group>
             </Container>
-        </footer>}
+        </footer>}</>}
         styles={(theme) => ({
             main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
         })}
     >
         <div style={{ position: 'relative' }}>
-            { props.data.loading && <Center style={{ height: 400 }}><Loader/></Center> }
-            { !props.data.loading && <Body {...props} active={navbar.active}/> }
+            { (props.loading === undefined || account.opened) && <Center style={{ height: 400 }}><Loader/></Center> }
+            { (props.loading !== undefined && !account.opened) && <Body {...props} active={navbar.active}/> }
         </div>
         <SwitchAccount
+            opened={account.opened}
             data={account.data}
             onChange={account.onAccountChange}
             onClose={() => account.setChangeModalOpen(false)}
@@ -276,14 +277,14 @@ export const Mgmt = (props: MgmtProps) => {
 }
 
 const useAccount = (initial: AccountData, onAccountChange: (account: string) => void) => {
-    const [changeModalOpen, setChangeModalOpen] = useState(!initial.hidden);
+    const [changeModalOpen, setChangeModalOpen] = useState(false);
     const [active, setActive] = useState(initial.active);
 
     return {
+        opened: changeModalOpen,
         data: {
             ...initial,
             active,
-            hidden: !changeModalOpen
         },
         setChangeModalOpen,
         onAccountChange: (next: string) => {
@@ -315,6 +316,7 @@ const Body = (props: MgmtProps & {active: string}) => {
     switch (props.active){
     case 'Dashboard':
         return <Dashboard
+            loading={props.loading || false}
             data={props.data.dashboard}
             onBreakdownMetricChange={props.onDashboardBreakdownMetricChange}
             onDateRangeChange={props.onDashboardDateRangeChange}
@@ -329,6 +331,7 @@ const Body = (props: MgmtProps & {active: string}) => {
         />
     case 'Groups':
         return <Groups
+            loading={props.loading || false}
             data={props.data.groups}
             onCreateGroup={props.onCreateGroup}
             onCreateGroupUsers={props.onCreateGroupUsers}
@@ -341,6 +344,7 @@ const Body = (props: MgmtProps & {active: string}) => {
         />
     case 'Lessons':
         return <Lessons
+            loading={props.loading || false}
             data={props.data.lessons}
             onAutocompleteChange={props.onLessonAutocompleteChange}
             onGroupChange={props.onLessonGroupChange}
@@ -351,6 +355,7 @@ const Body = (props: MgmtProps & {active: string}) => {
         />
     case 'Badges':
         return <Badges
+            loading={props.loading || false}
             data={props.data.badges}
             onAutocompleteChange={props.onBadgeAutocompleteChange}
             onGroupChange={props.onBadgeGroupChange}

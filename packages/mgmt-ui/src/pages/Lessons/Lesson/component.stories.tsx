@@ -12,7 +12,6 @@ export default {
 };
 
 const mockdata: LessonData = {
-    loading: false,
     key: "1",
     name: "Lessons in society",
     description: "A lesson in governing societies",

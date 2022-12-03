@@ -27,6 +27,7 @@ export type GroupUserItem = {
  * GroupUserTableProps
  */
 export interface GroupUserTableProps {
+    loading: boolean
     data: GroupUserItem[];
 
     onChangeRole: (user: GroupUserItem, role: string | null) => void;
@@ -40,6 +41,17 @@ export interface GroupUserTableProps {
  * @constructor
  */
 export function GroupUserTable(props: GroupUserTableProps) {
+    if(props.data.length === 0){
+        return <PlaceholderBanner
+            loading={props.loading}
+            data={{
+                title: "No one in group",
+                icon: "thinking",
+                description: "You don't have any people in this group yet. When your ready, get started by clicking the 'Add people' button above."
+            }}
+        />
+    }
+
     const openDeleteModal = (user: GroupUserItem) => openConfirmModal({
         title: `Delete "${user.givenName && user.familyName ? `${user.givenName} ${user.familyName}` : user.email}"?`,
         centered: true,
@@ -90,16 +102,6 @@ export function GroupUserTable(props: GroupUserTableProps) {
             </td>
         </tr>
     ));
-
-    if(props.data.length === 0){
-        return <PlaceholderBanner
-            data={{
-                title: "No one in group",
-                icon: "thinking",
-                description: "You don't have any people in this group yet. When your ready, get started by clicking the 'Add people' button above."
-            }}
-        />
-    }
 
     return (
         <ScrollArea>

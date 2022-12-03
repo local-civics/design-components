@@ -38,13 +38,13 @@ export interface LessonData {
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
     users: LessonUserItem[]
-    loading: boolean
 }
 
 /**
  * LessonProps
  */
 export interface LessonProps{
+    loading: boolean
     data: LessonData
 
     onBackClick: () => void
@@ -116,8 +116,9 @@ export const Lesson = (props: LessonProps) => {
                         onChange={tabs.onChange}
                     />
                     <div style={{ position: 'relative' }}>
-                        <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                        <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <LessonUserTable
+                            loading={props.loading}
                             data={props.data.users}
                             onClick={props.onUserClick}
                         />

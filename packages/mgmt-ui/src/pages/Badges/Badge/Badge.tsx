@@ -38,13 +38,13 @@ export interface BadgeData {
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
     users: BadgeUserItem[]
-    loading: boolean
 }
 
 /**
  * BadgeProps
  */
 export interface BadgeProps{
+    loading: boolean
     data: BadgeData
 
     onBackClick: () => void
@@ -116,8 +116,9 @@ export const Badge = (props: BadgeProps) => {
                         onChange={tabs.onChange}
                     />
                     <div style={{ position: 'relative' }}>
-                        <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                        <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <BadgeUserTable
+                            loading={props.loading}
                             data={props.data.users}
                             onClick={props.onUserClick}
                         />

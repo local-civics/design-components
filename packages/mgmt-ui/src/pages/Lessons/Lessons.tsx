@@ -29,7 +29,6 @@ const useStyles = createStyles((theme) => ({
  * LessonsData
  */
 export interface LessonsData {
-    loading: boolean
     lesson: LessonData
     lessonOpen: boolean
     lessons: LessonItem[]
@@ -39,6 +38,7 @@ export interface LessonsData {
  * LessonsProps
  */
 export interface LessonsProps{
+    loading: boolean
     data: LessonsData
 
     onAutocompleteChange: (next: string) => void
@@ -61,6 +61,7 @@ export const Lessons = (props: LessonsProps) => {
 
     if(lessonOpened){
         return <Lesson
+            loading={props.loading}
             data={props.data.lesson}
             onBackClick={() => setLessonOpened(false)}
             onGroupChange={props.onGroupChange}
@@ -95,8 +96,9 @@ export const Lessons = (props: LessonsProps) => {
                 />
 
                 <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.data.loading} overlayBlur={2} />
+                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <LessonTable
+                        loading={props.loading}
                         data={props.data.lessons}
                         onClick={(l) => {
                             props.onLessonClick && props.onLessonClick(l)

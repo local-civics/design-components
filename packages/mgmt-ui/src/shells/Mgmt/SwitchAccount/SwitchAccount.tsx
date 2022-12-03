@@ -6,7 +6,6 @@ import {Modal, Select, Button, Title} from '@mantine/core';
  * AccountData
  */
 export interface AccountData{
-    hidden: boolean
     active: string
     accounts: {key: string, name: string}[]
 }
@@ -15,6 +14,7 @@ export interface AccountData{
  * SwitchAccountProps
  */
 export interface SwitchAccountProps {
+    opened: boolean
     data: AccountData
 
     onChange: (next: string) => void;
@@ -34,7 +34,7 @@ export const SwitchAccount = (props: SwitchAccountProps) => {
     });
 
     return <Modal centered
-                  opened={!props.data.hidden}
+                  opened={props.opened}
                   onClose={() => props.onClose && props.onClose()}
                   size="sm"
                   title={<Title size="h5">Accounts</Title>}

@@ -15,6 +15,7 @@ export interface LessonItem {
  * LessonTableProps
  */
 export interface LessonTableProps {
+    loading: boolean
     data: LessonItem[];
 
     onClick: (lesson: LessonItem) => void
@@ -28,6 +29,7 @@ export interface LessonTableProps {
 export function LessonTable(props: LessonTableProps) {
     if(props.data.length === 0){
         return <PlaceholderBanner
+            loading={props.loading}
             data={{
                 title: "No lessons available",
                 icon: "lessons",
