@@ -1,45 +1,59 @@
-import * as React                                         from 'react';
-import { Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
-import {PlaceholderBanner}                                from "../../banners/PlaceholderBanner/PlaceholderBanner";
+import * as React from 'react';
+import { Avatar, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
+import {
+    PlaceholderBanner
+} from "../../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
- * BadgeItem
+ * Item
  */
-export interface BadgeItem {
-    key: string,
-    name: string;
-    description: string
+export interface Item {
+    key: string
+    avatar: string
+    name: string
+    email: string
 }
 
 /**
- * BadgeTableProps
+ * TableData
  */
-export interface BadgeTableProps {
+export type TableData = {
     loading: boolean
-    data: BadgeItem[];
-
-    onClick: (badge: BadgeItem) => void
+    data: Item[]
 }
 
 /**
- * BadgeTable
- * @param props
- * @constructor
+ * TableMethods
  */
-export function BadgeTable(props: BadgeTableProps) {
+export type TableMethods = {
+    onClick: (item: Item) => void
+}
+
+
+/**
+ * TableProps
+ */
+export type TableProps = TableData & TableMethods
+
+/**
+ * Table
+ * @constructor
+ * @param props
+ */
+export function Table(props: TableProps) {
     if(props.data.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
             data={{
-                title: "No badges available",
-                icon: "badges",
-                description: "Adjust your search or contact a representative if your expecting results."
+                title: "No data for group",
+                icon: "thinking",
+                description: "You don't have any data for people in this group yet. Check back later or adjust your search."
             }}
         />
     }
 
     const rows = props.data.map((row) => (
-        <tr key={row.key}>
+        <tr key={row.name}>
             <td>
                 <UnstyledButton
                     sx={(theme) => ({
@@ -53,16 +67,16 @@ export function BadgeTable(props: BadgeTableProps) {
                                 theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
                         },
                     })}
-
                     onClick={() => props.onClick && props.onClick(row)}
                 >
                     <Group>
+                        <Avatar size={40} src={row.avatar} radius={40} />
                         <div>
                             <Text size="sm" weight={500}>
                                 {row.name}
                             </Text>
                             <Text size="xs" color="dimmed">
-                                {row.description}
+                                {row.email}
                             </Text>
                         </div>
                     </Group>
@@ -73,9 +87,9 @@ export function BadgeTable(props: BadgeTableProps) {
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <Table horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
+            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
                 <tbody>{rows}</tbody>
-            </Table>
+            </MantineTable>
         </ScrollArea.Autosize>
     );
 }

@@ -4,31 +4,31 @@ import {Container, Grid, LoadingOverlay, Select, Stack, TabsValue, Text, Title} 
 import {DateRangePicker, DateRangePickerValue}                                  from '@mantine/dates';
 import {
     PlaceholderBanner
-}                                                               from "../../banners/PlaceholderBanner/PlaceholderBanner";
+}                                                               from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {Tabs}                                                   from "../../components/navigation/Tabs/Tabs";
 import {Breakdown, BreakdownData}                               from "./Breakdown/Breakdown";
 import {Overview, OverviewData}                                 from "./Overview/Overview";
 
 const tabsData = [{value: "Overview"}, {value: "Breakdown"}]
 
+
 /**
  * DashboardData
  */
-export interface DashboardData{
+export type DashboardData = {
+    loading: boolean
     dateRange: DateRangePickerValue
     overview: OverviewData
     breakdown: BreakdownData
+    group: string
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
 }
 
 /**
- * DashboardProps
+ * DashboardMethods
  */
-export interface DashboardProps {
-    loading: boolean
-    data: DashboardData
-
+export type DashboardMethods = {
     onBreakdownMetricChange: (next: string) => void;
     onDateRangeChange: (next: DateRangePickerValue) => void
     onGroupChange: (next: string) => void;
@@ -37,17 +37,16 @@ export interface DashboardProps {
 }
 
 /**
+ * DashboardProps
+ */
+export type DashboardProps = DashboardData & DashboardMethods
+
+/**
  * Dashboard
  * @param props
  * @constructor
  */
 export const Dashboard = (props: DashboardProps) => {
-    const breakdown = useBreakdown(props.data.breakdown, props.onBreakdownMetricChange)
-    const dateRange = useDateRange(props.data.dateRange, props.onDateRangeChange)
-    const groups = useGroups(props.data.groups, props.onGroupChange)
-    const overview = useOverview(props.data.overview, props.onOverviewMetricChange)
-    const tabs = useTabs(props.data.tab, props.onTabChange)
-
     return <Container size="lg" py="xl">
         <Stack>
             <Grid>
@@ -61,18 +60,18 @@ export const Dashboard = (props: DashboardProps) => {
                     <Select
                         placeholder="Select a group"
                         nothingFound="No options"
-                        value={groups.select}
-                        onChange={groups.onSelectChange}
+                        value={props.group}
+                        onChange={props.onGroupChange}
                         icon={<IconCategory2/>}
-                        data={props.data.groups.map(g => g.name)}
+                        data={props.groups.map(g => g.name)}
                     />
                 </Grid.Col>
                 <Grid.Col sm="auto">
                     <DateRangePicker
                         placeholder="Select a date"
                         allowSingleDateInRange
-                        value={dateRange.value}
-                        onChange={dateRange.onChange}
+                        value={props.dateRange}
+                        onChange={props.onDateRangeChange}
                         icon={<IconCalendar size={16} />}
                     />
                 </Grid.Col>
@@ -80,18 +79,17 @@ export const Dashboard = (props: DashboardProps) => {
             <Stack>
                 <Tabs
                     data={tabsData}
-                    value={tabs.value}
-                    onChange={tabs.onChange}
+                    value={props.tab}
+                    onChange={props.onTabChange}
                 />
 
                 <div style={{ position: 'relative' }}>
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <TabBody
                         {...props}
-                        data={{...props.data, overview: overview.data, breakdown: breakdown.data}}
-                        active={tabs.value}
-                        onBreakdownMetricChange={breakdown.onMetricChange}
-                        onOverviewMetricChange={overview.onMetricChange}
+                        active={props.tab}
+                        onBreakdownMetricChange={props.onBreakdownMetricChange}
+                        onOverviewMetricChange={props.onOverviewMetricChange}
                     />
                 </div>
             </Stack>
@@ -100,7 +98,7 @@ export const Dashboard = (props: DashboardProps) => {
 }
 
 const TabBody = (props: DashboardProps & {active: TabsValue}) => {
-    if(props.data.overview.stats["PROBLEMS SOLVED"].value === 0){
+    if(props.overview.stats["PROBLEMS SOLVED"].value === 0){
         return <PlaceholderBanner
             loading={props.loading}
             data={{
@@ -115,12 +113,12 @@ const TabBody = (props: DashboardProps & {active: TabsValue}) => {
     switch (props.active){
     case 'Overview':
         return <Overview
-            data={props.data.overview}
+            data={props.overview}
             onMetricChange={props.onOverviewMetricChange}
         />
     case 'Breakdown':
         return <Breakdown
-            data={props.data.breakdown}
+            data={props.breakdown}
             onMetricChange={props.onBreakdownMetricChange}
         />
     default:

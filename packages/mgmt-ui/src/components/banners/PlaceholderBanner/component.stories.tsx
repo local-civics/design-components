@@ -1,5 +1,5 @@
 import * as React                        from "react";
-import {MgmtProvider}                    from "../../providers/MgmtProvider/MgmtProvider";
+import {MgmtProvider}                    from "../../../providers/MgmtProvider/MgmtProvider";
 import { Story }                                  from "@storybook/react";
 import {PlaceholderBanner, PlaceholderBannerProps, PlaceholderBannerData} from "./PlaceholderBanner";
 

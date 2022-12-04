@@ -64,9 +64,11 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
+export type PlaceholderIcon = "badges" | "lessons" | "dashboard" | "groups" | "kindergarten" | "thinking"
+
 export interface PlaceholderBannerData {
     title: string
-    icon: "badges" | "lessons" | "dashboard" | "groups" | "kindergarten" | "thinking"
+    icon: PlaceholderIcon
     description: string
 }
 

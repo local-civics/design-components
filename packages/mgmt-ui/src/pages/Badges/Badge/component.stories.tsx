@@ -1,6 +1,6 @@
 import * as React                        from "react";
 import {MgmtProvider}                   from "../../../providers/MgmtProvider/MgmtProvider";
-import {Badge, BadgeData, BadgeProps} from "./Badge";
+import {Badge, BadgeProps} from "./Badge";
 import { Story }                        from "@storybook/react";
 
 /**
@@ -11,7 +11,7 @@ export default {
   component: Badge,
 };
 
-const mockdata: BadgeData = {
+const mockdata = {
     key: "1",
     name: "Badges in society",
     description: "A badge in governing societies",
@@ -60,7 +60,7 @@ const mockdata: BadgeData = {
 const Template: Story<BadgeProps> = (args) => (
     <MgmtProvider>
       <div className="h-full w-full overscroll-none font-proxima">
-        <Badge {...args} data={args.data || mockdata}/>
+        <Badge {...mockdata} {...args}/>
       </div>
     </MgmtProvider>
 );

@@ -5,7 +5,7 @@ import {
     IconDots,
     IconTrash, IconUsers,
 }                                                         from '@tabler/icons';
-import {PlaceholderBanner}                                from "../../banners/PlaceholderBanner/PlaceholderBanner";
+import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * GroupStackItem

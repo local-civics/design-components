@@ -12,6 +12,7 @@ export default {
 };
 
 const mockdata: MgmtData = {
+    loading: false,
     account: {
         active: "1",
         accounts: [{
@@ -26,6 +27,8 @@ const mockdata: MgmtData = {
         }],
     },
     dashboard: {
+        loading: false,
+        group: "",
         breakdown: {
             metric: "PROBLEMS SOLVED",
             users: [
@@ -238,12 +241,12 @@ const mockdata: MgmtData = {
         tab: "Overview",
     },
     groups: {
-        groupOpen: false,
-        formOpen: false,
+        loading: false,
         group: {
+            id: "123",
+            loading: false,
             name: "My group",
             description: "My special group that I made",
-            groupUserHomeOpen: false,
             user: {
                 avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
                 givenName: "Jane",
@@ -399,10 +402,13 @@ const mockdata: MgmtData = {
         ]
     },
     lessons: {
+        loading: false,
         lesson: {
-            key: "1234",
+            loading: false,
+            id: "1234",
             name: "Lessons in society",
             description: "A lesson in governing societies",
+            group: "",
             groups: [
                 {name: 'Group 1', active: true},
                 {name: 'Group 2'},
@@ -441,7 +447,6 @@ const mockdata: MgmtData = {
                 }
             ],
         },
-        lessonOpen: false,
         lessons: [
             {
                 key: "1",
@@ -464,8 +469,10 @@ const mockdata: MgmtData = {
         ],
     },
     badges: {
+        loading: false,
         badge: {
-            key: "1234",
+            loading: false,
+            id: "1234",
             name: "Badges in society",
             description: "A badge in governing societies",
             groups: [
@@ -506,7 +513,6 @@ const mockdata: MgmtData = {
                 }
             ],
         },
-        badgeOpen: false,
         badges: [
             {
                 key: "1",
@@ -537,7 +543,7 @@ const mockdata: MgmtData = {
 const Template: Story<MgmtProps> = (args) => (
     <MgmtProvider>
       <div className="h-full w-full overscroll-none font-proxima">
-        <Mgmt {...args} data={args.data || mockdata} onViewGroupUser={async (u) => args.onViewGroupUser(u)}/>
+        <Mgmt {...mockdata} {...args} />
       </div>
     </MgmtProvider>
 );

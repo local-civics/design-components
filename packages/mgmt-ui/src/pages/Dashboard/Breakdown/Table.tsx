@@ -1,6 +1,6 @@
 import * as React                                    from 'react';
 import { useState } from 'react';
-import { createStyles, Table, ScrollArea, Badge } from '@mantine/core';
+import { createStyles, Table as MantineTable, ScrollArea, Badge } from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
     header: {
@@ -27,27 +27,27 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * BreakdownUserItem
+ * Item
  */
-export interface BreakdownUserItem {
+export interface Item {
     name: string;
     email: string;
     value: number
 }
 
 /**
- * BreakdownUserTableProps
+ * TableProps
  */
-export interface BreakdownUserTableProps {
-    data: BreakdownUserItem[];
+export interface TableProps {
+    data: Item[];
 }
 
 /**
- * BreakdownUserTable
+ * Table
  * @param data
  * @constructor
  */
-export const BreakdownUserTable = ({ data }: BreakdownUserTableProps) => {
+export const Table = ({ data }: TableProps) => {
     const { classes, cx } = useStyles();
     const [scrolled, setScrolled] = useState(false);
 
@@ -75,7 +75,7 @@ export const BreakdownUserTable = ({ data }: BreakdownUserTableProps) => {
 
     return (
         <ScrollArea sx={{ height: 500 }} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-            <Table verticalSpacing="md" sx={{ minWidth: 700 }}>
+            <MantineTable verticalSpacing="md" sx={{ minWidth: 700 }}>
                 <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
                 <tr>
                     <th>Name</th>
@@ -85,7 +85,7 @@ export const BreakdownUserTable = ({ data }: BreakdownUserTableProps) => {
                 </tr>
                 </thead>
                 <tbody>{rows}</tbody>
-            </Table>
+            </MantineTable>
         </ScrollArea>
     );
 }

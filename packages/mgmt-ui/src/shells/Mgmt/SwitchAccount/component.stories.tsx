@@ -1,5 +1,4 @@
 import * as React                                         from "react";
-import {MgmtProvider}                                     from "../../../providers/MgmtProvider/MgmtProvider";
 import { SwitchAccount, SwitchAccountProps, AccountData } from "./SwitchAccount";
 import { Story }                                          from "@storybook/react";
 

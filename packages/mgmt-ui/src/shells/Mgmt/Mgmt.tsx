@@ -1,24 +1,28 @@
-import {Loader, Center, ActionIcon, AppShell, Container, createStyles, Group, Image, LoadingOverlay, TabsValue, Text, Title} from "@mantine/core";
-import {DateRangePickerValue}                                                                from "@mantine/dates";
-import {IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin}                            from "@tabler/icons";
-import {useState}                                                                            from "react";
-import * as React                                                                            from 'react';
-import {BadgeUserItem}                                                                       from "../../pages/Badges/Badge/BadgeUserTable";
-import {Badges, BadgesData}                                                                  from "../../pages/Badges/Badges";
-import {BadgeItem}                                                                           from "../../pages/Badges/BadgeTable";
+import {Loader, Center, ActionIcon, AppShell, Container, createStyles, Group, Image, TabsValue, Text, Title} from "@mantine/core";
+import {DateRangePickerValue}                                                                                from "@mantine/dates";
+import {IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin}                                            from "@tabler/icons";
+import {useState}                                                                                            from "react";
+import * as React                                                                                            from 'react';
+import {
+    BadgeUserItem
+}                                                                                                            from "../../../dist/pages/Badges/Badge/BadgeUserTable";
+import {
+    BadgeItem
+}                                                                                                            from "../../../dist/pages/Badges/BadgeTable";
+import {Badges, BadgesData}                                                                                  from "../../pages/Badges/Badges";
 import {
     GroupStackItem
-}                                                                                            from "../../pages/Groups/GroupsStack";
-import {LessonUserItem}                                                                      from "../../pages/Lessons/Lesson/LessonUserTable";
-import {Lessons, LessonsData}                                                                from "../../pages/Lessons/Lessons";
-import {LessonItem}                                                                          from "../../pages/Lessons/LessonTable";
-import {AccountData, SwitchAccount}                                                          from "./SwitchAccount/SwitchAccount";
-import {isPseudoLink, Navbar}                                                                from "../../components/navigation/Navbar/Navbar";
-import {GroupUserItem}                                                                       from "../../pages/Groups/Group/GroupUserTable";
-import {Groups, GroupsData}                                                                  from "../../pages/Groups/Groups";
-import {Home}                                                                                from "../../pages/Home/Home";
-import {Dashboard, DashboardData}                                                            from "../../pages/Dashboard/Dashboard";
-import {HomeData}                                                                            from "../../pages/Home/Home";
+}                                                                                                            from "../../pages/Groups/GroupsStack";
+import {LessonUserItem}                                                                                      from "../../pages/Lessons/Lesson/LessonUserTable";
+import {Lessons, LessonsData}                                                                                from "../../pages/Lessons/Lessons";
+import {LessonItem}                                                                                          from "../../pages/Lessons/LessonTable";
+import {AccountData, SwitchAccount}                                                                          from "./SwitchAccount/SwitchAccount";
+import {isPseudoLink, Navbar}                                                                                from "../../components/navigation/Navbar/Navbar";
+import {GroupUserItem}                                                                                       from "../../pages/Groups/Group/GroupUserTable";
+import {Groups, GroupsData} from "../../pages/Groups/Groups";
+import {Home}                              from "../../pages/Home/Home";
+import {Dashboard, DashboardData} from "../../pages/Dashboard/Dashboard";
+import {HomeData}                                   from "../../pages/Home/Home";
 
 const useStyles = createStyles((theme) => ({
     footer: {
@@ -119,7 +123,8 @@ const useStyles = createStyles((theme) => ({
 /**
  * MgmtData
  */
-export interface MgmtData {
+export type MgmtData = {
+    loading: boolean
     navbar: {active: string}
     home: HomeData
     dashboard: DashboardData
@@ -130,12 +135,9 @@ export interface MgmtData {
 }
 
 /**
- * MgmtProps
+ * MgmtMethods
  */
-export interface MgmtProps{
-    loading: boolean | null
-    data: MgmtData
-
+export type MgmtMethods = {
     onAccountChange: (next: string) => void;
     onDashboardBreakdownMetricChange: (next: string) => void;
     onDashboardDateRangeChange: (next: DateRangePickerValue) => void
@@ -149,22 +151,32 @@ export interface MgmtProps{
     onDeleteGroup: (group: GroupStackItem) => void
     onDeleteGroupUser: (user: GroupUserItem) => void
     onEditGroup: (group: GroupStackItem) => void
-    onViewGroupUser: (user: GroupUserItem) => Promise<void>
+    onViewGroupUser: (user: GroupUserItem) => void
+    onGroupBackClick: () => void;
     onGroupUserRoleChange: (user: GroupUserItem, next: string | null) => void
+    onGroupUserBackClick: () => void;
     onLessonAutocompleteChange: (next: string) => void
     onLessonGroupChange: (next: string) => void;
     onLessonClick: (lesson: LessonItem) => void
-    onLessonPreview: (lesson: LessonItem) => void;
+    onLessonPreview: (id: string) => void;
     onLessonTabChange: (tab: TabsValue) => void;
     onLessonUserClick: (user: LessonUserItem) => void;
+    onLessonBackClick: () => void;
     onGroupUserTimelineScrollBottom: () => void;
     onBadgeAutocompleteChange: (next: string) => void
-    onBadgePreview: (badge: BadgeItem) => void;
+    onBadgePreview: (id: string) => void;
     onBadgeGroupChange: (next: string) => void;
     onBadgeClick: (badge: BadgeItem) => void
     onBadgeTabChange: (tab: TabsValue) => void;
     onBadgeUserClick: (user: BadgeUserItem) => void;
+    onBadgeBackClick: () => void;
+
 }
+
+/**
+ * MgmtProps
+ */
+export type MgmtProps = MgmtData & MgmtMethods
 
 /**
  * Mgmt
@@ -173,7 +185,7 @@ export interface MgmtProps{
  */
 export const Mgmt = (props: MgmtProps) => {
     const { classes } = useStyles();
-    const account = useAccount(props.data.account, props.onAccountChange)
+    const account = useAccount(props.account, props.onAccountChange)
     const onNavbarClick = (next: string) => {
         switch (next){
         case "Change account":
@@ -182,7 +194,7 @@ export const Mgmt = (props: MgmtProps) => {
         }
         props.onNavbarClick && props.onNavbarClick(next)
     }
-    const navbar = useNavbar(props.data.navbar.active, onNavbarClick)
+    const navbar = useNavbar(props.navbar.active, onNavbarClick)
 
     return <AppShell
         padding="xs"
@@ -316,8 +328,7 @@ const Body = (props: MgmtProps & {active: string}) => {
     switch (props.active){
     case 'Dashboard':
         return <Dashboard
-            loading={props.loading || false}
-            data={props.data.dashboard}
+            {...props.dashboard}
             onBreakdownMetricChange={props.onDashboardBreakdownMetricChange}
             onDateRangeChange={props.onDashboardDateRangeChange}
             onGroupChange={props.onDashboardGroupChange}
@@ -326,13 +337,13 @@ const Body = (props: MgmtProps & {active: string}) => {
         />
     case 'Home':
         return <Home
-            data={props.data.home}
+            {...props.home}
             onTimelineScrollBottom={props.onHomeTimelineScrollBottom}
         />
     case 'Groups':
         return <Groups
-            loading={props.loading || false}
-            data={props.data.groups}
+            {...props.groups}
+            onBackClick={props.onGroupBackClick}
             onCreateGroup={props.onCreateGroup}
             onCreateGroupUsers={props.onCreateGroupUsers}
             onDeleteGroup={props.onDeleteGroup}
@@ -340,12 +351,13 @@ const Body = (props: MgmtProps & {active: string}) => {
             onEditGroup={props.onEditGroup}
             onViewGroupUser={props.onViewGroupUser}
             onGroupUserRoleChange={props.onGroupUserRoleChange}
+            onGroupUserBackClick={props.onGroupUserBackClick}
             onTimelineScrollBottom={props.onGroupUserTimelineScrollBottom}
         />
     case 'Lessons':
         return <Lessons
-            loading={props.loading || false}
-            data={props.data.lessons}
+            {...props.lessons}
+            onBackClick={props.onLessonBackClick}
             onAutocompleteChange={props.onLessonAutocompleteChange}
             onGroupChange={props.onLessonGroupChange}
             onLessonClick={props.onLessonClick}
@@ -355,8 +367,8 @@ const Body = (props: MgmtProps & {active: string}) => {
         />
     case 'Badges':
         return <Badges
-            loading={props.loading || false}
-            data={props.data.badges}
+            {...props.badges}
+            onBackClick={props.onBadgeBackClick}
             onAutocompleteChange={props.onBadgeAutocompleteChange}
             onGroupChange={props.onBadgeGroupChange}
             onBadgeClick={props.onBadgeClick}

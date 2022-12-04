@@ -1,5 +1,5 @@
 import * as React                                                                                from 'react';
-import {Blockquote, Container, Grid, Stack} from '@mantine/core';
+import {Container, Grid, Stack} from '@mantine/core';
 import {Timeline}                                                                                from "../../components/data/Timeline/Timeline";
 import {StatsGroup}                                                                from "../../components/stats/StatsGroup/StatsGroup";
 import {UserInfo}                                                                  from "../../components/users/UserInfo/UserInfo";
@@ -8,7 +8,7 @@ import {TenantBanner}                                                           
 /**
  * HomeData
  */
-export interface HomeData {
+export type HomeData = {
     user: {
         avatar: string
         givenName: string
@@ -41,12 +41,16 @@ export interface HomeData {
 }
 
 /**
- * HomeProps
+ * HomeMethods
  */
-export interface HomeProps {
-    data: HomeData
+export type HomeMethods = {
     onTimelineScrollBottom: () => void;
 }
+
+/**
+ * HomeProps
+ */
+export type HomeProps = HomeData & HomeMethods
 
 /**
  * Home
@@ -58,17 +62,17 @@ export const Home = (props: HomeProps) => {
         <Stack spacing="lg">
             <Grid gutter="md">
                 <Grid.Col md={6}>
-                    <UserInfo data={props.data.user}/>
+                    <UserInfo data={props.user}/>
                 </Grid.Col>
                 <Grid.Col md={6}>
                     <TenantBanner
-                        title={props.data.tenant.name}
-                        description={props.data.tenant.description}
-                        image={props.data.tenant.image}
+                        title={props.tenant.name}
+                        description={props.tenant.description}
+                        image={props.tenant.image}
                         action={
                             {
                                 label: "Visit website",
-                                link: props.data.tenant.website,
+                                link: props.tenant.website,
                             }
                         }
                     />
@@ -78,22 +82,22 @@ export const Home = (props: HomeProps) => {
             <StatsGroup data={[
                 {
                     title: "PROBLEMS SOLVED",
-                    value: props.data.stats["PROBLEMS SOLVED"].value,
-                    diff: props.data.stats["PROBLEMS SOLVED"].diff,
+                    value: props.stats["PROBLEMS SOLVED"].value,
+                    diff: props.stats["PROBLEMS SOLVED"].diff,
                 },
                 {
                     title: "LESSONS COMPLETED",
-                    value: props.data.stats["LESSONS COMPLETED"].value,
-                    diff: props.data.stats["LESSONS COMPLETED"].diff,
+                    value: props.stats["LESSONS COMPLETED"].value,
+                    diff: props.stats["LESSONS COMPLETED"].diff,
                 },
                 {
                     title: "BADGES EARNED",
-                    value: props.data.stats["BADGES EARNED"].value,
-                    diff: props.data.stats["BADGES EARNED"].diff,
+                    value: props.stats["BADGES EARNED"].value,
+                    diff: props.stats["BADGES EARNED"].diff,
                 },
             ]}/>
 
-            <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.data.timeline} />
+            <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.timeline} />
         </Stack>
     </Container>
 }

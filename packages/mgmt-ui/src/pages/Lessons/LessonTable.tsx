@@ -1,6 +1,6 @@
 import * as React                                         from 'react';
 import { Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
-import {PlaceholderBanner}                                from "../../banners/PlaceholderBanner/PlaceholderBanner";
+import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * LessonItem

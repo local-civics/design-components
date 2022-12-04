@@ -33,29 +33,32 @@ const useStyles = createStyles((theme) => ({
 /**
  * GroupsData
  */
-export interface GroupsData {
-    formOpen: boolean
-    group: GroupData
-    groupOpen: boolean
+export type GroupsData = {
+    loading: boolean
+    group: GroupData | null
     groups: GroupStackItem[]
 }
 
 /**
- * GroupsProps
+ * GroupsMethods
  */
-export interface GroupsProps{
-    loading: boolean
-    data: GroupsData
-
+export type GroupsMethods = {
     onCreateGroup:  (group: GroupStackItem) => void
     onCreateGroupUsers: (users: GroupUserItem[]) => void
     onDeleteGroup:  (group: GroupStackItem) => void
     onDeleteGroupUser: (user: GroupUserItem) => void
     onEditGroup: (group: GroupStackItem) => void
-    onViewGroupUser: (user: GroupUserItem) => Promise<void>
+    onViewGroupUser: (user: GroupUserItem) => void
     onGroupUserRoleChange: (user: GroupUserItem, next: string | null) => void
     onTimelineScrollBottom: () => void;
+    onGroupUserBackClick: () => void;
+    onBackClick: () => void;
 }
+
+/**
+ * GroupsProps
+ */
+export type GroupsProps = GroupsData & GroupsMethods
 
 /**
  * Groups
@@ -75,18 +78,16 @@ export const Groups = (props: GroupsProps) => {
             name: (val) => (val.length <= 6 ? 'Name should include at least 6 characters' : null),
         },
     });
-    const [opened, setOpened] = useState(props.data.formOpen);
-    const [groupOpened, setGroupOpened] = useState(props.data.groupOpen);
-
-    if(groupOpened){
+    const [opened, setOpened] = useState(false);
+    if(props.group){
         return <Group
-            loading={props.loading}
-            data={props.data.group}
-            onBackClick={() => setGroupOpened(false)}
+            {...props.group}
+            onBackClick={props.onBackClick}
             onCreateUsers={props.onCreateGroupUsers}
             onDelete={props.onDeleteGroupUser}
             onViewProfile={props.onViewGroupUser}
             onRoleChange={props.onGroupUserRoleChange}
+            onUserBackClick={props.onGroupUserBackClick}
             onTimelineScrollBottom={props.onTimelineScrollBottom}
         />
     }
@@ -159,12 +160,9 @@ export const Groups = (props: GroupsProps) => {
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <GroupsStack
                             loading={props.loading}
-                            data={props.data.groups}
+                            data={props.groups}
                             onDeleteGroup={props.onDeleteGroup}
-                            onEditGroup={(g) => {
-                                props.onEditGroup && props.onEditGroup(g)
-                                setGroupOpened(true)
-                            }}
+                            onEditGroup={props.onEditGroup}
                         />
                     </div>
                 </Stack>

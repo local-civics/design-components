@@ -9,8 +9,8 @@ import {
     Select, TabsValue, ActionIcon, Group,
     Button, Divider, LoadingOverlay,
 } from '@mantine/core';
-import {Tabs}                           from "../../../components/navigation/Tabs/Tabs";
-import {BadgeUserTable, BadgeUserItem} from "./BadgeUserTable";
+import {Tabs}                 from "../../../components/navigation/Tabs/Tabs";
+import {Table, Item} from "./Table";
 
 const tabsData = [{value: "Complete"}, {value: "Incomplete"}]
 
@@ -31,28 +31,31 @@ const useStyles = createStyles((theme) => ({
 /**
  * BadgeData
  */
-export interface BadgeData {
-    key: string
+export type BadgeData = {
+    id: string
+    loading: boolean
     name: string,
     description: string
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
-    users: BadgeUserItem[]
+    users: Item[]
+}
+
+/**
+ * BadgeMethods
+ */
+export type BadgeMethods = {
+    onBackClick: () => void
+    onGroupChange: (next: string) => void;
+    onPreview: (id: string) => void;
+    onTabChange: (value: TabsValue) => void;
+    onUserClick: (item: Item) => void;
 }
 
 /**
  * BadgeProps
  */
-export interface BadgeProps{
-    loading: boolean
-    data: BadgeData
-
-    onBackClick: () => void
-    onGroupChange: (next: string) => void;
-    onPreview: (badge: BadgeData) => void;
-    onTabChange: (next: TabsValue) => void;
-    onUserClick: (user: BadgeUserItem) => void;
-}
+export type BadgeProps = BadgeData & BadgeMethods
 
 /**
  * Badge
@@ -60,8 +63,8 @@ export interface BadgeProps{
  * @constructor
  */
 export const Badge = (props: BadgeProps) => {
-    const groups = useGroups(props.data.groups, props.onGroupChange)
-    const tabs = useTabs(props.data.tab, props.onTabChange)
+    const groups = useGroups(props.groups, props.onGroupChange)
+    const tabs = useTabs(props.tab, props.onTabChange)
     const { classes } = useStyles();
 
     return (
@@ -80,18 +83,18 @@ export const Badge = (props: BadgeProps) => {
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
-                                    {props.data.name || "Badge"}
+                                    {props.name || "Badge"}
                                 </Title>
 
                                 <Text color="dimmed" className={classes.description} mt="sm">
-                                    {props.data.description || "No description"}
+                                    {props.description || "No description"}
                                 </Text>
                             </Stack>
 
                             <Stack ml="auto">
                                 <Button
                                     variant="gradient"
-                                    onClick={() => props.onPreview && props.onPreview(props.data)}
+                                    onClick={() => props.onPreview(props.id)}
                                 >
                                     Preview
                                 </Button>
@@ -103,7 +106,7 @@ export const Badge = (props: BadgeProps) => {
                                     value={groups.select}
                                     onChange={groups.onSelectChange}
                                     icon={<IconCategory2/>}
-                                    data={props.data.groups.map(g => g.name)}
+                                    data={props.groups.map(g => g.name)}
                                 />
                             </Stack>
                         </Group>
@@ -117,9 +120,9 @@ export const Badge = (props: BadgeProps) => {
                     />
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                        <BadgeUserTable
+                        <Table
                             loading={props.loading}
-                            data={props.data.users}
+                            data={props.users}
                             onClick={props.onUserClick}
                         />
                     </div>

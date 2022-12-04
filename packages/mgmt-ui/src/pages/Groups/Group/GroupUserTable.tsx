@@ -4,7 +4,7 @@ import { Avatar, Table, Group, Text, ActionIcon, UnstyledButton, ScrollArea, Sel
 import {IconTrash} from '@tabler/icons';
 import {
     PlaceholderBanner
-} from "../../../banners/PlaceholderBanner/PlaceholderBanner";
+} from "../../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {relativeTimeFromDates} from "../../../utils/time";
 
 const rolesData = [{value: 'Member', label: 'Member'}, {value: 'Admin', label: 'Admin'}];

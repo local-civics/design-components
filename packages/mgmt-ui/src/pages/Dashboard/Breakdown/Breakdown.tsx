@@ -1,7 +1,7 @@
 import {Paper, Grid, ActionIcon, Title, Tooltip, Group, Select, Stack} from "@mantine/core";
 import {IconInfoCircle}                                                       from "@tabler/icons";
-import * as React                                                             from 'react';
-import {BreakdownUserTable}                                                            from "./BreakdownUserTable";
+import * as React from 'react';
+import {Table}    from "./Table";
 
 /**
  * BreakdownData
@@ -61,7 +61,7 @@ export const Breakdown = (props: BreakdownProps) => {
                 />
             </Group>
 
-            <BreakdownUserTable data={props.data.users}/>
+            <Table data={props.data.users}/>
         </Stack>
     </Paper>
 }

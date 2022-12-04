@@ -1,15 +1,13 @@
-import {useState}              from "react";
-import * as React              from 'react';
+import * as React                       from 'react';
 import {
     createStyles,
     Badge as BadgeCore,
     Title,
     Text,
-    Container, Stack, Grid, Autocomplete, TabsValue, LoadingOverlay,
-} from '@mantine/core';
-import {Badge, BadgeData}      from "./Badge/Badge";
-import {BadgeUserItem}         from "./Badge/BadgeUserTable";
-import {BadgeTable, BadgeItem} from "./BadgeTable";
+    Container, Stack, Grid, Autocomplete, LoadingOverlay,
+}                                       from '@mantine/core';
+import {Badge, BadgeData, BadgeMethods} from "./Badge/Badge";
+import {Item, Table}         from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -26,28 +24,24 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * BadgesData
+ * BadgeData
  */
-export interface BadgesData {
-    badge: BadgeData
-    badgeOpen: boolean
-    badges: BadgeItem[]
+export type BadgesData = {
+    loading: boolean
+    badges: Item[]
+    badge: BadgeData | null
+}
+
+export type BadgesMethods = BadgeMethods & {
+    onAutocompleteChange: (value: string) => void
+    onGroupChange: (value: string) => void;
+    onBadgeClick: (item: Item) => void;
 }
 
 /**
  * BadgesProps
  */
-export interface BadgesProps{
-    loading: boolean
-    data: BadgesData
-
-    onAutocompleteChange: (next: string) => void
-    onGroupChange: (next: string) => void;
-    onBadgeClick: (badge: BadgeItem) => void
-    onPreview: (badge: BadgeItem) => void;
-    onTabChange: (tab: TabsValue) => void;
-    onUserClick: (user: BadgeUserItem) => void;
-}
+export type BadgesProps = BadgesData & BadgesMethods
 
 /**
  * Badges
@@ -56,14 +50,10 @@ export interface BadgesProps{
  */
 export const Badges = (props: BadgesProps) => {
     const { classes } = useStyles();
-
-    const [badgeOpened, setBadgeOpened] = useState(props.data.badgeOpen);
-
-    if(badgeOpened){
+    if(props.badge){
         return <Badge
-            loading={props.loading}
-            data={props.data.badge}
-            onBackClick={() => setBadgeOpened(false)}
+            {...props.badge}
+            onBackClick={props.onBackClick}
             onGroupChange={props.onGroupChange}
             onTabChange={props.onTabChange}
             onUserClick={props.onUserClick}
@@ -91,19 +81,16 @@ export const Badges = (props: BadgesProps) => {
 
                 <Autocomplete
                     placeholder="Search for a badge that fits your needs"
-                    data={props.data.badges.map(item => item.name)}
+                    data={props.badges.map(item => item.name)}
                     onChange={props.onAutocompleteChange}
                 />
 
                 <div style={{ position: 'relative' }}>
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <BadgeTable
+                    <Table
                         loading={props.loading}
-                        data={props.data.badges}
-                        onClick={(b) => {
-                            props.onBadgeClick && props.onBadgeClick(b)
-                            setBadgeOpened(true)
-                        }}
+                        data={props.badges}
+                        onClick={props.onBadgeClick}
                     />
                 </div>
             </Stack>

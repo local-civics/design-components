@@ -31,28 +31,32 @@ const useStyles = createStyles((theme) => ({
 /**
  * LessonData
  */
-export interface LessonData {
-    key: string
+export type LessonData = {
+    loading: boolean
+    id: string
     name: string,
     description: string
+    group: string
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
     users: LessonUserItem[]
 }
 
 /**
+ * LessonMethods
+ */
+export type LessonMethods = {
+    onBackClick: () => void
+    onGroupChange: (value: string) => void;
+    onPreview: (id: string) => void;
+    onTabChange: (value: TabsValue) => void;
+    onUserClick: (item: LessonUserItem) => void;
+}
+
+/**
  * LessonProps
  */
-export interface LessonProps{
-    loading: boolean
-    data: LessonData
-
-    onBackClick: () => void
-    onGroupChange: (next: string) => void;
-    onPreview: (lesson: LessonData) => void;
-    onTabChange: (next: TabsValue) => void;
-    onUserClick: (user: LessonUserItem) => void;
-}
+export type LessonProps = LessonData & LessonMethods
 
 /**
  * Lesson
@@ -60,8 +64,6 @@ export interface LessonProps{
  * @constructor
  */
 export const Lesson = (props: LessonProps) => {
-    const groups = useGroups(props.data.groups, props.onGroupChange)
-    const tabs = useTabs(props.data.tab, props.onTabChange)
     const { classes } = useStyles();
 
     return (
@@ -80,18 +82,18 @@ export const Lesson = (props: LessonProps) => {
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
-                                    {props.data.name || "Lesson"}
+                                    {props.name || "Lesson"}
                                 </Title>
 
                                 <Text color="dimmed" className={classes.description} mt="sm">
-                                    {props.data.description || "No description"}
+                                    {props.description || "No description"}
                                 </Text>
                             </Stack>
 
                             <Stack ml="auto">
                                 <Button
                                     variant="gradient"
-                                    onClick={() => props.onPreview && props.onPreview(props.data)}
+                                    onClick={() => props.onPreview && props.onPreview(props.id)}
                                 >
                                     Preview
                                 </Button>
@@ -100,10 +102,10 @@ export const Lesson = (props: LessonProps) => {
                                     size="sm"
                                     placeholder="Select a group"
                                     nothingFound="No options"
-                                    value={groups.select}
-                                    onChange={groups.onSelectChange}
+                                    value={props.group}
+                                    onChange={props.onGroupChange}
                                     icon={<IconCategory2/>}
-                                    data={props.data.groups.map(g => g.name)}
+                                    data={props.groups.map(g => g.name)}
                                 />
                             </Stack>
                         </Group>
@@ -112,14 +114,14 @@ export const Lesson = (props: LessonProps) => {
                 <div>
                     <Tabs
                         data={tabsData}
-                        value={tabs.value}
-                        onChange={tabs.onChange}
+                        value={props.tab}
+                        onChange={props.onTabChange}
                     />
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <LessonUserTable
                             loading={props.loading}
-                            data={props.data.users}
+                            data={props.users}
                             onClick={props.onUserClick}
                         />
                     </div>
@@ -127,29 +129,4 @@ export const Lesson = (props: LessonProps) => {
             </Stack>
         </Container>
     )
-}
-
-const useGroups = (initialState: {name: string, active?: boolean}[], onGroupChange: (next: string) => void) => {
-    const active = initialState.filter(g => g.active)
-    const [group, setGroup] = React.useState(active.length > 0 ? active[0].name : null)
-
-    return {
-        select: group,
-        onSelectChange: (next: string) => {
-            setGroup(next)
-            onGroupChange && onGroupChange(next)
-        }
-    }
-}
-
-const useTabs = (initialState: TabsValue, onTabChange: (next: TabsValue) => void) => {
-    const [tab, setTab] = React.useState<TabsValue>(initialState);
-
-    return {
-        value: tab,
-        onChange: (next: TabsValue) => {
-            setTab(next)
-            onTabChange && onTabChange(next)
-        }
-    }
 }

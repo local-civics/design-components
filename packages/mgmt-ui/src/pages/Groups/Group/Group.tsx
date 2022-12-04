@@ -56,10 +56,11 @@ const useStyles = createStyles((theme) => ({
 /**
  * GroupData
  */
-export interface GroupData {
+export type GroupData = {
+    id: string
+    loading: boolean
     description: string
     name: string
-    groupUserHomeOpen: boolean
     user: {
         avatar: string
         givenName: string
@@ -67,7 +68,7 @@ export interface GroupData {
         email: string
         job: string
         quote: string
-    }
+    } | null
     tenant: {
         name: string
         description: string
@@ -93,19 +94,22 @@ export interface GroupData {
 }
 
 /**
- * GroupProps
+ * GroupMethods
  */
-export interface GroupProps{
-    loading: boolean
-    data: GroupData
-
+export type GroupMethods = {
     onBackClick: () => void
     onCreateUsers: (users: GroupUserItem[]) => void;
     onDelete: (user: GroupUserItem) => void;
     onRoleChange: (user: GroupUserItem, role: string | null) => void;
-    onViewProfile: (user: GroupUserItem) => Promise<void>;
+    onViewProfile: (user: GroupUserItem) => void;
     onTimelineScrollBottom: () => void;
+    onUserBackClick: () => void;
 }
+
+/**
+ * GroupProps
+ */
+export type GroupProps = GroupData & GroupMethods
 
 /**
  * Group
@@ -127,27 +131,25 @@ export const Group = (props: GroupProps) => {
         },
 
         validate: {
-            email: (value) => /^\S+@\S+$/.test(value) && props.data.users.filter(u => u.email === value).length === 0 ? null : 'Invalid email',
+            email: (value) => /^\S+@\S+$/.test(value) && props.users.filter(u => u.email === value).length === 0 ? null : 'Invalid email',
         },
     });
     const [opened, setOpened] = useState(false);
-    const [groupUserOpened, setGroupUserOpened] = useState(props.data.groupUserHomeOpen);
-
-    if(groupUserOpened){
+    if(props.user){
         return <Container size="lg" py="xl">
             <Stack spacing="md">
                 <Grid>
                     <Grid.Col sm="auto">
                         <Badge
                             variant="filled"
-                            leftSection={<ActionIcon onClick={() => setGroupUserOpened(false)} color="blue" size="xs" radius="xl" variant="filled">
+                            leftSection={<ActionIcon onClick={props.onUserBackClick} color="blue" size="xs" radius="xl" variant="filled">
                                 <IconArrowLeft size={14} />
                             </ActionIcon>}
                             size="lg">
                             Users
                         </Badge>
 
-                        <UserInfo variant="compact" data={props.data.user}/>
+                        <UserInfo variant="compact" data={props.user}/>
                     </Grid.Col>
                 </Grid>
 
@@ -157,22 +159,22 @@ export const Group = (props: GroupProps) => {
                         <StatsGroup data={[
                             {
                                 title: "PROBLEMS SOLVED",
-                                value: props.data.stats["PROBLEMS SOLVED"].value,
-                                diff: props.data.stats["PROBLEMS SOLVED"].diff,
+                                value: props.stats["PROBLEMS SOLVED"].value,
+                                diff: props.stats["PROBLEMS SOLVED"].diff,
                             },
                             {
                                 title: "LESSONS COMPLETED",
-                                value: props.data.stats["LESSONS COMPLETED"].value,
-                                diff: props.data.stats["LESSONS COMPLETED"].diff,
+                                value: props.stats["LESSONS COMPLETED"].value,
+                                diff: props.stats["LESSONS COMPLETED"].diff,
                             },
                             {
                                 title: "BADGES EARNED",
-                                value: props.data.stats["BADGES EARNED"].value,
-                                diff: props.data.stats["BADGES EARNED"].diff,
+                                value: props.stats["BADGES EARNED"].value,
+                                diff: props.stats["BADGES EARNED"].diff,
                             },
                         ]}/>
 
-                        <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.data.timeline} />
+                        <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.timeline} />
                     </Stack>
                 </div>
             </Stack>
@@ -238,11 +240,11 @@ export const Group = (props: GroupProps) => {
                             Groups
                         </Badge>
                         <Title order={2} className={classes.title} mt="md">
-                            {props.data.name || "Group"}
+                            {props.name || "Group"}
                         </Title>
 
                         <Text color="dimmed" className={classes.description} mt="sm">
-                            {props.data.description || "No description"}
+                            {props.description || "No description"}
                         </Text>
                     </Grid.Col>
                     <Grid.Col sm="content">
@@ -258,12 +260,10 @@ export const Group = (props: GroupProps) => {
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <GroupUserTable
                         loading={props.loading}
-                        data={props.data.users}
+                        data={props.users}
                         onDelete={props.onDelete}
                         onChangeRole={props.onRoleChange}
-                        onViewProfile={(user) => props.onViewProfile(user).then(() => {
-                            setGroupUserOpened(true)
-                        })}
+                        onViewProfile={(user) => props.onViewProfile(user)}
                     />
                 </div>
             </Stack>
@@ -287,7 +287,7 @@ const DropzoneButton = (props: GroupProps & {close: () => void}) => {
                 worker: true,
                 complete: function(results: ParseResult<GroupUserItem>) {
                     const data = results.data
-                        .filter(v => /^\S+@\S+$/.test(v.email) && props.data.users.filter(u => u.email === v.email).length === 0)
+                        .filter(v => /^\S+@\S+$/.test(v.email) && props.users.filter(u => u.email === v.email).length === 0)
                     data.length > 0 && props.onCreateUsers && props.onCreateUsers(data)
                     setLoading(false)
                     props.close()

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Avatar, Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
 import {
     PlaceholderBanner
-} from "../../../banners/PlaceholderBanner/PlaceholderBanner";
+} from "../../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * LessonUserItem
