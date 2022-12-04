@@ -288,7 +288,8 @@ const mockdata: MgmtData = {
             ],
             users: [
                 {
-                    "key": "1",
+                    "groupId": "",
+                    "userId": "1",
                     "readonly": false,
                     "avatar": "https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "givenName": "Robert",
@@ -298,7 +299,8 @@ const mockdata: MgmtData = {
                     "lastActivity": new Date()
                 },
                 {
-                    "key": "2",
+                    "groupId": "",
+                    "userId": "2",
                     "readonly": false,
                     "avatar": "https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "givenName": "Jill",
@@ -308,7 +310,8 @@ const mockdata: MgmtData = {
                     "lastActivity": new Date('2022-01-01')
                 },
                 {
-                    "key": "3",
+                    "groupId": "",
+                    "userId": "3",
                     "readonly": false,
                     "avatar": "https://images.unsplash.com/photo-1632922267756-9b71242b1592?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "givenName": "Henry",
@@ -318,7 +321,8 @@ const mockdata: MgmtData = {
                     "lastActivity": new Date((new Date()).getTime() - (1000*60*60*24))
                 },
                 {
-                    "key": "4",
+                    "groupId": "",
+                    "userId": "4",
                     "readonly": false,
                     "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "givenName": "Bill",
@@ -328,7 +332,8 @@ const mockdata: MgmtData = {
                     "lastActivity": new Date((new Date()).getTime() - (1000*60*60)),
                 },
                 {
-                    "key": "5",
+                    "groupId": "",
+                    "userId": "5",
                     "readonly": false,
                     "avatar": "https://images.unsplash.com/photo-1630841539293-bd20634c5d72?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "givenName": "Jeremy",
@@ -341,19 +346,19 @@ const mockdata: MgmtData = {
         },
         groups: [
             {
-                key: "0",
+                groupId: "0",
                 name: 'Extreme performance',
                 description:
                     'This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit',
             },
             {
-                key: "1",
+                groupId: "1",
                 name: 'Privacy focused',
                 description:
                     'People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma',
             },
             {
-                key: "2",
+                groupId: "2",
                 name: 'No third parties',
                 description:
                     'They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves',
@@ -416,31 +421,36 @@ const mockdata: MgmtData = {
             tab: "Complete",
             users: [
                 {
-                    "key": "1",
+                    "lessonId": "",
+                    "userId": "1",
                     "avatar": "https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Robert Wolfkisser",
                     "email": "rob_wolf@gmail.com",
                 },
                 {
-                    "key": "2",
+                    "lessonId": "",
+                    "userId": "2",
                     "avatar": "https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Jill Jailbreaker",
                     "email": "jj@breaker.com",
                 },
                 {
-                    "key": "3",
+                    "lessonId": "",
+                    "userId": "3",
                     "avatar": "https://images.unsplash.com/photo-1632922267756-9b71242b1592?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Henry Silkeater",
                     "email": "henry@silkeater.io",
                 },
                 {
-                    "key": "4",
+                    "lessonId": "",
+                    "userId": "4",
                     "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Bill Horsefighter",
                     "email": "bhorsefighter@gmail.com",
                 },
                 {
-                    "key": "5",
+                    "lessonId": "",
+                    "userId": "5",
                     "avatar": "https://images.unsplash.com/photo-1630841539293-bd20634c5d72?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Jeremy Footviewer",
                     "email": "jeremy@foot.dev",
@@ -449,19 +459,19 @@ const mockdata: MgmtData = {
         },
         lessons: [
             {
-                key: "1",
+                lessonId: "1",
                 name: 'Extreme performance',
                 description:
                     'This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit. Extend default theme with any amount of additional colors, replace shadows, radius, spacing, fonts and many other properties to match your design requirements. Mantine theme is just an object, you can subscribe to it in any part of application via context and use it to build your own components.',
             },
             {
-                key: "2",
+                lessonId: "2",
                 name: 'Privacy focused',
                 description:
                     'People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma',
             },
             {
-                key: "3",
+                lessonId: "3",
                 name: 'No third parties',
                 description:
                     'They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves',
@@ -482,31 +492,36 @@ const mockdata: MgmtData = {
             tab: "Complete",
             users: [
                 {
-                    "key": "1",
+                    "badgeId": "",
+                    "userId": "1",
                     "avatar": "https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Robert Wolfkisser",
                     "email": "rob_wolf@gmail.com",
                 },
                 {
-                    "key": "2",
+                    "badgeId": "",
+                    "userId": "2",
                     "avatar": "https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Jill Jailbreaker",
                     "email": "jj@breaker.com",
                 },
                 {
-                    "key": "3",
+                    "badgeId": "",
+                    "userId": "3",
                     "avatar": "https://images.unsplash.com/photo-1632922267756-9b71242b1592?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Henry Silkeater",
                     "email": "henry@silkeater.io",
                 },
                 {
-                    "key": "4",
+                    "badgeId": "",
+                    "userId": "4",
                     "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Bill Horsefighter",
                     "email": "bhorsefighter@gmail.com",
                 },
                 {
-                    "key": "5",
+                    "badgeId": "",
+                    "userId": "5",
                     "avatar": "https://images.unsplash.com/photo-1630841539293-bd20634c5d72?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
                     "name": "Jeremy Footviewer",
                     "email": "jeremy@foot.dev",
@@ -515,19 +530,19 @@ const mockdata: MgmtData = {
         },
         badges: [
             {
-                key: "1",
+                badgeId: "1",
                 name: 'Extreme performance',
                 description:
                     'This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit. Extend default theme with any amount of additional colors, replace shadows, radius, spacing, fonts and many other properties to match your design requirements. Mantine theme is just an object, you can subscribe to it in any part of application via context and use it to build your own components.',
             },
             {
-                key: "2",
+                badgeId: "2",
                 name: 'Privacy focused',
                 description:
                     'People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma',
             },
             {
-                key: "3",
+                badgeId: "3",
                 name: 'No third parties',
                 description:
                     'They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves',
