@@ -41,7 +41,7 @@ export type GroupsProps = {
     groups: GroupItem[]
 
     onCreateGroup:  (group: GroupItem) => void
-    onDeleteGroup:  () => void
+    onDeleteGroup:  (group: GroupItem) => void
     onGroupClick: (group: GroupItem) => void
 }
 
