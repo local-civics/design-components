@@ -19,7 +19,7 @@ export interface TableProps {
     loading: boolean
     items: Item[];
 
-    onGroupUsersClick: (item: Item) => void
+    onClick: (item: Item) => void
     onDeleteGroup: (item: Item) => void
 }
 
@@ -58,7 +58,7 @@ export function Table(props: TableProps) {
             <td><Text size={14}>{row.description}</Text></td>
             <td>
                 <Group noWrap spacing={0} position="right">
-                    <ActionIcon color="blue" onClick={() => props.onGroupUsersClick(row)} variant="subtle">
+                    <ActionIcon color="blue" onClick={() => props.onClick(row)} variant="subtle">
                         <IconUsers
                             size={16}
                             stroke={1.5}

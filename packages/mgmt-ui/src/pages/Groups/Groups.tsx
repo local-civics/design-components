@@ -10,9 +10,9 @@ import {
     Drawer,
     Button, TextInput, ActionIcon,
     Tooltip, Group as GroupCore, LoadingOverlay,
-} from '@mantine/core';
-import { useForm }        from '@mantine/form';
-import {Table, Item} from "./Table";
+}                      from '@mantine/core';
+import { useForm }     from '@mantine/form';
+import {Table, Item}   from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -42,7 +42,7 @@ export type GroupsProps = {
 
     onCreateGroup:  (group: GroupItem) => void
     onDeleteGroup:  () => void
-    onGroupUsersClick: () => void
+    onGroupClick: (group: GroupItem) => void
 }
 
 /**
@@ -135,7 +135,7 @@ export const Groups = (props: GroupsProps) => {
                             loading={props.loading}
                             items={props.groups}
                             onDeleteGroup={props.onDeleteGroup}
-                            onGroupUsersClick={props.onGroupUsersClick}
+                            onClick={props.onGroupClick}
                         />
                     </div>
                 </Stack>
