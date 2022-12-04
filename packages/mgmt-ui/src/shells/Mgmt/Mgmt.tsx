@@ -5,11 +5,11 @@ import {useState}                                                               
 import * as React                                                                                            from 'react';
 import {
     BadgeUserItem
-}                                                                                                            from "../../../dist/pages/Badges/Badge/BadgeUserTable";
+}                                                                                                            from "../../pages/Badges/Badge/Table";
+import {Badges, BadgesData}                                                                                  from "../../pages/Badges/Badges";
 import {
     BadgeItem
-}                                                                                                            from "../../../dist/pages/Badges/BadgeTable";
-import {Badges, BadgesData}                                                                                  from "../../pages/Badges/Badges";
+}                                                                                                            from "../../pages/Badges/Table";
 import {
     GroupStackItem
 }                                                                                                            from "../../pages/Groups/GroupsStack";
@@ -19,7 +19,7 @@ import {LessonItem}                                                             
 import {AccountData, SwitchAccount}                                                                          from "./SwitchAccount/SwitchAccount";
 import {isPseudoLink, Navbar}                                                                                from "../../components/navigation/Navbar/Navbar";
 import {GroupUserItem}                                                                                       from "../../pages/Groups/Group/GroupUserTable";
-import {Groups, GroupsData} from "../../pages/Groups/Groups";
+import {Groups, GroupsData}                                                                                  from "../../pages/Groups/Groups";
 import {Home}                              from "../../pages/Home/Home";
 import {Dashboard, DashboardData} from "../../pages/Dashboard/Dashboard";
 import {HomeData}                                   from "../../pages/Home/Home";

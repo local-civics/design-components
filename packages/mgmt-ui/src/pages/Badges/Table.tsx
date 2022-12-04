@@ -3,9 +3,9 @@ import { Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '
 import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
- * Item
+ * BadgeItem
  */
-export interface Item {
+export interface BadgeItem {
     key: string,
     name: string;
     description: string
@@ -16,14 +16,14 @@ export interface Item {
  */
 export type TableData = {
     loading: boolean
-    data: Item[];
+    data: BadgeItem[];
 }
 
 /**
  * TableMethods
  */
 export type TableMethods = {
-    onClick: (badge: Item) => void
+    onClick: (badge: BadgeItem) => void
 }
 
 /**

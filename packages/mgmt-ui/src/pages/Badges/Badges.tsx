@@ -7,7 +7,7 @@ import {
     Container, Stack, Grid, Autocomplete, LoadingOverlay,
 }                                       from '@mantine/core';
 import {Badge, BadgeData, BadgeMethods} from "./Badge/Badge";
-import {Item, Table}         from "./Table";
+import {BadgeItem, Table}         from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -28,14 +28,14 @@ const useStyles = createStyles((theme) => ({
  */
 export type BadgesData = {
     loading: boolean
-    badges: Item[]
+    badges: BadgeItem[]
     badge: BadgeData | null
 }
 
 export type BadgesMethods = BadgeMethods & {
     onAutocompleteChange: (value: string) => void
     onGroupChange: (value: string) => void;
-    onBadgeClick: (item: Item) => void;
+    onBadgeClick: (item: BadgeItem) => void;
 }
 
 /**

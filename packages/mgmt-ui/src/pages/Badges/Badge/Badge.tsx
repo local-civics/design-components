@@ -10,7 +10,7 @@ import {
     Button, Divider, LoadingOverlay,
 } from '@mantine/core';
 import {Tabs}                 from "../../../components/navigation/Tabs/Tabs";
-import {Table, Item} from "./Table";
+import {Table, BadgeUserItem} from "./Table";
 
 const tabsData = [{value: "Complete"}, {value: "Incomplete"}]
 
@@ -38,7 +38,7 @@ export type BadgeData = {
     description: string
     groups: {name: string, active?: boolean}[]
     tab: TabsValue
-    users: Item[]
+    users: BadgeUserItem[]
 }
 
 /**
@@ -49,7 +49,7 @@ export type BadgeMethods = {
     onGroupChange: (next: string) => void;
     onPreview: (id: string) => void;
     onTabChange: (value: TabsValue) => void;
-    onUserClick: (item: Item) => void;
+    onUserClick: (item: BadgeUserItem) => void;
 }
 
 /**
