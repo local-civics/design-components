@@ -40,11 +40,9 @@ export function Table(props: TableProps) {
     if(props.data.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
-            data={{
-                title: "No badges available",
-                icon: "badges",
-                description: "Adjust your search or contact a representative if your expecting results."
-            }}
+            title="No badges available"
+            icon="badges"
+            description="Adjust your search or contact a representative if your expecting results."
         />
     }
 

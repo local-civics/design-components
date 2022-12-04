@@ -32,11 +32,9 @@ export function GroupsStack(props: GroupsStackProps) {
     if(props.data.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
-            data={{
-                title: "No groups",
-                icon: "groups",
-                description: "You don't have any groups just yet. When your ready, get started by clicking the 'Create group' button above."
-            }}
+            title="No groups"
+            icon="groups"
+            description="You don't have any groups just yet. When your ready, get started by clicking the 'Create group' button above."
         />
     }
 

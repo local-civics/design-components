@@ -64,17 +64,19 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-export type PlaceholderIcon = "badges" | "lessons" | "dashboard" | "groups" | "kindergarten" | "thinking"
+/**
+ * PlaceholderBannerIcon
+ */
+export type PlaceholderBannerIcon = "badges" | "lessons" | "dashboard" | "groups" | "kindergarten" | "thinking"
 
-export interface PlaceholderBannerData {
-    title: string
-    icon: PlaceholderIcon
-    description: string
-}
-
-export interface PlaceholderBannerProps {
+/**
+ * PlaceholderBannerProps
+ */
+export type PlaceholderBannerProps = {
     loading: boolean
-    data: PlaceholderBannerData
+    title: string
+    icon: PlaceholderBannerIcon
+    description: string
 }
 
 export const PlaceholderBanner = (props: PlaceholderBannerProps) => {
@@ -82,11 +84,11 @@ export const PlaceholderBanner = (props: PlaceholderBannerProps) => {
     return (
         <div className={classes.wrapper}>
             <div className={classes.body}>
-                <Title className={classes.title}>{props.loading ? "Loading..." : props.data.title}</Title>
-                <Text size="sm" color="dimmed">{props.loading ? "We're loading your data." : props.data.description}</Text>
+                <Title className={classes.title}>{props.loading ? "Loading..." : props.title}</Title>
+                <Text size="sm" color="dimmed">{props.loading ? "We're loading your data." : props.description}</Text>
             </div>
 
-            <Image src={`https://cdn.localcivics.io/illustrations/${props.data.icon}.svg`} className={classes.image} />
+            <Image src={`https://cdn.localcivics.io/illustrations/${props.icon}.svg`} className={classes.image} />
         </div>
     );
 }

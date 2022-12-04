@@ -34,11 +34,9 @@ export function Table(props: TableProps) {
     if(props.items.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
-            data={{
-                title: "No data for group",
-                icon: "thinking",
-                description: "You don't have any data for people in this group yet. Check back later or adjust your search."
-            }}
+            title="No data for group"
+            icon="thinking"
+            description="You don't have any data for people in this group yet. Check back later or adjust your search."
         />
     }
 

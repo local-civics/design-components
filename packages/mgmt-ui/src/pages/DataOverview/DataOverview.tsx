@@ -34,11 +34,9 @@ export const DataOverview = (props: DataOverviewProps) => {
     if(props.loading || !props.problemsSolved){
         return <PlaceholderBanner
             loading={props.loading}
-            data={{
-                title: "No data for period",
-                icon: "dashboard",
-                description: "We haven't received any data during this period. Check back later once progress has been made."
-            }}
+            title="No data for period"
+            icon="dashboard"
+            description="We haven't received any data during this period. Check back later once progress has been made."
         />
     }
 

@@ -30,11 +30,9 @@ export function LessonTable(props: LessonTableProps) {
     if(props.data.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
-            data={{
-                title: "No lessons available",
-                icon: "lessons",
-                description: "Adjust your search or contact a representative if your expecting results."
-            }}
+            title="No lessons available"
+            icon="lessons"
+            description="Adjust your search or contact a representative if your expecting results."
         />
     }
 

@@ -35,11 +35,9 @@ export const DataBreakdown = (props: DataBreakdownProps) => {
     if(props.loading || props.points.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
-            data={{
-                title: "No data for period",
-                icon: "dashboard",
-                description: "We haven't received any data during this period. Check back later once progress has been made."
-            }}
+            title="No data for period"
+            icon="dashboard"
+            description="We haven't received any data during this period. Check back later once progress has been made."
         />
     }
 
