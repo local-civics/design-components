@@ -8,7 +8,8 @@ import {
  * Item
  */
 export interface BadgeUserItem {
-    key: string
+    badgeId: string
+    userId: string
     avatar: string
     name: string
     email: string

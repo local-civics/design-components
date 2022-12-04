@@ -13,7 +13,8 @@ const rolesData = [{value: 'Member', label: 'Member'}, {value: 'Admin', label: '
  * GroupUserItem
  */
 export type GroupUserItem = {
-    key: string
+    groupId: string,
+    userId: string,
     avatar: string,
     email: string,
     givenName: string,

@@ -10,7 +10,7 @@ import {PlaceholderBanner}                                from "../../components
 /**
  * GroupStackItem
  */
-export type GroupStackItem = { key: string, name: string; description: string }
+export type GroupStackItem = { groupId: string, name: string; description: string }
 
 /**
  * GroupsStackProps
@@ -55,7 +55,7 @@ export function GroupsStack(props: GroupsStackProps) {
     });
 
     const rows = props.data.map((row) => (
-        <tr key={row.name}>
+        <tr key={row.groupId}>
             <td><Text size={14}>{row.name}</Text></td>
             <td><Text size={14}>{row.description}</Text></td>
             <td>

@@ -6,7 +6,7 @@ import {PlaceholderBanner}                                from "../../components
  * LessonItem
  */
 export interface LessonItem {
-    key: string,
+    lessonId: string,
     name: string;
     description: string
 }
@@ -39,7 +39,7 @@ export function LessonTable(props: LessonTableProps) {
     }
 
     const rows = props.data.map((row) => (
-        <tr key={row.key}>
+        <tr key={row.lessonId}>
             <td>
                 <UnstyledButton
                     sx={(theme) => ({

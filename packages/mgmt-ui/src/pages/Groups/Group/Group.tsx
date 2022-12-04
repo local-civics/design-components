@@ -120,7 +120,8 @@ export const Group = (props: GroupProps) => {
     const { classes } = useStyles();
     const form = useForm({
         initialValues: {
-            key: '',
+            groupId: '',
+            userId: '',
             email: '',
             givenName: '',
             familyName: '',

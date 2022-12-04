@@ -8,7 +8,8 @@ import {
  * LessonUserItem
  */
 export interface LessonUserItem {
-    key: string
+    lessonId: string
+    userId: string
     avatar: string
     name: string
     email: string

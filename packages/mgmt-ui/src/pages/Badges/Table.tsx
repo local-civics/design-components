@@ -6,7 +6,7 @@ import {PlaceholderBanner}                                from "../../components
  * BadgeItem
  */
 export interface BadgeItem {
-    key: string,
+    badgeId: string,
     name: string;
     description: string
 }
@@ -49,7 +49,7 @@ export function Table(props: TableProps) {
     }
 
     const rows = props.data.map((row) => (
-        <tr key={row.key}>
+        <tr key={row.badgeId}>
             <td>
                 <UnstyledButton
                     sx={(theme) => ({
