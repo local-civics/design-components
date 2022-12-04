@@ -6,8 +6,6 @@ import {
     Text,
     Container, Stack, Grid, Autocomplete, TabsValue, LoadingOverlay,
 } from '@mantine/core';
-import {Lesson, LessonData}      from "./Lesson/Lesson";
-import {LessonUserItem}          from "./Lesson/LessonUserTable";
 import {LessonTable, LessonItem} from "./LessonTable";
 
 const useStyles = createStyles((theme) => ({
@@ -25,31 +23,15 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * LessonsData
- */
-export type LessonsData = {
-    loading: boolean
-    lessons: LessonItem[]
-    lesson: LessonData | null
-}
-
-/**
- * LessonsMethods
- */
-export type LessonsMethods = {
-    onAutocompleteChange: (next: string) => void
-    onGroupChange: (next: string) => void;
-    onLessonClick: (lesson: LessonItem) => void
-    onPreview: (id: string) => void;
-    onTabChange: (tab: TabsValue) => void;
-    onUserClick: (user: LessonUserItem) => void;
-    onBackClick: () => void;
-}
-
-/**
  * LessonsProps
  */
-export type LessonsProps = LessonsData & LessonsMethods
+export type LessonsProps = {
+    loading: boolean
+    data: LessonItem[]
+
+    onAutocompleteChange: (next: string) => void
+    onLessonClick: (item: LessonItem) => void
+}
 
 /**
  * Lessons
@@ -58,18 +40,6 @@ export type LessonsProps = LessonsData & LessonsMethods
  */
 export const Lessons = (props: LessonsProps) => {
     const { classes } = useStyles();
-
-    if(props.lesson){
-        return <Lesson
-            {...props.lesson}
-            onBackClick={props.onBackClick}
-            onGroupChange={props.onGroupChange}
-            onTabChange={props.onTabChange}
-            onUserClick={props.onUserClick}
-            onPreview={props.onPreview}
-        />
-    }
-
     return (
         <Container size="lg" py="xl">
             <Stack spacing="md">
@@ -90,7 +60,7 @@ export const Lessons = (props: LessonsProps) => {
 
                 <Autocomplete
                     placeholder="Search for a lesson that fits your needs"
-                    data={props.lessons.map(item => item.name)}
+                    data={props.data.map(item => item.name)}
                     onChange={props.onAutocompleteChange}
                 />
 
@@ -98,7 +68,7 @@ export const Lessons = (props: LessonsProps) => {
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <LessonTable
                         loading={props.loading}
-                        data={props.lessons}
+                        data={props.data}
                         onClick={props.onLessonClick}
                     />
                 </div>

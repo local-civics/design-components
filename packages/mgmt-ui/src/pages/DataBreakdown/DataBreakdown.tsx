@@ -1,31 +1,49 @@
 import {Paper, Grid, ActionIcon, Title, Tooltip, Group, Select, Stack} from "@mantine/core";
-import {IconInfoCircle}                                                       from "@tabler/icons";
-import * as React from 'react';
-import {Table}    from "./Table";
+import {IconInfoCircle}                                                from "@tabler/icons";
+import * as React                                                      from 'react';
+import {
+    PlaceholderBanner
+}                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {Table}                                                         from "./Table";
 
 /**
- * BreakdownData
+ * DataBreakdownPoint
  */
-export interface BreakdownData {
-    metric: string
-    users: { name: string; email: string; value: number }[],
+export type DataBreakdownPoint = {
+    name: string;
+    email: string;
+    value: number
 }
 
 /**
- * BreakdownProps
+ * DataBreakdownProps
  */
-export interface BreakdownProps{
-    data: BreakdownData
+export type DataBreakdownProps = {
+    loading: boolean
+    metric: string
+    points: DataBreakdownPoint[],
 
     onMetricChange: (next: string) => void
 }
 
 /**
- * Breakdown
+ * DataBreakdown
  * @param props
  * @constructor
  */
-export const Breakdown = (props: BreakdownProps) => {
+export const DataBreakdown = (props: DataBreakdownProps) => {
+    if(props.loading || props.points.length === 0){
+        return <PlaceholderBanner
+            loading={props.loading}
+            data={{
+                title: "No data for period",
+                icon: "dashboard",
+                description: "We haven't received any data during this period. Check back later once progress has been made."
+            }}
+        />
+    }
+
+
     return <Paper mih={150} p="lg" withBorder>
         <Stack>
             <Grid>
@@ -44,7 +62,7 @@ export const Breakdown = (props: BreakdownProps) => {
             <Group spacing="sm">
                 <Select
                     placeholder="Select a metric"
-                    value={props.data.metric}
+                    value={props.metric}
                     onChange={props.onMetricChange}
                     data={
                         [{
@@ -61,7 +79,7 @@ export const Breakdown = (props: BreakdownProps) => {
                 />
             </Group>
 
-            <Table data={props.data.users}/>
+            <Table items={props.points}/>
         </Stack>
     </Paper>
 }

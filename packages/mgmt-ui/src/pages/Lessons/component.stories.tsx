@@ -1,5 +1,4 @@
 import * as React                from "react";
-import {MgmtProvider}                       from "../../providers/MgmtProvider/MgmtProvider";
 import {Lessons, LessonsProps} from "./Lessons";
 import { Story }                            from "@storybook/react";
 
@@ -15,11 +14,9 @@ export default {
  * Component storybook template
  */
 const Template: Story<LessonsProps> = (args) => (
-    <MgmtProvider>
-      <div className="h-full w-full overscroll-none font-proxima">
+    <div className="h-full w-full overscroll-none font-proxima">
         <Lessons {...args}/>
-      </div>
-    </MgmtProvider>
+    </div>
 );
 
 /**

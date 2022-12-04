@@ -26,13 +26,19 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
+ * DataPoint
+ */
+export type DataPoint = {
+    name: string
+    value: number
+}
+
+/**
  * AreaChartProps
  */
 export interface AreaChartProps {
-    data: {
-        points: {name: string, value: number}[]
-        metric: string
-    }
+    points: DataPoint[]
+    metric: string
 
     onMetricChange: (next: string) => void
 }
@@ -60,7 +66,7 @@ export const AreaChart = (props: AreaChartProps) => {
                 <Grid.Col sm={5}>
                     <Select
                         placeholder="Select a metric"
-                        value={props.data.metric}
+                        value={props.metric}
                         onChange={props.onMetricChange}
                         data={
                             [{
@@ -78,7 +84,7 @@ export const AreaChart = (props: AreaChartProps) => {
                 </Grid.Col>
             </Grid>
             <ResponsiveContainer width="100%" height={400}>
-                <AreaChartCore width={730} height={250} data={props.data.points}
+                <AreaChartCore width={730} height={250} data={props.points}
                                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">

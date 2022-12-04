@@ -9,7 +9,7 @@ import {
     Select, TabsValue, ActionIcon, Group,
     Button, Divider, LoadingOverlay,
 } from '@mantine/core';
-import {Tabs}                 from "../../../components/navigation/Tabs/Tabs";
+import {Tabs}                 from "../../components/navigation/Tabs/Tabs";
 import {Table, BadgeUserItem} from "./Table";
 
 const tabsData = [{value: "Complete"}, {value: "Incomplete"}]
@@ -29,33 +29,31 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * BadgeData
+ * BadgeGroup
  */
-export type BadgeData = {
-    id: string
-    loading: boolean
-    name: string,
-    description: string
-    groups: {name: string, active?: boolean}[]
-    tab: TabsValue
-    users: BadgeUserItem[]
-}
-
-/**
- * BadgeMethods
- */
-export type BadgeMethods = {
-    onBackClick: () => void
-    onGroupChange: (next: string) => void;
-    onPreview: (id: string) => void;
-    onTabChange: (value: TabsValue) => void;
-    onUserClick: (item: BadgeUserItem) => void;
+export type BadgeGroup = {
+    name: string
+    active: boolean
 }
 
 /**
  * BadgeProps
  */
-export type BadgeProps = BadgeData & BadgeMethods
+export type BadgeProps = {
+    loading: boolean
+    displayName: string,
+    description: string
+    groups: BadgeGroup[]
+    group: string
+    tab: TabsValue
+    users: BadgeUserItem[]
+
+    onBackClick: () => void;
+    onGroupChange: (group: string) => void;
+    onPreviewClick: () => void;
+    onTabChange: (tab: TabsValue) => void;
+    onUserClick: (user: BadgeUserItem) => void;
+}
 
 /**
  * Badge
@@ -63,8 +61,6 @@ export type BadgeProps = BadgeData & BadgeMethods
  * @constructor
  */
 export const Badge = (props: BadgeProps) => {
-    const groups = useGroups(props.groups, props.onGroupChange)
-    const tabs = useTabs(props.tab, props.onTabChange)
     const { classes } = useStyles();
 
     return (
@@ -83,7 +79,7 @@ export const Badge = (props: BadgeProps) => {
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
-                                    {props.name || "Badge"}
+                                    {props.displayName || "Badge"}
                                 </Title>
 
                                 <Text color="dimmed" className={classes.description} mt="sm">
@@ -94,7 +90,7 @@ export const Badge = (props: BadgeProps) => {
                             <Stack ml="auto">
                                 <Button
                                     variant="gradient"
-                                    onClick={() => props.onPreview(props.id)}
+                                    onClick={props.onPreviewClick}
                                 >
                                     Preview
                                 </Button>
@@ -103,8 +99,8 @@ export const Badge = (props: BadgeProps) => {
                                     size="sm"
                                     placeholder="Select a group"
                                     nothingFound="No options"
-                                    value={groups.select}
-                                    onChange={groups.onSelectChange}
+                                    value={props.group}
+                                    onChange={props.onGroupChange}
                                     icon={<IconCategory2/>}
                                     data={props.groups.map(g => g.name)}
                                 />
@@ -115,14 +111,14 @@ export const Badge = (props: BadgeProps) => {
                 <div>
                     <Tabs
                         data={tabsData}
-                        value={tabs.value}
-                        onChange={tabs.onChange}
+                        value={props.tab}
+                        onChange={props.onTabChange}
                     />
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <Table
                             loading={props.loading}
-                            data={props.users}
+                            items={props.users}
                             onClick={props.onUserClick}
                         />
                     </div>
@@ -130,29 +126,4 @@ export const Badge = (props: BadgeProps) => {
             </Stack>
         </Container>
     )
-}
-
-const useGroups = (initialState: {name: string, active?: boolean}[], onGroupChange: (next: string) => void) => {
-    const active = initialState.filter(g => g.active)
-    const [group, setGroup] = React.useState(active.length > 0 ? active[0].name : null)
-
-    return {
-        select: group,
-        onSelectChange: (next: string) => {
-            setGroup(next)
-            onGroupChange && onGroupChange(next)
-        }
-    }
-}
-
-const useTabs = (initialState: TabsValue, onTabChange: (next: TabsValue) => void) => {
-    const [tab, setTab] = React.useState<TabsValue>(initialState);
-
-    return {
-        value: tab,
-        onChange: (next: TabsValue) => {
-            setTab(next)
-            onTabChange && onTabChange(next)
-        }
-    }
 }

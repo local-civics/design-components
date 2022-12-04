@@ -1,39 +1,21 @@
 import * as React                                         from "react";
-import { SwitchAccount, SwitchAccountProps, AccountData } from "./SwitchAccount";
+import { SwitchAccount, SwitchAccountProps } from "./SwitchAccount";
 import { Story }                                          from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Shells/Mgmt/SwitchAccount",
+  title: "Shells/App/SwitchAccount",
   component: SwitchAccount,
 };
-
-const mockdata: AccountData = {
-        active: "1",
-        accounts: [{
-            key: "1",
-            name: "Account #1"
-        },{
-            key: "2",
-            name: "Account #2"
-        },{
-            key: "3",
-            name: "Account #3"
-        }],
-    }
 
 /**
  * Component storybook template
  */
 const Template: Story<SwitchAccountProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <SwitchAccount
-            {...args}
-            opened
-            data={args.data || mockdata}
-        />
+        <SwitchAccount{...args} opened/>
     </div>
 );
 

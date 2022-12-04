@@ -15,18 +15,14 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-interface UserData {
+export type UserInfoProps = {
+    variant?: "compact"
     avatar?: string
     givenName: string
     familyName: string
     email: string
     job: string
     quote: string
-}
-
-interface UserInfoProps {
-    variant?: "compact"
-    data: UserData
 }
 
 /**
@@ -36,8 +32,8 @@ interface UserInfoProps {
  */
 export const UserInfo = (props: UserInfoProps) => {
     const { classes } = useStyles();
-    const name = props.data.givenName ? [props.data.givenName, props.data.familyName].join(' ').trim() : props.data.email
-    const friendlyName = props.data.givenName ? props.data.givenName : "Me"
+    const name = props.givenName ? [props.givenName, props.familyName].join(' ').trim() : props.email
+    const friendlyName = props.givenName ? props.givenName : "Me"
 
     if(props.variant === "compact"){
         return <>
@@ -46,7 +42,7 @@ export const UserInfo = (props: UserInfoProps) => {
             </Title>
 
             <Text color="dimmed" className={classes.description} mt="xs">
-                {props.data.quote}
+                {props.quote}
             </Text>
         </>
     }
@@ -61,16 +57,16 @@ export const UserInfo = (props: UserInfoProps) => {
                     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
                 })}
             >
-                <Avatar src={props.data.avatar} size={135} radius={120} mx="auto" />
+                <Avatar src={props.avatar} size={135} radius={120} mx="auto" />
                 <Text align="center" size="lg" weight={500} mt="md">
                     {name}
                 </Text>
                 <Text align="center" color="dimmed" size="sm">
-                    {props.data.email} • {props.data.job}
+                    {props.email} • {props.job}
                 </Text>
             </Paper>
             <Blockquote mt="xl" color="blue" cite={`– ${friendlyName}`}>
-                {props.data.quote}
+                {props.quote}
             </Blockquote>
         </>
     );

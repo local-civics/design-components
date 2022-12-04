@@ -6,7 +6,6 @@ import {
     Text,
     Container, Stack, Grid, Autocomplete, LoadingOverlay,
 }                                       from '@mantine/core';
-import {Badge, BadgeData, BadgeMethods} from "./Badge/Badge";
 import {BadgeItem, Table}         from "./Table";
 
 const useStyles = createStyles((theme) => ({
@@ -24,24 +23,15 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * BadgeData
- */
-export type BadgesData = {
-    loading: boolean
-    badges: BadgeItem[]
-    badge: BadgeData | null
-}
-
-export type BadgesMethods = BadgeMethods & {
-    onAutocompleteChange: (value: string) => void
-    onGroupChange: (value: string) => void;
-    onBadgeClick: (item: BadgeItem) => void;
-}
-
-/**
  * BadgesProps
  */
-export type BadgesProps = BadgesData & BadgesMethods
+export type BadgesProps = {
+    loading: boolean
+    data: BadgeItem[]
+
+    onAutocompleteChange: (value: string) => void
+    onBadgeClick: (item: BadgeItem) => void;
+}
 
 /**
  * Badges
@@ -50,17 +40,6 @@ export type BadgesProps = BadgesData & BadgesMethods
  */
 export const Badges = (props: BadgesProps) => {
     const { classes } = useStyles();
-    if(props.badge){
-        return <Badge
-            {...props.badge}
-            onBackClick={props.onBackClick}
-            onGroupChange={props.onGroupChange}
-            onTabChange={props.onTabChange}
-            onUserClick={props.onUserClick}
-            onPreview={props.onPreview}
-        />
-    }
-
     return (
         <Container size="lg" py="xl">
             <Stack spacing="md">
@@ -81,7 +60,7 @@ export const Badges = (props: BadgesProps) => {
 
                 <Autocomplete
                     placeholder="Search for a badge that fits your needs"
-                    data={props.badges.map(item => item.name)}
+                    data={props.data.map(item => item.name)}
                     onChange={props.onAutocompleteChange}
                 />
 
@@ -89,7 +68,7 @@ export const Badges = (props: BadgesProps) => {
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <Table
                         loading={props.loading}
-                        data={props.badges}
+                        data={props.data}
                         onClick={props.onBadgeClick}
                     />
                 </div>

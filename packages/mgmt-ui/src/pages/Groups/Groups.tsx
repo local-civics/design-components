@@ -12,9 +12,7 @@ import {
     Tooltip, Group as GroupCore, LoadingOverlay,
 } from '@mantine/core';
 import { useForm }                   from '@mantine/form';
-import {Group, GroupData}            from "./Group/Group";
-import {GroupUserItem}               from "./Group/GroupUserTable";
-import {GroupStackItem, GroupsStack} from "./GroupsStack";
+import {GroupItem, GroupsStack} from "./GroupsStack";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -31,34 +29,16 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * GroupsData
- */
-export type GroupsData = {
-    loading: boolean
-    group: GroupData | null
-    groups: GroupStackItem[]
-}
-
-/**
- * GroupsMethods
- */
-export type GroupsMethods = {
-    onCreateGroup:  (group: GroupStackItem) => void
-    onCreateGroupUsers: (users: GroupUserItem[]) => void
-    onDeleteGroup:  (group: GroupStackItem) => void
-    onDeleteGroupUser: (user: GroupUserItem) => void
-    onEditGroup: (group: GroupStackItem) => void
-    onViewGroupUser: (user: GroupUserItem) => void
-    onGroupUserRoleChange: (user: GroupUserItem, next: string | null) => void
-    onTimelineScrollBottom: () => void;
-    onGroupUserBackClick: () => void;
-    onBackClick: () => void;
-}
-
-/**
  * GroupsProps
  */
-export type GroupsProps = GroupsData & GroupsMethods
+export type GroupsProps = {
+    loading: boolean
+    data: GroupItem[]
+
+    onCreateGroup:  (group: GroupItem) => void
+    onDeleteGroup:  () => void
+    onGroupUsersClick: () => void
+}
 
 /**
  * Groups
@@ -79,18 +59,6 @@ export const Groups = (props: GroupsProps) => {
         },
     });
     const [opened, setOpened] = useState(false);
-    if(props.group){
-        return <Group
-            {...props.group}
-            onBackClick={props.onBackClick}
-            onCreateUsers={props.onCreateGroupUsers}
-            onDelete={props.onDeleteGroupUser}
-            onViewProfile={props.onViewGroupUser}
-            onRoleChange={props.onGroupUserRoleChange}
-            onUserBackClick={props.onGroupUserBackClick}
-            onTimelineScrollBottom={props.onTimelineScrollBottom}
-        />
-    }
 
     return (
         <>
@@ -160,9 +128,9 @@ export const Groups = (props: GroupsProps) => {
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <GroupsStack
                             loading={props.loading}
-                            data={props.groups}
+                            data={props.data}
                             onDeleteGroup={props.onDeleteGroup}
-                            onEditGroup={props.onEditGroup}
+                            onGroupUsersClick={props.onGroupUsersClick}
                         />
                     </div>
                 </Stack>

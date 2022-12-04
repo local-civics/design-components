@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Avatar, Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
+import { Avatar, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
 import {
     PlaceholderBanner
-} from "../../../components/banners/PlaceholderBanner/PlaceholderBanner";
+} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
- * LessonUserItem
+ * Item
  */
-export interface LessonUserItem {
-    lessonId: string
+export interface BadgeUserItem {
+    badgeId: string
     userId: string
     avatar: string
     name: string
@@ -16,22 +16,33 @@ export interface LessonUserItem {
 }
 
 /**
- * LessonUserTableProps
+ * TableData
  */
-export interface LessonUserTableProps {
+export type TableData = {
     loading: boolean
-    data: LessonUserItem[];
-
-    onClick: (user: LessonUserItem) => void
+    items: BadgeUserItem[]
 }
 
 /**
- * LessonUserTable
+ * TableMethods
+ */
+export type TableMethods = {
+    onClick: (item: BadgeUserItem) => void
+}
+
+
+/**
+ * TableProps
+ */
+export type TableProps = TableData & TableMethods
+
+/**
+ * Table
  * @constructor
  * @param props
  */
-export function LessonUserTable(props: LessonUserTableProps) {
-    if(props.data.length === 0){
+export function Table(props: TableProps) {
+    if(props.items.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
             data={{
@@ -42,7 +53,7 @@ export function LessonUserTable(props: LessonUserTableProps) {
         />
     }
 
-    const rows = props.data.map((row) => (
+    const rows = props.items.map((row) => (
         <tr key={row.name}>
             <td>
                 <UnstyledButton
@@ -77,9 +88,9 @@ export function LessonUserTable(props: LessonUserTableProps) {
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <Table horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
+            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
                 <tbody>{rows}</tbody>
-            </Table>
+            </MantineTable>
         </ScrollArea.Autosize>
     );
 }

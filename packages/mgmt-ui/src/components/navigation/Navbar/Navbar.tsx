@@ -5,7 +5,7 @@ import {
     IconHome2,
     IconGauge,
     IconLogout,
-    IconSwitchHorizontal, IconLambda, IconCategory2, IconAlbum, IconTooltip,
+    IconSwitchHorizontal, IconLambda, IconCategory2, IconAlbum,
 } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
@@ -35,15 +35,15 @@ interface NavbarLinkProps {
     icon: TablerIcon;
     label: string;
     active?: boolean;
-    onClick?(): void;
+    onClick?: () => void;
 }
 
 const data = [
-    { icon: IconHome2, label: 'Home' },
-    { icon: IconGauge, label: 'Dashboard' },
-    { icon: IconCategory2, label: 'Groups' },
-    { icon: IconAlbum, label: 'Badges' },
-    { icon: IconLambda, label: 'Lessons' },
+    { icon: IconHome2, label: 'Home', href: '/home' },
+    { icon: IconGauge, label: 'Dashboard', href: '/dashboard' },
+    { icon: IconCategory2, label: 'Groups', href: 'groups' },
+    { icon: IconAlbum, label: 'Badges', href: '/badges' },
+    { icon: IconLambda, label: 'Lessons', href: '/lessons' },
 ];
 
 const NavbarLink = ({ icon: Icon, label, active, onClick }: NavbarLinkProps) => {
@@ -57,16 +57,14 @@ const NavbarLink = ({ icon: Icon, label, active, onClick }: NavbarLinkProps) => 
     );
 }
 
-const pseudoLinks = ["Logout", "Change account"]
-
-export const isPseudoLink = (link: string) => pseudoLinks.indexOf(link) !== -1
-
 /**
  * NavbarProps
  */
 export interface NavbarProps {
-    active?: string
-    onClick: (label: string) => void
+    active: string
+    navigate: (to: string) => void;
+    onLogout: () => void;
+    onSwitchAccounts?: () => void;
 }
 
 /**
@@ -77,10 +75,11 @@ export interface NavbarProps {
 export const Navbar = (props: NavbarProps) => {
     const links = data.map((link) => (
         <NavbarLink
-            {...link}
             key={link.label}
+            label={link.label}
+            icon={link.icon}
             active={link.label === props.active}
-            onClick={() => props.onClick && props.onClick(link.label)}
+            onClick={() => props.navigate(link.href)}
         />
     ));
 
@@ -102,13 +101,13 @@ export const Navbar = (props: NavbarProps) => {
                 <Stack justify="center" spacing={0}>
                     <NavbarLink
                         icon={IconSwitchHorizontal}
-                        label="Change account"
-                        onClick={() => props.onClick && props.onClick("Change account")}
+                        label="Switch accounts"
+                        onClick={props.onSwitchAccounts}
                     />
                     <NavbarLink
                         icon={IconLogout}
                         label="Logout"
-                        onClick={() => props.onClick && props.onClick("Logout")}
+                        onClick={props.onLogout}
                     />
                 </Stack>
             </NavbarCore.Section>

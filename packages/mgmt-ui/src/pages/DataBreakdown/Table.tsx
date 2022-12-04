@@ -39,22 +39,22 @@ export interface Item {
  * TableProps
  */
 export interface TableProps {
-    data: Item[];
+    items: Item[];
 }
 
 /**
  * Table
- * @param data
+ * @param props
  * @constructor
  */
-export const Table = ({ data }: TableProps) => {
+export const Table = (props: TableProps) => {
     const { classes, cx } = useStyles();
     const [scrolled, setScrolled] = useState(false);
 
-    const values = data.map(row => row.value)
+    const values = props.items.map(row => row.value)
     const average = Math.round(values.reduce((a, b) => a + b) / values.length)
 
-    const rows = data.map((row) => (
+    const rows = props.items.map((row) => (
         <tr key={row.name}>
             <td>{row.name}</td>
             <td>{row.email}</td>

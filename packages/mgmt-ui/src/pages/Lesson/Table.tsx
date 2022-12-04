@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Avatar, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
 import {
     PlaceholderBanner
-} from "../../../components/banners/PlaceholderBanner/PlaceholderBanner";
+} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
  */
-export interface BadgeUserItem {
-    badgeId: string
+export interface Item {
+    lessonId: string
     userId: string
     avatar: string
     name: string
@@ -16,25 +16,14 @@ export interface BadgeUserItem {
 }
 
 /**
- * TableData
- */
-export type TableData = {
-    loading: boolean
-    data: BadgeUserItem[]
-}
-
-/**
- * TableMethods
- */
-export type TableMethods = {
-    onClick: (item: BadgeUserItem) => void
-}
-
-
-/**
  * TableProps
  */
-export type TableProps = TableData & TableMethods
+export interface TableProps {
+    loading: boolean
+    items: Item[];
+
+    onClick: (user: Item) => void
+}
 
 /**
  * Table
@@ -42,7 +31,7 @@ export type TableProps = TableData & TableMethods
  * @param props
  */
 export function Table(props: TableProps) {
-    if(props.data.length === 0){
+    if(props.items.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
             data={{
@@ -53,7 +42,7 @@ export function Table(props: TableProps) {
         />
     }
 
-    const rows = props.data.map((row) => (
+    const rows = props.items.map((row) => (
         <tr key={row.name}>
             <td>
                 <UnstyledButton

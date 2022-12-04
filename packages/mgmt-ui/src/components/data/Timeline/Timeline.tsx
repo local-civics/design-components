@@ -15,8 +15,19 @@ const ICONS: {[key: string]: React.ReactNode} = {
     "ProblemSolved": <IconActivityHeartbeat size={12}/>,
 }
 
+/**
+ * TimelineItem
+ */
+export type TimelineItem = {
+    key: string,
+    name: string,
+    link?: string,
+    description: string,
+    time: string
+}
+
 interface TimelineProps {
-    data: {key: string, name: string, link?: string, description: string, time: string}[]
+    items: TimelineItem[]
     onScrollBottom: () => void;
 }
 
@@ -40,7 +51,7 @@ export const Timeline = (props: TimelineProps) => {
     }, [scrollPosition.y])
 
     let prev: string
-    const items = props.data.map(item => {
+    const items = props.items.map(item => {
         const namespace = item.name.split(/(?=[A-Z])/)
         const lineVariant = namespace[0] === prev ? "dashed" : "solid"
         prev = namespace[0]

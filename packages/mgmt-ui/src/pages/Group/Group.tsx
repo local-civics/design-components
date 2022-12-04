@@ -14,11 +14,8 @@ import {
 } from '@mantine/core';
 import { Dropzone, MIME_TYPES }        from '@mantine/dropzone';
 import { useForm }                     from '@mantine/form';
-import * as papa                       from 'papaparse'
-import {Timeline}                      from "../../../components/data/Timeline/Timeline";
-import {StatsGroup}                    from "../../../components/stats/StatsGroup/StatsGroup";
-import {UserInfo}                      from "../../../components/users/UserInfo/UserInfo";
-import {GroupUserTable, GroupUserItem} from "./GroupUserTable";
+import * as papa              from 'papaparse'
+import {Table, Item} from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -54,62 +51,25 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * GroupData
+ * GroupUserItem
  */
-export type GroupData = {
-    id: string
-    loading: boolean
-    description: string
-    name: string
-    user: {
-        avatar: string
-        givenName: string
-        familyName: string
-        email: string
-        job: string
-        quote: string
-    } | null
-    tenant: {
-        name: string
-        description: string
-        image: string
-        website: string
-    }
-    stats: {
-        "PROBLEMS SOLVED": {
-            value: number
-            diff: number
-        },
-        "LESSONS COMPLETED": {
-            value: number
-            diff: number
-        },
-        "BADGES EARNED": {
-            value: number
-            diff: number
-        },
-    }
-    timeline: {key: string, name: string, link?: string, description: string, time: string}[],
-    users: GroupUserItem[]
-}
-
-/**
- * GroupMethods
- */
-export type GroupMethods = {
-    onBackClick: () => void
-    onCreateUsers: (users: GroupUserItem[]) => void;
-    onDelete: (user: GroupUserItem) => void;
-    onRoleChange: (user: GroupUserItem, role: string | null) => void;
-    onViewProfile: (user: GroupUserItem) => void;
-    onTimelineScrollBottom: () => void;
-    onUserBackClick: () => void;
-}
+export type GroupUserItem = Item
 
 /**
  * GroupProps
  */
-export type GroupProps = GroupData & GroupMethods
+export type GroupProps = {
+    loading: boolean
+    displayName: string
+    description: string
+    users: GroupUserItem[]
+
+    onBackClick: () => void;
+    onCreateUsers: (users: GroupUserItem[]) => void;
+    onDeleteUser: (user: GroupUserItem) => void;
+    onRoleChange: (user: GroupUserItem, role: string | null) => void;
+    onUserClick: (item: GroupUserItem) => void;
+}
 
 /**
  * Group
@@ -136,52 +96,6 @@ export const Group = (props: GroupProps) => {
         },
     });
     const [opened, setOpened] = useState(false);
-    if(props.user){
-        return <Container size="lg" py="xl">
-            <Stack spacing="md">
-                <Grid>
-                    <Grid.Col sm="auto">
-                        <Badge
-                            variant="filled"
-                            leftSection={<ActionIcon onClick={props.onUserBackClick} color="blue" size="xs" radius="xl" variant="filled">
-                                <IconArrowLeft size={14} />
-                            </ActionIcon>}
-                            size="lg">
-                            Users
-                        </Badge>
-
-                        <UserInfo variant="compact" data={props.user}/>
-                    </Grid.Col>
-                </Grid>
-
-                <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <Stack spacing="lg">
-                        <StatsGroup data={[
-                            {
-                                title: "PROBLEMS SOLVED",
-                                value: props.stats["PROBLEMS SOLVED"].value,
-                                diff: props.stats["PROBLEMS SOLVED"].diff,
-                            },
-                            {
-                                title: "LESSONS COMPLETED",
-                                value: props.stats["LESSONS COMPLETED"].value,
-                                diff: props.stats["LESSONS COMPLETED"].diff,
-                            },
-                            {
-                                title: "BADGES EARNED",
-                                value: props.stats["BADGES EARNED"].value,
-                                diff: props.stats["BADGES EARNED"].diff,
-                            },
-                        ]}/>
-
-                        <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.timeline} />
-                    </Stack>
-                </div>
-            </Stack>
-        </Container>
-    }
-
     return (
         <>
             <Drawer
@@ -241,7 +155,7 @@ export const Group = (props: GroupProps) => {
                             Groups
                         </Badge>
                         <Title order={2} className={classes.title} mt="md">
-                            {props.name || "Group"}
+                            {props.displayName || "Group"}
                         </Title>
 
                         <Text color="dimmed" className={classes.description} mt="sm">
@@ -259,12 +173,12 @@ export const Group = (props: GroupProps) => {
 
                 <div style={{ position: 'relative' }}>
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <GroupUserTable
+                    <Table
                         loading={props.loading}
-                        data={props.users}
-                        onDelete={props.onDelete}
+                        items={props.users}
+                        onDelete={props.onDeleteUser}
                         onChangeRole={props.onRoleChange}
-                        onViewProfile={(user) => props.onViewProfile(user)}
+                        onViewProfile={(user) => props.onUserClick(user)}
                     />
                 </div>
             </Stack>

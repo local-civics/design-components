@@ -3,21 +3,21 @@ import * as React                     from 'react';
 import {Modal, Select, Button, Title} from '@mantine/core';
 
 /**
- * AccountData
+ * AccountItem
  */
-export interface AccountData{
-    active: string
-    accounts: {key: string, name: string}[]
+export type AccountItem = {
+    accountId: string
+    name: string
 }
 
 /**
  * SwitchAccountProps
  */
-export interface SwitchAccountProps {
+export type SwitchAccountProps = {
     opened: boolean
-    data: AccountData
-
-    onChange: (next: string) => void;
+    account: string
+    accounts: AccountItem[]
+    onChange: (account: string) => void;
     onClose: () => void;
 }
 
@@ -29,7 +29,7 @@ export interface SwitchAccountProps {
 export const SwitchAccount = (props: SwitchAccountProps) => {
     const form = useForm({
         initialValues: {
-            active: props.data.active,
+            active: props.account,
         },
     });
 
@@ -45,8 +45,8 @@ export const SwitchAccount = (props: SwitchAccountProps) => {
             <Select
                 required
                 placeholder="Select an account"
-                defaultValue={props.data.active}
-                data={props.data.accounts.map(a => { return {value: a.key, label: a.name}})}
+                defaultValue={props.account}
+                data={props.accounts.map(a => { return {value: a.accountId, label: a.name}})}
                 {...form.getInputProps("active")}
             />
             <Button type="submit" fullWidth mt="xl">

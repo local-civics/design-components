@@ -1,18 +1,18 @@
 import {openConfirmModal} from "@mantine/modals";
 import * as React from 'react';
-import { Avatar, Table, Group, Text, ActionIcon, UnstyledButton, ScrollArea, Select } from '@mantine/core';
+import { Avatar, Table as MantineTable, Group, Text, ActionIcon, UnstyledButton, ScrollArea, Select } from '@mantine/core';
 import {IconTrash} from '@tabler/icons';
 import {
     PlaceholderBanner
-} from "../../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {relativeTimeFromDates} from "../../../utils/time";
+} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {relativeTimeFromDates} from "../../utils/time";
 
 const rolesData = [{value: 'Member', label: 'Member'}, {value: 'Admin', label: 'Admin'}];
 
 /**
- * GroupUserItem
+ * Item
  */
-export type GroupUserItem = {
+export type Item = {
     groupId: string,
     userId: string,
     avatar: string,
@@ -25,24 +25,24 @@ export type GroupUserItem = {
 }
 
 /**
- * GroupUserTableProps
+ * TableProps
  */
-export interface GroupUserTableProps {
+export interface TableProps {
     loading: boolean
-    data: GroupUserItem[];
+    items: Item[];
 
-    onChangeRole: (user: GroupUserItem, role: string | null) => void;
-    onDelete: (user: GroupUserItem) => void
-    onViewProfile: (user: GroupUserItem) => void
+    onChangeRole: (user: Item, role: string | null) => void;
+    onDelete: (user: Item) => void
+    onViewProfile: (user: Item) => void
 }
 
 /**
- * GroupUserTable
+ * Table
  * @param props
  * @constructor
  */
-export function GroupUserTable(props: GroupUserTableProps) {
-    if(props.data.length === 0){
+export function Table(props: TableProps) {
+    if(props.items.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
             data={{
@@ -53,7 +53,7 @@ export function GroupUserTable(props: GroupUserTableProps) {
         />
     }
 
-    const openDeleteModal = (user: GroupUserItem) => openConfirmModal({
+    const openDeleteModal = (user: Item) => openConfirmModal({
         title: `Delete "${user.givenName && user.familyName ? `${user.givenName} ${user.familyName}` : user.email}"?`,
         centered: true,
         children: (
@@ -67,7 +67,7 @@ export function GroupUserTable(props: GroupUserTableProps) {
         onConfirm: () => props.onDelete && props.onDelete(user),
     });
 
-    const rows = props.data.map((row) => (
+    const rows = props.items.map((row) => (
         <tr key={row.email}>
             <td>
                 <UnstyledButton
@@ -106,7 +106,7 @@ export function GroupUserTable(props: GroupUserTableProps) {
 
     return (
         <ScrollArea>
-            <Table verticalSpacing={20} sx={{ minWidth: 700 }}>
+            <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }}>
                 <thead>
                     <tr>
                         <th>Member</th>
@@ -116,7 +116,7 @@ export function GroupUserTable(props: GroupUserTableProps) {
                     </tr>
                 </thead>
                 <tbody>{rows}</tbody>
-            </Table>
+            </MantineTable>
         </ScrollArea>
     );
 }

@@ -8,21 +8,20 @@ const mycCache = createEmotionCache({
     prepend: false
 });
 
-
 /**
- * MgmtProviderProps
+ * AdminProviderProps
  */
-export interface MgmtProviderProps {
+export interface AdminProviderProps {
     notificationLimit?: number
-    children?: React.ReactNode
+    children: React.ReactNode
 }
 
 /**
- * MgmtProvider
+ * AdminProvider
  * @constructor
  * @param props
  */
-export const MgmtProvider = (props: MgmtProviderProps) => {
+export const AdminProvider = (props: AdminProviderProps) => {
     return <MantineProvider withNormalizeCSS withGlobalStyles emotionCache={mycCache} theme={{ loader: 'bars' }}>
         <NotificationsProvider limit={props.notificationLimit || 5}>
             <ModalsProvider>

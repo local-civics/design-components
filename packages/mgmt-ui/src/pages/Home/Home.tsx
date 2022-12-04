@@ -1,56 +1,40 @@
-import * as React                                                                                from 'react';
+import * as React               from 'react';
 import {Container, Grid, Stack} from '@mantine/core';
-import {Timeline}                                                                                from "../../components/data/Timeline/Timeline";
-import {StatsGroup}                                                                from "../../components/stats/StatsGroup/StatsGroup";
-import {UserInfo}                                                                  from "../../components/users/UserInfo/UserInfo";
-import {TenantBanner}                                                              from "../../components/banners/TenantBanner/TenantBanner";
+import {Timeline, TimelineItem} from "../../components/data/Timeline/Timeline";
+import {StatsGroup}             from "../../components/data/StatsGroup/StatsGroup";
+import {UserInfo}               from "../../components/users/UserInfo/UserInfo";
+import {TenantBanner}           from "../../components/banners/TenantBanner/TenantBanner";
 
 /**
- * HomeData
+ * HomeUserEvent
  */
-export type HomeData = {
-    user: {
-        avatar: string
-        givenName: string
-        familyName: string
-        email: string
-        job: string
-        quote: string
-    }
-    tenant: {
-        name: string
-        description: string
-        image: string
-        website: string
-    }
-    stats: {
-        "PROBLEMS SOLVED": {
-            value: number
-            diff: number
-        },
-        "LESSONS COMPLETED": {
-            value: number
-            diff: number
-        },
-        "BADGES EARNED": {
-            value: number
-            diff: number
-        },
-    }
-    timeline: {key: string, name: string, link?: string, description: string, time: string}[],
-}
-
-/**
- * HomeMethods
- */
-export type HomeMethods = {
-    onTimelineScrollBottom: () => void;
-}
+export type HomeUserEvent = TimelineItem
 
 /**
  * HomeProps
  */
-export type HomeProps = HomeData & HomeMethods
+export type HomeProps = {
+    loading: boolean
+    avatarURL: string
+    givenName: string
+    familyName: string
+    email: string
+    job: string
+    impactStatement: string
+    tenantName: string
+    tenantDescription: string
+    tenantImage: string
+    tenantWebsite: string
+    events: HomeUserEvent[]
+    problemsSolved: number
+    problemsSolvedDiff: number
+    lessonsCompleted: number
+    lessonsCompletedDiff: number
+    badgesCompleted: number
+    badgesCompletedDiff: number
+
+    onScrollBottom: () => void;
+}
 
 /**
  * Home
@@ -62,17 +46,25 @@ export const Home = (props: HomeProps) => {
         <Stack spacing="lg">
             <Grid gutter="md">
                 <Grid.Col md={6}>
-                    <UserInfo data={props.user}/>
+                    <UserInfo
+                        variant="compact"
+                        givenName={props.givenName}
+                        familyName={props.familyName}
+                        avatar={props.avatarURL}
+                        email={props.email}
+                        quote={props.impactStatement}
+                        job={props.job}
+                    />
                 </Grid.Col>
                 <Grid.Col md={6}>
                     <TenantBanner
-                        title={props.tenant.name}
-                        description={props.tenant.description}
-                        image={props.tenant.image}
+                        title={props.tenantName}
+                        description={props.tenantDescription}
+                        image={props.tenantImage}
                         action={
                             {
                                 label: "Visit website",
-                                link: props.tenant.website,
+                                link: props.tenantWebsite,
                             }
                         }
                     />
@@ -82,22 +74,22 @@ export const Home = (props: HomeProps) => {
             <StatsGroup data={[
                 {
                     title: "PROBLEMS SOLVED",
-                    value: props.stats["PROBLEMS SOLVED"].value,
-                    diff: props.stats["PROBLEMS SOLVED"].diff,
+                    value: props.problemsSolved,
+                    diff: props.problemsSolvedDiff,
                 },
                 {
                     title: "LESSONS COMPLETED",
-                    value: props.stats["LESSONS COMPLETED"].value,
-                    diff: props.stats["LESSONS COMPLETED"].diff,
+                    value: props.lessonsCompleted,
+                    diff: props.lessonsCompletedDiff,
                 },
                 {
                     title: "BADGES EARNED",
-                    value: props.stats["BADGES EARNED"].value,
-                    diff: props.stats["BADGES EARNED"].diff,
+                    value: props.badgesCompleted,
+                    diff: props.badgesCompletedDiff,
                 },
             ]}/>
 
-            <Timeline onScrollBottom={props.onTimelineScrollBottom} data={props.timeline} />
+            <Timeline onScrollBottom={props.onScrollBottom} items={props.events} />
         </Stack>
     </Container>
 }

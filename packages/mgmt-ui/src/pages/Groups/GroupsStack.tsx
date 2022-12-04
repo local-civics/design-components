@@ -8,19 +8,19 @@ import {
 import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
- * GroupStackItem
+ * GroupItem
  */
-export type GroupStackItem = { groupId: string, name: string; description: string }
+export type GroupItem = { groupId: string, name: string; description: string }
 
 /**
  * GroupsStackProps
  */
 export interface GroupsStackProps {
     loading: boolean
-    data: GroupStackItem[];
+    data: GroupItem[];
 
-    onEditGroup: (group: GroupStackItem) => void
-    onDeleteGroup: (group: GroupStackItem) => void
+    onGroupUsersClick: (item: GroupItem) => void
+    onDeleteGroup: (item: GroupItem) => void
 }
 
 /**
@@ -40,7 +40,7 @@ export function GroupsStack(props: GroupsStackProps) {
         />
     }
 
-    const openDeleteModal = (group: GroupStackItem) => openConfirmModal({
+    const openDeleteModal = (group: GroupItem) => openConfirmModal({
         title: `Delete "${group.name}"?`,
         centered: true,
         children: (
@@ -51,7 +51,7 @@ export function GroupsStack(props: GroupsStackProps) {
         ),
         labels: { confirm: 'Delete group', cancel: "No don't delete it" },
         confirmProps: { color: 'red' },
-        onConfirm: () => props.onDeleteGroup && props.onDeleteGroup(group),
+        onConfirm: () => props.onDeleteGroup(group),
     });
 
     const rows = props.data.map((row) => (
@@ -60,7 +60,7 @@ export function GroupsStack(props: GroupsStackProps) {
             <td><Text size={14}>{row.description}</Text></td>
             <td>
                 <Group noWrap spacing={0} position="right">
-                    <ActionIcon color="blue" onClick={() => props.onEditGroup && props.onEditGroup(row)} variant="subtle">
+                    <ActionIcon color="blue" onClick={() => props.onGroupUsersClick(row)} variant="subtle">
                         <IconUsers
                             size={16}
                             stroke={1.5}

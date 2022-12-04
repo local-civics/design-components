@@ -8,9 +8,9 @@ import {
     Container, Stack, Grid,
     Select, TabsValue, ActionIcon, Group,
     Button, Divider, LoadingOverlay,
-} from '@mantine/core';
-import {Tabs}                        from "../../../components/navigation/Tabs/Tabs";
-import {LessonUserTable, LessonUserItem} from "./LessonUserTable";
+}                              from '@mantine/core';
+import {Tabs}                  from "../../components/navigation/Tabs/Tabs";
+import {Table, Item}                  from "./Table";
 
 const tabsData = [{value: "Complete"}, {value: "Incomplete"}]
 
@@ -29,34 +29,37 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * LessonData
+ * LessonUserItem
  */
-export type LessonData = {
-    loading: boolean
-    id: string
-    name: string,
-    description: string
-    group: string
-    groups: {name: string, active?: boolean}[]
-    tab: TabsValue
-    users: LessonUserItem[]
-}
+export type LessonUserItem = Item
 
 /**
- * LessonMethods
+ * LessonGroup
  */
-export type LessonMethods = {
-    onBackClick: () => void
-    onGroupChange: (value: string) => void;
-    onPreview: (id: string) => void;
-    onTabChange: (value: TabsValue) => void;
-    onUserClick: (item: LessonUserItem) => void;
+export type LessonGroup = {
+    name: string
+    active: boolean
 }
 
 /**
  * LessonProps
  */
-export type LessonProps = LessonData & LessonMethods
+export type LessonProps = {
+    loading: boolean
+    lessonId: string
+    displayName: string
+    description: string
+    group: string
+    groups: LessonGroup[]
+    tab: TabsValue
+    users: LessonUserItem[]
+
+    onBackClick: () => void;
+    onGroupChange: (group: string) => void;
+    onPreviewClick: () => void;
+    onTabChange: (tab: TabsValue) => void;
+    onUserClick: (user: LessonUserItem) => void;
+}
 
 /**
  * Lesson
@@ -82,7 +85,7 @@ export const Lesson = (props: LessonProps) => {
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
-                                    {props.name || "Lesson"}
+                                    {props.displayName || "Lesson"}
                                 </Title>
 
                                 <Text color="dimmed" className={classes.description} mt="sm">
@@ -93,7 +96,7 @@ export const Lesson = (props: LessonProps) => {
                             <Stack ml="auto">
                                 <Button
                                     variant="gradient"
-                                    onClick={() => props.onPreview && props.onPreview(props.id)}
+                                    onClick={props.onPreviewClick}
                                 >
                                     Preview
                                 </Button>
@@ -119,9 +122,9 @@ export const Lesson = (props: LessonProps) => {
                     />
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                        <LessonUserTable
+                        <Table
                             loading={props.loading}
-                            data={props.users}
+                            items={props.users}
                             onClick={props.onUserClick}
                         />
                     </div>

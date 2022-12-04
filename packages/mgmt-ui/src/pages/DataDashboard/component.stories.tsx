@@ -1,13 +1,13 @@
-import * as React                                 from "react";
-import {Dashboard, DashboardData, DashboardProps} from "./Dashboard";
-import { Story }                                  from "@storybook/react";
+import * as React                                     from "react";
+import {DataDashboard, DashboardData, DashboardProps} from "./Dashboard";
+import { Story }                                      from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
   title: "Pages/Dashboard",
-  component: Dashboard,
+  component: DataDashboard,
 };
 
 /**
@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<DashboardProps> = (args) => (
   <div className="h-full w-full overscroll-none font-proxima">
-    <Dashboard {...args} />
+    <DataDashboard {...args} />
   </div>
 );
 
