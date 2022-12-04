@@ -101,7 +101,7 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-export {SwitchAccount, AccountItem}
+export {SwitchAccount, AccountItem, Navbar}
 
 /**
  * AppProps
