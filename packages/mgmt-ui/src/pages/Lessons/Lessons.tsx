@@ -4,9 +4,9 @@ import {
     Badge,
     Title,
     Text,
-    Container, Stack, Grid, Autocomplete, TabsValue, LoadingOverlay,
+    Container, Stack, Grid, Autocomplete, LoadingOverlay,
 } from '@mantine/core';
-import {LessonTable, LessonItem} from "./LessonTable";
+import {Table, Item} from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -23,11 +23,16 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
+ * LessonItem
+ */
+export type LessonItem = Item
+
+/**
  * LessonsProps
  */
 export type LessonsProps = {
     loading: boolean
-    data: LessonItem[]
+    lessons: LessonItem[]
 
     onAutocompleteChange: (next: string) => void
     onLessonClick: (item: LessonItem) => void
@@ -60,15 +65,15 @@ export const Lessons = (props: LessonsProps) => {
 
                 <Autocomplete
                     placeholder="Search for a lesson that fits your needs"
-                    data={props.data.map(item => item.name)}
+                    data={props.lessons.map(item => item.name)}
                     onChange={props.onAutocompleteChange}
                 />
 
                 <div style={{ position: 'relative' }}>
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <LessonTable
+                    <Table
                         loading={props.loading}
-                        data={props.data}
+                        items={props.lessons}
                         onClick={props.onLessonClick}
                     />
                 </div>

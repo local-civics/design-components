@@ -3,9 +3,9 @@ import { Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '
 import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
- * BadgeItem
+ * Item
  */
-export interface BadgeItem {
+export interface Item {
     badgeId: string,
     name: string;
     description: string
@@ -16,14 +16,14 @@ export interface BadgeItem {
  */
 export type TableData = {
     loading: boolean
-    data: BadgeItem[];
+    items: Item[];
 }
 
 /**
  * TableMethods
  */
 export type TableMethods = {
-    onClick: (badge: BadgeItem) => void
+    onClick: (badge: Item) => void
 }
 
 /**
@@ -37,7 +37,7 @@ export type TableProps = TableData & TableMethods
  * @constructor
  */
 export function Table(props: TableProps) {
-    if(props.data.length === 0){
+    if(props.items.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
             title="No badges available"
@@ -46,7 +46,7 @@ export function Table(props: TableProps) {
         />
     }
 
-    const rows = props.data.map((row) => (
+    const rows = props.items.map((row) => (
         <tr key={row.badgeId}>
             <td>
                 <UnstyledButton

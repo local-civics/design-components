@@ -6,7 +6,7 @@ import {
     Text,
     Container, Stack, Grid, Autocomplete, LoadingOverlay,
 }                                       from '@mantine/core';
-import {BadgeItem, Table}         from "./Table";
+import {Table, Item}         from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -23,14 +23,19 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
+ * BadgeItem
+ */
+export type BadgeItem = Item
+
+/**
  * BadgesProps
  */
 export type BadgesProps = {
     loading: boolean
-    data: BadgeItem[]
+    badges: BadgeItem[]
 
     onAutocompleteChange: (value: string) => void
-    onBadgeClick: (item: BadgeItem) => void;
+    onBadgeClick: (badge: BadgeItem) => void;
 }
 
 /**
@@ -60,7 +65,7 @@ export const Badges = (props: BadgesProps) => {
 
                 <Autocomplete
                     placeholder="Search for a badge that fits your needs"
-                    data={props.data.map(item => item.name)}
+                    data={props.badges.map(item => item.name)}
                     onChange={props.onAutocompleteChange}
                 />
 
@@ -68,7 +73,7 @@ export const Badges = (props: BadgesProps) => {
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
                     <Table
                         loading={props.loading}
-                        data={props.data}
+                        items={props.badges}
                         onClick={props.onBadgeClick}
                     />
                 </div>

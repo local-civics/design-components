@@ -1,33 +1,33 @@
 import * as React                                         from 'react';
-import { Table, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
+import { Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
 import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
- * LessonItem
+ * Item
  */
-export interface LessonItem {
+export interface Item {
     lessonId: string,
     name: string;
     description: string
 }
 
 /**
- * LessonTableProps
+ * TableProps
  */
-export interface LessonTableProps {
+export interface TableProps {
     loading: boolean
-    data: LessonItem[];
+    items: Item[];
 
-    onClick: (lesson: LessonItem) => void
+    onClick: (lesson: Item) => void
 }
 
 /**
- * LessonTable
+ * Table
  * @param props
  * @constructor
  */
-export function LessonTable(props: LessonTableProps) {
-    if(props.data.length === 0){
+export function Table(props: TableProps) {
+    if(props.items.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
             title="No lessons available"
@@ -36,7 +36,7 @@ export function LessonTable(props: LessonTableProps) {
         />
     }
 
-    const rows = props.data.map((row) => (
+    const rows = props.items.map((row) => (
         <tr key={row.lessonId}>
             <td>
                 <UnstyledButton
@@ -71,9 +71,9 @@ export function LessonTable(props: LessonTableProps) {
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <Table horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
+            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
                 <tbody>{rows}</tbody>
-            </Table>
+            </MantineTable>
         </ScrollArea.Autosize>
     );
 }

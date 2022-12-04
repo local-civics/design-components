@@ -1,6 +1,6 @@
 import {openConfirmModal}                                 from "@mantine/modals";
 import * as React                                         from 'react';
-import {Table, Group, Text, ActionIcon, ScrollArea, Menu} from '@mantine/core';
+import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, Menu} from '@mantine/core';
 import {
     IconDots,
     IconTrash, IconUsers,
@@ -8,28 +8,28 @@ import {
 import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
- * GroupItem
+ * Item
  */
-export type GroupItem = { groupId: string, name: string; description: string }
+export type Item = { groupId: string, name: string; description: string }
 
 /**
- * GroupsStackProps
+ * TableProps
  */
-export interface GroupsStackProps {
+export interface TableProps {
     loading: boolean
-    data: GroupItem[];
+    items: Item[];
 
-    onGroupUsersClick: (item: GroupItem) => void
-    onDeleteGroup: (item: GroupItem) => void
+    onGroupUsersClick: (item: Item) => void
+    onDeleteGroup: (item: Item) => void
 }
 
 /**
- * GroupsStack
+ * Table
  * @param props
  * @constructor
  */
-export function GroupsStack(props: GroupsStackProps) {
-    if(props.data.length === 0){
+export function Table(props: TableProps) {
+    if(props.items.length === 0){
         return <PlaceholderBanner
             loading={props.loading}
             title="No groups"
@@ -38,7 +38,7 @@ export function GroupsStack(props: GroupsStackProps) {
         />
     }
 
-    const openDeleteModal = (group: GroupItem) => openConfirmModal({
+    const openDeleteModal = (group: Item) => openConfirmModal({
         title: `Delete "${group.name}"?`,
         centered: true,
         children: (
@@ -52,7 +52,7 @@ export function GroupsStack(props: GroupsStackProps) {
         onConfirm: () => props.onDeleteGroup(group),
     });
 
-    const rows = props.data.map((row) => (
+    const rows = props.items.map((row) => (
         <tr key={row.groupId}>
             <td><Text size={14}>{row.name}</Text></td>
             <td><Text size={14}>{row.description}</Text></td>
@@ -84,7 +84,7 @@ export function GroupsStack(props: GroupsStackProps) {
 
     return (
         <ScrollArea.Autosize maxHeight={300}>
-            <Table verticalSpacing={20} sx={{ minWidth: 700 }}>
+            <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }}>
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -93,7 +93,7 @@ export function GroupsStack(props: GroupsStackProps) {
                 </tr>
                 </thead>
                 <tbody>{rows}</tbody>
-            </Table>
+            </MantineTable>
         </ScrollArea.Autosize>
     );
 }
