@@ -104,6 +104,11 @@ const withName = (config: ButtonProps, name?: NavLinkName | string) => {
       config.text = "Privacy";
       config.size = "sm";
       break;
+    case "switch accounts":
+      config.icon = "bolt";
+      config.size = "lg";
+      config.color = "slate:icon";
+      break;
     default:
       config.size = "sm";
       config.spacing = "sm";

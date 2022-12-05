@@ -79,8 +79,8 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
               active={props.page === "calendar"}
             />
           )}
+          {props.onSwitchAccount && <NavLink name="switch accounts" onClick={props.onSwitchAccount}/>}
           {props.onLogout && <NavLink name="Logout" onClick={props.onLogout} />}
-          {props.onSwitchAccount && <NavLink name="Switch accounts" onClick={props.onSwitchAccount}/>}
         </NavBar>
 
         {props.children && (

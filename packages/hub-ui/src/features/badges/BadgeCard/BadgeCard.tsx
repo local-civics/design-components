@@ -83,7 +83,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
           </div>
         </div>
         {criteriaNames.length > 0 && (
-          <div className="p-5 grid grid-cols-1 gap-y-3 max-w-[30rem] border-t border-zinc-200">
+          <div className="p-5 grid grid-cols-1 gap-y-3 md:min-w-[30rem] max-w-[40rem] border-t border-zinc-200">
             <p className="font-semibold">Badge Criteria</p>
             <p className="text-xs">Complete 1 of each: {criteriaNames.join(", ")}</p>
 
