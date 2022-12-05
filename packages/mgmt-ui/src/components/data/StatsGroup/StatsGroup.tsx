@@ -72,9 +72,9 @@ export const StatsGroup = ({ data }: StatsGroupProps) => {
         <div key={stat.title} className={classes.stat}>
             <Text className={classes.count}>{stat.value.toLocaleString()}</Text>
             <Text className={classes.title}>{stat.title}</Text>
-            <Text className={classes.description}>
+            { stat.diff && <Text className={classes.description}>
                 {`${stat.diff}% ${stat.diff < 0 ? 'decrease': 'increase'} compared to last period`}
-            </Text>
+            </Text> }
         </div>
     ));
     return <div className={classes.root}>{stats}</div>;

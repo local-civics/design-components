@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { Avatar, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
+import * as React                                                                 from 'react';
+import { Avatar, Badge, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
 import {
     PlaceholderBanner
-} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+}                                                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
  */
 export interface Item {
-    lessonId: string
     userId: string
     avatar: string
     name: string
     email: string
+    isComplete?: boolean
 }
 
 /**
@@ -43,20 +43,7 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.name}>
             <td>
-                <UnstyledButton
-                    sx={(theme) => ({
-                        display: 'block',
-                        width: '100%',
-                        padding: theme.spacing.md,
-                        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-                        '&:hover': {
-                            backgroundColor:
-                                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-                        },
-                    })}
-                    onClick={() => props.onClick && props.onClick(row)}
-                >
+                <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
                     <Group>
                         <Avatar size={40} src={row.avatar} radius={40} />
                         <div>
@@ -70,12 +57,22 @@ export function Table(props: TableProps) {
                     </Group>
                 </UnstyledButton>
             </td>
+            <td>
+                {!!row.isComplete && <Badge>Complete</Badge>}
+                {!row.isComplete && <Badge color="gray">Incomplete</Badge>}
+            </td>
         </tr>
     ));
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
+            <MantineTable horizontalSpacing={0} verticalSpacing="sm" sx={{ minWidth: 700 }}>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>{rows}</tbody>
             </MantineTable>
         </ScrollArea.Autosize>

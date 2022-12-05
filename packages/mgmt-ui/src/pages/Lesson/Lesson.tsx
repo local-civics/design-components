@@ -9,10 +9,7 @@ import {
     Select, TabsValue, ActionIcon, Group,
     Button, Divider, LoadingOverlay,
 }                              from '@mantine/core';
-import {Tabs}                  from "../../components/navigation/Tabs/Tabs";
 import {Table, Item}                  from "./Table";
-
-const tabsData = [{value: "Complete"}, {value: "Incomplete"}]
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -46,12 +43,10 @@ export type LessonGroup = {
  */
 export type LessonProps = {
     loading: boolean
-    lessonId: string
     displayName: string
     description: string
     group: string
     groups: LessonGroup[]
-    tab: TabsValue
     users: LessonUserItem[]
 
     onBackClick: () => void;
@@ -93,7 +88,7 @@ export const Lesson = (props: LessonProps) => {
                                 </Text>
                             </Stack>
 
-                            <Stack ml="auto">
+                            <Stack spacing="xs" ml="auto">
                                 <Button
                                     variant="gradient"
                                     onClick={props.onPreviewClick}
@@ -115,11 +110,6 @@ export const Lesson = (props: LessonProps) => {
                     </Grid.Col>
                 </Grid>
                 <div>
-                    <Tabs
-                        data={tabsData}
-                        value={props.tab}
-                        onChange={props.onTabChange}
-                    />
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <Table

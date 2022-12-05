@@ -44,7 +44,7 @@ export const StatsGrid = ({ data }: StatsGridProps) => {
                             {stat.value.toLocaleString()}
                         </Text>
                     </div>
-                    <ThemeIcon
+                    { stat.diff && <ThemeIcon
                         color="gray"
                         variant="light"
                         sx={(theme) => ({ color: stat.diff > 0 ? theme.colors.teal[6] : theme.colors.red[6] })}
@@ -52,14 +52,14 @@ export const StatsGrid = ({ data }: StatsGridProps) => {
                         radius="md"
                     >
                         <DiffIcon size={28} stroke={1.5} />
-                    </ThemeIcon>
+                    </ThemeIcon> }
                 </Group>
-                <Text color="dimmed" size="sm" mt="md">
+                { stat.diff && <Text color="dimmed" size="sm" mt="md">
                     <Text component="span" color={stat.diff > 0 ? 'teal' : 'red'} weight={700}>
                         {stat.diff}%
                     </Text>{' '}
                     {stat.diff > 0 ? 'increase' : 'decrease'} compared to last period
-                </Text>
+                </Text> }
             </Paper>
         );
     });

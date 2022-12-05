@@ -9,10 +9,7 @@ import {
     Select, TabsValue, ActionIcon, Group,
     Button, Divider, LoadingOverlay,
 } from '@mantine/core';
-import {Tabs}                 from "../../components/navigation/Tabs/Tabs";
 import {Table, BadgeUserItem} from "./Table";
-
-const tabsData = [{value: "Complete"}, {value: "Incomplete"}]
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -45,7 +42,6 @@ export type BadgeProps = {
     description: string
     groups: BadgeGroup[]
     group: string
-    tab: TabsValue
     users: BadgeUserItem[]
 
     onBackClick: () => void;
@@ -87,7 +83,7 @@ export const Badge = (props: BadgeProps) => {
                                 </Text>
                             </Stack>
 
-                            <Stack ml="auto">
+                            <Stack spacing="xs" ml="auto">
                                 <Button
                                     variant="gradient"
                                     onClick={props.onPreviewClick}
@@ -109,11 +105,6 @@ export const Badge = (props: BadgeProps) => {
                     </Grid.Col>
                 </Grid>
                 <div>
-                    <Tabs
-                        data={tabsData}
-                        value={props.tab}
-                        onChange={props.onTabChange}
-                    />
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <Table
