@@ -6,7 +6,7 @@ import {
     Title,
     Text,
     Container, Stack, Grid,
-    Select, TabsValue, ActionIcon, Group,
+    Select, ActionIcon, Group,
     Button, Divider, LoadingOverlay,
 }                              from '@mantine/core';
 import {Table, Item}                  from "./Table";
@@ -52,7 +52,6 @@ export type LessonProps = {
     onBackClick: () => void;
     onGroupChange: (group: string) => void;
     onPreviewClick: () => void;
-    onTabChange: (tab: TabsValue) => void;
     onUserClick: (user: LessonUserItem) => void;
 }
 
