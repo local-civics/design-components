@@ -79,7 +79,7 @@ export function Table(props: TableProps) {
 
     return (
         <ScrollArea.Autosize maxHeight={300}>
-            <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }}>
+            <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
                     <th>Name</th>
