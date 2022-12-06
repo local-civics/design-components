@@ -1,8 +1,7 @@
 import {openConfirmModal}                                                 from "@mantine/modals";
 import * as React                                                         from 'react';
-import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, Menu, UnstyledButton} from '@mantine/core';
+import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, UnstyledButton} from '@mantine/core';
 import {
-    IconDots,
     IconTrash
 }                                                                         from '@tabler/icons';
 import {PlaceholderBanner}                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -57,18 +56,9 @@ export function Table(props: TableProps) {
             <td><Text size={14}>{row.description}</Text></td>
             <td>
                 <Group noWrap spacing={0} position="right">
-                    <Menu transition="pop" withArrow position="bottom-end">
-                        <Menu.Target>
-                            <ActionIcon>
-                                <IconDots size={16} stroke={1.5} />
-                            </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                            <Menu.Item onClick={() => openDeleteModal(row)} icon={<IconTrash size={16} stroke={1.5} />} color="red">
-                                Delete
-                            </Menu.Item>
-                        </Menu.Dropdown>
-                    </Menu>
+                    <ActionIcon color="red">
+                        <IconTrash onClick={() => openDeleteModal(row)} size={16} stroke={1.5} />
+                    </ActionIcon>
                 </Group>
             </td>
         </tr>
