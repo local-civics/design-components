@@ -1,7 +1,6 @@
-import {UnstyledButton}                                                  from "@mantine/core/lib/UnstyledButton/UnstyledButton";
 import {openConfirmModal}                                                 from "@mantine/modals";
 import * as React                                                         from 'react';
-import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, Menu} from '@mantine/core';
+import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, Menu, UnstyledButton} from '@mantine/core';
 import {
     IconDots,
     IconTrash
