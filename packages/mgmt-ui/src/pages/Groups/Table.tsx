@@ -1,11 +1,12 @@
-import {openConfirmModal}                                 from "@mantine/modals";
-import * as React                                         from 'react';
+import {UnstyledButton}                                                  from "@mantine/core/lib/UnstyledButton/UnstyledButton";
+import {openConfirmModal}                                                 from "@mantine/modals";
+import * as React                                                         from 'react';
 import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, Menu} from '@mantine/core';
 import {
     IconDots,
-    IconTrash, IconUsers,
-}                                                         from '@tabler/icons';
-import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+    IconTrash
+}                                                                         from '@tabler/icons';
+import {PlaceholderBanner}                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
@@ -49,17 +50,14 @@ export function Table(props: TableProps) {
 
     const rows = props.items.map((row) => (
         <tr key={row.groupId}>
-            <td><Text size={14}>{row.name}</Text></td>
+            <td>
+                <UnstyledButton onClick={() => props.onClick(row)}>
+                    <Text size={14}>{row.name}</Text>
+                </UnstyledButton>
+             </td>
             <td><Text size={14}>{row.description}</Text></td>
             <td>
                 <Group noWrap spacing={0} position="right">
-                    <ActionIcon color="blue" onClick={() => props.onClick(row)} variant="subtle">
-                        <IconUsers
-                            size={16}
-                            stroke={1.5}
-                        />
-                    </ActionIcon>
-
                     <Menu transition="pop" withArrow position="bottom-end">
                         <Menu.Target>
                             <ActionIcon>

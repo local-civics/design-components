@@ -50,7 +50,7 @@ export function Table(props: TableProps) {
         <tr key={row.name}>
             <td>
                 <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
-                    <Group>
+                    <Group spacing="sm">
                         <Avatar size={40} src={row.avatar} radius={40} />
                         <div>
                             <Text size="sm" weight={500}>
@@ -72,7 +72,7 @@ export function Table(props: TableProps) {
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <MantineTable horizontalSpacing={0} verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
+            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
                     <th>Name</th>

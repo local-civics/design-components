@@ -63,8 +63,7 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.email}>
             <td>
-                <UnstyledButton
-                    onClick={() => props.onViewProfile && props.onViewProfile(row)}>
+                <UnstyledButton onClick={() => props.onViewProfile && props.onViewProfile(row)}>
                     <Group spacing="sm">
                         <Avatar size={40} src={row.avatar} radius={40} />
                         <div>
@@ -99,7 +98,7 @@ export function Table(props: TableProps) {
 
     return (
         <ScrollArea>
-            <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }}>
+            <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                     <tr>
                         <th>Member</th>
