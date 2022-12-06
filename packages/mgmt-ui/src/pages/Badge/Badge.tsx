@@ -34,6 +34,7 @@ export type BadgeUserItem = Item
  * BadgeGroup
  */
 export type BadgeGroup = {
+    groupId: string
     name: string
     active: boolean
 }
@@ -46,7 +47,7 @@ export type BadgeProps = {
     displayName: string,
     description: string
     groups: BadgeGroup[]
-    group: string
+    groupId: string
     users: BadgeUserItem[]
 
     onBackClick: () => void;
@@ -99,10 +100,10 @@ export const Badge = (props: BadgeProps) => {
                                     size="sm"
                                     placeholder="Select a group"
                                     nothingFound="No options"
-                                    value={props.group}
+                                    value={props.groupId}
                                     onChange={props.onGroupChange}
                                     icon={<IconCategory2/>}
-                                    data={props.groups.map(g => g.name)}
+                                    data={props.groups.map(g => {return {value: g.groupId, label: g.name}})}
                                 />
                             </Stack>
                         </Group>

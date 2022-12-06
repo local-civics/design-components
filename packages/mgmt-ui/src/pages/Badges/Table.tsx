@@ -38,12 +38,7 @@ export type TableProps = TableData & TableMethods
  */
 export function Table(props: TableProps) {
     if(props.items.length === 0){
-        return <PlaceholderBanner
-            loading={props.loading}
-            title="No badges available"
-            icon="badges"
-            description="Adjust your search or contact a representative if your expecting results."
-        />
+        return <PlaceholderBanner loading={props.loading} icon="badges"/>
     }
 
     const rows = props.items.map((row) => (

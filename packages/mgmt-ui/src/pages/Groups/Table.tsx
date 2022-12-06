@@ -30,12 +30,7 @@ export interface TableProps {
  */
 export function Table(props: TableProps) {
     if(props.items.length === 0){
-        return <PlaceholderBanner
-            loading={props.loading}
-            title="No groups"
-            icon="groups"
-            description="You don't have any groups just yet. When your ready, get started by clicking the 'Create group' button above."
-        />
+        return <PlaceholderBanner loading={props.loading} icon="groups"/>
     }
 
     const openDeleteModal = (group: Item) => openConfirmModal({

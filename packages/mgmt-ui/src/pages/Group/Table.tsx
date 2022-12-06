@@ -43,12 +43,7 @@ export interface TableProps {
  */
 export function Table(props: TableProps) {
     if(props.items.length === 0){
-        return <PlaceholderBanner
-            loading={props.loading}
-            title="No one in group"
-            icon="thinking"
-            description="You don't have any people in this group yet. When your ready, get started by clicking the 'Add people' button above."
-        />
+        return <PlaceholderBanner loading={props.loading} icon="groups"/>
     }
 
     const openDeleteModal = (user: Item) => openConfirmModal({

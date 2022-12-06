@@ -34,6 +34,7 @@ export type LessonUserItem = Item
  * LessonGroup
  */
 export type LessonGroup = {
+    groupId: string
     name: string
     active: boolean
 }
@@ -45,7 +46,7 @@ export type LessonProps = {
     loading: boolean
     displayName: string
     description: string
-    group: string
+    groupId: string
     groups: LessonGroup[]
     users: LessonUserItem[]
 
@@ -99,10 +100,10 @@ export const Lesson = (props: LessonProps) => {
                                     size="sm"
                                     placeholder="Select a group"
                                     nothingFound="No options"
-                                    value={props.group}
+                                    value={props.groupId}
                                     onChange={props.onGroupChange}
                                     icon={<IconCategory2/>}
-                                    data={props.groups.map(g => g.name)}
+                                    data={props.groups.map(g => {return {value: g.groupId, label: g.name}})}
                                 />
                             </Stack>
                         </Group>
