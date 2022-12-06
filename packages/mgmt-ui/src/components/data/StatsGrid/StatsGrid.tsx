@@ -44,7 +44,7 @@ export const StatsGrid = ({ data }: StatsGridProps) => {
                             {stat.value.toLocaleString()}
                         </Text>
                     </div>
-                    { stat.diff && <ThemeIcon
+                    { !!stat.diff && <ThemeIcon
                         color="gray"
                         variant="light"
                         sx={(theme) => ({ color: stat.diff > 0 ? theme.colors.teal[6] : theme.colors.red[6] })}
@@ -54,7 +54,7 @@ export const StatsGrid = ({ data }: StatsGridProps) => {
                         <DiffIcon size={28} stroke={1.5} />
                     </ThemeIcon> }
                 </Group>
-                { stat.diff && <Text color="dimmed" size="sm" mt="md">
+                { !!stat.diff && <Text color="dimmed" size="sm" mt="md">
                     <Text component="span" color={stat.diff > 0 ? 'teal' : 'red'} weight={700}>
                         {stat.diff}%
                     </Text>{' '}
