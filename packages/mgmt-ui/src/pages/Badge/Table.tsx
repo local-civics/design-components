@@ -64,8 +64,8 @@ export function Table(props: TableProps) {
                 </UnstyledButton>
             </td>
             <td>
-                {!!row.isComplete && <Badge>Complete</Badge>}
-                {!row.isComplete && <Badge color="gray">Incomplete</Badge>}
+                {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
+                {!row.isComplete && <Badge color="gray" variant="filled">Incomplete</Badge>}
             </td>
         </tr>
     ));

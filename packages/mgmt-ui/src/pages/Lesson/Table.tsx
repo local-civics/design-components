@@ -12,6 +12,7 @@ export interface Item {
     avatar: string
     name: string
     email: string
+    isStarted?: boolean
     isComplete?: boolean
 }
 
@@ -53,8 +54,9 @@ export function Table(props: TableProps) {
                 </UnstyledButton>
             </td>
             <td>
-                {!!row.isComplete && <Badge>Complete</Badge>}
-                {!row.isComplete && <Badge color="gray">Incomplete</Badge>}
+                {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
+                {!row.isComplete && !row.isStarted && <Badge color="red" variant="filled">Not started</Badge>}
+                {!row.isComplete && !!row.isStarted && <Badge color="violet" variant="filled">In progress</Badge>}
             </td>
         </tr>
     ));
