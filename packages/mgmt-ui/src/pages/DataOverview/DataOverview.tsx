@@ -1,7 +1,6 @@
 import * as React             from 'react';
 import {PlaceholderBanner}    from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {AreaChart, DataPoint} from "../../components/data/AreaChart/AreaChart";
-import {StatsGrid}            from "../../components/data/StatsGrid/StatsGrid";
 
 /**
  * DataOverviewPoint
@@ -15,13 +14,6 @@ export type DataOverviewProps = {
     loading: boolean
     metric: string
     points: DataOverviewPoint[]
-    problemsSolved: number
-    problemsSolvedDiff: number
-    lessonsCompleted: number
-    lessonsCompletedDiff: number
-    badgesCompleted: number
-    badgesCompletedDiff: number
-
     onMetricChange: (metric: string) => void
 }
 
@@ -31,29 +23,11 @@ export type DataOverviewProps = {
  * @constructor
  */
 export const DataOverview = (props: DataOverviewProps) => {
-    if(props.loading || !props.problemsSolved){
+    if(props.loading || !props.points.length){
         return <PlaceholderBanner loading={props.loading} icon="dashboard"/>
     }
 
     return <>
-        <StatsGrid data={[
-            {
-                title: "PROBLEMS SOLVED",
-                value: props.problemsSolved,
-                diff: props.problemsSolvedDiff,
-            },
-            {
-                title: "LESSONS COMPLETED",
-                value: props.lessonsCompleted,
-                diff: props.lessonsCompletedDiff,
-            },
-            {
-                title: "BADGES EARNED",
-                value: props.badgesCompleted,
-                diff: props.badgesCompletedDiff,
-            },
-        ]}/>
-
         <AreaChart
             metric={props.metric}
             points={props.points}
