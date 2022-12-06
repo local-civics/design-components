@@ -53,11 +53,12 @@ export const Timeline = (props: TimelineProps) => {
     let prev: string
     const items = props.items.map(item => {
         const namespace = item.name.split(/(?=[A-Z])/)
+        const name = namespace.length === 2 ? `${namespace[0]} ${namespace[1].toLowerCase()}` : item.name
         const lineVariant = namespace[0] === prev ? "dashed" : "solid"
         prev = namespace[0]
-        const title = item.link ?  <Anchor color="dark" unstyled href={item.link}>
-            {`${namespace[0]} ${namespace[1].toLowerCase()}`}
-        </Anchor> : `${namespace[0]} ${namespace[1].toLowerCase()}`
+        const title = item.link ? <Anchor color="dark" unstyled href={item.link}>
+            {name}
+        </Anchor> : name
 
         return <TimelineCore.Item
             key={item.key}
