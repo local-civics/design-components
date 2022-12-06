@@ -10,6 +10,7 @@ const tabs = [{value: "Overview"}, {value: "Breakdown"}]
  * DataGroup
  */
 export type DataGroup = {
+    groupId: string,
     name: string,
     active: boolean
 }
@@ -19,15 +20,14 @@ export type DataGroup = {
  */
 export type DataDashboardProps = {
     loading: boolean
-    group: string
+    groupId: string
     tab: string
     body: React.ReactNode
-    metric: string
     dateRange: DateRangePickerValue
     groups: DataGroup[]
 
     onDateRangeChange: (dateRange: DateRangePickerValue) => void
-    onGroupChange: (group: string) => void;
+    onGroupChange: (groupId: string) => void;
     onTabChange: (tab: TabsValue) => void;
 }
 
@@ -50,10 +50,10 @@ export const DataDashboard = (props: DataDashboardProps) => {
                     <Select
                         placeholder="Select a group"
                         nothingFound="No options"
-                        value={props.group}
+                        value={props.groupId}
                         onChange={props.onGroupChange}
                         icon={<IconCategory2/>}
-                        data={props.groups.map(g => g.name)}
+                        data={props.groups.map(g => {return {value: g.groupId, label: g.name}})}
                     />
                 </Grid.Col>
                 <Grid.Col sm="auto">

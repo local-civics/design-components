@@ -23,7 +23,7 @@ export type DataBreakdownProps = {
     metric: string
     points: DataBreakdownPoint[],
 
-    onMetricChange: (next: string) => void
+    onMetricChange: (metric: string) => void
 }
 
 /**

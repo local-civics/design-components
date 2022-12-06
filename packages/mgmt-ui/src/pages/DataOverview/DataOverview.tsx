@@ -22,7 +22,7 @@ export type DataOverviewProps = {
     badgesCompleted: number
     badgesCompletedDiff: number
 
-    onMetricChange: (next: string) => void
+    onMetricChange: (metric: string) => void
 }
 
 /**
