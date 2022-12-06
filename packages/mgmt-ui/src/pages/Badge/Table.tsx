@@ -7,7 +7,7 @@ import {
 /**
  * Item
  */
-export interface BadgeUserItem {
+export interface Item {
     userId: string
     avatar: string
     name: string
@@ -20,14 +20,14 @@ export interface BadgeUserItem {
  */
 export type TableData = {
     loading: boolean
-    items: BadgeUserItem[]
+    items: Item[]
 }
 
 /**
  * TableMethods
  */
 export type TableMethods = {
-    onClick: (item: BadgeUserItem) => void
+    onClick: (item: Item) => void
 }
 
 

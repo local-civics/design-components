@@ -9,7 +9,7 @@ import {
     Select, ActionIcon, Group,
     Button, Divider, LoadingOverlay,
 } from '@mantine/core';
-import {Table, BadgeUserItem} from "./Table";
+import {Table, Item} from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -24,6 +24,11 @@ const useStyles = createStyles((theme) => ({
         maxWidth: 600,
     },
 }));
+
+/**
+ * BadgeUserItem
+ */
+export type BadgeUserItem = Item
 
 /**
  * BadgeGroup
