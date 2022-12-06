@@ -45,13 +45,11 @@ export const Badge = (props: BadgeProps) => {
 
   return (
     <>
-      <BadgeButton {...props} progress={progress} target={target} onClick={onOpen} />
-
-      {open && (
-        <Overlay>
+      { !open && <BadgeButton {...props} progress={progress} target={target} onClick={onOpen} /> }
+      { open && !!props.preview &&  <BadgeCard {...props} onClose={onClose} /> }
+      { open && !props.preview && <Overlay>
           <BadgeCard {...props} onClose={onClose} />
-        </Overlay>
-      )}
+      </Overlay>}
     </>
   );
 };
