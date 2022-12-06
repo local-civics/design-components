@@ -127,8 +127,9 @@ export const LearningForm = (props: LearningFormProps) => {
     }
   };
 
+  const bg = props.preview ? "" : "bg-gray-100"
   return (
-      <div className="grid grid-cols-1 gap-y-12 bg-gray-100 px-4 pb-12 lg:px-48">
+      <div className={`grid grid-cols-1 gap-y-12 ${bg} px-4 pb-12 lg:px-48`}>
         <div className="w-full max-w-[62.5rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
           <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
             <div
