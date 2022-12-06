@@ -133,7 +133,13 @@ export const LearningForm = (props: LearningFormProps) => {
         <div className="w-full max-w-[62.5rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
           <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
             <div
-                onClick={() => setShowExitDialogue(true)}
+                onClick={() => {
+                  if(props.preview && props.onGoBack){
+                    props.onGoBack()
+                  } else {
+                    setShowExitDialogue(true)
+                  }
+                }}
                 className="flex h-max gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
             >
               <div className="w-3 h-3 min-w-3">
