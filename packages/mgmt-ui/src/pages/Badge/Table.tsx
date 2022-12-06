@@ -65,7 +65,7 @@ export function Table(props: TableProps) {
             </td>
             <td>
                 {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
-                {!row.isComplete && <Badge color="gray" variant="filled">Incomplete</Badge>}
+                {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
             </td>
         </tr>
     ));
