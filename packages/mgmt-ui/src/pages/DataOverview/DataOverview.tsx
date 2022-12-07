@@ -23,7 +23,7 @@ export type DataOverviewProps = {
  * @constructor
  */
 export const DataOverview = (props: DataOverviewProps) => {
-    if(props.loading || !props.points.length){
+    if(props.loading){
         return <PlaceholderBanner loading={props.loading} icon="dashboard"/>
     }
 
