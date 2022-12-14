@@ -6,14 +6,14 @@ import {Timeline, TimelineItem} from "../../components/data/Timeline/Timeline";
 import {UserInfo}               from "../../components/users/UserInfo/UserInfo";
 
 /**
- * GroupUserEvent
+ * StudentEvent
  */
-export type GroupUserEvent = TimelineItem
+export type StudentEvent = TimelineItem
 
 /**
- * GroupUserProps
+ * StudentProps
  */
-export type GroupUserProps = {
+export type StudentProps = {
     loading: boolean
     avatarURL: string
     givenName: string
@@ -21,7 +21,7 @@ export type GroupUserProps = {
     email: string
     job: string
     impactStatement: string
-    events: GroupUserEvent[]
+    events: StudentEvent[]
     problemsSolved: number
     problemsSolvedDiff: number
     lessonsCompleted: number
@@ -33,7 +33,7 @@ export type GroupUserProps = {
     onScrollBottom: () => void;
 }
 
-export const GroupUser = (props: GroupUserProps) => {
+export const Student = (props: StudentProps) => {
     return <Container size="lg" py="xl">
         <Stack spacing="md">
             <Grid>

@@ -1,26 +1,26 @@
 import * as React                        from "react";
-import {Groups, GroupsProps} from "./Groups";
+import {Classes, ClassesProps} from "./Classes";
 import { Story }                         from "@storybook/react";
 
 /**
  * Storybook component configuration
  */
 export default {
-  title: "Pages/Groups",
-  component: Groups,
+  title: "Pages/Classes",
+  component: Classes,
 };
 
 /**
  * Component storybook template
  */
-const Template: Story<GroupsProps> = (args) => (
+const Template: Story<ClassesProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Groups {...args}/>
+        <Classes {...args}/>
     </div>
 );
 
 /**
  * Component stories
  */
-export const Component: Story<GroupsProps> = Template.bind({});
+export const Component: Story<ClassesProps> = Template.bind({});
 Component.args = {};

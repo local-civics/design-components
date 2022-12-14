@@ -13,7 +13,7 @@ const rolesData = [{value: 'Member', label: 'Member'}, {value: 'Admin', label: '
  * Item
  */
 export type Item = {
-    groupId: string,
+    classId: string,
     userId: string,
     avatar: string,
     email: string,
@@ -31,7 +31,6 @@ export interface TableProps {
     loading: boolean
     items: Item[];
 
-    onChangeRole: (user: Item, role: string | null) => void;
     onDelete: (user: Item) => void
     onViewProfile: (user: Item) => void
 }
@@ -76,14 +75,6 @@ export function Table(props: TableProps) {
                         </div>
                     </Group>
                 </UnstyledButton>
-            </td>
-            <td>
-                <Select
-                    data={[...rolesData].map(role => row.readonly ? {...role, disabled: role.value !== row.role} : role)}
-                    defaultValue={row.role}
-                    variant="unstyled"
-                    onChange={v => !row.readonly && props.onChangeRole && props.onChangeRole(row, v)}
-                />
             </td>
             <td>{row.lastActivity ? relativeTimeFromDates(row.lastActivity) : ""}</td>
             <td>

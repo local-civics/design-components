@@ -31,10 +31,10 @@ const useStyles = createStyles((theme) => ({
 export type BadgeUserItem = Item
 
 /**
- * BadgeGroup
+ * BadgeClass
  */
-export type BadgeGroup = {
-    groupId: string
+export type BadgeClass = {
+    classId: string
     name: string
     active: boolean
 }
@@ -46,12 +46,12 @@ export type BadgeProps = {
     loading: boolean
     displayName: string,
     description: string
-    groups: BadgeGroup[]
-    groupId: string
+    classes: BadgeClass[]
+    classId: string
     users: BadgeUserItem[]
 
     onBackClick: () => void;
-    onGroupChange: (group: string) => void;
+    onClassChange: (classId: string) => void;
     onPreviewClick: () => void;
     onUserClick: (user: BadgeUserItem) => void;
 }
@@ -98,12 +98,12 @@ export const Badge = (props: BadgeProps) => {
                                 <Divider label="or" labelPosition="center" my="xs" variant="dashed" />
                                 <Select
                                     size="sm"
-                                    placeholder="Select a group"
+                                    placeholder="Select a class"
                                     nothingFound="No options"
-                                    value={props.groupId}
-                                    onChange={props.onGroupChange}
+                                    value={props.classId}
+                                    onChange={props.onClassChange}
                                     icon={<IconCategory2/>}
-                                    data={props.groups.map(g => {return {value: g.groupId, label: g.name}})}
+                                    data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
                                 />
                             </Stack>
                         </Group>

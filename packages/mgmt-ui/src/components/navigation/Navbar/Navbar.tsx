@@ -41,7 +41,7 @@ interface NavbarLinkProps {
 const data = [
     { icon: IconHome2, label: 'Home', href: '/home' },
     { icon: IconGauge, label: 'Dashboard', href: '/dashboard' },
-    { icon: IconCategory2, label: 'Groups', href: '/groups' },
+    { icon: IconCategory2, label: 'Classes', href: '/classes' },
     { icon: IconAlbum, label: 'Badges', href: '/badges' },
     { icon: IconLambda, label: 'Lessons', href: '/lessons' },
 ];

@@ -9,7 +9,7 @@ import {PlaceholderBanner}                                                from "
 /**
  * Item
  */
-export type Item = { groupId: string, name: string; description: string }
+export type Item = { classId: string, name: string; description: string }
 
 /**
  * TableProps
@@ -19,7 +19,7 @@ export interface TableProps {
     items: Item[];
 
     onClick: (item: Item) => void
-    onDeleteGroup: (item: Item) => void
+    onDeleteClass: (item: Item) => void
 }
 
 /**
@@ -37,17 +37,17 @@ export function Table(props: TableProps) {
         centered: true,
         children: (
             <Text size="sm">
-                Are you sure you want to delete this group? This action is destructive and you will have
+                Are you sure you want to delete this class? This action is destructive and you will have
                 to contact support to restore your data.
             </Text>
         ),
-        labels: { confirm: 'Delete group', cancel: "No don't delete it" },
+        labels: { confirm: 'Delete class', cancel: "No don't delete it" },
         confirmProps: { color: 'red' },
-        onConfirm: () => props.onDeleteGroup(group),
+        onConfirm: () => props.onDeleteClass(group),
     });
 
     const rows = props.items.map((row) => (
-        <tr key={row.groupId}>
+        <tr key={row.classId}>
             <td>
                 <UnstyledButton onClick={() => props.onClick(row)}>
                     <Text size={14}>{row.name}</Text>

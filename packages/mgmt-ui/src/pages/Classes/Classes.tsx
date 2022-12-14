@@ -9,7 +9,7 @@ import {
     Container, Stack, Grid,
     Drawer,
     Button, TextInput, ActionIcon,
-    Tooltip, Group as GroupCore, LoadingOverlay,
+    Tooltip, Group, LoadingOverlay,
 }                      from '@mantine/core';
 import { useForm }     from '@mantine/form';
 import {Table, Item}   from "./Table";
@@ -29,32 +29,32 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * GroupItem
+ * ClassItem
  */
-export type GroupItem = Item
+export type ClassItem = Item
 
 /**
- * GroupsProps
+ * ClassesProps
  */
-export type GroupsProps = {
+export type ClassesProps = {
     loading: boolean
-    groups: GroupItem[]
+    classes: ClassItem[]
 
-    onCreateGroup:  (group: GroupItem) => void
-    onDeleteGroup:  (group: GroupItem) => void
-    onGroupClick: (group: GroupItem) => void
+    onCreateClass:  (group: ClassItem) => void
+    onDeleteClass:  (group: ClassItem) => void
+    onClassClick: (group: ClassItem) => void
 }
 
 /**
- * Groups
+ * Classes
  * @param props
  * @constructor
  */
-export const Groups = (props: GroupsProps) => {
+export const Classes = (props: ClassesProps) => {
     const { classes } = useStyles();
     const form = useForm({
         initialValues: {
-            groupId: '',
+            classId: '',
             name: '',
             description: '',
         },
@@ -70,14 +70,14 @@ export const Groups = (props: GroupsProps) => {
             <Drawer
                 opened={opened}
                 onClose={() => setOpened(false)}
-                title={<GroupCore spacing={0}>
-                    <Title size="h5">Create a group</Title>
-                    <Tooltip label="Groups settings cannot be modified once created">
+                title={<Group spacing={0}>
+                    <Title size="h5">Create a class</Title>
+                    <Tooltip label="Classes settings cannot be modified once created">
                         <ActionIcon>
                             <IconInfoCircle color="#3b82f6" size={14} />
                         </ActionIcon>
                     </Tooltip>
-            </GroupCore>}
+            </Group>}
                 padding="xl"
                 size="xl"
             >
@@ -85,18 +85,18 @@ export const Groups = (props: GroupsProps) => {
                     const values = form.values
                     form.reset()
                     setOpened(false)
-                    props.onCreateGroup && props.onCreateGroup(values)
+                    props.onCreateClass && props.onCreateClass(values)
                 })}>
                     <Stack>
                         <TextInput
                             withAsterisk
                             label="Name"
-                            placeholder="Group name"
+                            placeholder="Class name"
                             {...form.getInputProps('name')}
                         />
                         <TextInput
                             label="Description"
-                            placeholder="A group for my first period class"
+                            placeholder="A class for my first period English students"
                             {...form.getInputProps('description')}
                         />
                     </Stack>
@@ -110,21 +110,21 @@ export const Groups = (props: GroupsProps) => {
                     <Grid>
                         <Grid.Col sm="auto">
                             <Badge variant="filled" size="lg">
-                                Groups
+                                Classes
                             </Badge>
                             <Title order={2} className={classes.title} mt="md">
-                                Organize people into groups
+                                Organize students into classes
                             </Title>
 
                             <Text color="dimmed" className={classes.description} mt="sm">
-                                A group can be a class, team, or other functioning organizations.
+                                A class can be a specific class period, team, or other functioning groups.
                             </Text>
                         </Grid.Col>
                         <Grid.Col sm="content">
                             { !props.loading && <Button
                                 onClick={() => setOpened(true)}
                                 leftIcon={<IconPlaylistAdd size={14} />}>
-                                Create group
+                                Create class
                             </Button> }
                         </Grid.Col>
                     </Grid>
@@ -133,9 +133,9 @@ export const Groups = (props: GroupsProps) => {
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <Table
                             loading={props.loading}
-                            items={props.groups}
-                            onDeleteGroup={props.onDeleteGroup}
-                            onClick={props.onGroupClick}
+                            items={props.classes}
+                            onDeleteClass={props.onDeleteClass}
+                            onClick={props.onClassClick}
                         />
                     </div>
                 </Stack>

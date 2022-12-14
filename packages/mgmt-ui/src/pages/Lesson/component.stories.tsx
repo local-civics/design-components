@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<LessonProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Lesson {...args} groups={[]} users={[]} />
+        <Lesson {...args} classes={[]} users={[]} />
     </div>
 );
 

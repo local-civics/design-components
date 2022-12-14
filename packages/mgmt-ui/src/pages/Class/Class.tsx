@@ -10,7 +10,7 @@ import {
     Drawer,
     Button, TextInput, Badge,
     ActionIcon,
-    Group as GroupCore, Divider, LoadingOverlay
+    Group, Divider, LoadingOverlay
 } from '@mantine/core';
 import { Dropzone, MIME_TYPES }        from '@mantine/dropzone';
 import { useForm }                     from '@mantine/form';
@@ -51,36 +51,35 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * GroupUserItem
+ * StudentItem
  */
-export type GroupUserItem = Item
+export type StudentItem = Item
 
 /**
- * GroupProps
+ * ClassProps
  */
-export type GroupProps = {
+export type ClassProps = {
     loading: boolean
     displayName: string
     description: string
-    users: GroupUserItem[]
+    users: StudentItem[]
 
     onBackClick: () => void;
-    onCreateUsers: (users: GroupUserItem[]) => void;
-    onDeleteUser: (user: GroupUserItem) => void;
-    onRoleChange: (user: GroupUserItem, role: string | null) => void;
-    onUserClick: (item: GroupUserItem) => void;
+    onCreateUsers: (users: StudentItem[]) => void;
+    onDeleteUser: (user: StudentItem) => void;
+    onUserClick: (item: StudentItem) => void;
 }
 
 /**
- * Group
+ * Class
  * @param props
  * @constructor
  */
-export const Group = (props: GroupProps) => {
+export const Class = (props: ClassProps) => {
     const { classes } = useStyles();
     const form = useForm({
         initialValues: {
-            groupId: '',
+            classId: '',
             userId: '',
             email: '',
             givenName: '',
@@ -101,7 +100,7 @@ export const Group = (props: GroupProps) => {
             <Drawer
                 opened={opened}
                 onClose={() => setOpened(false)}
-                title={<Title size="h5">Add people</Title>}
+                title={<Title size="h5">Add students</Title>}
                 padding="xl"
                 size="xl"
             >
@@ -123,7 +122,7 @@ export const Group = (props: GroupProps) => {
                                 placeholder="Email"
                                 {...form.getInputProps('email')}
                             />
-                            <GroupCore grow>
+                            <Group grow>
                                 <TextInput
                                     label="Given name"
                                     placeholder="Given name"
@@ -134,7 +133,7 @@ export const Group = (props: GroupProps) => {
                                     placeholder="Family name"
                                     {...form.getInputProps('familyName')}
                                 />
-                            </GroupCore>
+                            </Group>
                             <Button type="submit" fullWidth mt="md">
                                 Submit
                             </Button>
@@ -152,10 +151,10 @@ export const Group = (props: GroupProps) => {
                                 <IconArrowLeft size={14} />
                             </ActionIcon>}
                             size="lg">
-                            Groups
+                            Classes
                         </Badge>
                         <Title order={2} className={classes.title} mt="md">
-                            {props.displayName || "Group"}
+                            {props.displayName || "Class"}
                         </Title>
 
                         <Text color="dimmed" className={classes.description} mt="sm">
@@ -166,7 +165,7 @@ export const Group = (props: GroupProps) => {
                         { !props.loading && <Button
                             onClick={() => setOpened(true)}
                             leftIcon={<IconPlaylistAdd size={14} />}>
-                            Add people
+                            Add students
                         </Button> }
                     </Grid.Col>
                 </Grid>
@@ -177,7 +176,6 @@ export const Group = (props: GroupProps) => {
                         loading={props.loading}
                         items={props.users}
                         onDelete={props.onDeleteUser}
-                        onChangeRole={props.onRoleChange}
                         onViewProfile={(user) => props.onUserClick(user)}
                     />
                 </div>
@@ -187,7 +185,7 @@ export const Group = (props: GroupProps) => {
     )
 }
 
-const DropzoneButton = (props: GroupProps & {close: () => void}) => {
+const DropzoneButton = (props: ClassProps & {close: () => void}) => {
     const { classes, theme } = useStyles();
     const openRef = React.useRef<() => void>(null);
     const [loading, setLoading] = React.useState(false)
@@ -200,7 +198,7 @@ const DropzoneButton = (props: GroupProps & {close: () => void}) => {
                 dynamicTyping: true,
                 skipEmptyLines: true,
                 worker: true,
-                complete: function(results: ParseResult<GroupUserItem>) {
+                complete: function(results: ParseResult<StudentItem>) {
                     const data = results.data
                         .filter(v => /^\S+@\S+$/.test(v.email) && props.users.filter(u => u.email === v.email).length === 0)
                     data.length > 0 && props.onCreateUsers && props.onCreateUsers(data)
@@ -224,7 +222,7 @@ const DropzoneButton = (props: GroupProps & {close: () => void}) => {
                 maxSize={5 * 1024 ** 2}
             >
                 <div style={{ pointerEvents: 'none' }}>
-                    <GroupCore position="center">
+                    <Group position="center">
                         <Dropzone.Accept>
                             <IconDownload size={50} color={theme.colors[theme.primaryColor][6]} stroke={1.5} />
                         </Dropzone.Accept>
@@ -238,7 +236,7 @@ const DropzoneButton = (props: GroupProps & {close: () => void}) => {
                                 stroke={1.5}
                             />
                         </Dropzone.Idle>
-                    </GroupCore>
+                    </Group>
 
                     <Text align="center" weight={700} size="lg" mt="xl">
                         <Dropzone.Accept>Drop files here</Dropzone.Accept>

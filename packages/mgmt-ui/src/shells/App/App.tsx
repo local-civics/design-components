@@ -178,7 +178,7 @@ export const App = (props: AppProps) => {
                             href="https://localcivics.notion.site/Help-Center-b52300f587b64fc0a61f512686e7626d"
                             target="_blank"
                         >
-                            FAQ
+                            Help Center
                         </Text>
                     </div>
                 </div>
