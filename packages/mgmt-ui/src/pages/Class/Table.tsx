@@ -1,27 +1,27 @@
 import {openConfirmModal} from "@mantine/modals";
 import * as React from 'react';
-import { Avatar, Table as MantineTable, Group, Text, ActionIcon, UnstyledButton, ScrollArea, Select } from '@mantine/core';
-import {IconTrash} from '@tabler/icons';
+import { Avatar, Table as MantineTable, Group, Text, ActionIcon, UnstyledButton, ScrollArea } from '@mantine/core';
+import {IconCheck, IconTrash}                                                                 from '@tabler/icons';
 import {
     PlaceholderBanner
-} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+}                                                                                             from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {relativeTimeFromDates} from "../../utils/time";
-
-const rolesData = [{value: 'Member', label: 'Member'}, {value: 'Admin', label: 'Admin'}];
 
 /**
  * Item
  */
 export type Item = {
     classId: string,
-    userId: string,
+    studentId: string,
     avatar: string,
     email: string,
     givenName: string,
     familyName: string,
-    role: string,
     lastActivity: Date | null
     readonly: boolean
+    hasAccount: boolean
+    badgesEarned: number
+    lessonsCompleted: number
 }
 
 /**
@@ -31,8 +31,8 @@ export interface TableProps {
     loading: boolean
     items: Item[];
 
-    onDelete: (user: Item) => void
-    onViewProfile: (user: Item) => void
+    onViewProfile: (student: Item) => void
+    onDelete?: (student: Item) => void
 }
 
 /**
@@ -42,11 +42,16 @@ export interface TableProps {
  */
 export function Table(props: TableProps) {
     if(props.items.length === 0){
-        return <PlaceholderBanner loading={props.loading} icon="groups"/>
+        return <PlaceholderBanner
+            title="No students to display"
+            description="You have not rostered any students yet."
+            loading={props.loading}
+            icon="groups"
+        />
     }
 
-    const openDeleteModal = (user: Item) => openConfirmModal({
-        title: `Delete "${user.givenName && user.familyName ? `${user.givenName} ${user.familyName}` : user.email}"?`,
+    const openDeleteModal = (student: Item) => openConfirmModal({
+        title: `Delete "${student.givenName && student.familyName ? `${student.givenName} ${student.familyName}` : student.email}"?`,
         centered: true,
         children: (
             <Text size="sm">
@@ -56,7 +61,7 @@ export function Table(props: TableProps) {
         ),
         labels: { confirm: 'Delete', cancel: "No don't delete them" },
         confirmProps: { color: 'red' },
-        onConfirm: () => props.onDelete && props.onDelete(user),
+        onConfirm: () => props.onDelete && props.onDelete(student),
     });
 
     const rows = props.items.map((row) => (
@@ -76,10 +81,13 @@ export function Table(props: TableProps) {
                     </Group>
                 </UnstyledButton>
             </td>
+            <td>{row.badgesEarned}</td>
+            <td>{row.lessonsCompleted}</td>
+            <td>{row.hasAccount && <IconCheck color="green" />}</td>
             <td>{row.lastActivity ? relativeTimeFromDates(row.lastActivity) : ""}</td>
             <td>
                 <Group noWrap spacing={0} position="right">
-                    { !row.readonly && <ActionIcon color="red">
+                    { !row.readonly && !!props.onDelete && <ActionIcon color="red">
                         <IconTrash onClick={() => openDeleteModal(row)} size={16} stroke={1.5} />
                     </ActionIcon> }
                 </Group>
@@ -88,13 +96,15 @@ export function Table(props: TableProps) {
     ));
 
     return (
-        <ScrollArea>
+        <ScrollArea style={{width: '100%'}}>
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                     <tr>
-                        <th>Member</th>
-                        <th>Role</th>
-                        <th>Last active</th>
+                        <th>Student</th>
+                        <th>Badges Earned</th>
+                        <th>Lessons Completed</th>
+                        <th>Account Created?</th>
+                        <th>Last Active</th>
                         <th></th>
                     </tr>
                 </thead>

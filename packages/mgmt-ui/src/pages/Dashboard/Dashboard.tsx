@@ -33,7 +33,7 @@ export const Dashboard = (props: DashboardProps) => {
                 <Grid.Col sm="auto">
                     <Title size="h3">Dashboard</Title>
                     <Text color="dimmed" size="sm" mt="md">
-                        View core metrics and extract insights.
+                        Track class performance across core areas of focus.
                     </Text>
                 </Grid.Col>
                 <Grid.Col sm={2.5}>

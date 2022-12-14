@@ -29,7 +29,12 @@ export interface TableProps {
  */
 export function Table(props: TableProps) {
     if(props.items.length === 0){
-        return <PlaceholderBanner loading={props.loading} icon="groups"/>
+        return <PlaceholderBanner
+            title="No classes to display"
+            description="You don't have any classes yet. Try creating one first..."
+            loading={props.loading}
+            icon="groups"
+        />
     }
 
     const openDeleteModal = (group: Item) => openConfirmModal({

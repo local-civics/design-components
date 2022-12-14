@@ -1,14 +1,8 @@
 import * as React               from 'react';
 import {Container, Grid, Stack} from '@mantine/core';
-import {Timeline, TimelineItem} from "../../components/data/Timeline/Timeline";
-import {StatsGroup}             from "../../components/data/StatsGroup/StatsGroup";
+import {CardGradient}           from "../../components/cards/CardGradient";
 import {UserInfo}               from "../../components/users/UserInfo/UserInfo";
 import {TenantBanner}           from "../../components/banners/TenantBanner/TenantBanner";
-
-/**
- * HomeUserEvent
- */
-export type HomeUserEvent = TimelineItem
 
 /**
  * HomeProps
@@ -16,24 +10,14 @@ export type HomeUserEvent = TimelineItem
 export type HomeProps = {
     loading: boolean
     avatarURL: string
-    givenName: string
-    familyName: string
-    email: string
-    job: string
+    name: string
     impactStatement: string
-    tenantName: string
-    tenantDescription: string
-    tenantImage: string
-    tenantWebsite: string
-    events: HomeUserEvent[]
-    problemsSolved: number
-    problemsSolvedDiff: number
-    lessonsCompleted: number
-    lessonsCompletedDiff: number
-    badgesCompleted: number
-    badgesCompletedDiff: number
+    organization: {name: string, description: string, image: string, website: string}
 
-    onScrollBottom: () => void;
+    onDashboardClick: () => void;
+    onClassesClick: () => void;
+    onLessonsClick: () => void;
+    onBadgesClick: () => void;
 }
 
 /**
@@ -48,48 +32,55 @@ export const Home = (props: HomeProps) => {
                 <Grid.Col md={6}>
                     <UserInfo
                         variant="compact"
-                        givenName={props.givenName}
-                        familyName={props.familyName}
-                        avatar={props.avatarURL}
-                        email={props.email}
-                        quote={props.impactStatement}
-                        job={props.job}
+                        name={props.name}
+                        impactStatement={props.impactStatement}
                     />
                 </Grid.Col>
                 <Grid.Col md={6}>
                     <TenantBanner
-                        title={props.tenantName}
-                        description={props.tenantDescription}
-                        image={props.tenantImage}
+                        title={props.organization.name}
+                        description={props.organization.description}
+                        image={props.organization.image}
                         action={
                             {
                                 label: "Visit website",
-                                link: props.tenantWebsite,
+                                link: props.organization.website,
                             }
                         }
                     />
                 </Grid.Col>
             </Grid>
 
-            <StatsGroup data={[
-                {
-                    title: "PROBLEMS SOLVED",
-                    value: props.problemsSolved,
-                    diff: props.problemsSolvedDiff,
-                },
-                {
-                    title: "LESSONS COMPLETED",
-                    value: props.lessonsCompleted,
-                    diff: props.lessonsCompletedDiff,
-                },
-                {
-                    title: "BADGES EARNED",
-                    value: props.badgesCompleted,
-                    diff: props.badgesCompletedDiff,
-                },
-            ]}/>
-
-            <Timeline onScrollBottom={props.onScrollBottom} items={props.events} />
+            <Grid gutter="md">
+                <Grid.Col>
+                    <CardGradient
+                        title="Dashboard"
+                        description="Track class performance across core areas of focus."
+                        onClick={props.onDashboardClick}
+                    />
+                </Grid.Col>
+                <Grid.Col>
+                    <CardGradient
+                        title="Classes"
+                        description="Organize students into classes."
+                        onClick={props.onClassesClick}
+                    />
+                </Grid.Col>
+                <Grid.Col>
+                    <CardGradient
+                        title="Lessons"
+                        description="Explore units of instruction and/or see corresponding class progress."
+                        onClick={props.onLessonsClick}
+                    />
+                </Grid.Col>
+                <Grid.Col>
+                    <CardGradient
+                        title="Badges"
+                        description="Project-sized skills acquisition and standards alignment."
+                        onClick={props.onBadgesClick}
+                    />
+                </Grid.Col>
+            </Grid>
         </Stack>
     </Container>
 }

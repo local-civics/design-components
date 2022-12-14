@@ -17,12 +17,8 @@ const useStyles = createStyles((theme) => ({
 
 export type UserInfoProps = {
     variant?: "compact"
-    avatar?: string
-    givenName: string
-    familyName: string
-    email: string
-    job: string
-    quote: string
+    name: string
+    impactStatement: string
 }
 
 /**
@@ -32,42 +28,13 @@ export type UserInfoProps = {
  */
 export const UserInfo = (props: UserInfoProps) => {
     const { classes } = useStyles();
-    const name = props.givenName ? [props.givenName, props.familyName].join(' ').trim() : props.email
-    const friendlyName = props.givenName ? props.givenName : "Me"
+    return <>
+        <Title className={classes.title}>
+            {props.name}
+        </Title>
 
-    if(props.variant === "compact"){
-        return <>
-            <Title className={classes.title}>
-                {name}
-            </Title>
-
-            <Text color="dimmed" className={classes.description} mt="xs">
-                {props.quote}
-            </Text>
-        </>
-    }
-
-    return (
-        <>
-            <Paper
-                radius="md"
-                withBorder
-                p="lg"
-                sx={(theme) => ({
-                    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
-                })}
-            >
-                <Avatar src={props.avatar} size={135} radius={120} mx="auto" />
-                <Text align="center" size="lg" weight={500} mt="md">
-                    {name}
-                </Text>
-                <Text align="center" color="dimmed" size="sm">
-                    {props.email} • {props.job}
-                </Text>
-            </Paper>
-            <Blockquote mt="xl" color="blue" cite={`– ${friendlyName}`}>
-                {props.quote}
-            </Blockquote>
-        </>
-    );
+        <Text color="dimmed" className={classes.description} mt="xs">
+            {props.impactStatement}
+        </Text>
+    </>
 }

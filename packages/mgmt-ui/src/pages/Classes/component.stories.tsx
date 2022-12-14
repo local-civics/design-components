@@ -15,7 +15,14 @@ export default {
  */
 const Template: Story<ClassesProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Classes {...args}/>
+        <Classes
+            {...args}
+            classes={args.classes || []}
+            students={args.students || []}
+            numberOfStudents={args.numberOfStudents || 147}
+            numberOfClasses={args.numberOfClasses || 5}
+            percentageOfAccountsCreated={args.percentageOfAccountsCreated || 0}
+        />
     </div>
 );
 

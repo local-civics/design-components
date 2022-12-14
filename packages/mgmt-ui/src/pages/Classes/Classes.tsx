@@ -10,9 +10,12 @@ import {
     Drawer,
     Button, TextInput, ActionIcon,
     Tooltip, Group, LoadingOverlay,
-}                      from '@mantine/core';
-import { useForm }     from '@mantine/form';
-import {Table, Item}   from "./Table";
+}                    from '@mantine/core';
+import { useForm }   from '@mantine/form';
+import {StatsGroup}  from "../../components/data/StatsGroup/StatsGroup";
+import {Tabs}        from "../../components/navigation/Tabs/Tabs";
+import {Table, Item} from "./Table";
+import {Table as StudentTable, Item as StudentItem} from "../Class/Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -39,10 +42,16 @@ export type ClassItem = Item
 export type ClassesProps = {
     loading: boolean
     classes: ClassItem[]
+    students: StudentItem[]
+    numberOfStudents: number
+    numberOfClasses: number
+    percentageOfAccountsCreated: number
 
     onCreateClass:  (group: ClassItem) => void
     onDeleteClass:  (group: ClassItem) => void
     onClassClick: (group: ClassItem) => void
+    onDeleteStudent: (user: StudentItem) => void
+    onViewStudentProfile: (user: StudentItem) => void
 }
 
 /**
@@ -64,6 +73,7 @@ export const Classes = (props: ClassesProps) => {
         },
     });
     const [opened, setOpened] = useState(false);
+    const [tab, setTab] = useState("classes")
 
     return (
         <>
@@ -117,7 +127,7 @@ export const Classes = (props: ClassesProps) => {
                             </Title>
 
                             <Text color="dimmed" className={classes.description} mt="sm">
-                                A class can be a specific class period, team, or other functioning groups.
+                                A class can be for a specific period of time, grade, team, or other cohorts.
                             </Text>
                         </Grid.Col>
                         <Grid.Col sm="content">
@@ -131,12 +141,46 @@ export const Classes = (props: ClassesProps) => {
 
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                        <Table
-                            loading={props.loading}
-                            items={props.classes}
-                            onDeleteClass={props.onDeleteClass}
-                            onClick={props.onClassClick}
-                        />
+                        <Group spacing="sm">
+                            <StatsGroup data={[
+                                {
+                                    title: "# OF CLASSES",
+                                    value: props.numberOfClasses,
+                                },
+                                {
+                                    title: "# OF STUDENTS",
+                                    value: props.numberOfStudents,
+                                },
+                                {
+                                    title: "ACCOUNT CREATION",
+                                    value: props.percentageOfAccountsCreated,
+                                    unit: "%",
+                                },
+                            ]}/>
+
+                            <Tabs
+                                value={tab}
+                                data={[
+                                    {label: "My classes", value: "classes"},
+                                    {label: "My students", value: "students"},
+                                ]}
+                                onChange={setTab}
+                            />
+
+                            { tab === "classes" && <Table
+                                loading={props.loading}
+                                items={props.classes}
+                                onDeleteClass={props.onDeleteClass}
+                                onClick={props.onClassClick}
+                            /> }
+
+                            { tab === "students" && <StudentTable
+                                loading={props.loading}
+                                items={props.students}
+                                onViewProfile={props.onViewStudentProfile}
+                            /> }
+
+                        </Group>
                     </div>
                 </Stack>
             </Container>

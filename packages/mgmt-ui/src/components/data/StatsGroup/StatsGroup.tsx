@@ -4,6 +4,7 @@ import { createStyles, Text } from '@mantine/core';
 const useStyles = createStyles((theme) => ({
     root: {
         display: 'flex',
+        width: '100%',
         backgroundImage: `linear-gradient(-60deg, ${theme.colors[theme.primaryColor][4]} 0%, ${
             theme.colors[theme.primaryColor][7]
         } 100%)`,
@@ -39,7 +40,6 @@ const useStyles = createStyles((theme) => ({
 
     stat: {
         flex: 1,
-
         '& + &': {
             paddingLeft: theme.spacing.xl,
             marginLeft: theme.spacing.xl,
@@ -58,7 +58,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface StatsGroupProps {
-    data: { title: string; value: number; diff: number }[];
+    data: { title: string; value: number, unit?: string}[];
 }
 
 /**
@@ -70,11 +70,8 @@ export const StatsGroup = ({ data }: StatsGroupProps) => {
     const { classes } = useStyles();
     const stats = data.map((stat) => (
         <div key={stat.title} className={classes.stat}>
-            <Text className={classes.count}>{stat.value.toLocaleString()}</Text>
+            <Text className={classes.count}>{stat.value.toLocaleString()}{stat.unit}</Text>
             <Text className={classes.title}>{stat.title}</Text>
-            { !!stat.diff && <Text className={classes.description}>
-                {`${stat.diff}% ${stat.diff < 0 ? 'decrease': 'increase'} compared to last period`}
-            </Text> }
         </div>
     ));
     return <div className={classes.root}>{stats}</div>;

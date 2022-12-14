@@ -11,11 +11,12 @@ import {
     Button, TextInput, Badge,
     ActionIcon,
     Group, Divider, LoadingOverlay
-} from '@mantine/core';
-import { Dropzone, MIME_TYPES }        from '@mantine/dropzone';
-import { useForm }                     from '@mantine/form';
-import * as papa              from 'papaparse'
-import {Table, Item} from "./Table";
+}                               from '@mantine/core';
+import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
+import { useForm }              from '@mantine/form';
+import * as papa                from 'papaparse'
+import {StatsGroup}             from "../../components/data/StatsGroup/StatsGroup";
+import {Table, Item}            from "./Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -62,12 +63,15 @@ export type ClassProps = {
     loading: boolean
     displayName: string
     description: string
-    users: StudentItem[]
+    students: StudentItem[]
+    percentageOfAccountsCreated: number
+    percentageOfBadgesEarned: number
+    percentageOfLessonsCompleted: number
 
     onBackClick: () => void;
-    onCreateUsers: (users: StudentItem[]) => void;
-    onDeleteUser: (user: StudentItem) => void;
-    onUserClick: (item: StudentItem) => void;
+    onCreateStudents: (students: StudentItem[]) => void;
+    onDeleteStudent: (student: StudentItem) => void;
+    onStudentClick: (student: StudentItem) => void;
 }
 
 /**
@@ -80,7 +84,7 @@ export const Class = (props: ClassProps) => {
     const form = useForm({
         initialValues: {
             classId: '',
-            userId: '',
+            studentId: '',
             email: '',
             givenName: '',
             familyName: '',
@@ -91,7 +95,7 @@ export const Class = (props: ClassProps) => {
         },
 
         validate: {
-            email: (value) => /^\S+@\S+$/.test(value) && props.users.filter(u => u.email === value).length === 0 ? null : 'Invalid email',
+            email: (value) => /^\S+@\S+$/.test(value) && props.students.filter(u => u.email === value).length === 0 ? null : 'Invalid email',
         },
     });
     const [opened, setOpened] = useState(false);
@@ -113,7 +117,7 @@ export const Class = (props: ClassProps) => {
                         const values = form.values
                         form.reset()
                         setOpened(false)
-                        props.onCreateUsers && props.onCreateUsers([values])
+                        props.onCreateStudents && props.onCreateStudents([values])
                     })}>
                         <Stack>
                             <TextInput
@@ -172,12 +176,37 @@ export const Class = (props: ClassProps) => {
 
                 <div style={{ position: 'relative' }}>
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <Table
-                        loading={props.loading}
-                        items={props.users}
-                        onDelete={props.onDeleteUser}
-                        onViewProfile={(user) => props.onUserClick(user)}
-                    />
+
+                    <Group spacing="sm">
+                        <StatsGroup data={[
+                            {
+                                title: "# OF STUDENTS",
+                                value: props.students.length,
+                            },
+                            {
+                                title: "ACCOUNT CREATION",
+                                value: props.percentageOfAccountsCreated,
+                                unit: "%",
+                            },
+                            {
+                                title: "BADGE COMPLETION",
+                                value: props.percentageOfBadgesEarned,
+                                unit: "%",
+                            },
+                            {
+                                title: "LESSON COMPLETION",
+                                value: props.percentageOfLessonsCompleted,
+                                unit: "%",
+                            },
+                        ]}/>
+
+                        <Table
+                            loading={props.loading}
+                            items={props.students}
+                            onDelete={props.onDeleteStudent}
+                            onViewProfile={(student) => props.onStudentClick(student)}
+                        />
+                    </Group>
                 </div>
             </Stack>
             </Container>
@@ -200,8 +229,8 @@ const DropzoneButton = (props: ClassProps & {close: () => void}) => {
                 worker: true,
                 complete: function(results: ParseResult<StudentItem>) {
                     const data = results.data
-                        .filter(v => /^\S+@\S+$/.test(v.email) && props.users.filter(u => u.email === v.email).length === 0)
-                    data.length > 0 && props.onCreateUsers && props.onCreateUsers(data)
+                        .filter(v => /^\S+@\S+$/.test(v.email) && props.students.filter(u => u.email === v.email).length === 0)
+                    data.length > 0 && props.onCreateStudents && props.onCreateStudents(data)
                     setLoading(false)
                     props.close()
                 }

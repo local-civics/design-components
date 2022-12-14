@@ -75,15 +75,19 @@ export type PlaceholderBannerIcon = "badges" | "lessons" | "dashboard" | "groups
 export type PlaceholderBannerProps = {
     loading: boolean
     icon: PlaceholderBannerIcon
+    title?: string,
+    description?: string,
 }
 
 export const PlaceholderBanner = (props: PlaceholderBannerProps) => {
     const { classes } = useStyles();
+    const title = props.title || "Nothing to display"
+    const description = props.description || "We don't have anything to show you here just yet. Add data, check back later, or adjust your search."
     return (
         <div className={classes.wrapper}>
             <div className={classes.body}>
-                <Title className={classes.title}>{props.loading ? "Loading..." : "Nothing to display"}</Title>
-                <Text size="sm" color="dimmed">{props.loading ? "Hold on, we're loading your data." : "We don't have anything to show you here just yet. Add data, check back later, or adjust your search."}</Text>
+                <Title className={classes.title}>{props.loading ? "Loading..." : title}</Title>
+                <Text size="sm" color="dimmed">{props.loading ? "Hold on, we're loading your data." : description}</Text>
             </div>
 
             <Image src={`https://cdn.localcivics.io/illustrations/${props.icon}.svg`} className={classes.image} />
