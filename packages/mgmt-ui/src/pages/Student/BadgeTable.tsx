@@ -8,10 +8,7 @@ import {
  * Item
  */
 export interface Item {
-    userId: string
-    avatar: string
-    name: string
-    email: string
+    badgeName: string
     isComplete?: boolean
 }
 
@@ -52,22 +49,8 @@ export function Table(props: TableProps) {
     }
 
     const rows = props.items.map((row) => (
-        <tr key={row.name}>
-            <td>
-                <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
-                    <Group spacing="sm">
-                        { row.avatar && <Avatar size={40} src={row.avatar} radius={40} /> }
-                        <div>
-                            <Text size="sm" weight={500}>
-                                {row.name}
-                            </Text>
-                            <Text size="xs" color="dimmed">
-                                {row.email}
-                            </Text>
-                        </div>
-                    </Group>
-                </UnstyledButton>
-            </td>
+        <tr key={row.badgeName}>
+            <td>{row.badgeName}</td>
             <td>
                 {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
                 {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
@@ -80,8 +63,8 @@ export function Table(props: TableProps) {
             <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
-                    <th>Student Name</th>
-                    <th>Badge Status</th>
+                    <th>Badge Name</th>
+                    <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>{rows}</tbody>

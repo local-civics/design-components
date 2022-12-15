@@ -10,8 +10,6 @@ export default {
   component: Class,
 };
 
-// example student: {givenName: "Jane", familyName: "Doe", hasAccount: true, badgesEarned: 5, lessonsCompleted: 5}
-
 /**
  * Component storybook template
  */
@@ -34,3 +32,23 @@ const Template: Story<ClassProps> = (args) => (
  */
 export const Component: Story<ClassProps> = Template.bind({});
 Component.args = {};
+
+/**
+ * Mock stories
+ */
+export const Mock: Story<ClassProps> = Template.bind({});
+Mock.args = {
+    students: [{
+        classId: "",
+        studentId: "",
+        avatar: "",
+        readonly: false,
+        lastActivity: null,
+        email: "jane.doe@localcivics.io",
+        givenName: "Jane",
+        familyName: "Doe",
+        hasAccount: true,
+        badgesEarned: 5,
+        lessonsCompleted: 5,
+    }]
+};

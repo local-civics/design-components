@@ -33,7 +33,12 @@ export interface TableProps {
  */
 export function Table(props: TableProps) {
     if(props.items.length === 0){
-        return <PlaceholderBanner loading={props.loading} icon="lessons"/>
+        return <PlaceholderBanner
+            title="No students to display"
+            description="You don't have any student data yet for this lesson"
+            loading={props.loading}
+            icon="lessons"
+        />
     }
 
     const rows = props.items.map((row) => (
@@ -66,7 +71,7 @@ export function Table(props: TableProps) {
             <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Lesson Name</th>
                         <th>Status</th>
                     </tr>
                 </thead>

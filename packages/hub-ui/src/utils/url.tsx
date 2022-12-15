@@ -2,7 +2,11 @@ import React from "react";
 import LinkifyIt    from "linkify-it";
 import reactStringReplace from "react-string-replace"
 
-export const linkify = (text: string) => {
+export const linkify = (text: React.ReactNode) => {
+    if(typeof text !== 'string'){
+        return text
+    }
+
     const matches = LinkifyIt().match(text)
     let replacedText = reactStringReplace(text)
     matches?.forEach(match => {

@@ -93,7 +93,7 @@ const withName = (config: ButtonProps, name?: NavLinkName | string) => {
       config.icon = name;
       break;
     case "faq":
-      config.text = "FAQ";
+      config.text = "Help Center";
       config.size = "sm";
       break;
     case "terms":

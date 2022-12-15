@@ -6,7 +6,7 @@ import { Story }                        from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Pages/Badges/Badge",
+  title: "Pages/Badge",
   component: Badge,
 };
 
@@ -15,7 +15,12 @@ export default {
  */
 const Template: Story<BadgeProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Badge {...args}/>
+        <Badge
+            {...args}
+            classes={args.classes || []}
+            students={args.students || []}
+            lessons={args.lessons || []}
+        />
     </div>
 );
 
@@ -24,3 +29,26 @@ const Template: Story<BadgeProps> = (args) => (
  */
 export const Component: Story<BadgeProps> = Template.bind({});
 Component.args = {};
+
+/**
+ * Component stories
+ */
+export const Mock: Story<BadgeProps> = Template.bind({});
+Mock.args = {
+    classes: [{
+        classId: "",
+        active: false,
+        name: "AP History",
+    }],
+    students: [{
+        userId: "",
+        avatar: "",
+        name: "Jane Doe",
+        email: "jane.doe@localcivics.io",
+    }],
+    lessons: [{
+        lessonId: "",
+        lessonName: "Example lesson",
+        percentageCompletion: 0.4,
+    }],
+};

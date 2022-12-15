@@ -15,7 +15,10 @@ export default {
  */
 const Template: Story<LessonsProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Lessons {...args}/>
+        <Lessons
+            {...args}
+            lessons={args.lessons || []}
+        />
     </div>
 );
 

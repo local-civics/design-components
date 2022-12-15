@@ -96,11 +96,11 @@ export function Table(props: TableProps) {
     ));
 
     return (
-        <ScrollArea style={{width: '100%'}}>
+        <ScrollArea>
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                     <tr>
-                        <th>Student</th>
+                        <th>Student Name</th>
                         <th>Badges Earned</th>
                         <th>Lessons Completed</th>
                         <th>Account Created?</th>

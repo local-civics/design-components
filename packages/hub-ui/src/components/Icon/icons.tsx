@@ -26,7 +26,7 @@ import FormalDoublePanBalance from "../../../assets/formal-double-pan-balance.sv
 import FormalEasel from "../../../assets/formal-easel.svg";
 import FormalEye from "../../../assets/formal-eye.svg";
 import FormalGavel from "../../../assets/formal-gavel.svg";
-import FormalGroup from "../../../assets/formal-group.svg";
+import FormalClass from "../../../assets/formal-group.svg";
 import FormalHandshake from "../../../assets/formal-handshake.svg";
 import FormalHeart from "../../../assets/formal-heart.svg";
 import FormalMagnifyingGlass from "../../../assets/formal-magnifying-glass.svg";
@@ -179,7 +179,7 @@ export const icons: { [key in typeof iconNames[number]]: Icon } = {
     svg: FormalGavel,
   },
   "formal group": {
-    svg: FormalGroup,
+    svg: FormalClass,
   },
   "formal handshake": {
     svg: FormalHandshake,

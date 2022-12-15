@@ -1,5 +1,5 @@
 import * as React                                                                      from 'react';
-import {Avatar, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton, Badge} from '@mantine/core';
+import {Table as MantineTable, ScrollArea, UnstyledButton} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -8,11 +8,9 @@ import {
  * Item
  */
 export interface Item {
-    userId: string
-    avatar: string
-    name: string
-    email: string
-    isComplete?: boolean
+    lessonId: string
+    lessonName: string
+    percentageCompletion: number
 }
 
 /**
@@ -44,44 +42,32 @@ export type TableProps = TableData & TableMethods
 export function Table(props: TableProps) {
     if(props.items.length === 0){
         return <PlaceholderBanner
-            title="No badges to display"
-            description="There has not been any badge progress just yet."
+            title="No lessons to display"
+            description="There are not lessons in badge."
             loading={props.loading}
             icon="badges"
         />
     }
 
-    const rows = props.items.map((row) => (
-        <tr key={row.name}>
+    const rows = props.items.map((row) => {
+        const percentageCompletion = Math.round((row.percentageCompletion + Number.EPSILON) * 100)
+        return <tr key={row.lessonName}>
             <td>
                 <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
-                    <Group spacing="sm">
-                        { row.avatar && <Avatar size={40} src={row.avatar} radius={40} /> }
-                        <div>
-                            <Text size="sm" weight={500}>
-                                {row.name}
-                            </Text>
-                            <Text size="xs" color="dimmed">
-                                {row.email}
-                            </Text>
-                        </div>
-                    </Group>
+                    {row.lessonName}
                 </UnstyledButton>
             </td>
-            <td>
-                {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
-                {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
-            </td>
+            <td>{percentageCompletion}%</td>
         </tr>
-    ));
+    });
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
             <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
-                    <th>Student Name</th>
-                    <th>Badge Status</th>
+                    <th>Lesson Name</th>
+                    <th>Lesson Completion</th>
                 </tr>
                 </thead>
                 <tbody>{rows}</tbody>

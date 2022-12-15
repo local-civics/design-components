@@ -44,7 +44,6 @@ export type ClassesProps = {
     classes: ClassItem[]
     students: StudentItem[]
     numberOfStudents: number
-    numberOfClasses: number
     percentageOfAccountsCreated: number
 
     onCreateClass:  (group: ClassItem) => void
@@ -141,11 +140,11 @@ export const Classes = (props: ClassesProps) => {
 
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                        <Group spacing="sm">
+                        <Stack spacing="sm">
                             <StatsGroup data={[
                                 {
                                     title: "# OF CLASSES",
-                                    value: props.numberOfClasses,
+                                    value: props.classes.length,
                                 },
                                 {
                                     title: "# OF STUDENTS",
@@ -158,29 +157,30 @@ export const Classes = (props: ClassesProps) => {
                                 },
                             ]}/>
 
-                            <Tabs
-                                value={tab}
-                                data={[
-                                    {label: "My classes", value: "classes"},
-                                    {label: "My students", value: "students"},
-                                ]}
-                                onChange={setTab}
-                            />
+                            <Stack spacing={0}>
+                                <Tabs
+                                    value={tab}
+                                    data={[
+                                        {label: "My classes", value: "classes"},
+                                        {label: "My students", value: "students"},
+                                    ]}
+                                    onChange={setTab}
+                                />
 
-                            { tab === "classes" && <Table
-                                loading={props.loading}
-                                items={props.classes}
-                                onDeleteClass={props.onDeleteClass}
-                                onClick={props.onClassClick}
-                            /> }
+                                { tab === "classes" && <Table
+                                    loading={props.loading}
+                                    items={props.classes}
+                                    onDeleteClass={props.onDeleteClass}
+                                    onClick={props.onClassClick}
+                                /> }
 
-                            { tab === "students" && <StudentTable
-                                loading={props.loading}
-                                items={props.students}
-                                onViewProfile={props.onViewStudentProfile}
-                            /> }
-
-                        </Group>
+                                { tab === "students" && <StudentTable
+                                    loading={props.loading}
+                                    items={props.students}
+                                    onViewProfile={props.onViewStudentProfile}
+                                /> }
+                            </Stack>
+                        </Stack>
                     </div>
                 </Stack>
             </Container>

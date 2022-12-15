@@ -165,8 +165,8 @@ export const LearningForm = (props: LearningFormProps) => {
           })}
 
           <FormItem
-              displayName="Almost there, write a short reflection to earn your points!"
-              description="(1-2 sentences)"
+              displayName="To earn your Impact Points for this activity, answer either of the following:"
+              description="(1-2 sentences minimum)"
               format="question"
               questionType="text"
               disabled={!canReflect || !!props.preview}

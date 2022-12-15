@@ -1,14 +1,13 @@
 import {ActionIcon, Badge, Container, Grid, LoadingOverlay, Stack} from "@mantine/core";
-import {IconArrowLeft}                                             from "@tabler/icons";
-import * as React                                                  from "react";
-import {StatsGroup}             from "../../components/data/StatsGroup/StatsGroup";
-import {Timeline, TimelineItem} from "../../components/data/Timeline/Timeline";
-import {UserInfo}               from "../../components/users/UserInfo/UserInfo";
-
-/**
- * StudentEvent
- */
-export type StudentEvent = TimelineItem
+import {IconArrowLeft} from "@tabler/icons";
+import {useState} from "react";
+import * as React      from "react";
+import {StatsGroup}                                                       from "../../components/data/StatsGroup/StatsGroup";
+import {Tabs}                                                             from "../../components/navigation/Tabs/Tabs";
+import {UserInfo}                                                         from "../../components/users/UserInfo/UserInfo";
+import {Table as BadgeTable, Item as BadgeItem}                           from "./BadgeTable"
+import {Table as AnswerTable, Item as AnswerItem} from "./AnswerTable"
+import {Table as ReflectionTable, Item as ReflectionItem} from "./ReflectionTable"
 
 /**
  * StudentProps
@@ -16,27 +15,27 @@ export type StudentEvent = TimelineItem
 export type StudentProps = {
     loading: boolean
     avatarURL: string
-    givenName: string
-    familyName: string
-    email: string
-    job: string
+    name: string
     impactStatement: string
-    events: StudentEvent[]
-    problemsSolved: number
-    problemsSolvedDiff: number
-    lessonsCompleted: number
-    lessonsCompletedDiff: number
-    badgesCompleted: number
-    badgesCompletedDiff: number
+    organization: {name: string, description: string, image: string, website: string}
+    numberOfProblemsSolved: number
+    percentageOfLessonsCompleted: number
+    badges: BadgeItem[],
+    answers: AnswerItem[],
+    reflections: ReflectionItem[],
 
     onBackClick: () => void
-    onScrollBottom: () => void;
+    onBadgeClick: (badge: BadgeItem) => void;
 }
 
 export const Student = (props: StudentProps) => {
+    const [tab, setTab] = useState("badges")
+    const numberOfBadges = props.badges.length
+    const percentageOfBadgesEarned = numberOfBadges > 0 ? props.badges.filter(b => b.isComplete).length / numberOfBadges : 0
+
     return <Container size="lg" py="xl">
         <Stack spacing="md">
-            <Grid>
+            <Grid gutter="md">
                 <Grid.Col sm="auto">
                     <Badge
                         variant="filled"
@@ -49,12 +48,8 @@ export const Student = (props: StudentProps) => {
 
                     <UserInfo
                         variant="compact"
-                        givenName={props.givenName}
-                        familyName={props.familyName}
-                        avatar={props.avatarURL}
-                        email={props.email}
-                        quote={props.impactStatement}
-                        job={props.job}
+                        name={props.name}
+                        impactStatement={props.impactStatement}
                     />
                 </Grid.Col>
             </Grid>
@@ -65,22 +60,47 @@ export const Student = (props: StudentProps) => {
                     <StatsGroup data={[
                         {
                             title: "PROBLEMS SOLVED",
-                            value: props.problemsSolved,
-                            diff: props.problemsSolvedDiff,
+                            value: props.numberOfProblemsSolved,
                         },
                         {
-                            title: "LESSONS COMPLETED",
-                            value: props.lessonsCompleted,
-                            diff: props.lessonsCompletedDiff,
+                            title: "LESSON COMPLETION",
+                            value: props.percentageOfLessonsCompleted,
+                            unit: "%"
                         },
                         {
-                            title: "BADGES EARNED",
-                            value: props.badgesCompleted,
-                            diff: props.badgesCompletedDiff,
+                            title: "BADGE COMPLETION",
+                            value: percentageOfBadgesEarned,
+                            unit: "%"
                         },
                     ]}/>
 
-                    <Timeline onScrollBottom={props.onScrollBottom} items={props.events} />
+                    <Stack spacing={0}>
+                        <Tabs
+                            value={tab}
+                            data={[
+                                {label: "My badges", value: "badges"},
+                                {label: "My answers", value: "answers"},
+                                {label: "My reflections", value: "reflections"},
+                            ]}
+                            onChange={setTab}
+                        />
+
+                        { tab === "badges" && <BadgeTable
+                            loading={props.loading}
+                            items={props.badges}
+                            onClick={props.onBadgeClick}
+                        /> }
+
+                        { tab === "answers" && <AnswerTable
+                            loading={props.loading}
+                            items={props.answers}
+                        /> }
+
+                        { tab === "reflections" && <ReflectionTable
+                            loading={props.loading}
+                            items={props.reflections}
+                        /> }
+                    </Stack>
                 </Stack>
             </div>
         </Stack>

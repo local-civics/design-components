@@ -4,7 +4,6 @@ import { createStyles, Text } from '@mantine/core';
 const useStyles = createStyles((theme) => ({
     root: {
         display: 'flex',
-        width: '100%',
         backgroundImage: `linear-gradient(-60deg, ${theme.colors[theme.primaryColor][4]} 0%, ${
             theme.colors[theme.primaryColor][7]
         } 100%)`,
@@ -68,11 +67,20 @@ interface StatsGroupProps {
  */
 export const StatsGroup = ({ data }: StatsGroupProps) => {
     const { classes } = useStyles();
-    const stats = data.map((stat) => (
-        <div key={stat.title} className={classes.stat}>
-            <Text className={classes.count}>{stat.value.toLocaleString()}{stat.unit}</Text>
+    const stats = data.map((stat) => {
+        const value = (() => {
+            if(stat.unit === '%'){
+               // https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
+               return Math.round((stat.value + Number.EPSILON) * 100)
+            }
+
+            return stat.value
+        })()
+
+        return <div key={stat.title} className={classes.stat}>
+            <Text className={classes.count}>{value.toLocaleString()}{stat.unit}</Text>
             <Text className={classes.title}>{stat.title}</Text>
         </div>
-    ));
+    });
     return <div className={classes.root}>{stats}</div>;
 }

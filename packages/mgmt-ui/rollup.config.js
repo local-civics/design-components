@@ -24,6 +24,8 @@ const cfg = [
             '@tabler/icons': 'TablerIcons',
             'papaparse': 'Papaparse',
             'recharts': 'Recharts',
+            'chart.js': 'ChartJs',
+            'react-chartjs-2': 'ReactChartJs',
         },
       },
       {
@@ -51,6 +53,8 @@ const cfg = [
         '@tabler/icons',
         'papaparse',
         'recharts',
+        'chart.js',
+        'react-chartjs-2'
     ],
   },
 ];

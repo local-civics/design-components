@@ -74,7 +74,7 @@ export function Table(props: TableProps) {
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Class Name</th>
                     <th>Description</th>
                     <th></th>
                 </tr>

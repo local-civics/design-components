@@ -15,7 +15,10 @@ export default {
  */
 const Template: Story<BadgesProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Badges {...args}/>
+        <Badges
+            {...args}
+            badges={args.badges || []}
+        />
     </div>
 );
 

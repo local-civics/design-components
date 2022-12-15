@@ -92,6 +92,9 @@ export const Class = (props: ClassProps) => {
             role: '',
             readonly: false,
             lastActivity: null,
+            hasAccount: false,
+            lessonsCompleted: 0,
+            badgesEarned: 0,
         },
 
         validate: {
@@ -177,7 +180,7 @@ export const Class = (props: ClassProps) => {
                 <div style={{ position: 'relative' }}>
                     <LoadingOverlay visible={props.loading} overlayBlur={2} />
 
-                    <Group spacing="sm">
+                    <Stack spacing="sm">
                         <StatsGroup data={[
                             {
                                 title: "# OF STUDENTS",
@@ -206,7 +209,7 @@ export const Class = (props: ClassProps) => {
                             onDelete={props.onDeleteStudent}
                             onViewProfile={(student) => props.onStudentClick(student)}
                         />
-                    </Group>
+                    </Stack>
                 </div>
             </Stack>
             </Container>

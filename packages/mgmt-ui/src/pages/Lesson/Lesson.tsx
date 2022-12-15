@@ -1,5 +1,6 @@
 import {IconArrowLeft, IconCategory2} from "@tabler/icons";
-import * as React                     from 'react';
+import {useState}    from "react";
+import * as React    from 'react';
 import {
     createStyles,
     Badge,
@@ -7,9 +8,13 @@ import {
     Text,
     Container, Stack, Grid,
     Select, ActionIcon, Group,
-    Button, Divider, LoadingOverlay,
-}                              from '@mantine/core';
-import {Table, Item}                  from "./Table";
+    Button, LoadingOverlay,
+}                                 from '@mantine/core';
+import {StatsGroup}               from "../../components/data/StatsGroup/StatsGroup";
+import {Tabs}                                             from "../../components/navigation/Tabs/Tabs";
+import {Item as ReflectionItem, Table as ReflectionTable} from "./ReflectionTable";
+import {Table, Item}                                      from "./Table";
+import {Stack as QuestionStack, Item as QuestionItem}                                      from "./QuestionStack";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -48,7 +53,9 @@ export type LessonProps = {
     description: string
     classId: string
     classes: LessonClass[]
-    users: LessonUserItem[]
+    students: LessonUserItem[]
+    reflections: ReflectionItem[],
+    questions: QuestionItem[],
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -63,6 +70,10 @@ export type LessonProps = {
  */
 export const Lesson = (props: LessonProps) => {
     const { classes } = useStyles();
+    const [tab, setTab] = useState("question")
+
+    const numberOfStudents = props.students.length
+    const percentageOfLessonsCompleted = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
 
     return (
         <Container size="lg" py="xl">
@@ -88,23 +99,13 @@ export const Lesson = (props: LessonProps) => {
                                 </Text>
                             </Stack>
 
-                            <Stack spacing="xs" ml="auto">
+                            <Stack ml="auto">
                                 <Button
                                     variant="gradient"
                                     onClick={props.onPreviewClick}
                                 >
                                     Preview
                                 </Button>
-                                <Divider label="or" labelPosition="center" my="xs" variant="dashed" />
-                                <Select
-                                    size="sm"
-                                    placeholder="Select a class"
-                                    nothingFound="No options"
-                                    value={props.classId}
-                                    onChange={props.onClassChange}
-                                    icon={<IconCategory2/>}
-                                    data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
-                                />
                             </Stack>
                         </Group>
                     </Grid.Col>
@@ -112,11 +113,54 @@ export const Lesson = (props: LessonProps) => {
                 <div>
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                        <Table
-                            loading={props.loading}
-                            items={props.users}
-                            onClick={props.onUserClick}
-                        />
+                        <Stack>
+                            <StatsGroup data={[
+                                {
+                                    title: "LESSON COMPLETION",
+                                    value: percentageOfLessonsCompleted,
+                                    unit: '%',
+                                },
+                            ]}/>
+                            <Stack spacing={0}>
+                                <Tabs
+                                    value={tab}
+                                    data={[
+                                        {label: "By question", value: "question"},
+                                        {label: "By reflection", value: "reflections"},
+                                        {label: "By student", value: "students"},
+                                    ]}
+                                    onChange={setTab}
+                                />
+
+                                { tab === "question" && <QuestionStack
+                                    loading={props.loading}
+                                    items={props.questions}
+                                />}
+
+                                { tab === "reflections" && <ReflectionTable
+                                    loading={props.loading}
+                                    items={props.reflections}
+                                /> }
+
+                                { tab === "students" && <Stack mt={10}>
+                                    <Select
+                                        size="sm"
+                                        placeholder="Select a class"
+                                        nothingFound="No options"
+                                        value={props.classId}
+                                        onChange={props.onClassChange}
+                                        icon={<IconCategory2/>}
+                                        data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
+                                    />
+
+                                    <Table
+                                        loading={props.loading}
+                                        items={props.students}
+                                        onClick={props.onUserClick}
+                                    />
+                                </Stack>}
+                            </Stack>
+                        </Stack>
                     </div>
                 </div>
             </Stack>
