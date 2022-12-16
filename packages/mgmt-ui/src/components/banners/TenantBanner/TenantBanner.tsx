@@ -36,8 +36,8 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface TenantBannerProps {
-    title: React.ReactNode;
-    description: React.ReactNode;
+    title: string;
+    description: string;
     image: string;
     action: {
         label: string;
