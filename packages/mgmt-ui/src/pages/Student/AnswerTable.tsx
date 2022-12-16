@@ -1,5 +1,5 @@
 import * as React                                                                      from 'react';
-import {Table as MantineTable, ScrollArea} from '@mantine/core';
+import {Table as MantineTable, ScrollArea, UnstyledButton} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -8,6 +8,7 @@ import {
  * Item
  */
 export interface Item {
+    lessonId: string
     lessonName: string
     questionName: string
     answer: string[]
@@ -24,7 +25,9 @@ export type TableData = {
 /**
  * TableMethods
  */
-export type TableMethods = {}
+export type TableMethods = {
+    onClick: (item: Item) => void;
+}
 
 
 /**
@@ -49,7 +52,7 @@ export function Table(props: TableProps) {
 
     const rows = props.items.map((row) => (
         <tr key={row.questionName}>
-            <td>{row.lessonName}</td>
+            <td><UnstyledButton onClick={() => props.onClick(row)}>{row.lessonName}</UnstyledButton></td>
             <td>{row.questionName}</td>
             <td>{row.answer.join(",")}</td>
         </tr>

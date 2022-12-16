@@ -1,5 +1,5 @@
 import * as React                                                                      from 'react';
-import {Avatar, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton, Badge} from '@mantine/core';
+import {Table as MantineTable, ScrollArea, UnstyledButton, Badge} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -8,6 +8,7 @@ import {
  * Item
  */
 export interface Item {
+    badgeId: string
     badgeName: string
     isComplete?: boolean
 }
@@ -50,7 +51,7 @@ export function Table(props: TableProps) {
 
     const rows = props.items.map((row) => (
         <tr key={row.badgeName}>
-            <td>{row.badgeName}</td>
+            <td><UnstyledButton onClick={() => props.onClick(row)}>{row.badgeName}</UnstyledButton></td>
             <td>
                 {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
                 {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}

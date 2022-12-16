@@ -14,10 +14,8 @@ import {Table as ReflectionTable, Item as ReflectionItem} from "./ReflectionTabl
  */
 export type StudentProps = {
     loading: boolean
-    avatarURL: string
     name: string
     impactStatement: string
-    organization: {name: string, description: string, image: string, website: string}
     numberOfProblemsSolved: number
     percentageOfLessonsCompleted: number
     badges: BadgeItem[],
@@ -25,7 +23,9 @@ export type StudentProps = {
     reflections: ReflectionItem[],
 
     onBackClick: () => void
-    onBadgeClick: (badge: BadgeItem) => void;
+    onBadgeClick: (item: BadgeItem) => void;
+    onAnswerClick: (item: AnswerItem) => void;
+    onReflectionClick: (item: ReflectionItem) => void;
 }
 
 export const Student = (props: StudentProps) => {
@@ -43,7 +43,7 @@ export const Student = (props: StudentProps) => {
                             <IconArrowLeft size={14} />
                         </ActionIcon>}
                         size="lg">
-                        Users
+                        Students
                     </Badge>
 
                     <UserInfo
@@ -94,11 +94,13 @@ export const Student = (props: StudentProps) => {
                         { tab === "answers" && <AnswerTable
                             loading={props.loading}
                             items={props.answers}
+                            onClick={props.onAnswerClick}
                         /> }
 
                         { tab === "reflections" && <ReflectionTable
                             loading={props.loading}
                             items={props.reflections}
+                            onClick={props.onReflectionClick}
                         /> }
                     </Stack>
                 </Stack>

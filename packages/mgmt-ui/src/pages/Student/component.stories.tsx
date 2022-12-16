@@ -41,14 +41,17 @@ Component.args = {};
 export const Mock: Story<StudentProps> = Template.bind({});
 Mock.args = {
     badges: [{
+        badgeId: "",
         badgeName: "Unit 1 Badge",
         isComplete: true,
     },{
+        badgeId: "",
         badgeName: "Unit 2 Badge",
         isComplete: false,
     }],
     answers: [
         {
+            lessonId: "",
             lessonName: "An example lesson",
             questionName: "An example question",
             answer: ["My example answer"]
@@ -56,6 +59,7 @@ Mock.args = {
     ],
     reflections: [
         {
+            lessonId: "",
             lessonName: "An example lesson",
             reflection: "An example reflection",
             rating: 2,
