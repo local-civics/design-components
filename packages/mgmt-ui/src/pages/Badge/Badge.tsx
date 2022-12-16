@@ -139,6 +139,8 @@ export const Badge = (props: BadgeProps) => {
 
                                 { tab === "students" && <Stack mt={10}>
                                     <Select
+                                        clearable
+                                        clearButtonLabel="Clear class selection"
                                         size="sm"
                                         placeholder="Select a class"
                                         nothingFound="No options"

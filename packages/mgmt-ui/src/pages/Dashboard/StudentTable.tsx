@@ -1,5 +1,5 @@
 import * as React                                                                      from 'react';
-import {Table as MantineTable, ScrollArea} from '@mantine/core';
+import {Table as MantineTable, ScrollArea, UnstyledButton} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -8,9 +8,9 @@ import {
  * Item
  */
 export interface Item {
-    lessonName: string
-    reflection: string
-    rating: number
+    studentId: string
+    studentName: string
+    className: string
 }
 
 /**
@@ -24,7 +24,9 @@ export type TableData = {
 /**
  * TableMethods
  */
-export type TableMethods = {}
+export type TableMethods = {
+    onViewProfile: (item: Item) => void;
+}
 
 
 /**
@@ -40,18 +42,17 @@ export type TableProps = TableData & TableMethods
 export function Table(props: TableProps) {
     if(props.items.length === 0){
         return <PlaceholderBanner
-            title="No reflections to display"
-            description="There has not been any lesson progress just yet."
+            title="No students to display"
+            description="You don't have any students yet, add them and revisit."
             loading={props.loading}
-            icon="lessons"
+            icon="groups"
         />
     }
 
     const rows = props.items.map((row) => (
-        <tr key={row.lessonName}>
-            <td>{row.lessonName}</td>
-            <td>{row.reflection}</td>
-            <td>{row.rating.toLocaleString()}</td>
+        <tr key={row.studentName}>
+            <td><UnstyledButton onClick={() => props.onViewProfile(row)}>{row.studentName}</UnstyledButton></td>
+            <td>{row.className}</td>
         </tr>
     ));
 
@@ -59,11 +60,10 @@ export function Table(props: TableProps) {
         <ScrollArea.Autosize maxHeight={500}>
             <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
-                    <tr>
-                        <th>Lesson Name</th>
-                        <th>Reflection</th>
-                        <th>Rating</th>
-                    </tr>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Class Name</th>
+                </tr>
                 </thead>
                 <tbody>{rows}</tbody>
             </MantineTable>

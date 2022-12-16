@@ -28,7 +28,12 @@ export interface TableProps {
  */
 export function Table(props: TableProps) {
     if(props.items.length === 0){
-        return <PlaceholderBanner loading={props.loading} icon="lessons"/>
+        return <PlaceholderBanner
+            title="No lessons to display"
+            description="We don't have any lessons to show you just yet."
+            loading={props.loading}
+            icon="lessons"
+        />
     }
 
     const rows = props.items.map((row) => (

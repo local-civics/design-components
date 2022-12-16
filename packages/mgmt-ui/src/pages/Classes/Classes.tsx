@@ -13,9 +13,7 @@ import {
 }                    from '@mantine/core';
 import { useForm }   from '@mantine/form';
 import {StatsGroup}  from "../../components/data/StatsGroup/StatsGroup";
-import {Tabs}        from "../../components/navigation/Tabs/Tabs";
 import {Table, Item} from "./Table";
-import {Table as StudentTable, Item as StudentItem} from "../Class/Table";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -42,15 +40,10 @@ export type ClassItem = Item
 export type ClassesProps = {
     loading: boolean
     classes: ClassItem[]
-    students: StudentItem[]
-    numberOfStudents: number
-    percentageOfAccountsCreated: number
 
     onCreateClass:  (group: ClassItem) => void
     onDeleteClass:  (group: ClassItem) => void
     onClassClick: (group: ClassItem) => void
-    onDeleteStudent: (user: StudentItem) => void
-    onViewStudentProfile: (user: StudentItem) => void
 }
 
 /**
@@ -72,8 +65,6 @@ export const Classes = (props: ClassesProps) => {
         },
     });
     const [opened, setOpened] = useState(false);
-    const [tab, setTab] = useState("classes")
-
     return (
         <>
             <Drawer
@@ -146,40 +137,14 @@ export const Classes = (props: ClassesProps) => {
                                     title: "# OF CLASSES",
                                     value: props.classes.length,
                                 },
-                                {
-                                    title: "# OF STUDENTS",
-                                    value: props.numberOfStudents,
-                                },
-                                {
-                                    title: "ACCOUNT CREATION",
-                                    value: props.percentageOfAccountsCreated,
-                                    unit: "%",
-                                },
                             ]}/>
 
-                            <Stack spacing={0}>
-                                <Tabs
-                                    value={tab}
-                                    data={[
-                                        {label: "My classes", value: "classes"},
-                                        {label: "My students", value: "students"},
-                                    ]}
-                                    onChange={setTab}
-                                />
-
-                                { tab === "classes" && <Table
-                                    loading={props.loading}
-                                    items={props.classes}
-                                    onDeleteClass={props.onDeleteClass}
-                                    onClick={props.onClassClick}
-                                /> }
-
-                                { tab === "students" && <StudentTable
-                                    loading={props.loading}
-                                    items={props.students}
-                                    onViewProfile={props.onViewStudentProfile}
-                                /> }
-                            </Stack>
+                            <Table
+                                loading={props.loading}
+                                items={props.classes}
+                                onDeleteClass={props.onDeleteClass}
+                                onClick={props.onClassClick}
+                            />
                         </Stack>
                     </div>
                 </Stack>

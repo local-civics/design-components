@@ -9,6 +9,7 @@ export interface Item {
     badgeId: string,
     name: string;
     description: string
+    percentageCompletion: number
 }
 
 /**
@@ -76,12 +77,21 @@ export function Table(props: TableProps) {
                     </Group>
                 </UnstyledButton>
             </td>
+            <td>{row.description}</td>
+            <td>{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</td>
         </tr>
     ));
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
+            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
+                <thead>
+                    <tr>
+                        <th>Badge Name</th>
+                        <th>Description</th>
+                        <th>Completion</th>
+                    </tr>
+                </thead>
                 <tbody>{rows}</tbody>
             </MantineTable>
         </ScrollArea.Autosize>

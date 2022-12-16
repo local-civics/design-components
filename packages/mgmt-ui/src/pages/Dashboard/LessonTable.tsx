@@ -6,9 +6,10 @@ import {PlaceholderBanner}                                from "../../components
  * Item
  */
 export interface Item {
-    badgeId: string,
+    lessonId: string,
     name: string;
     description: string
+    percentageCompletion: number
 }
 
 /**
@@ -39,15 +40,15 @@ export type TableProps = TableData & TableMethods
 export function Table(props: TableProps) {
     if(props.items.length === 0){
         return <PlaceholderBanner
-            title="No badges to display"
-            description="We don't have any badges to show you just yet."
+            title="No lessons to display"
+            description="We don't have any lessons to show you just yet."
             loading={props.loading}
-            icon="badges"
+            icon="lessons"
         />
     }
 
     const rows = props.items.map((row) => (
-        <tr key={row.badgeId}>
+        <tr key={row.lessonId}>
             <td>
                 <UnstyledButton
                     sx={(theme) => ({
@@ -76,12 +77,21 @@ export function Table(props: TableProps) {
                     </Group>
                 </UnstyledButton>
             </td>
+            <td>{row.description}</td>
+            <td>{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</td>
         </tr>
     ));
 
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
+            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
+                <thead>
+                    <tr>
+                        <th>Lesson Name</th>
+                        <th>Description</th>
+                        <th>Completion</th>
+                    </tr>
+                </thead>
                 <tbody>{rows}</tbody>
             </MantineTable>
         </ScrollArea.Autosize>

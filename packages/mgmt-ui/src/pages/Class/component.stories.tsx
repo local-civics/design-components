@@ -17,10 +17,6 @@ const Template: Story<ClassProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
         <Class
             {...args}
-            students={args.students || []}
-            percentageOfAccountsCreated={args.percentageOfAccountsCreated || 0}
-            percentageOfBadgesEarned={args.percentageOfBadgesEarned || 0}
-            percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
             displayName={args.displayName || "AP History"}
             description={args.description || "Class focused on the history of the United States"}
         />

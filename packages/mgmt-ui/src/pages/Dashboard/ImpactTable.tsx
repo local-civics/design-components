@@ -8,9 +8,8 @@ import {
  * Item
  */
 export interface Item {
-    lessonName: string
-    reflection: string
-    rating: number
+    studentName: string
+    impactStatement: string
 }
 
 /**
@@ -40,18 +39,17 @@ export type TableProps = TableData & TableMethods
 export function Table(props: TableProps) {
     if(props.items.length === 0){
         return <PlaceholderBanner
-            title="No reflections to display"
-            description="There has not been any lesson progress just yet."
+            title="No impact statements to display"
+            description="There are no students with impact statements yet."
             loading={props.loading}
-            icon="lessons"
+            icon="kindergarten"
         />
     }
 
     const rows = props.items.map((row) => (
-        <tr key={row.lessonName}>
-            <td>{row.lessonName}</td>
-            <td>{row.reflection}</td>
-            <td>{row.rating.toLocaleString()}</td>
+        <tr key={row.studentName}>
+            <td>{row.studentName}</td>
+            <td>{row.impactStatement}</td>
         </tr>
     ));
 
@@ -59,11 +57,10 @@ export function Table(props: TableProps) {
         <ScrollArea.Autosize maxHeight={500}>
             <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
-                    <tr>
-                        <th>Lesson Name</th>
-                        <th>Reflection</th>
-                        <th>Rating</th>
-                    </tr>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Impact Statement</th>
+                </tr>
                 </thead>
                 <tbody>{rows}</tbody>
             </MantineTable>
