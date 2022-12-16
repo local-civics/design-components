@@ -121,6 +121,18 @@ export const Badge = (props: BadgeProps) => {
                                 },
                             ]}/>
 
+                            <Select
+                                clearable
+                                clearButtonLabel="Clear class selection"
+                                size="sm"
+                                placeholder="Select a class"
+                                nothingFound="No options"
+                                value={props.classId}
+                                onChange={props.onClassChange}
+                                icon={<IconCategory2/>}
+                                data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
+                            />
+
                             <Stack spacing={0}>
                                 <Tabs
                                     value={tab}
@@ -137,25 +149,11 @@ export const Badge = (props: BadgeProps) => {
                                     onClick={props.onLessonClick}
                                 /> }
 
-                                { tab === "students" && <Stack mt={10}>
-                                    <Select
-                                        clearable
-                                        clearButtonLabel="Clear class selection"
-                                        size="sm"
-                                        placeholder="Select a class"
-                                        nothingFound="No options"
-                                        value={props.classId}
-                                        onChange={props.onClassChange}
-                                        icon={<IconCategory2/>}
-                                        data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
-                                    />
-
-                                    <Table
-                                        loading={props.loading}
-                                        items={props.students}
-                                        onClick={props.onUserClick}
-                                    />
-                                </Stack>}
+                                { tab === "students" && <Table
+                                    loading={props.loading}
+                                    items={props.students}
+                                    onClick={props.onUserClick}
+                                />}
                             </Stack>
                         </Stack>
                     </div>

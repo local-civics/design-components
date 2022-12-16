@@ -56,7 +56,7 @@ export function Table(props: TableProps) {
             <td>
                 <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
                     <Group spacing="sm">
-                        { row.avatar && <Avatar size={40} src={row.avatar} radius={40} /> }
+                        <Avatar size={40} src={row.avatar} radius={40} />
                         <div>
                             <Text size="sm" weight={500}>
                                 {row.name}
