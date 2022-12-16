@@ -19,7 +19,6 @@ const Template: Story<StudentProps> = (args) => (
         {...args}
         name={args.name || "Jane McDowell"}
         impactStatement={args.impactStatement || "I want to equip my students with transformational leadership skills so they could make impact in their communities!"}
-        organization={args.organization || {name: "Local Civics", description: "An example organization", website: "https://www.localcivics.io", image: "https://cdn.localcivics.io/hub/landing.jpg"}}
         numberOfProblemsSolved={args.numberOfProblemsSolved || 17}
         percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
         badges={args.badges || []}
