@@ -56,10 +56,9 @@ Mock.args = {
     }],
     reflections: [{
         lessonName: "Example lesson",
-        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         studentName: "Jane Doe",
         reflection: "An example reflection",
-        rating: 4,
     }],
     badges: [{
         badgeId: "",

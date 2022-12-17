@@ -12,8 +12,7 @@ export interface Item {
     lessonName: string
     studentName: string
     reflection: string
-    rating: number
-    createdAt: string
+    updatedAt: string
 }
 
 /**
@@ -55,8 +54,7 @@ export function Table(props: TableProps) {
             <td>{row.studentName}</td>
             <td>{row.lessonName}</td>
             <td>{row.reflection}</td>
-            <td>{relativeTimeFromDates(new Date(row.createdAt))}</td>
-            <td>{row.rating.toLocaleString()}</td>
+            <td>{relativeTimeFromDates(new Date(row.updatedAt))}</td>
         </tr>
     ));
 
@@ -68,8 +66,7 @@ export function Table(props: TableProps) {
                     <th>Student Name</th>
                     <th>Lesson Name</th>
                     <th>Reflection</th>
-                    <th>Created At</th>
-                    <th>Rating</th>
+                    <th>Updated At</th>
                 </tr>
                 </thead>
                 <tbody>{rows}</tbody>
