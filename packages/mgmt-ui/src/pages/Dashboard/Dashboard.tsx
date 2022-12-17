@@ -5,7 +5,7 @@ import {Container, LoadingOverlay, Select, Stack, Text, Title} from '@mantine/co
 import {StatsGroup}                                            from "../../components/data/StatsGroup/StatsGroup";
 import {Tabs}                                                  from "../../components/navigation/Tabs/Tabs";
 import {Item as StudentItem, Table as StudentTable}            from "./StudentTable";
-import {Table as ReflectionTable, Item as ReflectionItem}      from "../Lesson/ReflectionTable";
+import {Table as ReflectionTable, Item as ReflectionItem}      from "./ReflectionTable";
 import {Item as ImpactItem, Table as ImpactTable}              from "./ImpactTable";
 import {Item as BadgeItem, Table as BadgeTable}              from "./BadgeTable";
 import {Item as LessonItem, Table as LessonTable}              from "./LessonTable";

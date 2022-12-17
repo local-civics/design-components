@@ -50,31 +50,8 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.badgeId}>
             <td>
-                <UnstyledButton
-                    sx={(theme) => ({
-                        display: 'block',
-                        width: '100%',
-                        padding: theme.spacing.md,
-                        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-                        '&:hover': {
-                            backgroundColor:
-                                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-                        },
-                    })}
-
-                    onClick={() => props.onClick && props.onClick(row)}
-                >
-                    <Group>
-                        <div>
-                            <Text size="sm" weight={500}>
-                                {row.name}
-                            </Text>
-                            <Text size="xs" color="dimmed">
-                                {row.description}
-                            </Text>
-                        </div>
-                    </Group>
+                <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
+                    {row.name}
                 </UnstyledButton>
             </td>
             <td>{row.description}</td>
