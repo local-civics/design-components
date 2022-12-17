@@ -16,7 +16,6 @@ import {Item as LessonItem, Table as LessonTable}              from "./LessonTab
 export type DashboardClass = {
     classId: string
     name: string
-    active: boolean
 }
 
 /**

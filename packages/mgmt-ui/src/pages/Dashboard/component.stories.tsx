@@ -53,7 +53,6 @@ Mock.args = {
     classes: [{
         classId: "",
         name: "AP History",
-        active: false,
     }],
     reflections: [{
         studentName: "Jane Doe",
