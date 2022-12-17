@@ -82,6 +82,18 @@ export const Dashboard = (props: DashboardProps) => {
                             },
                         ]}/>
 
+                        <Select
+                            clearable
+                            clearButtonLabel="Clear class selection"
+                            size="sm"
+                            placeholder="Select a class"
+                            nothingFound="No options"
+                            value={props.classId}
+                            onChange={props.onClassChange}
+                            icon={<IconCategory2/>}
+                            data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
+                        />
+
                         <Stack spacing={0}>
                             <Tabs
                                 value={tab}
@@ -117,25 +129,11 @@ export const Dashboard = (props: DashboardProps) => {
                                 onClick={props.onLessonClick}
                             /> }
 
-                            { tab === "students" && <Stack mt={10}>
-                                <Select
-                                    clearable
-                                    clearButtonLabel="Clear class selection"
-                                    size="sm"
-                                    placeholder="Select a class"
-                                    nothingFound="No options"
-                                    value={props.classId}
-                                    onChange={props.onClassChange}
-                                    icon={<IconCategory2/>}
-                                    data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
-                                />
-
-                                <StudentTable
-                                    loading={props.loading}
-                                    items={props.students}
-                                    onViewProfile={props.onViewStudentProfile}
-                                />
-                            </Stack>}
+                            { tab === "students" && <StudentTable
+                                loading={props.loading}
+                                items={props.students}
+                                onViewProfile={props.onViewStudentProfile}
+                            />}
                         </Stack>
                     </Stack>
                 </div>
