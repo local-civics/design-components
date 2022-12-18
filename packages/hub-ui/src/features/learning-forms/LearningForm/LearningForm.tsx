@@ -72,7 +72,7 @@ export const LearningForm = (props: LearningFormProps) => {
   const canReflect = !!reflection || answeredAllRequired
   const canSubmit = answeredAllRequired && reflection.length >= MIN_REFLECTION_LENGTH
   const items = props.items || []
-  const currentAnswersKey = answers && answers.length > 0 ? JSON.stringify(answers) : ""
+  const currentAnswersKey = answers && answers.length > 0 ? JSON.stringify(answers) : null
 
   React.useEffect(() => {
     setRating(props.rating);
