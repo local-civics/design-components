@@ -98,7 +98,7 @@ export function Stack(props: StackProps) {
                                     label: '',
                                     data: choices.map(k => {
                                         return {
-                                            primary: k,
+                                            primary: truncateWithEllipses(k, 50),
                                             secondary: labelMap[k]
                                         }
                                     }),
@@ -138,3 +138,5 @@ export function Stack(props: StackProps) {
         {rows}
     </MantineStack>
 }
+
+const truncateWithEllipses = (text: string, max: number) => text.substr(0,max-1)+(text.length>max?'&hellip;':'')
