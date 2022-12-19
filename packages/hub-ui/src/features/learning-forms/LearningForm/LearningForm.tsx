@@ -83,9 +83,7 @@ export const LearningForm = (props: LearningFormProps) => {
   }, [props.reflection]);
 
   React.useEffect(() => {
-    if(isDraft){
-      autoSaveHandler(answers, reflection, rating)
-    }
+    autoSaveHandler(answers, reflection, rating)
   }, [currentAnswersKey, reflection, rating, isDraft])
 
 
