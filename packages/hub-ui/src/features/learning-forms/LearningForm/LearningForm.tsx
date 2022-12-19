@@ -58,6 +58,14 @@ export const LearningForm = (props: LearningFormProps) => {
   const autoSaveHandler = useCallback(autoSave(isDraft, props.onSaveDraft, () => setIsDraft(false)), [isDraft]);
   const saveVisibility = isDraft ? "opacity-100 visible" : "opacity-0 invisible"
   const answers: FormItemProps[] = []
+  const saveDraft = async () => {
+    if(!isDraft){
+      return
+    }
+
+    return props.onSaveDraft && props.onSaveDraft(answers, reflection, rating)
+        .then((e) => !e && setIsDraft(false))
+  }
 
   let answeredAllRequired = true
   props.items?.forEach(item => {
@@ -193,21 +201,17 @@ export const LearningForm = (props: LearningFormProps) => {
               border="rounded"
               theme="dark"
               text="Save"
-              onClick={() => {
-                props.onSaveDraft && props.onSaveDraft(answers, reflection, rating)
-                    .then((e) => !e && setIsDraft(false))
-              }}
+              onClick={saveDraft}
           />
         </div> }
 
         {showExitDialogue && (
             <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
               <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
-                <FormExitDialog onYes={() => {
-                  props.onSaveDraft && props.onSaveDraft(answers, reflection, rating)
-                      .then((e) => !e && setIsDraft(false))
-                      .then(() => props.onGoBack && props.onGoBack())
-                }} onNo={() => setShowExitDialogue(false)} />
+                <FormExitDialog
+                    onYes={() => saveDraft().then(() => props.onGoBack && props.onGoBack())}
+                    onNo={() => setShowExitDialogue(false)}
+                />
               </div>
             </div>
         )}
