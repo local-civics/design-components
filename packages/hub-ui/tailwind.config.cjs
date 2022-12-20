@@ -44,5 +44,5 @@ module.exports = {
       stroke: ["hover", "focus"],
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
+  plugins: [import("@tailwindcss/line-clamp")],
 };

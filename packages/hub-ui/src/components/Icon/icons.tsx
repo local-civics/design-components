@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from "react";
 import FourteenPointStar from "../../../assets/14-point-star.svg";
 import AwardRibbon from "../../../assets/award-ribbon.svg";

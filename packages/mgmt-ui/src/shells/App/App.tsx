@@ -2,7 +2,8 @@ import {Loader, Center, ActionIcon, AppShell, Container, createStyles, Group, Im
 import {IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin}                                            from "@tabler/icons";
 import {useState}                                                                                            from "react";
 import * as React                                from 'react';
-import {AccountItem, SwitchAccount} from "./SwitchAccount/SwitchAccount";
+import type {AccountItem} from "./SwitchAccount/SwitchAccount";
+import {SwitchAccount} from "./SwitchAccount/SwitchAccount"
 import {Navbar, NavbarProps}                     from "../../components/navigation/Navbar/Navbar";
 
 const useStyles = createStyles((theme) => ({
