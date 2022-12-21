@@ -13,7 +13,6 @@ const bundle = config => ({
 export default [
   bundle({
     plugins: [
-      scss({sourceMap: true}),
       svgr({
         titleProp: true,
         replaceAttrValues: {
