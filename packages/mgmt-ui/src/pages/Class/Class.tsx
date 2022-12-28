@@ -16,6 +16,7 @@ import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { useForm }              from '@mantine/form';
 import * as papa                from 'papaparse'
 import {StatsGroup}             from "../../components/data/StatsGroup/StatsGroup";
+import {SplitButton}            from "./SplitButton";
 import {Table, Item}            from "./Table";
 
 const useStyles = createStyles((theme) => ({
@@ -72,6 +73,7 @@ export type ClassProps = {
     onCreateStudents: (students: StudentItem[]) => void;
     onDeleteStudent: (student: StudentItem) => void;
     onStudentClick: (student: StudentItem) => void;
+    onCopyLinkClick: () => void;
 }
 
 /**
@@ -169,11 +171,10 @@ export const Class = (props: ClassProps) => {
                         </Text>
                     </Grid.Col>
                     <Grid.Col sm="content">
-                        { !props.loading && <Button
-                            onClick={() => setOpened(true)}
-                            leftIcon={<IconPlaylistAdd size={14} />}>
-                            Add students
-                        </Button> }
+                        { !props.loading && <SplitButton
+                            onAddStudentsClick={() => setOpened(true)}
+                            onCopyClassLinkClick={props.onCopyLinkClick}
+                        />}
                     </Grid.Col>
                 </Grid>
 

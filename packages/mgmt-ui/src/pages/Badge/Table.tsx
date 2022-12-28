@@ -1,8 +1,10 @@
+import {DataTable}                                                                     from "mantine-datatable";
 import * as React                                                                      from 'react';
-import {Avatar, Table as MantineTable, Group, Text, ScrollArea, UnstyledButton, Badge} from '@mantine/core';
+import {Avatar, Group, Text, ScrollArea, UnstyledButton, Badge} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {Stack as LessonStack, Item as LessonItem}                                                          from "./LessonStack";
 
 /**
  * Item
@@ -13,6 +15,7 @@ export interface Item {
     name: string
     email: string
     isComplete?: boolean
+    lessons: LessonItem[]
 }
 
 /**
@@ -51,41 +54,50 @@ export function Table(props: TableProps) {
         />
     }
 
-    const rows = props.items.map((row) => (
-        <tr key={row.name}>
-            <td>
-                <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
-                    <Group spacing="sm">
-                        <Avatar size={40} src={row.avatar} radius={40} />
-                        <div>
-                            <Text size="sm" weight={500}>
-                                {row.name}
-                            </Text>
-                            <Text size="xs" color="dimmed">
-                                {row.email}
-                            </Text>
-                        </div>
-                    </Group>
-                </UnstyledButton>
-            </td>
-            <td>
-                {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
-                {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
-            </td>
-        </tr>
-    ));
-
     return (
         <ScrollArea.Autosize maxHeight={500}>
-            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
-                <thead>
-                <tr>
-                    <th>Student Name</th>
-                    <th>Badge Status</th>
-                </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </MantineTable>
+            <DataTable
+                verticalSpacing="sm"
+                sx={{ minWidth: 700 }}
+                withBorder={false}
+                borderRadius="sm"
+                withColumnBorders
+                striped
+                highlightOnHover
+                records={props.items}
+                columns={[{
+                    accessor: 'name',
+                    title: 'Student Name',
+                    render: (row: Item) => (
+                        <UnstyledButton>
+                            <Group spacing="sm">
+                                <Avatar size={40} src={row.avatar} radius={40}/>
+                                <div>
+                                    <Text size="sm" weight={500}>
+                                        {row.name}
+                                    </Text>
+                                    <Text size="xs" color="dimmed">
+                                        {row.email}
+                                    </Text>
+                                </div>
+                            </Group>
+                        </UnstyledButton>
+                    ),
+                },{
+                    accessor: 'status',
+                    render: (row: Item) => (
+                        <>
+                            {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
+                            {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
+                        </>
+                    )
+                }]}
+                rowExpansion={{
+                    content: ({ record }: {record: Item}) => (
+                        <LessonStack items={record.lessons}/>
+                    ),
+                }}
+            />
         </ScrollArea.Autosize>
     );
 }

@@ -45,6 +45,11 @@ Mock.args = {
         avatar: "",
         name: "Jane Doe",
         email: "jane.doe@localcivics.io",
+        lessons: [{
+            lessonName: "Example lesson",
+        },{
+            lessonName: "Example lesson 2",
+        }]
     }],
     lessons: [{
         lessonId: "",

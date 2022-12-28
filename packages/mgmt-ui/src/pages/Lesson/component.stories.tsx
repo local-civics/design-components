@@ -49,6 +49,16 @@ Mock.args = {
             avatar: "",
             name: "Jane Doe",
             email: "jane.doe@localcivics.io",
+            answers: [{
+                questionName: "An example question",
+                answer: ["An example response"],
+            },{
+                questionName: "Another example question",
+                answer: [],
+            },{
+                questionName: "A chart example question",
+                answer: ["A. An example response"],
+            }]
         }
     ],
     questions: [

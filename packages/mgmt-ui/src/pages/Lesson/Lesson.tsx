@@ -139,8 +139,8 @@ export const Lesson = (props: LessonProps) => {
                                     value={tab}
                                     data={[
                                         {label: "By question", value: "question"},
-                                        {label: "By reflection", value: "reflections"},
                                         {label: "By student", value: "students"},
+                                        {label: "By reflection", value: "reflections"},
                                     ]}
                                     onChange={setTab}
                                 />
