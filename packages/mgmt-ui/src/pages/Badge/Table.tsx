@@ -65,6 +65,7 @@ export function Table(props: TableProps) {
                 striped
                 highlightOnHover
                 records={props.items}
+                idAccessor="userId"
                 columns={[{
                     accessor: 'name',
                     title: 'Student Name',

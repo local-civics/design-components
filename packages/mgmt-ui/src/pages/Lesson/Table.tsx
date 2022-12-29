@@ -61,6 +61,7 @@ export function Table(props: TableProps) {
                 withColumnBorders
                 striped
                 highlightOnHover
+                idAccessor="userId"
                 records={props.items}
                 columns={[{
                     accessor: 'name',

@@ -1,5 +1,5 @@
 import * as React                                                      from 'react';
-import {Stack as MantineStack, Grid, Badge, Title} from '@mantine/core';
+import {Grid, Badge, Title} from '@mantine/core';
 
 /**
  * Item
