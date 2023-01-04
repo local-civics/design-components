@@ -18,8 +18,8 @@ const Template: Story<ClassProps> = (args) => (
         <Class
             {...args}
             percentageOfAccountsCreated={args.percentageOfAccountsCreated||0}
-            percentageOfBadgesEarned={args.percentageOfBadgesEarned||0}
-            percentageOfLessonsCompleted={args.percentageOfLessonsCompleted||0}
+            numberOfBadgesEarned={args.numberOfBadgesEarned||0}
+            numberOfLessonsCompleted={args.numberOfLessonsCompleted||0}
             students={args.students || []}
             displayName={args.displayName || "AP History"}
             description={args.description || "Class focused on the history of the United States"}

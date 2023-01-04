@@ -8,13 +8,14 @@ import {
     Text,
     Container, Stack, Grid,
     Select, ActionIcon, Group,
-    Button, LoadingOverlay,
-}                                 from '@mantine/core';
-import {StatsGroup}               from "../../components/data/StatsGroup/StatsGroup";
+    LoadingOverlay,
+}                                                         from '@mantine/core';
+import {StatsGroup}                                       from "../../components/data/StatsGroup/StatsGroup";
 import {Tabs}                                             from "../../components/navigation/Tabs/Tabs";
 import {Item as ReflectionItem, Table as ReflectionTable} from "./ReflectionTable";
+import {SplitButton}                                      from "./SplitButton";
 import {Table, Item}                                      from "./Table";
-import {Stack as QuestionStack, Item as QuestionItem}                                      from "./QuestionStack";
+import {Stack as QuestionStack, Item as QuestionItem}     from "./QuestionStack";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -61,6 +62,8 @@ export type LessonProps = {
     onClassChange: (classId: string) => void;
     onPreviewClick: () => void;
     onUserClick: (user: LessonUserItem) => void;
+    onCopyLinkClick: () => void;
+    onExportDataClick: () => void;
 }
 
 /**
@@ -100,12 +103,11 @@ export const Lesson = (props: LessonProps) => {
                             </Stack>
 
                             <Stack ml="auto">
-                                <Button
-                                    variant="gradient"
-                                    onClick={props.onPreviewClick}
-                                >
-                                    Preview
-                                </Button>
+                                <SplitButton
+                                    onPreviewClick={props.onPreviewClick}
+                                    onCopyLinkClick={props.onCopyLinkClick}
+                                    onExportDataClick={props.onExportDataClick}
+                                />
                             </Stack>
                         </Group>
                     </Grid.Col>

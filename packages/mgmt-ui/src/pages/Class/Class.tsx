@@ -1,4 +1,4 @@
-import {IconArrowLeft, IconPlaylistAdd, IconCloudUpload, IconX, IconDownload} from "@tabler/icons";
+import {IconArrowLeft, IconCloudUpload, IconX, IconDownload} from "@tabler/icons";
 import {ParseResult}                                                          from "papaparse";
 import {useState}                                                             from "react";
 import * as React                                                             from 'react';
@@ -66,8 +66,9 @@ export type ClassProps = {
     description: string
     students: StudentItem[]
     percentageOfAccountsCreated: number
-    percentageOfBadgesEarned: number
-    percentageOfLessonsCompleted: number
+    numberOfBadgesEarned: number
+    numberOfLessonsCompleted: number
+    withClassLink?: boolean
 
     onBackClick: () => void;
     onCreateStudents: (students: StudentItem[]) => void;
@@ -172,6 +173,7 @@ export const Class = (props: ClassProps) => {
                     </Grid.Col>
                     <Grid.Col sm="content">
                         { !props.loading && <SplitButton
+                            withClassLink={props.withClassLink}
                             onAddStudentsClick={() => setOpened(true)}
                             onCopyClassLinkClick={props.onCopyLinkClick}
                         />}
@@ -193,14 +195,12 @@ export const Class = (props: ClassProps) => {
                                 unit: "%",
                             },
                             {
-                                title: "BADGE COMPLETION",
-                                value: props.percentageOfBadgesEarned,
-                                unit: "%",
+                                title: "BADGES EARNED",
+                                value: props.numberOfBadgesEarned,
                             },
                             {
-                                title: "LESSON COMPLETION",
-                                value: props.percentageOfLessonsCompleted,
-                                unit: "%",
+                                title: "LESSONS COMPLETED",
+                                value: props.numberOfLessonsCompleted,
                             },
                         ]}/>
 

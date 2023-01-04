@@ -8,11 +8,12 @@ import {
     Text,
     Container, Stack, Grid,
     Select, ActionIcon, Group,
-    Button, LoadingOverlay,
-}                    from '@mantine/core';
-import {StatsGroup}  from "../../components/data/StatsGroup/StatsGroup";
-import {Tabs}        from "../../components/navigation/Tabs/Tabs";
-import {Table, Item} from "./Table";
+    LoadingOverlay,
+}                                                 from '@mantine/core';
+import {StatsGroup}                               from "../../components/data/StatsGroup/StatsGroup";
+import {Tabs}                                     from "../../components/navigation/Tabs/Tabs";
+import {SplitButton}                              from "./SplitButton";
+import {Table, Item}                              from "./Table";
 import {Table as LessonTable, Item as LessonItem} from "./LessonTable"
 
 const useStyles = createStyles((theme) => ({
@@ -60,6 +61,8 @@ export type BadgeProps = {
     onPreviewClick: () => void;
     onUserClick: (user: BadgeUserItem) => void;
     onLessonClick: (lesson: LessonItem) => void;
+    onCopyLinkClick: () => void;
+    onExportDataClick: () => void;
 }
 
 /**
@@ -99,12 +102,11 @@ export const Badge = (props: BadgeProps) => {
                             </Stack>
 
                             <Stack ml="auto">
-                                <Button
-                                    variant="gradient"
-                                    onClick={props.onPreviewClick}
-                                >
-                                    Preview
-                                </Button>
+                                <SplitButton
+                                    onPreviewClick={props.onPreviewClick}
+                                    onCopyLinkClick={props.onCopyLinkClick}
+                                    onExportDataClick={props.onExportDataClick}
+                                />
                             </Stack>
                         </Group>
                     </Grid.Col>

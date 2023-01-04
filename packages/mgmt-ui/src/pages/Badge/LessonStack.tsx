@@ -6,8 +6,8 @@ import {Grid, Badge, Title} from '@mantine/core';
  */
 export interface Item {
     lessonName: string
+    completion: number
     isStarted?: boolean
-    isComplete?: boolean
 }
 
 /**
@@ -43,9 +43,9 @@ export function Stack(props: StackProps) {
                 <Title color="dark.4" size="lg">{row.lessonName}</Title>
             </Grid.Col>
             <Grid.Col span={6}>
-                {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
-                {!row.isComplete && !row.isStarted && <Badge color="red" variant="filled">Not started</Badge>}
-                {!row.isComplete && !!row.isStarted && <Badge color="violet" variant="filled">In progress</Badge>}
+                {row.completion >= 1 && <Badge variant="filled">Complete</Badge>}
+                {row.completion === 0 && !row.isStarted && <Badge color="red" variant="filled">Not started</Badge>}
+                {row.completion > 0 && row.completion < 1 && <Badge color="violet" variant="filled">{Math.round((row.completion + Number.EPSILON) * 100)}% Complete</Badge>}
             </Grid.Col>
         </>
     ));

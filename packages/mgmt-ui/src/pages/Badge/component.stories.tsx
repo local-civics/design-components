@@ -47,8 +47,10 @@ Mock.args = {
         email: "jane.doe@localcivics.io",
         lessons: [{
             lessonName: "Example lesson",
+            completion: 0,
         },{
             lessonName: "Example lesson 2",
+            completion: 0.5,
         }]
     }],
     lessons: [{

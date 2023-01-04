@@ -3,8 +3,8 @@ import { createStyles, Button, Menu, Group, ActionIcon } from '@mantine/core';
 import {
     IconChevronDown,
     IconPlaylistAdd,
-    IconClipboardCopy
-}                                                        from '@tabler/icons';
+    IconClipboardCopy, IconTableExport
+} from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
     button: {
@@ -23,30 +23,28 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export type SplitButtonProps = {
-    withClassLink?: boolean
-    onAddStudentsClick: () => void;
-    onCopyClassLinkClick: () => void;
+    onPreviewClick: () => void;
+    onCopyLinkClick: () => void;
+    onExportDataClick: () => void;
 }
 
 export const SplitButton = (props: SplitButtonProps) => {
     const { classes, theme } = useStyles();
     const menuIconColor = theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 6];
 
-    const hasMenu = !!props.withClassLink
-
     return (
         <Group noWrap spacing={0}>
             <Button
-                className={hasMenu ? classes.button: ""}
-                leftIcon={<IconPlaylistAdd size={14} />}
-                onClick={props.onAddStudentsClick}
+                className={classes.button}
+                variant="gradient"
+                onClick={props.onPreviewClick}
             >
-                Add students
+                Preview
             </Button>
-            { hasMenu && <Menu transition="pop" position="bottom-end">
+            <Menu transition="pop" position="bottom-end">
                 <Menu.Target>
                     <ActionIcon
-                        variant="filled"
+                        variant="gradient"
                         color={theme.primaryColor}
                         size={36}
                         className={classes.menuControl}
@@ -55,14 +53,20 @@ export const SplitButton = (props: SplitButtonProps) => {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    { !!props.withClassLink && <Menu.Item
+                    <Menu.Item
                         icon={<IconClipboardCopy size={16} stroke={1.5} color={menuIconColor} />}
-                        onClick={props.onCopyClassLinkClick}
+                        onClick={props.onCopyLinkClick}
                     >
-                        Copy class link
-                    </Menu.Item> }
+                        Copy link
+                    </Menu.Item>
+                    <Menu.Item
+                        icon={<IconTableExport size={16} stroke={1.5} color={menuIconColor} />}
+                        onClick={props.onExportDataClick}
+                    >
+                        Export data (.csv)
+                    </Menu.Item>
                 </Menu.Dropdown>
-            </Menu> }
+            </Menu>
         </Group>
     );
 }
