@@ -171,7 +171,17 @@ export const LearningForm = (props: LearningFormProps) => {
           })}
 
           <FormItem
-              displayName="To earn your Impact Points for this activity, answer either of the following:"
+              displayName={<>
+                <p>To earn your impact points for this activity, answer either of the following:</p>
+                <ul className="list-disc my-2 ml-5 text-sm">
+                  <li>
+                    How would you explain what you learned here to a friend? OR
+                  </li>
+                  <li>
+                    How does what you learned here connect to other school topics or everyday life?
+                  </li>
+                </ul>
+              </>}
               description="(1-2 sentences minimum)"
               format="question"
               questionType="text"
@@ -277,8 +287,7 @@ const Rating = (props: { disabled?: boolean, rating?: number; setRating?: (ratin
   return (
       <div className="m-auto inline-block py-4">
         <h6 className="font-bold pb-2 mb-4 text-md text-slate-600 font-semibold">
-          {" "}
-          Rate your experience from poor to amazing
+          {'Almost there, rate this activity before submitting.'}
         </h6>
         <div className="w-max m-auto">
           <div className={`ml-5 w-[17.7rem] grid grid-cols-5 justify-self-center items-center gap-7 mb-2`}>{buttons}</div>

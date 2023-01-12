@@ -7,7 +7,7 @@ import {linkify} from "../../../utils/url";
  */
 export type FormItemProps = {
   itemId?: string;
-  displayName?: string;
+  displayName?: string | React.ReactNode;
   description?: string;
   format?: "question" | "image" | "embed" | "text";
   questionType?: "radio" | "checkbox" | "drop down" | "file upload" | "text" | "date" | "time";
@@ -154,7 +154,7 @@ const RadioQuestion = (props: FormItemProps) => {
                       type="radio"
                       value={option}
                       disabled={props.disabled}
-                      name={props.displayName}
+                      name={displayNameString(props.displayName)}
                   />
                   <div>
                     <span className="font-bold">{String.fromCharCode(65 + index)}.</span> {option}
@@ -213,7 +213,7 @@ const CheckboxQuestion = (props: FormItemProps) => {
                       onChange={option ? onChange : onOtherChange}
                       type="checkbox"
                       value={option||response}
-                      name={props.displayName}
+                      name={displayNameString(props.displayName)}
                   />
                   { option && <div>{option}</div> }
                   { !option && <>Other: <input className="w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 text-sm placeholder-slate-400 border border-slate-300 rounded-sm shadow-sm
@@ -250,7 +250,7 @@ const DropDownQuestion = (props: FormItemProps) => {
         focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
         disabled:bg-slate-50 disabled:text-gray-600 disabled:border-slate-200 disabled:shadow-none`}
           required={props.required}
-          name={props.displayName}
+          name={displayNameString(props.displayName)}
           onChange={onChange}
       >
         <option className="cursor-pointer" value="">
@@ -320,7 +320,7 @@ const FileUploadQuestion = (props: FormItemProps) => {
           <input
               type="url"
               disabled={props.disabled}
-              name={props.displayName}
+              name={displayNameString(props.displayName)}
               required={props.required}
               onChange={onChange}
               value={imageURL}
@@ -356,7 +356,7 @@ const TextQuestion = (props: FormItemProps) => {
                 minLength={minimum}
                 onChange={onChange}
                 onBlur={props.onTextBlur}
-                name={props.displayName}
+                name={displayNameString(props.displayName)}
                 disabled={props.disabled}
                 type="text"
                 placeholder="Your answer"
@@ -372,7 +372,7 @@ const TextQuestion = (props: FormItemProps) => {
                 minLength={minimum}
                 onChange={onChange}
                 onBlur={props.onTextBlur}
-                name={props.displayName}
+                name={displayNameString(props.displayName)}
                 disabled={props.disabled}
                 value={response}
                 placeholder="Your answer"
@@ -399,7 +399,7 @@ const DateQuestion = (props: FormItemProps) => {
         disabled:bg-slate-50 disabled:text-gray-600 disabled:border-slate-200 disabled:shadow-none"
           required={props.required}
           onChange={onChange}
-          name={props.displayName}
+          name={displayNameString(props.displayName)}
           disabled={props.disabled}
           type="date"
           value={response}
@@ -424,7 +424,7 @@ const TimeQuestion = (props: FormItemProps) => {
         disabled:bg-slate-50 disabled:text-gray-600 disabled:border-slate-200 disabled:shadow-none"
           required={props.required}
           onChange={onChange}
-          name={props.displayName}
+          name={displayNameString(props.displayName)}
           disabled={props.disabled}
           type="time"
           value={response}
@@ -482,7 +482,7 @@ const Image = (props: FormItemProps) => {
 
   return (
       <div className="relative max-w-[25rem] md:max-w-[40rem] md:w-[40rem] overflow-hidden">
-        <img referrerPolicy="no-referrer" className={`h-full max-h-[25rem] w-full object-cover ${scale}`} alt={props.displayName} src={props.url} />
+        <img referrerPolicy="no-referrer" className={`h-full max-h-[25rem] w-full object-cover ${scale}`} alt={displayNameString(props.displayName)} src={props.url} />
         <div className="absolute rounded-sm shadow-md bottom-5 right-5 z-5 bg-gray-100 font-bold">
         <span className="p-5 cursor-pointer text-md text-gray-400 hover:text-gray-600" onClick={scaleUp}>
           +
@@ -502,10 +502,19 @@ const Embed = (props: FormItemProps) => {
             className="w-full"
             height="315"
             src={props.url}
-            title={props.displayName}
+            title={displayNameString(props.displayName)}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
         />
       </div>
   );
 };
+
+
+const displayNameString = (displayName: React.ReactNode) => {
+  if(!displayName){
+    return ""
+  }
+
+  return displayName.toString()
+}
