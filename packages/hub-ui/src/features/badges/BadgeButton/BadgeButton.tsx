@@ -11,6 +11,7 @@ import { ordNumber } from "../../../utils/date";
 export type BadgeButtonProps = {
   displayName?: string;
   icon?: IconName;
+  iconURL?: string;
   imageURL?: string;
   startedAt?: string;
   createdAt?: string
@@ -60,6 +61,7 @@ export const BadgeButton = (props: BadgeButtonProps) => {
           <div className={`w-max m-auto ${emblemOpacity}`}>
             <BadgeEmblem
               icon={props.icon}
+              iconURL={props.iconURL}
               imageURL={props.imageURL}
               alt={props.displayName}
               level={props.level}

@@ -1,4 +1,5 @@
 import * as React from "react";
+import "external-svg-loader";
 
 import { Icon, IconName } from "../../../components/Icon/Icon";
 
@@ -7,6 +8,7 @@ import { Icon, IconName } from "../../../components/Icon/Icon";
  */
 export type BadgeEmblemProps = {
   icon?: IconName;
+  iconURL?: string
   alt?: string;
   imageURL?: string;
   level?: number;
@@ -30,10 +32,12 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
     }
   })();
 
+  const hasIcon = !!props.icon || !!props.iconURL
+
   return (
     <div className={`relative overflow-hidden ${size[0]}`}>
-        {!props.icon && <img className="w-full h-full object-cover" alt={props.alt} src={props.imageURL} />}
-        { !!props.icon &&
+        {!hasIcon && <img className="w-full h-full object-cover" alt={props.alt} src={props.imageURL} />}
+        { hasIcon &&
             <>
                 <svg
                 className="h-full w-full drop-shadow-[inherit]"
@@ -68,7 +72,10 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
                 />
               </svg>
               <div className={`absolute overflow-hidden left-0 right-0 top-0 bottom-0 m-auto text-dark-blue-400 ${size[1]}`}>
-                <Icon name={props.icon} />
+                { !props.iconURL && !!props.icon && <Icon name={props.icon} /> }
+                { props.iconURL && <svg className="w-full h-full drop-shadow-[inherit]" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg data-src={props.iconURL} width="32" height="32"/>
+                </svg> }
               </div>
             </>
         }
