@@ -73,9 +73,7 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
               </svg>
               <div className={`absolute overflow-hidden left-0 right-0 top-0 bottom-0 m-auto text-dark-blue-400 ${size[1]}`}>
                 { !props.iconURL && !!props.icon && <Icon name={props.icon} /> }
-                { props.iconURL && <svg className="w-full h-full drop-shadow-[inherit]" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <svg data-cache="disabled" data-src={props.iconURL} width="32" height="32"/>
-                </svg> }
+                { props.iconURL && <svg data-cache="disabled" data-src={props.iconURL} className="w-full h-full drop-shadow-[inherit]" viewBox="0 0 32 32" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"/> }
               </div>
             </>
         }
