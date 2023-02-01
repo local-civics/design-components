@@ -22,6 +22,7 @@ type CriterionProps = {
  */
 export type BadgeCardProps = {
   icon?: IconName;
+  iconURL?: string
   isLoading?: boolean
   displayName?: string;
   imageURL?: string;
@@ -64,6 +65,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
           <BadgeEmblem
             icon={props.icon}
             imageURL={props.imageURL}
+            iconURL={props.iconURL}
             alt={props.displayName}
             level={props.level}
             size="sm"
