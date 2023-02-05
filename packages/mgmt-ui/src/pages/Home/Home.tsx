@@ -62,7 +62,7 @@ export const Home = (props: HomeProps) => {
                 <Grid.Col>
                     <CardGradient
                         title="Classes"
-                        description="Organize students into classes."
+                        description="Organize people into classes."
                         onClick={props.onClassesClick}
                     />
                 </Grid.Col>

@@ -6,7 +6,7 @@ import {PlaceholderBanner, PlaceholderBannerProps} from "./PlaceholderBanner";
  * Storybook component configuration
  */
 export default {
-  title: "Banners/PlaceholderBanner",
+  title: "Components/PlaceholderBanner",
   component: PlaceholderBanner,
 };
 

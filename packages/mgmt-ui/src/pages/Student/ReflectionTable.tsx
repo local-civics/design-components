@@ -1,5 +1,5 @@
 import * as React                                                                      from 'react';
-import {Table as MantineTable, ScrollArea, UnstyledButton} from '@mantine/core';
+import {Table as MantineTable, ScrollArea, Text} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -12,6 +12,7 @@ export interface Item {
     lessonName: string
     reflection: string
     rating: number
+    href: string
 }
 
 /**
@@ -22,18 +23,11 @@ export type TableData = {
     items: Item[]
 }
 
-/**
- * TableMethods
- */
-export type TableMethods = {
-    onClick: (item: Item) => void
-}
-
 
 /**
  * TableProps
  */
-export type TableProps = TableData & TableMethods
+export type TableProps = TableData
 
 /**
  * Table
@@ -52,14 +46,14 @@ export function Table(props: TableProps) {
 
     const rows = props.items.map((row) => (
         <tr key={row.lessonName}>
-            <td><UnstyledButton onClick={() => props.onClick(row)}>{row.lessonName}</UnstyledButton></td>
+            <td><Text<'a'> component='a' href={row.href}>{row.lessonName}</Text></td>
             <td>{row.reflection}</td>
             <td>{row.rating.toLocaleString()}</td>
         </tr>
     ));
 
     return (
-        <ScrollArea.Autosize maxHeight={500}>
+        <ScrollArea.Autosize maxHeight={600}>
             <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                     <tr>

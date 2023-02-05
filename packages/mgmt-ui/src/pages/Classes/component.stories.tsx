@@ -35,7 +35,9 @@ export const Mock: Story<ClassesProps> = Template.bind({});
 Mock.args = {
     classes: [{
         classId: "",
+        href: "",
         name: "AP History",
         description: "Class for my first period API history subject",
+        numberOfStudents: 8,
     }]
 };

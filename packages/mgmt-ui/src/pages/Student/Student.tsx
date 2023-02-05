@@ -1,4 +1,4 @@
-import {ActionIcon, Badge, Container, Grid, LoadingOverlay, Stack} from "@mantine/core";
+import {ActionIcon, Badge, Container, Grid, LoadingOverlay, Stack, UnstyledButton} from "@mantine/core";
 import {IconArrowLeft} from "@tabler/icons";
 import {useState} from "react";
 import * as React      from "react";
@@ -23,9 +23,6 @@ export type StudentProps = {
     reflections: ReflectionItem[],
 
     onBackClick: () => void
-    onBadgeClick: (item: BadgeItem) => void;
-    onAnswerClick: (item: AnswerItem) => void;
-    onReflectionClick: (item: ReflectionItem) => void;
 }
 
 export const Student = (props: StudentProps) => {
@@ -37,14 +34,16 @@ export const Student = (props: StudentProps) => {
         <Stack spacing="md">
             <Grid gutter="md">
                 <Grid.Col sm="auto">
-                    <Badge
-                        variant="filled"
-                        leftSection={<ActionIcon onClick={props.onBackClick} color="blue" size="xs" radius="xl" variant="filled">
-                            <IconArrowLeft size={14} />
-                        </ActionIcon>}
-                        size="lg">
-                        Students
-                    </Badge>
+                    <UnstyledButton onClick={props.onBackClick}>
+                        <Badge
+                            variant="filled"
+                            leftSection={<ActionIcon color="blue" size="xs" radius="xl" variant="filled">
+                                <IconArrowLeft size={14} />
+                            </ActionIcon>}
+                            size="lg">
+                            Students
+                        </Badge>
+                    </UnstyledButton>
 
                     <UserInfo
                         variant="compact"
@@ -88,19 +87,16 @@ export const Student = (props: StudentProps) => {
                         { tab === "badges" && <BadgeTable
                             loading={props.loading}
                             items={props.badges}
-                            onClick={props.onBadgeClick}
                         /> }
 
                         { tab === "answers" && <AnswerTable
                             loading={props.loading}
                             items={props.answers}
-                            onClick={props.onAnswerClick}
                         /> }
 
                         { tab === "reflections" && <ReflectionTable
                             loading={props.loading}
                             items={props.reflections}
-                            onClick={props.onReflectionClick}
                         /> }
                     </Stack>
                 </Stack>

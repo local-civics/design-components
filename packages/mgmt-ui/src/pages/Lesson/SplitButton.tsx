@@ -23,7 +23,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export type SplitButtonProps = {
-    onPreviewClick: () => void;
+    href: string
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
 }
@@ -34,10 +34,11 @@ export const SplitButton = (props: SplitButtonProps) => {
 
     return (
         <Group noWrap spacing={0}>
-            <Button
+            <Button<'a'>
+                component='a'
+                href={props.href}
                 className={classes.button}
                 variant="gradient"
-                onClick={props.onPreviewClick}
             >
                 Preview
             </Button>

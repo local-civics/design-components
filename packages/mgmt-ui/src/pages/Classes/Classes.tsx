@@ -9,8 +9,8 @@ import {
     Container, Stack, Grid,
     Drawer,
     Button, TextInput, ActionIcon,
-    Tooltip, Group, LoadingOverlay,
-}                    from '@mantine/core';
+    Tooltip, Group, LoadingOverlay, Autocomplete,
+} from '@mantine/core';
 import { useForm }   from '@mantine/form';
 import {StatsGroup}  from "../../components/data/StatsGroup/StatsGroup";
 import {Table, Item} from "./Table";
@@ -43,7 +43,7 @@ export type ClassesProps = {
 
     onCreateClass:  (group: ClassItem) => void
     onDeleteClass:  (group: ClassItem) => void
-    onClassClick: (group: ClassItem) => void
+    onAutocompleteChange: (next: string) => void
 }
 
 /**
@@ -58,6 +58,8 @@ export const Classes = (props: ClassesProps) => {
             classId: '',
             name: '',
             description: '',
+            href: '',
+            numberOfStudents: 0,
         },
 
         validate: {
@@ -113,7 +115,7 @@ export const Classes = (props: ClassesProps) => {
                                 Classes
                             </Badge>
                             <Title order={2} className={classes.title} mt="md">
-                                Organize students into classes
+                                Organize people into classes
                             </Title>
 
                             <Text color="dimmed" className={classes.description} mt="sm">
@@ -139,11 +141,16 @@ export const Classes = (props: ClassesProps) => {
                                 },
                             ]}/>
 
+                            <Autocomplete
+                                placeholder="Search for classes"
+                                data={props.classes.map(item => item.name)}
+                                onChange={props.onAutocompleteChange}
+                            />
+
                             <Table
                                 loading={props.loading}
                                 items={props.classes}
                                 onDeleteClass={props.onDeleteClass}
-                                onClick={props.onClassClick}
                             />
                         </Stack>
                     </div>

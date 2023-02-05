@@ -6,7 +6,7 @@ import { Story }                                          from "@storybook/react
  * Storybook component configuration
  */
 export default {
-  title: "Shells/App/SwitchAccount",
+  title: "Components/SwitchAccount",
   component: SwitchAccount,
 };
 
@@ -15,7 +15,13 @@ export default {
  */
 const Template: Story<SwitchAccountProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <SwitchAccount{...args} opened/>
+        <SwitchAccount {...args} opened accounts={[
+            {accountId: "1", name: "Account #1", isAdmin: true},
+            {accountId: "2", name: "Account #2", isGroupAdmin: true},
+            {accountId: "3", name: "Account #3"},
+            {accountId: "4", name: "Account #4"},
+        ]}/>
+        <img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />
     </div>
 );
 

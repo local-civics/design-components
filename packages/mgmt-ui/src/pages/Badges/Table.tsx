@@ -9,6 +9,7 @@ export interface Item {
     badgeId: string,
     name: string;
     description: string
+    href: string
 }
 
 /**
@@ -20,16 +21,9 @@ export type TableData = {
 }
 
 /**
- * TableMethods
- */
-export type TableMethods = {
-    onClick: (badge: Item) => void
-}
-
-/**
  * TableProps
  */
-export type TableProps = TableData & TableMethods
+export type TableProps = TableData
 
 /**
  * Table
@@ -49,7 +43,8 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.badgeId}>
             <td>
-                <UnstyledButton
+                <UnstyledButton<'a'> component='a'
+                    href={row.href}
                     sx={(theme) => ({
                         display: 'block',
                         width: '100%',
@@ -60,10 +55,7 @@ export function Table(props: TableProps) {
                             backgroundColor:
                                 theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
                         },
-                    })}
-
-                    onClick={() => props.onClick && props.onClick(row)}
-                >
+                    })}>
                     <Group>
                         <div>
                             <Text size="sm" weight={500}>
@@ -80,7 +72,7 @@ export function Table(props: TableProps) {
     ));
 
     return (
-        <ScrollArea.Autosize maxHeight={500}>
+        <ScrollArea.Autosize maxHeight={600}>
             <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
                 <tbody>{rows}</tbody>
             </MantineTable>

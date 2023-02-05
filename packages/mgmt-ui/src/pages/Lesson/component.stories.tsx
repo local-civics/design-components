@@ -36,6 +36,7 @@ Component.args = {};
  */
 export const Mock: Story<LessonProps> = Template.bind({});
 Mock.args = {
+    href: "",
     reflections: [
         {
             studentName: "Jane Doe",
@@ -47,6 +48,7 @@ Mock.args = {
         {
             userId: "",
             avatar: "",
+            href: "",
             name: "Jane Doe",
             email: "jane.doe@localcivics.io",
             answers: [{

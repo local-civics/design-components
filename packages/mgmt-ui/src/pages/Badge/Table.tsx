@@ -1,6 +1,6 @@
 import {DataTable}                                                                     from "mantine-datatable";
 import * as React                                                                      from 'react';
-import {Avatar, Group, Text, ScrollArea, UnstyledButton, Badge} from '@mantine/core';
+import {Avatar, Group, Text, ScrollArea, Badge} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -26,18 +26,11 @@ export type TableData = {
     items: Item[]
 }
 
-/**
- * TableMethods
- */
-export type TableMethods = {
-    onClick: (item: Item) => void
-}
-
 
 /**
  * TableProps
  */
-export type TableProps = TableData & TableMethods
+export type TableProps = TableData
 
 /**
  * Table
@@ -55,7 +48,7 @@ export function Table(props: TableProps) {
     }
 
     return (
-        <ScrollArea.Autosize maxHeight={500}>
+        <ScrollArea.Autosize maxHeight={600}>
             <DataTable
                 verticalSpacing="sm"
                 sx={{ minWidth: 700 }}
@@ -70,19 +63,17 @@ export function Table(props: TableProps) {
                     accessor: 'name',
                     title: 'Student Name',
                     render: (row: Item) => (
-                        <UnstyledButton>
-                            <Group spacing="sm">
-                                <Avatar size={40} src={row.avatar} radius={40}/>
-                                <div>
-                                    <Text size="sm" weight={500}>
-                                        {row.name}
-                                    </Text>
-                                    <Text size="xs" color="dimmed">
-                                        {row.email}
-                                    </Text>
-                                </div>
-                            </Group>
-                        </UnstyledButton>
+                        <Group spacing="sm">
+                            <Avatar size={40} src={row.avatar} radius={40}/>
+                            <div>
+                                <Text size="sm" weight={500}>
+                                    {row.name}
+                                </Text>
+                                <Text<'a'> component='a' size="xs" color="dimmed">
+                                    {row.email}
+                                </Text>
+                            </div>
+                        </Group>
                     ),
                 },{
                     accessor: 'status',

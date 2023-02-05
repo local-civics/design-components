@@ -35,7 +35,6 @@ export type BadgesProps = {
     badges: BadgeItem[]
 
     onAutocompleteChange: (value: string) => void
-    onBadgeClick: (badge: BadgeItem) => void;
 }
 
 /**
@@ -74,7 +73,6 @@ export const Badges = (props: BadgesProps) => {
                     <Table
                         loading={props.loading}
                         items={props.badges}
-                        onClick={props.onBadgeClick}
                     />
                 </div>
             </Stack>

@@ -24,6 +24,7 @@ export interface Item {
     answers: AnswerItem[]
     isStarted?: boolean
     isComplete?: boolean
+    href: string
 }
 
 /**
@@ -32,8 +33,6 @@ export interface Item {
 export interface TableProps {
     loading: boolean
     items: Item[];
-
-    onClick: (user: Item) => void
 }
 
 /**
@@ -52,7 +51,7 @@ export function Table(props: TableProps) {
     }
 
     return (
-        <ScrollArea.Autosize maxHeight={500}>
+        <ScrollArea.Autosize maxHeight={600}>
             <DataTable
                 verticalSpacing="sm"
                 sx={{ minWidth: 700 }}
@@ -93,7 +92,7 @@ export function Table(props: TableProps) {
                 }]}
                 rowExpansion={{
                     content: ({ record }: {record: Item}) => (
-                        <AnswerStack items={record.answers}/>
+                        <AnswerStack href={record.href} items={record.answers}/>
                     ),
                 }}
             />

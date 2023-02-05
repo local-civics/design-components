@@ -2,15 +2,15 @@ import {Loader, Center, ActionIcon, AppShell, Container, createStyles, Group, Im
 import {IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin}                                            from "@tabler/icons";
 import {useState}                                                                                            from "react";
 import * as React                                from 'react';
-import type {AccountItem} from "./SwitchAccount/SwitchAccount";
-import {SwitchAccount} from "./SwitchAccount/SwitchAccount"
-import {Navbar, NavbarProps}                     from "../../components/navigation/Navbar/Navbar";
+import type {AccountItem} from "../../components/users/SwitchAccount/SwitchAccount";
+import {SwitchAccount}                   from "../../components/users/SwitchAccount/SwitchAccount"
+import {NestedNavbar, NestedNavbarProps} from "../../components/navigation/NestedNavbar/NestedNavbar";
 
 const useStyles = createStyles((theme) => ({
     footer: {
         paddingTop: theme.spacing.xl * 2,
         paddingBottom: theme.spacing.xl * 2,
-        paddingLeft: theme.spacing.xl * 3,
+        paddingLeft: theme.spacing.xl * 13,
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
         borderTop: `1px solid ${
             theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
@@ -102,8 +102,6 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-export {SwitchAccount, AccountItem, Navbar}
-
 /**
  * AppProps
  */
@@ -112,9 +110,9 @@ export type AppProps = {
     account: string
     accounts: AccountItem[]
 
-    navbar: React.ReactElement<NavbarProps>
+    navbar: React.ReactElement<NestedNavbarProps>
     page: React.ReactNode
-    onAccountChange: (account: string) => void;
+    onAccountChange: (account: string) => Promise<void>;
 }
 
 /**
@@ -125,15 +123,12 @@ export type AppProps = {
 export const App = (props: AppProps) => {
     const { classes } = useStyles();
     const account = useAccount(props.account, props.accounts, props.onAccountChange)
-
     return <AppShell
         padding="xs"
-        navbar={<Navbar
-            active={props.navbar.props.active}
-            navigate={props.navbar.props.navigate}
-            onLogout={props.navbar.props.onLogout}
-            onSwitchAccounts={() => account.setChangeModalOpen(true)}/>
-        }
+        navbar={<NestedNavbar
+            {...props.navbar.props}
+            onSwitchAccounts={() => account.setChangeModalOpen(true)}
+        />}
         footer={<>{!account.opened && <footer className={classes.footer}>
             <Container className={classes.inner}>
                 <div className={classes.logo}>
@@ -212,18 +207,20 @@ export const App = (props: AppProps) => {
         </div>
         <SwitchAccount
             opened={account.opened}
+            loading={account.loading}
             account={account.account}
             accounts={account.accounts}
-            onChange={account.onAccountChange}
+            onClick={account.onAccountChange}
             onClose={() => account.setChangeModalOpen(false)}
         />
     </AppShell>
 }
 
-const useAccount = (account: string, accounts: AccountItem[], onAccountChange: (account: string) => void) => {
+const useAccount = (account: string, accounts: AccountItem[], onAccountChange: (account: string) => Promise<void>) => {
     const accountsKey = JSON.stringify(accounts)
     const [changeModalOpen, setChangeModalOpen] = useState(false);
     const [active, setActive] = useState(account);
+    const [loading, setLoading] = useState(false)
 
     React.useEffect(() => {
         setActive(account)
@@ -233,11 +230,15 @@ const useAccount = (account: string, accounts: AccountItem[], onAccountChange: (
         opened: changeModalOpen,
         account: active,
         accounts: accounts,
+        loading,
         setChangeModalOpen,
         onAccountChange: (account: string) => {
-            setActive(account)
-            setChangeModalOpen(false)
-            onAccountChange(account)
+            setLoading(true)
+            onAccountChange(account).then(() => {
+                setActive(account)
+                setLoading(false)
+                setChangeModalOpen(false)
+            })
         }
     }
 }

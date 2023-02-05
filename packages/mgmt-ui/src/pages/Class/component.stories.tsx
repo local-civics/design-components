@@ -20,7 +20,7 @@ const Template: Story<ClassProps> = (args) => (
             percentageOfAccountsCreated={args.percentageOfAccountsCreated||0}
             numberOfBadgesEarned={args.numberOfBadgesEarned||0}
             numberOfLessonsCompleted={args.numberOfLessonsCompleted||0}
-            students={args.students || []}
+            members={args.members || []}
             displayName={args.displayName || "AP History"}
             description={args.description || "Class focused on the history of the United States"}
         />
@@ -38,10 +38,11 @@ Component.args = {};
  */
 export const Mock: Story<ClassProps> = Template.bind({});
 Mock.args = {
-    students: [{
+    members: [{
         classId: "",
-        studentId: "",
+        userId: "",
         avatar: "",
+        href: "",
         readonly: false,
         lastActivity: null,
         email: "jane.doe@localcivics.io",
@@ -50,5 +51,6 @@ Mock.args = {
         hasAccount: true,
         badgesEarned: 5,
         lessonsCompleted: 5,
+        isAdmin: false,
     }]
 };

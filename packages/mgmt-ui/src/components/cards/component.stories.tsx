@@ -6,7 +6,7 @@ import {CardGradient, CardGradientProps} from "./CardGradient";
  * Storybook component configuration
  */
 export default {
-  title: "Cards/CardGradient",
+  title: "Components/CardGradient",
   component: CardGradient,
 };
 

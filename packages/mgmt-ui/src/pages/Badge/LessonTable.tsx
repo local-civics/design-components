@@ -1,5 +1,5 @@
 import * as React                                                                      from 'react';
-import {Table as MantineTable, ScrollArea, UnstyledButton} from '@mantine/core';
+import {Table as MantineTable, ScrollArea, Text} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
@@ -11,6 +11,7 @@ export interface Item {
     lessonId: string
     lessonName: string
     percentageCompletion: number
+    href: string
 }
 
 /**
@@ -21,18 +22,11 @@ export type TableData = {
     items: Item[]
 }
 
-/**
- * TableMethods
- */
-export type TableMethods = {
-    onClick: (item: Item) => void
-}
-
 
 /**
  * TableProps
  */
-export type TableProps = TableData & TableMethods
+export type TableProps = TableData
 
 /**
  * Table
@@ -53,16 +47,16 @@ export function Table(props: TableProps) {
         const percentageCompletion = Math.round((row.percentageCompletion + Number.EPSILON) * 100)
         return <tr key={row.lessonName}>
             <td>
-                <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
+                <Text<'a'> href={row.href} component='a'>
                     {row.lessonName}
-                </UnstyledButton>
+                </Text>
             </td>
             <td>{percentageCompletion}%</td>
         </tr>
     });
 
     return (
-        <ScrollArea.Autosize maxHeight={500}>
+        <ScrollArea.Autosize maxHeight={600}>
             <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>

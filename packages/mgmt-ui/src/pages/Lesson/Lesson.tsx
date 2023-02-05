@@ -9,6 +9,7 @@ import {
     Container, Stack, Grid,
     Select, ActionIcon, Group,
     LoadingOverlay,
+    UnstyledButton,
 }                                                         from '@mantine/core';
 import {StatsGroup}                                       from "../../components/data/StatsGroup/StatsGroup";
 import {Tabs}                                             from "../../components/navigation/Tabs/Tabs";
@@ -52,6 +53,7 @@ export type LessonProps = {
     loading: boolean
     displayName: string
     description: string
+    href: string
     classId: string
     classes: LessonClass[]
     students: LessonUserItem[]
@@ -60,8 +62,6 @@ export type LessonProps = {
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
-    onPreviewClick: () => void;
-    onUserClick: (user: LessonUserItem) => void;
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
 }
@@ -83,14 +83,16 @@ export const Lesson = (props: LessonProps) => {
             <Stack spacing="md">
                 <Grid>
                     <Grid.Col sm="auto">
-                        <Badge
-                            variant="filled"
-                            leftSection={<ActionIcon onClick={props.onBackClick} color="blue" size="xs" radius="xl" variant="filled">
-                                <IconArrowLeft size={14} />
-                            </ActionIcon>}
-                            size="lg">
-                            Lessons
-                        </Badge>
+                        <UnstyledButton onClick={props.onBackClick}>
+                            <Badge
+                                variant="filled"
+                                leftSection={<ActionIcon color="blue" size="xs" radius="xl" variant="filled">
+                                    <IconArrowLeft size={14}   />
+                                </ActionIcon>}
+                                size="lg">
+                                Lessons
+                            </Badge>
+                        </UnstyledButton>
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
@@ -104,7 +106,7 @@ export const Lesson = (props: LessonProps) => {
 
                             <Stack ml="auto">
                                 <SplitButton
-                                    onPreviewClick={props.onPreviewClick}
+                                    href={props.href}
                                     onCopyLinkClick={props.onCopyLinkClick}
                                     onExportDataClick={props.onExportDataClick}
                                 />
@@ -160,7 +162,6 @@ export const Lesson = (props: LessonProps) => {
                                 { tab === "students" && <Table
                                     loading={props.loading}
                                     items={props.students}
-                                    onClick={props.onUserClick}
                                 />}
                             </Stack>
                         </Stack>

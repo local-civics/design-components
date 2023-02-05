@@ -10,18 +10,17 @@ import {
     ScrollArea,
     Select,
     Box
-} from '@mantine/core';
-import {IconCheck, IconTrash}                                                                 from '@tabler/icons';
+}                                                          from '@mantine/core';
+import {IconCheck, IconTrash} from '@tabler/icons';
 import {
     PlaceholderBanner
-}                                                                                             from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+}                                                          from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {relativeTimeFromDates} from "../../utils/time";
 
 /**
  * Item
  */
 export type Item = {
-    classId: string,
     userId: string,
     avatar: string,
     email: string,
@@ -30,9 +29,9 @@ export type Item = {
     lastActivity: Date | null
     readonly: boolean
     hasAccount: boolean
-    badgesEarned: number
-    lessonsCompleted: number
     isAdmin: boolean
+    isGroupAdmin: boolean
+    numberOfClasses: number
     href: string
 }
 
@@ -43,7 +42,7 @@ export interface TableProps {
     loading: boolean
     items: Item[];
 
-    onDelete?: (member: Item) => void
+    onDelete?: (user: Item) => void
     onRoleChange?: (user: Item, role: string | null) => void;
 }
 
@@ -55,8 +54,8 @@ export interface TableProps {
 export function Table(props: TableProps) {
     if(props.items.length === 0){
         return <PlaceholderBanner
-            title="No members to display"
-            description="You have not rostered any students yet."
+            title="No people to display"
+            description="You have not rostered any people yet."
             loading={props.loading}
             icon="groups"
         />
@@ -97,15 +96,14 @@ export function Table(props: TableProps) {
                 <Box maw={100}>
                     <Select
                         size="sm"
-                        value={row.isAdmin ? "admin" : "member"}
+                        value={row.isAdmin ? "admin" : row.isGroupAdmin ? "educator" : "student"}
                         onChange={(value) => props.onRoleChange && props.onRoleChange(row, value)}
-                        data={[{value: "member", label: "Member"}, {value: "admin", label: "Admin"}]}
+                        data={[{value: "student", label: "Student"}, {value: "educator", label: "Educator"}, {value: "admin", label: "Admin"}]}
                     />
                 </Box>
             </td>
-            <td>{row.badgesEarned}</td>
-            <td>{row.lessonsCompleted}</td>
             <td>{row.hasAccount && <IconCheck color="green" />}</td>
+            <td>{row.numberOfClasses}</td>
             <td>{row.lastActivity ? relativeTimeFromDates(row.lastActivity) : ""}</td>
             <td>
                 <Group noWrap spacing={0} position="right">
@@ -124,9 +122,8 @@ export function Table(props: TableProps) {
                     <tr>
                         <th>Name</th>
                         <th>Role</th>
-                        <th>Badges Earned</th>
-                        <th>Lessons Completed</th>
                         <th>Account Created?</th>
+                        <th># of Classes</th>
                         <th>Last Active</th>
                         <th></th>
                     </tr>

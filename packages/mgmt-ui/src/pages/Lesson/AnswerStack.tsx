@@ -1,5 +1,5 @@
 import * as React                                 from 'react';
-import {Stack as MantineStack, ScrollArea, Title, Text} from '@mantine/core';
+import {Stack as MantineStack, UnstyledButton, ScrollArea, Title, Text} from '@mantine/core';
 
 /**
  * Item
@@ -13,6 +13,7 @@ export interface Item {
  * StackData
  */
 export type StackData = {
+    href: string
     items: Item[]
 }
 
@@ -44,10 +45,12 @@ export function Stack(props: StackProps) {
     ));
 
     return (
-        <ScrollArea.Autosize maxHeight={500}>
-            <MantineStack spacing={24} sx={{ padding: 20, minWidth: 700 }}>
-                {rows}
-            </MantineStack>
+        <ScrollArea.Autosize maxHeight={600}>
+            <UnstyledButton<'a'> component='a' href={props.href}>
+                <MantineStack spacing={24} sx={{ padding: 20, minWidth: 700 }}>
+                    {rows}
+                </MantineStack>
+            </UnstyledButton>
         </ScrollArea.Autosize>
     );
 }

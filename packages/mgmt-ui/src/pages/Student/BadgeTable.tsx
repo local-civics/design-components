@@ -1,8 +1,10 @@
+import {DataTable}                                                                     from "mantine-datatable";
 import * as React                                                                      from 'react';
-import {Table as MantineTable, ScrollArea, UnstyledButton, Badge} from '@mantine/core';
+import {ScrollArea, Badge, Text} from '@mantine/core';
 import {
     PlaceholderBanner
-}                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+}                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {Item as LessonItem, Stack as LessonStack} from "../Badge/LessonStack";
 
 /**
  * Item
@@ -11,6 +13,7 @@ export interface Item {
     badgeId: string
     badgeName: string
     isComplete?: boolean
+    lessons: LessonItem[]
 }
 
 /**
@@ -21,18 +24,11 @@ export type TableData = {
     items: Item[]
 }
 
-/**
- * TableMethods
- */
-export type TableMethods = {
-    onClick: (item: Item) => void
-}
-
 
 /**
  * TableProps
  */
-export type TableProps = TableData & TableMethods
+export type TableProps = TableData
 
 /**
  * Table
@@ -49,27 +45,41 @@ export function Table(props: TableProps) {
         />
     }
 
-    const rows = props.items.map((row) => (
-        <tr key={row.badgeName}>
-            <td><UnstyledButton onClick={() => props.onClick(row)}>{row.badgeName}</UnstyledButton></td>
-            <td>
-                {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
-                {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
-            </td>
-        </tr>
-    ));
-
     return (
-        <ScrollArea.Autosize maxHeight={500}>
-            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
-                <thead>
-                <tr>
-                    <th>Badge Name</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </MantineTable>
+        <ScrollArea.Autosize maxHeight={600}>
+            <DataTable
+                verticalSpacing="sm"
+                sx={{ minWidth: 700 }}
+                withBorder={false}
+                borderRadius="sm"
+                withColumnBorders
+                striped
+                highlightOnHover
+                records={props.items}
+                idAccessor="badgeId"
+                columns={[{
+                    accessor: 'name',
+                    title: 'Badge Name',
+                    render: (row: Item) => (
+                        <>
+                            <Text>{row.badgeName}</Text>
+                        </>
+                    ),
+                },{
+                    accessor: 'status',
+                    render: (row: Item) => (
+                        <>
+                            {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
+                            {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
+                        </>
+                    )
+                }]}
+                rowExpansion={{
+                    content: ({ record }: {record: Item}) => (
+                        <LessonStack items={record.lessons}/>
+                    ),
+                }}
+            />
         </ScrollArea.Autosize>
     );
 }

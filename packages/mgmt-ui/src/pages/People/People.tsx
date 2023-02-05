@@ -1,5 +1,5 @@
 import {IconArrowLeft, IconCloudUpload, IconX, IconDownload} from "@tabler/icons";
-import {ParseResult}                                                           from "papaparse";
+import {ParseResult}                                                          from "papaparse";
 import {useState}                                                             from "react";
 import * as React                                                             from 'react';
 import {
@@ -10,9 +10,9 @@ import {
     Drawer,
     Button, TextInput, Badge,
     ActionIcon,
-    Group, Divider, LoadingOverlay,
+    Group, Divider, LoadingOverlay, Autocomplete,
     UnstyledButton,
-}                               from '@mantine/core';
+} from '@mantine/core';
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { useForm }              from '@mantine/form';
 import * as papa                from 'papaparse'
@@ -30,9 +30,6 @@ const useStyles = createStyles((theme) => ({
     },
     description: {
         maxWidth: 600,
-    },
-    autocomplete: {
-        maxWidth: 400,
     },
     wrapper: {
         position: 'relative',
@@ -57,28 +54,26 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * MemberItem
+ * UserItem
  */
-export type MemberItem = Item
+export type UserItem = Item
 
 /**
- * ClassProps
+ * PeopleProps
  */
-export type ClassProps = {
+export type PeopleProps = {
     loading: boolean
-    displayName: string
-    description: string
-    members: MemberItem[]
+    users: UserItem[]
     percentageOfAccountsCreated: number
-    numberOfBadgesEarned: number
-    numberOfLessonsCompleted: number
-    withClassLink?: boolean
+    percentageRostered: number
+    withOrganizationLink?: boolean
 
     onBackClick: () => void;
-    onCreateMembers: (members: MemberItem[]) => void;
-    onDeleteMember: (student: MemberItem) => void;
-    onChangeUserRole: (user: MemberItem, role: string | null) => void;
+    onCreateUsers: (users: UserItem[]) => void;
+    onDeleteUser: (user: UserItem) => void;
+    onChangeUserRole: (user: UserItem, role: string | null) => void;
     onCopyLinkClick: () => void;
+    onAutocompleteChange: (next: string) => void
 }
 
 /**
@@ -86,11 +81,10 @@ export type ClassProps = {
  * @param props
  * @constructor
  */
-export const Class = (props: ClassProps) => {
+export const People = (props: PeopleProps) => {
     const { classes } = useStyles();
     const form = useForm({
         initialValues: {
-            classId: '',
             userId: '',
             email: '',
             givenName: '',
@@ -100,14 +94,14 @@ export const Class = (props: ClassProps) => {
             readonly: false,
             lastActivity: null,
             hasAccount: false,
-            lessonsCompleted: 0,
-            badgesEarned: 0,
+            numberOfClasses: 0,
             href: "",
             isAdmin: false,
+            isGroupAdmin: false,
         },
 
         validate: {
-            email: (value) => /^\S+@\S+$/.test(value) && props.members.filter(u => u.email === value).length === 0 ? null : 'Invalid email',
+            email: (value) => /^\S+@\S+$/.test(value) && props.users.filter(u => u.email === value).length === 0 ? null : 'Invalid email',
         },
     });
     const [opened, setOpened] = useState(false);
@@ -129,7 +123,7 @@ export const Class = (props: ClassProps) => {
                         const values = form.values
                         form.reset()
                         setOpened(false)
-                        props.onCreateMembers && props.onCreateMembers([values])
+                        props.onCreateUsers && props.onCreateUsers([values])
                     })}>
                         <Stack>
                             <TextInput
@@ -168,22 +162,17 @@ export const Class = (props: ClassProps) => {
                                     <IconArrowLeft size={14} />
                                 </ActionIcon>}
                                 size="lg">
-                                Classes
+                                Organization
                             </Badge>
                         </UnstyledButton>
-                        <Title order={2} className={classes.title} mt="md">
-                            {props.displayName || "Class"}
-                        </Title>
-
-                        <Text color="dimmed" className={classes.description} mt="sm">
-                            {props.description || "No description"}
-                        </Text>
+                        <Title order={2} className={classes.title} mt="md">People</Title>
+                        <Text color="dimmed" className={classes.description} mt="sm">Manage members of your organization</Text>
                     </Grid.Col>
                     <Grid.Col sm="content">
                         { !props.loading && <SplitButton
-                            withClassLink={props.withClassLink}
-                            onAddMembersClick={() => setOpened(true)}
-                            onCopyClassLinkClick={props.onCopyLinkClick}
+                            withOrganizationLink={props.withOrganizationLink}
+                            onAddUsersClick={() => setOpened(true)}
+                            onCopyOrganizationLinkClick={props.onCopyLinkClick}
                         />}
                     </Grid.Col>
                 </Grid>
@@ -194,8 +183,8 @@ export const Class = (props: ClassProps) => {
                     <Stack spacing="sm">
                         <StatsGroup data={[
                             {
-                                title: "# OF STUDENTS",
-                                value: props.members.length,
+                                title: "# OF PEOPLE",
+                                value: props.users.length,
                             },
                             {
                                 title: "ACCOUNT CREATION",
@@ -203,19 +192,22 @@ export const Class = (props: ClassProps) => {
                                 unit: "%",
                             },
                             {
-                                title: "BADGES EARNED",
-                                value: props.numberOfBadgesEarned,
-                            },
-                            {
-                                title: "LESSONS COMPLETED",
-                                value: props.numberOfLessonsCompleted,
+                                title: "PERCENTAGE ROSTERED",
+                                unit: "%",
+                                value: props.percentageRostered,
                             },
                         ]}/>
 
+                        <Autocomplete
+                            placeholder="Search for a people in your organization"
+                            data={props.users.map(item => item.email)}
+                            onChange={props.onAutocompleteChange}
+                        />
+
                         <Table
                             loading={props.loading}
-                            items={props.members}
-                            onDelete={props.onDeleteMember}
+                            items={props.users}
+                            onDelete={props.onDeleteUser}
                             onRoleChange={props.onChangeUserRole}
                         />
                     </Stack>
@@ -226,7 +218,7 @@ export const Class = (props: ClassProps) => {
     )
 }
 
-const DropzoneButton = (props: ClassProps & {close: () => void}) => {
+const DropzoneButton = (props: PeopleProps & {close: () => void}) => {
     const { classes, theme } = useStyles();
     const openRef = React.useRef<() => void>(null);
     const [loading, setLoading] = React.useState(false)
@@ -239,10 +231,10 @@ const DropzoneButton = (props: ClassProps & {close: () => void}) => {
                 dynamicTyping: true,
                 skipEmptyLines: true,
                 worker: true,
-                complete: function(results: ParseResult<MemberItem>) {
+                complete: function(results: ParseResult<UserItem>) {
                     const data = results.data
-                        .filter(v => /^\S+@\S+$/.test(v.email) && props.members.filter(u => u.email === v.email).length === 0)
-                    data.length > 0 && props.onCreateMembers && props.onCreateMembers(data)
+                        .filter(v => /^\S+@\S+$/.test(v.email) && props.users.filter(u => u.email === v.email).length === 0)
+                    data.length > 0 && props.onCreateUsers && props.onCreateUsers(data)
                     setLoading(false)
                     props.close()
                 }

@@ -35,6 +35,7 @@ Component.args = {};
  */
 export const Mock: Story<BadgeProps> = Template.bind({});
 Mock.args = {
+    href: "",
     classes: [{
         classId: "",
         active: false,
@@ -48,13 +49,16 @@ Mock.args = {
         lessons: [{
             lessonName: "Example lesson",
             completion: 0,
+            href: "",
         },{
             lessonName: "Example lesson 2",
             completion: 0.5,
+            href: "",
         }]
     }],
     lessons: [{
         lessonId: "",
+        href: "",
         lessonName: "Example lesson",
         percentageCompletion: 0.4,
     }],

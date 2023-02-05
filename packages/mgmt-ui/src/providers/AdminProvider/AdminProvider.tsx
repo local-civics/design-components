@@ -22,7 +22,11 @@ export interface AdminProviderProps {
  * @param props
  */
 export const AdminProvider = (props: AdminProviderProps) => {
-    return <MantineProvider withNormalizeCSS withGlobalStyles emotionCache={mycCache} theme={{ loader: 'bars' }}>
+    return <MantineProvider
+        theme={{
+            loader: "bars"
+        }}
+        withNormalizeCSS withGlobalStyles emotionCache={mycCache}>
         <NotificationsProvider limit={props.notificationLimit || 5}>
             <ModalsProvider>
                 { props.children }

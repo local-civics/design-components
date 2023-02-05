@@ -9,6 +9,7 @@ import {
     Container, Stack, Grid,
     Select, ActionIcon, Group,
     LoadingOverlay,
+    UnstyledButton,
 }                                                 from '@mantine/core';
 import {StatsGroup}                               from "../../components/data/StatsGroup/StatsGroup";
 import {Tabs}                                     from "../../components/navigation/Tabs/Tabs";
@@ -55,12 +56,10 @@ export type BadgeProps = {
     lessons: LessonItem[]
     classId: string
     students: BadgeUserItem[]
+    href: string
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
-    onPreviewClick: () => void;
-    onUserClick: (user: BadgeUserItem) => void;
-    onLessonClick: (lesson: LessonItem) => void;
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
 }
@@ -82,14 +81,16 @@ export const Badge = (props: BadgeProps) => {
             <Stack spacing="md">
                 <Grid>
                     <Grid.Col sm="auto">
-                        <BadgeCore
-                            variant="filled"
-                            leftSection={<ActionIcon onClick={props.onBackClick} color="blue" size="xs" radius="xl" variant="filled">
-                                <IconArrowLeft size={14} />
-                            </ActionIcon>}
-                            size="lg">
-                            Badges
-                        </BadgeCore>
+                        <UnstyledButton onClick={props.onBackClick}>
+                            <BadgeCore
+                                variant="filled"
+                                leftSection={<ActionIcon color="blue" size="xs" radius="xl" variant="filled">
+                                    <IconArrowLeft size={14} />
+                                </ActionIcon>}
+                                size="lg">
+                                Badges
+                            </BadgeCore>
+                        </UnstyledButton>
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
@@ -103,7 +104,7 @@ export const Badge = (props: BadgeProps) => {
 
                             <Stack ml="auto">
                                 <SplitButton
-                                    onPreviewClick={props.onPreviewClick}
+                                    href={props.href}
                                     onCopyLinkClick={props.onCopyLinkClick}
                                     onExportDataClick={props.onExportDataClick}
                                 />
@@ -148,13 +149,11 @@ export const Badge = (props: BadgeProps) => {
                                 { tab === "lessons" && <LessonTable
                                     loading={props.loading}
                                     items={props.lessons}
-                                    onClick={props.onLessonClick}
                                 /> }
 
                                 { tab === "students" && <Table
                                     loading={props.loading}
                                     items={props.students}
-                                    onClick={props.onUserClick}
                                 />}
                             </Stack>
                         </Stack>

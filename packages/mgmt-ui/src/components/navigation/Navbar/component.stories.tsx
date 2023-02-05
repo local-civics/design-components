@@ -6,7 +6,7 @@ import { Story } from "@storybook/react";
  * Storybook component configuration
  */
 export default {
-  title: "Navigation/Navbar",
+  title: "Components/Navbar",
   component: Navbar,
 };
 

@@ -35,7 +35,6 @@ export type LessonsProps = {
     lessons: LessonItem[]
 
     onAutocompleteChange: (next: string) => void
-    onLessonClick: (item: LessonItem) => void
 }
 
 /**
@@ -74,7 +73,6 @@ export const Lessons = (props: LessonsProps) => {
                     <Table
                         loading={props.loading}
                         items={props.lessons}
-                        onClick={props.onLessonClick}
                     />
                 </div>
             </Stack>

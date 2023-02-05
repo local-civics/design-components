@@ -9,7 +9,7 @@ import {PlaceholderBanner}                                                from "
 /**
  * Item
  */
-export type Item = { classId: string, name: string; description: string }
+export type Item = { href: string, classId: string, name: string; description: string, numberOfStudents: number }
 
 /**
  * TableProps
@@ -18,7 +18,6 @@ export interface TableProps {
     loading: boolean
     items: Item[];
 
-    onClick: (item: Item) => void
     onDeleteClass: (item: Item) => void
 }
 
@@ -54,11 +53,12 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.classId}>
             <td>
-                <UnstyledButton onClick={() => props.onClick(row)}>
+                <UnstyledButton<'a'> component='a' href={row.href}>
                     <Text size={14}>{row.name}</Text>
                 </UnstyledButton>
              </td>
             <td><Text size={14}>{row.description}</Text></td>
+            <td><Text size={14}>{row.numberOfStudents||0}</Text></td>
             <td>
                 <Group noWrap spacing={0} position="right">
                     <ActionIcon color="red">
@@ -70,12 +70,13 @@ export function Table(props: TableProps) {
     ));
 
     return (
-        <ScrollArea.Autosize maxHeight={300}>
+        <ScrollArea.Autosize maxHeight={600}>
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
                     <th>Class Name</th>
                     <th>Description</th>
+                    <th># of Students</th>
                     <th></th>
                 </tr>
                 </thead>

@@ -23,23 +23,23 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export type SplitButtonProps = {
-    withClassLink?: boolean
-    onAddMembersClick: () => void;
-    onCopyClassLinkClick: () => void;
+    withOrganizationLink?: boolean
+    onAddUsersClick: () => void;
+    onCopyOrganizationLinkClick: () => void;
 }
 
 export const SplitButton = (props: SplitButtonProps) => {
     const { classes, theme } = useStyles();
     const menuIconColor = theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 6];
 
-    const hasMenu = !!props.withClassLink
+    const hasMenu = !!props.withOrganizationLink
 
     return (
         <Group noWrap spacing={0}>
             <Button
                 className={hasMenu ? classes.button: ""}
                 leftIcon={<IconPlaylistAdd size={14} />}
-                onClick={props.onAddMembersClick}
+                onClick={props.onAddUsersClick}
             >
                 Add members
             </Button>
@@ -55,11 +55,11 @@ export const SplitButton = (props: SplitButtonProps) => {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    { !!props.withClassLink && <Menu.Item
+                    { !!props.withOrganizationLink && <Menu.Item
                         icon={<IconClipboardCopy size={16} stroke={1.5} color={menuIconColor} />}
-                        onClick={props.onCopyClassLinkClick}
+                        onClick={props.onCopyOrganizationLinkClick}
                     >
-                        Copy class link
+                        Copy organization link
                     </Menu.Item> }
                 </Menu.Dropdown>
             </Menu> }

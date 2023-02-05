@@ -23,16 +23,11 @@ export type StackData = {
     items: Item[]
 }
 
-/**
- * StackMethods
- */
-export type StackMethods = {}
-
 
 /**
  * StackProps
  */
-export type StackProps = StackData & StackMethods
+export type StackProps = StackData
 
 /**
  * Stack
@@ -117,7 +112,7 @@ export function Stack(props: StackProps) {
                 <Title size="lg">{row.question}</Title>
                 <Text size="sm">{row.answers.length} answers</Text>
 
-                <ScrollArea.Autosize maxHeight={500}>
+                <ScrollArea.Autosize maxHeight={600}>
                     <MantineStack spacing={4}>
                         {
                             row.answers.map(a => {

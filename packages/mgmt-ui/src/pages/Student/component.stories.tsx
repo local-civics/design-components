@@ -43,17 +43,20 @@ Mock.args = {
         badgeId: "",
         badgeName: "Unit 1 Badge",
         isComplete: true,
+        lessons: [],
     },{
         badgeId: "",
         badgeName: "Unit 2 Badge",
         isComplete: false,
+        lessons: [],
     }],
     answers: [
         {
             lessonId: "",
             lessonName: "An example lesson",
             questionName: "An example question",
-            answer: ["My example answer"]
+            answer: ["My example answer"],
+            href: "",
         }
     ],
     reflections: [
@@ -62,6 +65,7 @@ Mock.args = {
             lessonName: "An example lesson",
             reflection: "An example reflection",
             rating: 2,
+            href: "",
         }
     ]
 };

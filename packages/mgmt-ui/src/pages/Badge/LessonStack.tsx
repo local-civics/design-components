@@ -1,5 +1,5 @@
 import * as React                                                      from 'react';
-import {Grid, Badge, Title} from '@mantine/core';
+import {Grid, Badge, Text} from '@mantine/core';
 
 /**
  * Item
@@ -8,6 +8,7 @@ export interface Item {
     lessonName: string
     completion: number
     isStarted?: boolean
+    href: string
 }
 
 /**
@@ -18,14 +19,9 @@ export type StackData = {
 }
 
 /**
- * StackMethods
- */
-export type StackMethods = {}
-
-/**
  * StackProps
  */
-export type StackProps = StackData & StackMethods
+export type StackProps = StackData
 
 /**
  * Stack
@@ -40,7 +36,9 @@ export function Stack(props: StackProps) {
     const rows = props.items.map((row) => (
         <>
             <Grid.Col span={6}>
-                <Title color="dark.4" size="lg">{row.lessonName}</Title>
+                <Text<'a'> component='a' href={row.href} color="dark.4" weight="bold" size="md">
+                    {row.lessonName}
+                </Text>
             </Grid.Col>
             <Grid.Col span={6}>
                 {row.completion >= 1 && <Badge variant="filled">Complete</Badge>}
