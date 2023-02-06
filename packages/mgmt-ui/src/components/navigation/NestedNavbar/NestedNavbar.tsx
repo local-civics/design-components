@@ -23,6 +23,15 @@ const useStyles = createStyles((theme, _params, getRef) => {
             backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
         },
 
+        navHeader: {
+            // Media query with value from theme
+            [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+                height: 71,
+                position: 'absolute',
+                top: 0,
+            },
+        },
+
         navBody: {
             // Media query with value from theme
             [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
@@ -158,8 +167,7 @@ export function NestedNavbar(props: NestedNavbarProps) {
 
     return (
         <>
-            <Burger opened={burgerOpen} onClick={toggle} className={classes.burger} size="sm" />
-            <NavbarCore width={{ sm: 300 }} p="md" className={classes.navbar}>
+            <NavbarCore width={{ sm: 300 }} p="md" className={cx(classes.navbar, {[classes.navHeader]: !burgerOpen})}>
                 <NavbarCore.Section className={classes.header}>
                     <Group position="apart">
                         <Center>

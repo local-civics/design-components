@@ -8,13 +8,19 @@ import {NestedNavbar, NestedNavbarProps} from "../../components/navigation/Neste
 
 const useStyles = createStyles((theme) => ({
     footer: {
-        paddingTop: theme.spacing.xl * 2,
-        paddingBottom: theme.spacing.xl * 2,
-        paddingLeft: theme.spacing.xl * 13,
+        paddingTop: theme.spacing.md,
+        paddingBottom: theme.spacing.md,
+        paddingLeft: theme.spacing.md,
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
         borderTop: `1px solid ${
             theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
         }`,
+
+        [theme.fn.largerThan('sm')]: {
+            paddingTop: theme.spacing.xl * 2,
+            paddingBottom: theme.spacing.xl * 2,
+            paddingLeft: theme.spacing.xl * 13,
+        }
     },
 
     logo: {
