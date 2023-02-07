@@ -1,6 +1,7 @@
-import * as React                                         from 'react';
+import * as React                                                         from 'react';
 import { Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
-import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {Link}                                                             from "react-router-dom";
+import {PlaceholderBanner}                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
@@ -43,8 +44,7 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.badgeId}>
             <td>
-                <UnstyledButton<'a'> component='a'
-                    href={row.href}
+                <UnstyledButton<typeof Link> component={Link} to={row.href}
                     sx={(theme) => ({
                         display: 'block',
                         width: '100%',

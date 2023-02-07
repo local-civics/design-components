@@ -1,5 +1,6 @@
 import * as React                                 from 'react';
 import {Stack as MantineStack, UnstyledButton, ScrollArea, Title, Text} from '@mantine/core';
+import { Link } from 'react-router-dom';
 
 /**
  * Item
@@ -46,7 +47,7 @@ export function Stack(props: StackProps) {
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
-            <UnstyledButton<'a'> component='a' href={props.href}>
+            <UnstyledButton<typeof Link> component={Link} to={props.href}>
                 <MantineStack spacing={24} sx={{ padding: 20, minWidth: 700 }}>
                     {rows}
                 </MantineStack>

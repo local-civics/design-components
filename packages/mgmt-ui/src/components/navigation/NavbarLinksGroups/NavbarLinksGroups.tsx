@@ -1,7 +1,8 @@
 import * as React                                                                     from 'react';
 import { useState }                                                                   from 'react';
-import { Group, Badge, Box, Collapse, ThemeIcon, Text, UnstyledButton, createStyles } from '@mantine/core';
-import { TablerIcon, IconChevronLeft, IconChevronRight }           from '@tabler/icons';
+import { Group, Badge, Box, Collapse, ThemeIcon, Text, createStyles } from '@mantine/core';
+import { TablerIcon, IconChevronLeft, IconChevronRight }                              from '@tabler/icons';
+import {Link}                                                                         from "react-router-dom";
 import {compact}                                                                      from "../../../utils/numbers";
 
 const useStyles = createStyles((theme, _params, getRef) => {
@@ -94,7 +95,7 @@ export function LinksGroup({ icon: Icon, href, label, initiallyOpened, links, ac
             className={cx(classes.link, { [classes.linkActive]: !!active && active === `${label}/${link.label}`})}
             key={link.label}>
             <Group position="apart" spacing={0}>
-                <Text<'a'> component='a' href={link.href}>
+                <Text<typeof Link> component={Link} to={link.href}>
                     {link.label}
                 </Text>
                 {!!link.notifications && (
@@ -121,7 +122,7 @@ export function LinksGroup({ icon: Icon, href, label, initiallyOpened, links, ac
                         <Icon className={classes.linkIcon} size={18} />
                     </ThemeIcon>
                     <Box ml="md">
-                        <Text<'a'> component='a' href={href}>
+                        <Text<typeof Link> component={Link} to={href}>
                             {label}
                         </Text>
                     </Box>

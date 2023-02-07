@@ -1,6 +1,7 @@
-import * as React                        from "react";
+import * as React                          from "react";
+import {MemoryRouter}                      from "react-router-dom";
 import {StudentLesson, StudentLessonProps} from "./StudentLesson";
-import { Story }                         from "@storybook/react";
+import { Story }                           from "@storybook/react";
 
 /**
  * Storybook component configuration
@@ -15,10 +16,12 @@ export default {
  */
 const Template: Story<StudentLessonProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <StudentLesson
-            {...args}
-            questions={args.questions||[]}
-        />
+        <MemoryRouter>
+            <StudentLesson
+                {...args}
+                questions={args.questions||[]}
+            />
+        </MemoryRouter>
     </div>
 );
 

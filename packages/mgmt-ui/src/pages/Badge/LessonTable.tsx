@@ -1,8 +1,9 @@
-import * as React                                                                      from 'react';
+import * as React                                from 'react';
 import {Table as MantineTable, ScrollArea, Text} from '@mantine/core';
+import {Link}                                    from "react-router-dom";
 import {
     PlaceholderBanner
-}                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+}                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
@@ -47,7 +48,7 @@ export function Table(props: TableProps) {
         const percentageCompletion = Math.round((row.percentageCompletion + Number.EPSILON) * 100)
         return <tr key={row.lessonName}>
             <td>
-                <Text<'a'> href={row.href} component='a'>
+                <Text<typeof Link> component={Link} to={row.href}>
                     {row.lessonName}
                 </Text>
             </td>

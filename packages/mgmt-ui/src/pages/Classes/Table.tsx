@@ -1,10 +1,11 @@
-import {openConfirmModal}                                                 from "@mantine/modals";
-import * as React                                                         from 'react';
+import {openConfirmModal}                                                           from "@mantine/modals";
+import * as React                                                                   from 'react';
 import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, UnstyledButton} from '@mantine/core';
 import {
     IconTrash
-}                                                                         from '@tabler/icons';
-import {PlaceholderBanner}                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+}                                                                                   from '@tabler/icons';
+import {Link}                                                                       from "react-router-dom";
+import {PlaceholderBanner}                                                          from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
@@ -53,7 +54,7 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.classId}>
             <td>
-                <UnstyledButton<'a'> component='a' href={row.href}>
+                <UnstyledButton<typeof Link> component={Link} to={row.href}>
                     <Text size={14}>{row.name}</Text>
                 </UnstyledButton>
              </td>

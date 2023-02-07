@@ -1,6 +1,7 @@
-import * as React                  from "react";
+import * as React              from "react";
+import {MemoryRouter}          from "react-router-dom";
 import {Student, StudentProps} from "./Student";
-import { Story }                   from "@storybook/react";
+import { Story }               from "@storybook/react";
 
 /**
  * Storybook component configuration
@@ -15,16 +16,18 @@ export default {
  */
 const Template: Story<StudentProps> = (args) => (
   <div className="h-full w-full overscroll-none font-proxima">
-    <Student
-        {...args}
-        name={args.name || "Jane McDowell"}
-        impactStatement={args.impactStatement || "I want to equip my students with transformational leadership skills so they could make impact in their communities!"}
-        numberOfProblemsSolved={args.numberOfProblemsSolved || 17}
-        percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
-        badges={args.badges || []}
-        answers={args.answers || []}
-        reflections={args.reflections || []}
-    />
+      <MemoryRouter>
+        <Student
+            {...args}
+            name={args.name || "Jane McDowell"}
+            impactStatement={args.impactStatement || "I want to equip my students with transformational leadership skills so they could make impact in their communities!"}
+            numberOfProblemsSolved={args.numberOfProblemsSolved || 17}
+            percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
+            badges={args.badges || []}
+            answers={args.answers || []}
+            reflections={args.reflections || []}
+        />
+      </MemoryRouter>
   </div>
 );
 

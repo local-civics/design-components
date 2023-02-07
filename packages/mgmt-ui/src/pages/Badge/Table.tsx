@@ -1,10 +1,11 @@
-import {DataTable}                                                                     from "mantine-datatable";
-import * as React                                                                      from 'react';
-import {Avatar, Group, Text, ScrollArea, Badge} from '@mantine/core';
+import {DataTable}                                from "mantine-datatable";
+import * as React                                 from 'react';
+import {Avatar, Group, Text, ScrollArea, Badge}   from '@mantine/core';
+import {Link}                                     from "react-router-dom";
 import {
     PlaceholderBanner
-}                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {Stack as LessonStack, Item as LessonItem}                                                          from "./LessonStack";
+}                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {Stack as LessonStack, Item as LessonItem} from "./LessonStack";
 
 /**
  * Item
@@ -69,7 +70,7 @@ export function Table(props: TableProps) {
                                 <Text size="sm" weight={500}>
                                     {row.name}
                                 </Text>
-                                <Text<'a'> component='a' size="xs" color="dimmed">
+                                <Text size="xs" color="dimmed">
                                     {row.email}
                                 </Text>
                             </div>

@@ -1,5 +1,6 @@
-import * as React                                                      from 'react';
+import * as React          from 'react';
 import {Grid, Badge, Text} from '@mantine/core';
+import {Link}              from "react-router-dom";
 
 /**
  * Item
@@ -36,7 +37,7 @@ export function Stack(props: StackProps) {
     const rows = props.items.map((row) => (
         <>
             <Grid.Col span={6}>
-                <Text<'a'> component='a' href={row.href} color="dark.4" weight="bold" size="md">
+                <Text<typeof Link> component={Link} to={row.href} color="dark.4" weight="bold" size="md">
                     {row.lessonName}
                 </Text>
             </Grid.Col>

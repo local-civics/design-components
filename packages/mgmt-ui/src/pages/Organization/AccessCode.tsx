@@ -11,8 +11,9 @@ import {
     Anchor,
     Center,
     Box,
-}                                                 from '@mantine/core';
+}                    from '@mantine/core';
 import {IconPointer} from '@tabler/icons';
+import {Link}        from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -56,8 +57,7 @@ export function AccessCode(props: AccessCodeProps) {
             <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
                 <TextInput value={props.value} readOnly/>
                 <Group position="apart" mt="lg" className={classes.controls}>
-                    <Anchor
-                        href={props.peopleLink}
+                    <Anchor<typeof Link> component={Link} to={props.peopleLink}
                         color="dimmed" size="sm" className={classes.control}>
                         <Center inline>
                             <IconPointer size={12} stroke={1.5} />

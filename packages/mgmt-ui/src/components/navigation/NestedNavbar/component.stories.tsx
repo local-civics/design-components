@@ -27,7 +27,7 @@ const Template: Story<NestedNavbarProps> = (args) => (
             "Classes": {notifications: 3, href: ""},
             "Badges": {notifications: 12, href: ""},
             "Lessons": {notifications: 57, href: ""},
-            "Organization/People": {notifications: 123, href: ""},
+            "Organization/People": {notifications: 123, href: "", hidden: true},
         }}
     />
   </div></AdminProvider>

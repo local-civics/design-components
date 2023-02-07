@@ -1,10 +1,11 @@
-import * as React from 'react'
+import * as React                                        from 'react'
 import { createStyles, Button, Menu, Group, ActionIcon } from '@mantine/core';
 import {
     IconChevronDown,
     IconPlaylistAdd,
     IconClipboardCopy, IconTableExport
-} from '@tabler/icons';
+}                                                        from '@tabler/icons';
+import {Link}                                            from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     button: {
@@ -34,9 +35,7 @@ export const SplitButton = (props: SplitButtonProps) => {
 
     return (
         <Group noWrap spacing={0}>
-            <Button<'a'>
-                component='a'
-                href={props.href}
+            <Button<typeof Link> component={Link} to={props.href}
                 className={classes.button}
                 variant="gradient"
             >

@@ -1,6 +1,7 @@
-import * as React                      from "react";
+import * as React                  from "react";
+import {MemoryRouter}              from "react-router-dom";
 import {Dashboard, DashboardProps} from "./Dashboard";
-import { Story }                       from "@storybook/react";
+import { Story }                   from "@storybook/react";
 
 /**
  * Storybook component configuration
@@ -15,18 +16,20 @@ export default {
  */
 const Template: Story<DashboardProps> = (args) => (
   <div className="h-full w-full overscroll-none font-proxima">
-    <Dashboard
-        {...args}
-        students={args.students || []}
-        impacts={args.impacts || []}
-        reflections={args.reflections || []}
-        classes={args.classes || []}
-        badges={args.badges || []}
-        lessons={args.lessons || []}
-        percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
-        percentageOfBadgesEarned={args.percentageOfBadgesEarned || 0}
-        percentageOfAccountsCreated={args.percentageOfAccountsCreated || 0}
-    />
+      <MemoryRouter>
+          <Dashboard
+                {...args}
+                students={args.students || []}
+                impacts={args.impacts || []}
+                reflections={args.reflections || []}
+                classes={args.classes || []}
+                badges={args.badges || []}
+                lessons={args.lessons || []}
+                percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
+                percentageOfBadgesEarned={args.percentageOfBadgesEarned || 0}
+                percentageOfAccountsCreated={args.percentageOfAccountsCreated || 0}
+            />
+      </MemoryRouter>
   </div>
 );
 

@@ -1,6 +1,7 @@
-import * as React                        from "react";
+import * as React          from "react";
+import {MemoryRouter}      from "react-router-dom";
 import {Badge, BadgeProps} from "./Badge";
-import { Story }                        from "@storybook/react";
+import { Story }           from "@storybook/react";
 
 /**
  * Storybook component configuration
@@ -15,12 +16,14 @@ export default {
  */
 const Template: Story<BadgeProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Badge
-            {...args}
-            classes={args.classes || []}
-            students={args.students || []}
-            lessons={args.lessons || []}
-        />
+        <MemoryRouter>
+            <Badge
+                {...args}
+                classes={args.classes || []}
+                students={args.students || []}
+                lessons={args.lessons || []}
+            />
+        </MemoryRouter>
     </div>
 );
 

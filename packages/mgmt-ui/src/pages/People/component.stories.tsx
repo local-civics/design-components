@@ -1,6 +1,7 @@
-import * as React           from "react";
+import * as React            from "react";
+import {MemoryRouter}        from "react-router-dom";
 import {People, PeopleProps} from "./People";
-import { Story }            from "@storybook/react";
+import { Story }             from "@storybook/react";
 
 /**
  * Storybook component configuration
@@ -15,12 +16,14 @@ export default {
  */
 const Template: Story<PeopleProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <People
-            {...args}
-            percentageOfAccountsCreated={args.percentageOfAccountsCreated||0}
-            percentageRostered={args.percentageRostered||0}
-            users={args.users || []}
-        />
+        <MemoryRouter>
+            <People
+                {...args}
+                percentageOfAccountsCreated={args.percentageOfAccountsCreated||0}
+                percentageRostered={args.percentageRostered||0}
+                users={args.users || []}
+            />
+        </MemoryRouter>
     </div>
 );
 

@@ -10,11 +10,12 @@ import {
     ScrollArea,
     Select,
     Box
-}                                                          from '@mantine/core';
-import {IconCheck, IconTrash} from '@tabler/icons';
+}                              from '@mantine/core';
+import {IconCheck, IconTrash}  from '@tabler/icons';
+import {Link}                  from "react-router-dom";
 import {
     PlaceholderBanner
-}                                                          from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+}                              from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {relativeTimeFromDates} from "../../utils/time";
 
 /**
@@ -78,7 +79,7 @@ export function Table(props: TableProps) {
     const rows = props.items.map((row) => (
         <tr key={row.email}>
             <td>
-                <UnstyledButton<'a'> component='a' href={row.href}>
+                <UnstyledButton<typeof Link> component={Link} to={row.href}>
                     <Group spacing="sm">
                         <Avatar size={40} src={row.avatar} radius={40} />
                         <div>

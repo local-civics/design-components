@@ -1,6 +1,7 @@
-import * as React                                from "react";
+import * as React                        from "react";
+import {MemoryRouter}                    from "react-router-dom";
 import {Organization, OrganizationProps} from "./Organization";
-import { Story }                                 from "@storybook/react";
+import { Story }                         from "@storybook/react";
 
 /**
  * Storybook component configuration
@@ -15,14 +16,16 @@ export default {
  */
 const Template: Story<OrganizationProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <Organization
-            {...args}
-            percentageOfAccountsActive={args.percentageOfAccountsActive||0}
-            numberOfStudents={300}
-            numberOfEducators={15}
-            displayName={args.displayName || "Local Civics University"}
-            description={args.description || "Organization focused on the history of the United States"}
-        />
+        <MemoryRouter>
+            <Organization
+                {...args}
+                percentageOfAccountsActive={args.percentageOfAccountsActive||0}
+                numberOfStudents={300}
+                numberOfEducators={15}
+                displayName={args.displayName || "Local Civics University"}
+                description={args.description || "Organization focused on the history of the United States"}
+            />
+        </MemoryRouter>
     </div>
 );
 
