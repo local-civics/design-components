@@ -4,7 +4,6 @@ import {ScrollArea, Badge, Text} from '@mantine/core';
 import {
     PlaceholderBanner
 }                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {Item as LessonItem, Stack as LessonStack} from "../Badge/LessonStack";
 
 /**
  * Item
@@ -13,7 +12,6 @@ export interface Item {
     badgeId: string
     badgeName: string
     isComplete?: boolean
-    lessons: LessonItem[]
 }
 
 /**
@@ -74,11 +72,6 @@ export function Table(props: TableProps) {
                         </>
                     )
                 }]}
-                rowExpansion={{
-                    content: ({ record }: {record: Item}) => (
-                        <LessonStack items={record.lessons}/>
-                    ),
-                }}
             />
         </ScrollArea.Autosize>
     );

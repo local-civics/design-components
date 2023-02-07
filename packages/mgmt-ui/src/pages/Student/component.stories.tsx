@@ -46,12 +46,10 @@ Mock.args = {
         badgeId: "",
         badgeName: "Unit 1 Badge",
         isComplete: true,
-        lessons: [],
     },{
         badgeId: "",
         badgeName: "Unit 2 Badge",
         isComplete: false,
-        lessons: [],
     }],
     answers: [
         {

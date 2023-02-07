@@ -195,7 +195,7 @@ export const Class = (props: ClassProps) => {
                         <StatsGroup data={[
                             {
                                 title: "# OF STUDENTS",
-                                value: props.members.length,
+                                value: props.members.filter(a => !a.isAdmin).length,
                             },
                             {
                                 title: "ACCOUNT CREATION",
