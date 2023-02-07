@@ -11,5 +11,7 @@ export * from './pages/Student/Student'
 export * from './pages/Home/Home'
 export * from './pages/Lesson/Lesson'
 export * from './pages/Lessons/Lessons'
+export * from './pages/Organization/Organization'
+export * from './pages/People/People'
 export * from './providers/AdminProvider/AdminProvider';
 export * from './shells/App/App';
