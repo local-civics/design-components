@@ -133,7 +133,7 @@ export const App = (props: AppProps) => {
         padding="xs"
         navbar={<NestedNavbar
             {...props.navbar.props}
-            onSwitchAccounts={() => account.setChangeModalOpen(true)}
+            onSwitchAccounts={account.accounts && account.accounts.length > 1 ? () => account.setChangeModalOpen(true) : undefined}
         />}
         footer={<>{!account.opened && <footer className={classes.footer}>
             <Container className={classes.inner}>

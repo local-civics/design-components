@@ -95,7 +95,7 @@ export function Table(props: TableProps) {
                 </UnstyledButton>
             </td>
             <td>
-                <Box maw={100}>
+                <Box maw={150}>
                     <Select
                         size="sm"
                         value={row.isAdmin ? "admin" : "member"}
