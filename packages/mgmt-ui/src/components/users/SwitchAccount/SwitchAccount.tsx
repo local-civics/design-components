@@ -32,7 +32,7 @@ const useStyles = createStyles((theme) => ({
 
         '&:hover': {
             boxShadow: `${theme.shadows.md} !important`,
-            transform: 'scale(1.05)',
+            transform: 'scale(1.02)',
         },
     },
 
@@ -104,7 +104,7 @@ export const SwitchAccount = (props: SwitchAccountProps) => {
         <div style={{ position: 'relative' }}>
             { props.loading && <Center style={{ height: 400 }}><Loader/></Center> }
             { !props.loading && <ScrollArea.Autosize maxHeight={600}>
-                <SimpleGrid cols={3} spacing="xl" breakpoints={[{ maxWidth: 'md', cols: 1 }]}>
+                <SimpleGrid p={20} cols={3} spacing="xl" breakpoints={[{ maxWidth: 'md', cols: 1 }]}>
                     {options}
                 </SimpleGrid>
             </ScrollArea.Autosize>
