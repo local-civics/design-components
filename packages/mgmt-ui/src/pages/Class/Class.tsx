@@ -116,7 +116,7 @@ export const Class = (props: ClassProps) => {
             <Drawer
                 opened={opened}
                 onClose={() => setOpened(false)}
-                title={<Title size="h5">Add members</Title>}
+                title={<Title size="h5">Add students</Title>}
                 padding="xl"
                 size="xl"
             >

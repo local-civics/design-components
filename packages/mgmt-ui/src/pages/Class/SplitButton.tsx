@@ -41,7 +41,7 @@ export const SplitButton = (props: SplitButtonProps) => {
                 leftIcon={<IconPlaylistAdd size={14} />}
                 onClick={props.onAddMembersClick}
             >
-                Add members
+                Add students
             </Button>
             { hasMenu && <Menu transition="pop" position="bottom-end">
                 <Menu.Target>

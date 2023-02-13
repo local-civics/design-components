@@ -98,9 +98,9 @@ export function Table(props: TableProps) {
                 <Box maw={150}>
                     <Select
                         size="sm"
-                        value={row.isAdmin ? "admin" : "member"}
+                        value={row.isAdmin ? "admin" : "student"}
                         onChange={(value) => props.onRoleChange && props.onRoleChange(row, value)}
-                        data={[{value: "member", label: "Member"}, {value: "admin", label: "Admin"}]}
+                        data={[{value: "student", label: "Student"}, {value: "admin", label: "Admin"}]}
                     />
                 </Box>
             </td>
