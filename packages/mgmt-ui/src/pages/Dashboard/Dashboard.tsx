@@ -31,8 +31,8 @@ export type DashboardProps = {
     lessons: LessonItem[],
     classId: string
     percentageOfAccountsCreated: number
-    percentageOfBadgesEarned: number
-    percentageOfLessonsCompleted: number
+    numberOfBadgesEarned: number
+    numberOfLessonsCompleted: number
 
     onClassChange: (classId: string) => void;
     onViewStudentProfile: (student: StudentItem) => void
@@ -71,14 +71,12 @@ export const Dashboard = (props: DashboardProps) => {
                                 unit: "%",
                             },
                             {
-                                title: "BADGE COMPLETION",
-                                value: props.percentageOfBadgesEarned,
-                                unit: "%",
+                                title: "BADGES EARNED",
+                                value: props.numberOfBadgesEarned,
                             },
                             {
-                                title: "LESSON COMPLETION",
-                                value: props.percentageOfLessonsCompleted,
-                                unit: "%",
+                                title: "LESSONS COMPLETED",
+                                value: props.numberOfLessonsCompleted,
                             },
                         ]}/>
 

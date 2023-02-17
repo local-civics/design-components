@@ -25,8 +25,8 @@ const Template: Story<DashboardProps> = (args) => (
                 classes={args.classes || []}
                 badges={args.badges || []}
                 lessons={args.lessons || []}
-                percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
-                percentageOfBadgesEarned={args.percentageOfBadgesEarned || 0}
+                numberOfLessonsCompleted={args.numberOfLessonsCompleted || 0}
+                numberOfBadgesEarned={args.numberOfBadgesEarned || 0}
                 percentageOfAccountsCreated={args.percentageOfAccountsCreated || 0}
             />
       </MemoryRouter>

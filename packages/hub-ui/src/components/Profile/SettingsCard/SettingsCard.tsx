@@ -73,7 +73,11 @@ export const SettingsCard = (props: SettingsCardProps) => {
         onSave();
       }
     };
-    reader.readAsDataURL(file);
+
+    if(file){
+      reader.readAsDataURL(file);
+    }
+
     setFocus("");
   };
 

@@ -289,7 +289,10 @@ const FileUploadQuestion = (props: FormItemProps) => {
         }
       }
     };
-    reader.readAsDataURL(file);
+
+    if(file){
+      reader.readAsDataURL(file);
+    }
   };
 
   React.useEffect(() => {

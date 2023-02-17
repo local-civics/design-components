@@ -72,7 +72,6 @@ export type ClassProps = {
     percentageOfAccountsCreated: number
     numberOfBadgesEarned: number
     numberOfLessonsCompleted: number
-    withClassLink?: boolean
 
     onBackClick: () => void;
     onCreateMembers: (members: MemberItem[]) => void;
@@ -181,7 +180,6 @@ export const Class = (props: ClassProps) => {
                     </Grid.Col>
                     <Grid.Col sm="content">
                         { !props.loading && <SplitButton
-                            withClassLink={props.withClassLink}
                             onAddMembersClick={() => setOpened(true)}
                             onCopyClassLinkClick={props.onCopyLinkClick}
                         />}
