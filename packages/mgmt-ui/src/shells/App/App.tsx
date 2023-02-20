@@ -4,7 +4,7 @@ import {useState}                                                               
 import * as React                                from 'react';
 import type {AccountItem} from "../../components/users/SwitchAccount/SwitchAccount";
 import {SwitchAccount}                   from "../../components/users/SwitchAccount/SwitchAccount"
-import {NestedNavbar, NestedNavbarProps} from "../../components/navigation/NestedNavbar/NestedNavbar";
+import {Navbar, NavbarProps} from "../../components/navigation/Navbar/Navbar";
 
 const useStyles = createStyles((theme, props: AppProps) => ({
     footer: {
@@ -116,7 +116,7 @@ export type AppProps = {
     account?: string
     accounts?: AccountItem[]
 
-    navbar?: React.ReactElement<NestedNavbarProps>
+    navbar?: React.ReactElement<NavbarProps>
     page: React.ReactNode
     onAccountChange?: (account: string) => Promise<void>;
 }
@@ -131,7 +131,7 @@ export const App = (props: AppProps) => {
     const account = useAccount(props.account, props.accounts, props.onAccountChange)
     return <AppShell
         padding="xs"
-        navbar={props.navbar && <NestedNavbar
+        navbar={props.navbar && <Navbar
             {...props.navbar.props}
             onSwitchAccounts={account.accounts && account.accounts.length > 1 ? () => account.setChangeModalOpen(true) : undefined}
         />}
