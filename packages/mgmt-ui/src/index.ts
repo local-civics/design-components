@@ -1,5 +1,4 @@
 export * from './components/navigation/Navbar/Navbar';
-export * from './components/navigation/NestedNavbar/NestedNavbar';
 export * from './components/users/SwitchAccount/SwitchAccount';
 export * from './hooks/notifications'
 export * from './pages/Badge/Badge'

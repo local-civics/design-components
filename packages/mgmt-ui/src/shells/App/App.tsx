@@ -6,11 +6,11 @@ import type {AccountItem} from "../../components/users/SwitchAccount/SwitchAccou
 import {SwitchAccount}                   from "../../components/users/SwitchAccount/SwitchAccount"
 import {NestedNavbar, NestedNavbarProps} from "../../components/navigation/NestedNavbar/NestedNavbar";
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles((theme, props: AppProps) => ({
     footer: {
         paddingTop: theme.spacing.md,
         paddingBottom: theme.spacing.md,
-        paddingLeft: theme.spacing.md,
+        paddingLeft: props.navbar ? theme.spacing.md : 0,
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
         borderTop: `1px solid ${
             theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
@@ -19,7 +19,7 @@ const useStyles = createStyles((theme) => ({
         [theme.fn.largerThan('sm')]: {
             paddingTop: theme.spacing.xl * 2,
             paddingBottom: theme.spacing.xl * 2,
-            paddingLeft: theme.spacing.xl * 13,
+            paddingLeft: props.navbar ? theme.spacing.xl * 13 : 0,
         }
     },
 
@@ -112,13 +112,13 @@ const useStyles = createStyles((theme) => ({
  * AppProps
  */
 export type AppProps = {
-    loading: boolean
-    account: string
-    accounts: AccountItem[]
+    loading?: boolean
+    account?: string
+    accounts?: AccountItem[]
 
-    navbar: React.ReactElement<NestedNavbarProps>
+    navbar?: React.ReactElement<NestedNavbarProps>
     page: React.ReactNode
-    onAccountChange: (account: string) => Promise<void>;
+    onAccountChange?: (account: string) => Promise<void>;
 }
 
 /**
@@ -127,11 +127,11 @@ export type AppProps = {
  * @constructor
  */
 export const App = (props: AppProps) => {
-    const { classes } = useStyles();
+    const { classes } = useStyles(props);
     const account = useAccount(props.account, props.accounts, props.onAccountChange)
     return <AppShell
         padding="xs"
-        navbar={<NestedNavbar
+        navbar={props.navbar && <NestedNavbar
             {...props.navbar.props}
             onSwitchAccounts={account.accounts && account.accounts.length > 1 ? () => account.setChangeModalOpen(true) : undefined}
         />}
@@ -211,18 +211,18 @@ export const App = (props: AppProps) => {
             { (props.loading || account.opened) && <Center style={{ height: 400 }}><Loader/></Center> }
             { (!props.loading && !account.opened) && props.page }
         </div>
-        <SwitchAccount
+        { !!account.accounts && !!account.account && <SwitchAccount
             opened={account.opened}
             loading={account.loading}
             account={account.account}
             accounts={account.accounts}
             onClick={account.onAccountChange}
             onClose={() => account.setChangeModalOpen(false)}
-        />
+        />}
     </AppShell>
 }
 
-const useAccount = (account: string, accounts: AccountItem[], onAccountChange: (account: string) => Promise<void>) => {
+const useAccount = (account?: string, accounts?: AccountItem[], onAccountChange?: (account: string) => Promise<void>) => {
     const accountsKey = JSON.stringify(accounts)
     const [changeModalOpen, setChangeModalOpen] = useState(false);
     const [active, setActive] = useState(account);
@@ -240,6 +240,10 @@ const useAccount = (account: string, accounts: AccountItem[], onAccountChange: (
         setChangeModalOpen,
         onAccountChange: (account: string) => {
             setLoading(true)
+            if(!onAccountChange){
+                return
+            }
+
             onAccountChange(account).then(() => {
                 setActive(account)
                 setLoading(false)
