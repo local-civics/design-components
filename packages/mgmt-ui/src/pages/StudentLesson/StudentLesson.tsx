@@ -83,7 +83,7 @@ export const StudentLesson = (props: StudentLessonProps) => {
                                     <IconArrowLeft size={14} />
                                 </ActionIcon>}
                                 size="lg">
-                                Lessons
+                                Go Back
                             </Badge>
                         </UnstyledButton>
                         <Group>

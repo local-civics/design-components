@@ -162,7 +162,7 @@ export const People = (props: PeopleProps) => {
                                     <IconArrowLeft size={14} />
                                 </ActionIcon>}
                                 size="lg">
-                                Organization
+                                Go Back
                             </Badge>
                         </UnstyledButton>
                         <Title order={2} className={classes.title} mt="md">People</Title>

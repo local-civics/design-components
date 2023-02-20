@@ -59,6 +59,7 @@ export type LessonProps = {
     students: LessonUserItem[]
     reflections: ReflectionItem[],
     questions: QuestionItem[],
+    trial?: boolean
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -90,7 +91,7 @@ export const Lesson = (props: LessonProps) => {
                                     <IconArrowLeft size={14}   />
                                 </ActionIcon>}
                                 size="lg">
-                                Lessons
+                                Go Back
                             </Badge>
                         </UnstyledButton>
                         <Group>
@@ -126,7 +127,7 @@ export const Lesson = (props: LessonProps) => {
                                 },
                             ]}/>
 
-                            <Select
+                            {!props.trial && <Select
                                 clearable
                                 clearButtonLabel="Clear class selection"
                                 size="sm"
@@ -136,10 +137,10 @@ export const Lesson = (props: LessonProps) => {
                                 onChange={props.onClassChange}
                                 icon={<IconCategory2/>}
                                 data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
-                            />
+                            />}
 
                             <Stack spacing={0}>
-                                <Tabs
+                                {!props.trial && <Tabs
                                     value={tab}
                                     data={[
                                         {label: "By question", value: "question"},
@@ -147,19 +148,19 @@ export const Lesson = (props: LessonProps) => {
                                         {label: "By reflection", value: "reflections"},
                                     ]}
                                     onChange={setTab}
-                                />
+                                />}
 
-                                { tab === "question" && <QuestionStack
+                                { (!!props.trial || tab === "question") && <QuestionStack
                                     loading={props.loading}
                                     items={props.questions}
                                 />}
 
-                                { tab === "reflections" && <ReflectionTable
+                                { (!props.trial && tab === "reflections") && <ReflectionTable
                                     loading={props.loading}
                                     items={props.reflections}
                                 /> }
 
-                                { tab === "students" && <Table
+                                { (!props.trial && tab === "students") && <Table
                                     loading={props.loading}
                                     items={props.students}
                                 />}

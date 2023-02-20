@@ -5,7 +5,8 @@ import {
     Image,
     Center,
     createStyles,
-    Group, Code, ScrollArea, Burger
+    Group, Code, ScrollArea, Burger,
+    Badge,
 } from '@mantine/core';
 import {
     IconHome2,
@@ -125,6 +126,7 @@ export interface NestedNavbarProps {
     name: string
     email: string
     links: Record<string, {notifications: number, href: string, hidden?: boolean}>
+    trial?: boolean
     onLogout: () => void;
     onSwitchAccounts?: () => void;
 }
@@ -150,7 +152,7 @@ export function NestedNavbar(props: NestedNavbarProps) {
     const toggle = () => setBurgerOpen(!burgerOpen)
     const links = data.map((item) => {
         const context = props.links[item.label] || {notifications: 0, href: ""}
-        if(context.hidden){
+        if(context.hidden || props.trial && item.label !== 'Home'){
             return null
         }
 
@@ -179,6 +181,7 @@ export function NestedNavbar(props: NestedNavbarProps) {
                         </Center>
                         <Group position="apart">
                             <Code sx={{ fontWeight: 700 }}>{props.version}</Code>
+                            { !!props.trial && <Badge color="violet" radius="xs">Trial</Badge>}
                             <Burger opened={burgerOpen} onClick={toggle} className={classes.burger} size="sm" />
                         </Group>
                     </Group>

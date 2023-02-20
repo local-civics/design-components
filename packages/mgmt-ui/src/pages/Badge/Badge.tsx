@@ -57,6 +57,7 @@ export type BadgeProps = {
     classId: string
     students: BadgeUserItem[]
     href: string
+    trial?: boolean
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -88,7 +89,7 @@ export const Badge = (props: BadgeProps) => {
                                     <IconArrowLeft size={14} />
                                 </ActionIcon>}
                                 size="lg">
-                                Badges
+                                Go Back
                             </BadgeCore>
                         </UnstyledButton>
                         <Group>
@@ -124,7 +125,7 @@ export const Badge = (props: BadgeProps) => {
                                 },
                             ]}/>
 
-                            <Select
+                            { !props.trial && <Select
                                 clearable
                                 clearButtonLabel="Clear class selection"
                                 size="sm"
@@ -134,24 +135,24 @@ export const Badge = (props: BadgeProps) => {
                                 onChange={props.onClassChange}
                                 icon={<IconCategory2/>}
                                 data={props.classes.map(g => {return {value: g.classId, label: g.name}})}
-                            />
+                            />}
 
                             <Stack spacing={0}>
-                                <Tabs
+                                { !props.trial && <Tabs
                                     value={tab}
                                     data={[
                                         {label: "By lesson", value: "lessons"},
                                         {label: "By student", value: "students"},
                                     ]}
                                     onChange={setTab}
-                                />
+                                />}
 
-                                { tab === "lessons" && <LessonTable
+                                { (!!props.trial || tab === "lessons") && <LessonTable
                                     loading={props.loading}
                                     items={props.lessons}
                                 /> }
 
-                                { tab === "students" && <Table
+                                { (!props.trial && tab === "students") && <Table
                                     loading={props.loading}
                                     items={props.students}
                                 />}

@@ -6,6 +6,7 @@ const useStyles = createStyles((theme) => ({
         height: 240,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        whiteSpace: 'pre-line'
     },
 
     content: {
