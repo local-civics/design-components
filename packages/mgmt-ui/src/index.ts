@@ -13,5 +13,8 @@ export * from './pages/Lesson/Lesson'
 export * from './pages/Lessons/Lessons'
 export * from './pages/Organization/Organization'
 export * from './pages/People/People'
+export * from './pages/StartAnonymousLesson/StartAnonymousLesson'
+export * from './pages/TrialHome/TrialHome'
+export * from './pages/TrialRegistration/TrialRegistration'
 export * from './providers/AdminProvider/AdminProvider';
 export * from './shells/App/App';
