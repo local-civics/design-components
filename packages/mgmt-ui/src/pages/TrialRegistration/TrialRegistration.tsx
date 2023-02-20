@@ -7,6 +7,7 @@ import {
     TextInput,
     Button,
     Group,
+    Image,
 }                   from '@mantine/core';
 import {
     IconPodium,
@@ -108,12 +109,20 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
     return (
         <div className={classes.wrapper}>
             <SimpleGrid maw={960} ml="auto" mr="auto" cols={1} spacing={15} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
-                <div>
-                    <Title className={classes.title}>Trial Educator</Title>
-                    <Text className={classes.description} mt="sm" mb={30}>
-                        Try out a some of the features we can bring to your classroom. No commitment required.
-                    </Text>
-                </div>
+                <Group spacing="sm">
+                    <Image
+                        height={100}
+                        width="auto"
+                        fit="contain"
+                        src="https://cdn.localcivics.io/brand/l.png"
+                    />
+                    <div>
+                        <Title className={classes.title}>Trial Educator</Title>
+                        <Text className={classes.description} mt="sm">
+                            Try out a few of the features we can bring to your classroom. No commitment required.
+                        </Text>
+                    </div>
+                </Group>
                 <div className={classes.form}>
                     <Group mb="md" spacing="md" grow>
                         <TextInput
