@@ -6,8 +6,6 @@ import { Loader, NavBar, NavBarProps, NavLink } from "../../components";
  */
 export type AuthLayoutProps = {
   isLoading?: boolean;
-  tenantName?: string;
-  impactStatement?: string;
   pathname?: string;
   page?: "profile" | "explore" | "calendar";
   disabled?: boolean;
@@ -18,7 +16,6 @@ export type AuthLayoutProps = {
   outlet?: React.ReactNode;
   children?: React.ReactNode;
 
-  onOnboarding?: () => void;
   onHome?: () => void;
   onProfile?: () => void;
   onExplore?: () => void;
@@ -35,18 +32,6 @@ export type AuthLayoutProps = {
  * @constructor
  */
 export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
-  const onOnboarding = () => props.onOnboarding && props.onOnboarding();
-  React.useEffect(() => {
-    if (!props.tenantName) {
-      return;
-    }
-
-    if (!props.impactStatement && !props.pathname?.endsWith("onboarding")) {
-      onOnboarding();
-      return;
-    }
-  }, [props.tenantName, props.impactStatement, props.pathname]);
-
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
       <Loader isLoading={props.isLoading}>
