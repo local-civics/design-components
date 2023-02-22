@@ -151,7 +151,7 @@ export const LearningForm = (props: LearningFormProps) => {
               <div className="w-3 h-3 min-w-3">
                 <Icon name="leftArrow" />
               </div>
-              <span className="text-md">Go back</span>
+              <span className="text-md">Back</span>
             </div>
             {!!props.displayName && <h2 className="h-max font-semibold text-2xl">{props.displayName}</h2>}
             {!!props.description && <p className="h-max max-h-[14rem] overflow-y-auto whitespace-pre-line">{props.description}</p>}

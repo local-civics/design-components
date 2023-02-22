@@ -89,7 +89,7 @@ export const Badge = (props: BadgeProps) => {
                                     <IconArrowLeft size={14} />
                                 </ActionIcon>}
                                 size="lg">
-                                Go Back
+                                Back
                             </BadgeCore>
                         </UnstyledButton>
                         <Group>
@@ -103,13 +103,13 @@ export const Badge = (props: BadgeProps) => {
                                 </Text>
                             </Stack>
 
-                            <Stack ml="auto">
+                            {!props.trial && <Stack ml="auto">
                                 <SplitButton
                                     href={props.href}
                                     onCopyLinkClick={props.onCopyLinkClick}
                                     onExportDataClick={props.onExportDataClick}
                                 />
-                            </Stack>
+                            </Stack>}
                         </Group>
                     </Grid.Col>
                 </Grid>

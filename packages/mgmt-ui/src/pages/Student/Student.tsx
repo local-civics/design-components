@@ -41,7 +41,7 @@ export const Student = (props: StudentProps) => {
                                 <IconArrowLeft size={14} />
                             </ActionIcon>}
                             size="lg">
-                            Go Back
+                            Back
                         </Badge>
                     </UnstyledButton>
 

@@ -87,7 +87,7 @@ export const Organization = (props: OrganizationProps) => {
                                     <IconArrowLeft size={14} />
                                 </ActionIcon>}
                                 size="lg">
-                                Go Back
+                                Back
                             </Badge>
                         </UnstyledButton>
                         <Title order={2} className={classes.title} mt="md">

@@ -167,7 +167,7 @@ export const Class = (props: ClassProps) => {
                                     <IconArrowLeft size={14} />
                                 </ActionIcon>}
                                 size="lg">
-                                Go Back
+                                Back
                             </Badge>
                         </UnstyledButton>
                         <Title order={2} className={classes.title} mt="md">
