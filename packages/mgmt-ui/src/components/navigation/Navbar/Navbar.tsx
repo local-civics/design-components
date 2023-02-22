@@ -146,13 +146,19 @@ const data = [
     }
 ]
 
+const TRIAL_PAGES = [
+    'Home',
+    'Lessons',
+    'Badges',
+]
+
 export function Navbar(props: NavbarProps) {
     const { classes, cx } = useStyles();
     const [burgerOpen, setBurgerOpen] = React.useState(false)
     const toggle = () => setBurgerOpen(!burgerOpen)
     const links = data.map((item) => {
         const context = props.links[item.label] || {notifications: 0, href: ""}
-        if(context.hidden || props.trial && item.label !== 'Home'){
+        if(context.hidden || props.trial && TRIAL_PAGES.indexOf(item.label) === -1){
             return null
         }
 

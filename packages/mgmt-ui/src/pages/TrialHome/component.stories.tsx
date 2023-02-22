@@ -18,7 +18,6 @@ const mockdata = [
         lessonsCompleted: 36,
         lessonsTotal: 36,
         href: "",
-        onCopy: () => {},
         users: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}],
     },
     {
@@ -27,7 +26,6 @@ const mockdata = [
         lessonsCompleted: 23,
         lessonsTotal: 36,
         href: "",
-        onCopy: () => {},
         users: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}],
     },
     {
@@ -36,7 +34,6 @@ const mockdata = [
         lessonsCompleted: 23,
         lessonsTotal: 36,
         href: "",
-        onCopy: () => {},
         users: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}],
     },
 ]

@@ -23,6 +23,12 @@ const useStyles = createStyles((theme, props: AppProps) => ({
         }
     },
 
+    page: {
+        [theme.fn.smallerThan('sm')]: {
+            paddingTop: theme.spacing.xl * 2 - 3,
+        }
+    },
+
     logo: {
         maxWidth: 200,
 
@@ -207,7 +213,7 @@ export const App = (props: AppProps) => {
             main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
         })}
     >
-        <div style={{ position: 'relative' }}>
+        <div className={classes.page} style={{ position: 'relative' }}>
             { (props.loading || account.opened) && <Center style={{ height: 400 }}><Loader/></Center> }
             { (!props.loading && !account.opened) && props.page }
         </div>

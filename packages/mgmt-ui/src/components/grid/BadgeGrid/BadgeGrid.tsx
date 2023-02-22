@@ -30,7 +30,6 @@ export type TaskCardProps = {
     lessonsTotal: number
     href: string
     users: {name: string}[]
-    onCopy: () => void
 }
 
 export function TaskCard(props: TaskCardProps) {
@@ -72,7 +71,7 @@ export function TaskCard(props: TaskCardProps) {
                 {props.description}
             </Text>
 
-            <Text color="dimmed" size="sm" mt="md">
+            {!!props.lessonsTotal && <Text color="dimmed" size="sm" mt="md">
                 Lessons completed:{' '}
                 <Text
                     span
@@ -81,18 +80,15 @@ export function TaskCard(props: TaskCardProps) {
                 >
                     {props.lessonsCompleted}/{props.lessonsTotal}
                 </Text>
-            </Text>
+            </Text>}
 
-            <Progress value={(props.lessonsCompleted / props.lessonsTotal) * 100} mt={5} />
+            {!!props.lessonsTotal && <Progress value={(props.lessonsCompleted / props.lessonsTotal) * 100} mt={5} />}
 
             <Group position="apart" mt="md">
                 <Avatar.Group spacing="sm">
                     {avatars}
                     {!!remainingUsers && <Avatar radius="xl">+{remainingUsers}</Avatar> }
                 </Avatar.Group>
-                <ActionIcon onClick={props.onCopy} variant="default">
-                    <IconCopy size={18} />
-                </ActionIcon>
             </Group>
         </Card>
     );
