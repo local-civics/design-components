@@ -60,6 +60,7 @@ export type LessonProps = {
     reflections: ReflectionItem[],
     questions: QuestionItem[],
     trial?: boolean
+    lessonsCompleted?: number
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -121,9 +122,9 @@ export const Lesson = (props: LessonProps) => {
                         <Stack>
                             <StatsGroup data={[
                                 {
-                                    title: "LESSON COMPLETION",
-                                    value: percentageOfLessonsCompleted,
-                                    unit: '%',
+                                    title: props.trial ? "# OF SUBMISSIONS" : "LESSON COMPLETION",
+                                    value: props.trial ? props.lessonsCompleted || 0 : percentageOfLessonsCompleted,
+                                    unit: props.trial ? '' : '%',
                                 },
                             ]}/>
 
