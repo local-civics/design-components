@@ -31,8 +31,10 @@ const useStyles = createStyles((theme) => ({
 
     title: {
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+        fontSize: 40,
         color: theme.white,
         lineHeight: 1,
+        maxWidth: 450,
     },
 
     description: {
@@ -110,7 +112,7 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
             <SimpleGrid maw={960} ml="auto" mr="auto" cols={1} spacing={15} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
                 <Group spacing="sm">
                     <Image
-                        height={100}
+                        height={150}
                         width="auto"
                         fit="contain"
                         src="https://cdn.localcivics.io/brand/l.png"

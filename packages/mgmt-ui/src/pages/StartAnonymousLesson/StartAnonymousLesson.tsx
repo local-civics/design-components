@@ -111,7 +111,7 @@ export const StartAnonymousLesson = (props: StartAnonymousLessonProps) => {
             <Container>
                 <SimpleGrid maw={960} cols={2} spacing={15} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
                     <div className={classes.content}>
-                        <Badge color="violet">Anonymous</Badge>
+                        <Badge color="violet">Community</Badge>
                         <Title className={classes.title}>{props.title}</Title>
                         <Text color="dimmed" mt="md">
                             {props.description}
