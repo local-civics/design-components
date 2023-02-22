@@ -54,13 +54,13 @@ export function TaskCard(props: TaskCardProps) {
 
     return (
         <Card withBorder radius="md">
-            {!!props.lessonsTotal && <Group position="apart">
+            <Group position="apart">
                 <ThemeIcon size="lg" variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
                     <IconBadge size={20} />
                 </ThemeIcon>
-                {isComplete && <Badge variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>Complete</Badge>}
-                {!isComplete && <Badge variant="filled">Incomplete</Badge>}
-            </Group>}
+                {!!props.lessonsTotal && isComplete && <Badge variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>Complete</Badge>}
+                {!!props.lessonsTotal && !isComplete && <Badge variant="filled">Incomplete</Badge>}
+            </Group>
 
             <UnstyledButton<typeof Link> component={Link} to={props.href} mt="md" sx={{":hover": {textDecoration: "underline"}}}>
                 <Text size="lg" weight={500}>
