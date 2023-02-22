@@ -127,6 +127,7 @@ export interface NavbarProps {
     email: string
     links: Record<string, {notifications: number, href: string, hidden?: boolean}>
     trial?: boolean
+    loading?: boolean
     onLogout: () => void;
     onSwitchAccounts?: () => void;
 }
@@ -162,6 +163,10 @@ export function Navbar(props: NavbarProps) {
             return null
         }
 
+        if(props.loading && item.label !== 'Home'){
+            return null
+        }
+
         return <LinksGroup
             key={item.label}
             active={props.active}
@@ -194,18 +199,18 @@ export function Navbar(props: NavbarProps) {
                 </NavbarCore.Section>
 
                 <div className={cx({[classes.navBody]: !burgerOpen})}>
-                    <UserButton
+                    { !props.loading && <UserButton
                         className={classes.user}
                         image={props.image}
                         name={props.name}
                         email={props.email}
-                    />
+                    /> }
 
                     <NavbarCore.Section grow className={classes.links} component={ScrollArea}>
                         <div className={classes.linksInner}>{links}</div>
                     </NavbarCore.Section>
 
-                    <NavbarCore.Section className={classes.footer}>
+                    { !props.loading && <NavbarCore.Section className={classes.footer}>
                         { !!props.onSwitchAccounts && <a href="#" className={classes.link} onClick={(event) => {
                             event.preventDefault()
                             props.onSwitchAccounts && props.onSwitchAccounts()
@@ -221,7 +226,7 @@ export function Navbar(props: NavbarProps) {
                             <IconLogout className={classes.linkIcon} stroke={1.5} />
                             <span>Logout</span>
                         </a>
-                    </NavbarCore.Section>
+                    </NavbarCore.Section> }
                 </div>
             </NavbarCore>
         </>

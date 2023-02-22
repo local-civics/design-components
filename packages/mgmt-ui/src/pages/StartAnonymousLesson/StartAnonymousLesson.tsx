@@ -12,11 +12,11 @@ import {
 const useStyles = createStyles((theme) => ({
     wrapper: {
         minHeight: 400,
+        height: '100%',
         boxSizing: 'border-box',
         backgroundImage: `linear-gradient(-60deg, ${theme.colors[theme.primaryColor][4]} 0%, ${
             theme.colors[theme.primaryColor][7]
         } 100%)`,
-        borderRadius: theme.radius.md,
         padding: theme.spacing.xl * 2.5,
 
         [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
@@ -94,7 +94,7 @@ export const StartAnonymousLesson = (props: StartAnonymousLessonProps) => {
 
     return (
         <div className={classes.wrapper}>
-            <SimpleGrid cols={2} spacing={50} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+            <SimpleGrid maw={960} ml="auto" mr="auto" cols={2} spacing={50} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
                 <div>
                     <Title className={classes.title}>{props.title}</Title>
                     <Text weight="bold" className={classes.description} mt="sm" mb={30}>
