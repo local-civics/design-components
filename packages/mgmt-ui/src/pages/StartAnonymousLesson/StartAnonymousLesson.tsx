@@ -1,57 +1,74 @@
-import * as React                                                            from "react";
+import * as React from "react";
 import {
     createStyles,
     Text,
     Title,
-    SimpleGrid,
     TextInput,
     Button,
-    Group,
-} from '@mantine/core';
+    Group, Container, SimpleGrid,
+    Badge,
+}                 from '@mantine/core';
 
 const useStyles = createStyles((theme) => ({
-    wrapper: {
-        minHeight: 400,
-        height: '100%',
-        boxSizing: 'border-box',
-        backgroundImage: `linear-gradient(-60deg, ${theme.colors[theme.primaryColor][4]} 0%, ${
-            theme.colors[theme.primaryColor][7]
-        } 100%)`,
-        padding: theme.spacing.xl * 2.5,
+    form: {
+        backgroundColor: theme.white,
+        padding: theme.spacing.xl,
+        border: `1px solid ${
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[3]
+        }`,
+        borderRadius: theme.radius.md,
+        boxShadow: theme.shadows.lg,
+        minWidth: 300,
+        height: "fit-content",
+    },
 
-        [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-            padding: theme.spacing.xl * 1.5,
+    wrapper: {
+        position: 'relative',
+        paddingTop: 180,
+        paddingBottom: 130,
+    },
+
+    content: {
+        maxWidth: 480,
+        marginRight: theme.spacing.xl * 3,
+
+        [theme.fn.smallerThan('md')]: {
+            maxWidth: '100%',
+            marginRight: 0,
         },
     },
 
     title: {
+        color: theme.colorScheme === 'dark' ? theme.white : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-        color: theme.white,
-        lineHeight: 1,
-    },
+        fontSize: 44,
+        lineHeight: 1.2,
+        fontWeight: 900,
 
-    description: {
-        color: theme.colors[theme.primaryColor][0],
-        maxWidth: 300,
-
-        [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-            maxWidth: '100%',
+        [theme.fn.smallerThan('xs')]: {
+            fontSize: 28,
         },
     },
 
-    form: {
-        backgroundColor: theme.white,
-        padding: theme.spacing.xl,
-        borderRadius: theme.radius.md,
-        boxShadow: theme.shadows.lg,
+    control: {
+        [theme.fn.smallerThan('xs')]: {
+            flex: 1,
+        },
     },
 
-    social: {
-        color: theme.white,
+    image: {
+        flex: 1,
 
-        '&:hover': {
-            color: theme.colors[theme.primaryColor][1],
+        [theme.fn.smallerThan('md')]: {
+            display: 'none',
         },
+    },
+
+    highlight: {
+        position: 'relative',
+        backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
+        borderRadius: theme.radius.sm,
+        padding: '4px 12px',
     },
 
     input: {
@@ -66,10 +83,6 @@ const useStyles = createStyles((theme) => ({
 
     inputLabel: {
         color: theme.black,
-    },
-
-    control: {
-        backgroundColor: theme.colors[theme.primaryColor][6],
     },
 }));
 
@@ -91,34 +104,39 @@ export type StartAnonymousLessonProps = {
  */
 export const StartAnonymousLesson = (props: StartAnonymousLessonProps) => {
     const { classes } = useStyles();
+    const [name, setName] = React.useState("")
 
     return (
         <div className={classes.wrapper}>
-            <SimpleGrid maw={960} ml="auto" mr="auto" cols={2} spacing={50} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
-                <div>
-                    <Title className={classes.title}>{props.title}</Title>
-                    <Text weight="bold" className={classes.description} mt="sm" mb={30}>
-                        Instructor: {props.educatorName}
-                    </Text>
-                    <Text className={classes.description} mt="sm" mb={30}>
-                        {props.description}
-                    </Text>
-                </div>
-                <div className={classes.form}>
-                    <TextInput
-                        label="Name"
-                        placeholder="John Doe"
-                        defaultValue={props.studentName}
-                        readOnly={!!props.studentName}
-                        required
-                        classNames={{ input: classes.input, label: classes.inputLabel }}
-                    />
+            <Container>
+                <SimpleGrid maw={960} cols={2} spacing={15} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+                    <div className={classes.content}>
+                        <Badge color="violet">Anonymous</Badge>
+                        <Title className={classes.title}>{props.title}</Title>
+                        <Text color="dimmed" mt="md">
+                            {props.description}
+                        </Text>
+                        <Text color="dimmed" mt="md">
+                            Instructed by {props.educatorName}.
+                        </Text>
+                    </div>
+                    <div className={classes.form}>
+                        <TextInput
+                            label="Name"
+                            placeholder="John Doe"
+                            defaultValue={props.studentName}
+                            readOnly={!!props.studentName}
+                            required
+                            onChange={(e) => setName(e.target.value)}
+                            classNames={{ input: classes.input, label: classes.inputLabel }}
+                        />
 
-                    <Group position="right" mt="md">
-                        <Button onClick={props.onStart} className={classes.control}>{!props.studentName ? "Start lesson" : "Continue lesson"}</Button>
-                    </Group>
-                </div>
-            </SimpleGrid>
+                        <Group position="right" mt="md">
+                            <Button disabled={!name && !props.studentName} onClick={props.onStart} className={classes.control}>{!props.studentName ? "Start lesson" : "Continue lesson"}</Button>
+                        </Group>
+                    </div>
+                </SimpleGrid>
+            </Container>
         </div>
     );
 }

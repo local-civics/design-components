@@ -21,9 +21,7 @@ const useStyles = createStyles((theme) => ({
         minHeight: 400,
         height: '100%',
         boxSizing: 'border-box',
-        backgroundImage: `linear-gradient(-60deg, ${theme.colors[theme.primaryColor][4]} 0%, ${
-            theme.colors[theme.primaryColor][7]
-        } 100%)`,
+        backgroundImage: `linear-gradient(-60deg, #4e5561 0%, #222a39 100%)`,
         padding: theme.spacing.xl * 2.5,
 
         [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
@@ -92,7 +90,7 @@ const OPTIONS = [{ description: 'high school', title: 'High school', icon: IconH
  * TrialRegistrationProps
  */
 export type TrialRegistrationProps = {
-    onBegin: (data: {firstName: string, lastName: string, interests: string[]}) => void
+    onBegin: (data: {firstName: string, lastName: string, schoolName: string, interests: string[]}) => void
 }
 
 /**
@@ -104,6 +102,7 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
     const { classes } = useStyles();
     const [firstName, setFirstName] = React.useState("")
     const [lastName, setLastName] = React.useState("")
+    const [schoolName, setSchoolName] = React.useState("")
     const [interests, setInterests] = React.useState({})
 
     return (
@@ -117,29 +116,49 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
                         src="https://cdn.localcivics.io/brand/l.png"
                     />
                     <div>
-                        <Title className={classes.title}>Trial Educator</Title>
+                        <Title className={classes.title}>
+                            Are you an
+                            {" "}
+                            <Text
+                                component="span"
+                                inherit
+                                variant="gradient"
+                                gradient={{ from: 'pink', to: 'yellow' }}
+                            >
+                                educator
+                            </Text>
+                            {" "}
+                            interested in a free trial?
+                        </Title>
                         <Text className={classes.description} mt="sm">
                             Try out a few of the features we can bring to your classroom. No commitment required.
                         </Text>
                     </div>
                 </Group>
                 <div className={classes.form}>
-                    <Group mb="md" spacing="md" grow>
+                    <SimpleGrid cols={2} spacing={15} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
                         <TextInput
                             label="First Name"
-                            placeholder="John"
+                            placeholder="Your first name"
                             required
                             classNames={{ input: classes.input, label: classes.inputLabel }}
                             onChange={(e) => setFirstName(e.target.value)}
                         />
                         <TextInput
                             label="Last Name"
-                            placeholder="Doe"
+                            placeholder="Your last name"
                             required
                             classNames={{ input: classes.input, label: classes.inputLabel }}
                             onChange={(e) => setLastName(e.target.value)}
                         />
-                    </Group>
+
+                        <TextInput
+                            label="School Name (Optional)"
+                            placeholder="What school, if any, are you associated with?"
+                            classNames={{ input: classes.input, label: classes.inputLabel }}
+                            onChange={(e) => setSchoolName(e.target.value)}
+                        />
+                    </SimpleGrid>
 
                     <Text size={14} weight={500} mb="md" mt="xl">
                         What are you interested in teaching?
@@ -151,7 +170,8 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
 
                     <Group position="right" mt="md">
                         <Button
-                            onClick={() => props.onBegin({firstName, lastName, interests: Object.keys(interests)})}
+                            disabled={!firstName || !lastName}
+                            onClick={() => props.onBegin({firstName, lastName, schoolName, interests: Object.keys(interests)})}
                             className={classes.control}>Begin trial</Button>
                     </Group>
                 </div>

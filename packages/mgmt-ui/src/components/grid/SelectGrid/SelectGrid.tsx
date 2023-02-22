@@ -17,7 +17,7 @@ const useStyles = createStyles((theme, { checked }: { checked: boolean }) => ({
                     : theme.colors.gray[3]
         }`,
         borderRadius: theme.radius.sm,
-        padding: theme.spacing.lg,
+        padding: theme.spacing.xl,
         backgroundColor: checked
             ? theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background
             : theme.colorScheme === 'dark'
@@ -73,7 +73,7 @@ export function ImageCheckbox({
                 <Text color="dimmed" size="xs" sx={{ lineHeight: 1 }} mb={5}>
                     {description}
                 </Text>
-                <Text weight={500} size="sm" sx={{ lineHeight: 1 }}>
+                <Text weight={500} size="md" sx={{ lineHeight: 1 }}>
                     {title}
                 </Text>
             </div>
