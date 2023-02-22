@@ -25,7 +25,7 @@ const useStyles = createStyles((theme, props: AppProps) => ({
 
     page: {
         [theme.fn.smallerThan('sm')]: {
-            paddingTop: theme.spacing.xl * 2 - 3,
+            paddingTop: theme.spacing.xl * 3,
         }
     },
 

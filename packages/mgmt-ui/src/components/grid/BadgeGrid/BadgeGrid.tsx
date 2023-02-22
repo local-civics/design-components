@@ -1,6 +1,6 @@
 import * as React                                                                      from "react";
-import {Card, Avatar, Text, Progress, Badge, Group, ActionIcon, SimpleGrid, ThemeIcon, UnstyledButton} from '@mantine/core';
-import {IconBadge, IconCopy}                                                             from '@tabler/icons';
+import {Card, Avatar, Text, Progress, Badge, Group, SimpleGrid, ThemeIcon, UnstyledButton} from '@mantine/core';
+import {IconBadge}                                                             from '@tabler/icons';
 import AvatarInit                                                                                      from 'avatar-initials';
 import {Link}                                                                          from "react-router-dom";
 
@@ -54,15 +54,15 @@ export function TaskCard(props: TaskCardProps) {
 
     return (
         <Card withBorder radius="md">
-            <Group position="apart">
+            {!!props.lessonsTotal && <Group position="apart">
                 <ThemeIcon size="lg" variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
                     <IconBadge size={20} />
                 </ThemeIcon>
                 {isComplete && <Badge variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>Complete</Badge>}
                 {!isComplete && <Badge variant="filled">Incomplete</Badge>}
-            </Group>
+            </Group>}
 
-            <UnstyledButton<typeof Link> to={props.href} mt="md" sx={{":hover": {textDecoration: "underline"}}}>
+            <UnstyledButton<typeof Link> component={Link} to={props.href} mt="md" sx={{":hover": {textDecoration: "underline"}}}>
                 <Text size="lg" weight={500}>
                     {props.title}
                 </Text>
@@ -71,14 +71,14 @@ export function TaskCard(props: TaskCardProps) {
                 {props.description}
             </Text>
 
-            {!!props.lessonsTotal && <Text color="dimmed" size="sm" mt="md">
+            {!!props.lessonsCompleted && <Text color="dimmed" size="sm" mt="md">
                 Lessons completed:{' '}
                 <Text
                     span
                     weight={500}
                     sx={(theme) => ({ color: theme.colorScheme === 'dark' ? theme.white : theme.black })}
                 >
-                    {props.lessonsCompleted}/{props.lessonsTotal}
+                    {props.lessonsCompleted}
                 </Text>
             </Text>}
 
