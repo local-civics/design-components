@@ -25,6 +25,7 @@ const useStyles = createStyles((theme) => ({
 
 export type SplitButtonProps = {
     href: string
+    noExport?: boolean
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
 }
@@ -59,12 +60,12 @@ export const SplitButton = (props: SplitButtonProps) => {
                     >
                         Copy link
                     </Menu.Item>
-                    <Menu.Item
+                    {!props.noExport && <Menu.Item
                         icon={<IconTableExport size={16} stroke={1.5} color={menuIconColor} />}
                         onClick={props.onExportDataClick}
                     >
                         Export data (.csv)
-                    </Menu.Item>
+                    </Menu.Item>}
                 </Menu.Dropdown>
             </Menu>
         </Group>

@@ -58,7 +58,7 @@ export type BadgeProps = {
     students: BadgeUserItem[]
     href: string
     trial?: boolean
-    badgesEarned?: number
+    lessonsCompleted?: number
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -121,7 +121,7 @@ export const Badge = (props: BadgeProps) => {
                             <StatsGroup data={[
                                 {
                                     title: props.trial ? "LESSONS SUBMITTED" : "BADGE COMPLETION",
-                                    value: props.trial ? props.badgesEarned || 0 : percentageOfBadgesEarned,
+                                    value: props.trial ? props.lessonsCompleted || 0 : percentageOfBadgesEarned,
                                     unit: props.trial ? '' : '%',
                                 },
                             ]}/>

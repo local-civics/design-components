@@ -35,7 +35,7 @@ export function TaskCard(props: TaskCardProps) {
 
     return (
         <Card withBorder radius="md">
-            <Group position="apart">
+            <Group position="apart" mb={20}>
                 <ThemeIcon size="lg" variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
                     <IconBadge size={20} />
                 </ThemeIcon>
@@ -48,7 +48,7 @@ export function TaskCard(props: TaskCardProps) {
                     {props.title}
                 </Text>
             </UnstyledButton>
-            <Text size="sm" color="dimmed" mt={5}>
+            <Text size="sm" color="dimmed" mt={5} mb={50}>
                 {props.description}
             </Text>
 

@@ -144,6 +144,7 @@ export const Lesson = (props: LessonProps) => {
                             <Stack ml="auto">
                                 <SplitButton
                                     href={props.href}
+                                    noExport={props.trial}
                                     onCopyLinkClick={props.onCopyLinkClick}
                                     onExportDataClick={props.onExportDataClick}
                                 />
