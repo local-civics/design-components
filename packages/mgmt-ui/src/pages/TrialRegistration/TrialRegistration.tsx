@@ -31,10 +31,10 @@ const useStyles = createStyles((theme) => ({
 
     title: {
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-        fontSize: 40,
+        fontSize: 50,
         color: theme.white,
         lineHeight: 1,
-        maxWidth: 450,
+        maxWidth: 500,
     },
 
     description: {
@@ -109,10 +109,10 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
 
     return (
         <div className={classes.wrapper}>
-            <SimpleGrid maw={960} ml="auto" mr="auto" cols={1} spacing={15} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+            <SimpleGrid maw={1200} ml="auto" mr="auto" cols={2} spacing={50} breakpoints={[{ maxWidth: 'md', cols: 1 }]}>
                 <Group spacing="sm">
                     <Image
-                        height={150}
+                        height={200}
                         width="auto"
                         fit="contain"
                         src="https://cdn.localcivics.io/brand/l.png"
@@ -141,14 +141,14 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
                     <SimpleGrid cols={2} spacing={15} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
                         <TextInput
                             label="First Name"
-                            placeholder="Your first name"
+                            placeholder="Insert your first name"
                             required
                             classNames={{ input: classes.input, label: classes.inputLabel }}
                             onChange={(e) => setFirstName(e.target.value)}
                         />
                         <TextInput
                             label="Last Name"
-                            placeholder="Your last name"
+                            placeholder="Insert your last name"
                             required
                             classNames={{ input: classes.input, label: classes.inputLabel }}
                             onChange={(e) => setLastName(e.target.value)}
@@ -156,7 +156,7 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
 
                         <TextInput
                             label="School Name (Optional)"
-                            placeholder="What school, if any, are you associated with?"
+                            placeholder="What's the name of your school?"
                             classNames={{ input: classes.input, label: classes.inputLabel }}
                             onChange={(e) => setSchoolName(e.target.value)}
                         />

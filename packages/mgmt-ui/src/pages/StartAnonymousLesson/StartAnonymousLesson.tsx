@@ -17,7 +17,7 @@ const useStyles = createStyles((theme) => ({
             theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[3]
         }`,
         borderRadius: theme.radius.md,
-        boxShadow: theme.shadows.lg,
+        boxShadow: theme.shadows.md,
         minWidth: 300,
         height: "fit-content",
     },

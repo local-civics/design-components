@@ -17,7 +17,7 @@ const useStyles = createStyles((theme, { checked }: { checked: boolean }) => ({
                     : theme.colors.gray[3]
         }`,
         borderRadius: theme.radius.sm,
-        padding: theme.spacing.xl,
+        padding: theme.spacing.md,
         backgroundColor: checked
             ? theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background
             : theme.colorScheme === 'dark'
@@ -70,10 +70,7 @@ export function ImageCheckbox({
             </ThemeIcon>
 
             <div className={classes.body}>
-                <Text color="dimmed" size="xs" sx={{ lineHeight: 1 }} mb={5}>
-                    {description}
-                </Text>
-                <Text weight={500} size="md" sx={{ lineHeight: 1 }}>
+                <Text weight={500} size="sm" sx={{ lineHeight: 1 }}>
                     {title}
                 </Text>
             </div>
@@ -101,7 +98,7 @@ export function SelectGrid(props: SelectGridProps) {
     />);
     return (
         <SimpleGrid
-            cols={3}
+            cols={2}
             breakpoints={[
                 { maxWidth: 'md', cols: 2 },
                 { maxWidth: 'sm', cols: 1 },
