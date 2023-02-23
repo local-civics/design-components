@@ -94,7 +94,7 @@ export type StartAnonymousLessonProps = {
     description: string
     educatorName: string
     studentName?: string
-    onStart: () => void;
+    onStart: (name: string) => void;
 }
 
 /**
@@ -132,7 +132,7 @@ export const StartAnonymousLesson = (props: StartAnonymousLessonProps) => {
                         />
 
                         <Group position="right" mt="md">
-                            <Button disabled={!name && !props.studentName} onClick={props.onStart} className={classes.control}>{!props.studentName ? "Start lesson" : "Continue lesson"}</Button>
+                            <Button disabled={!name && !props.studentName} onClick={() => props.onStart(name)} className={classes.control}>{!props.studentName ? "Start lesson" : "Continue lesson"}</Button>
                         </Group>
                     </div>
                 </SimpleGrid>

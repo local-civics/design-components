@@ -18,6 +18,8 @@ const useStyles = createStyles((theme, { checked }: { checked: boolean }) => ({
         }`,
         borderRadius: theme.radius.sm,
         padding: theme.spacing.md,
+        paddingTop: theme.spacing.sm,
+        paddingBottom: theme.spacing.sm,
         backgroundColor: checked
             ? theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background
             : theme.colorScheme === 'dark'

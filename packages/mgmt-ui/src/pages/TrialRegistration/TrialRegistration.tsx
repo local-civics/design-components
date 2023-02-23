@@ -109,7 +109,7 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
 
     return (
         <div className={classes.wrapper}>
-            <SimpleGrid maw={1200} ml="auto" mr="auto" cols={2} spacing={50} breakpoints={[{ maxWidth: 'md', cols: 1 }]}>
+            <SimpleGrid maw={1300} ml="auto" mr="auto" cols={2} spacing={50} breakpoints={[{ maxWidth: 'md', cols: 1 }]}>
                 <Group spacing="sm">
                     <Image
                         height={200}
