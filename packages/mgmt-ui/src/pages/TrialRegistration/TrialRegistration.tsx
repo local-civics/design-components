@@ -18,8 +18,7 @@ import {SelectGrid} from "../../components/grid/SelectGrid/SelectGrid";
 
 const useStyles = createStyles((theme) => ({
     wrapper: {
-        minHeight: 400,
-        height: '100%',
+        minHeight: '100%',
         boxSizing: 'border-box',
         backgroundImage: `linear-gradient(-60deg, #4e5561 0%, #222a39 100%)`,
         padding: theme.spacing.xl * 2.5,
