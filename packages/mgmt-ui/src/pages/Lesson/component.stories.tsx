@@ -47,6 +47,7 @@ Mock.args = {
             rating: 2,
         }
     ],
+    contributors: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}, {name: "Jamie"}, {name: "Jo"}],
     students: [
         {
             userId: "",

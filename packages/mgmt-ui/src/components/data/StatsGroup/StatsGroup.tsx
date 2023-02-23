@@ -9,10 +9,6 @@ const useStyles = createStyles((theme) => ({
         } 100%)`,
         padding: theme.spacing.xl * 1.5,
         borderRadius: theme.radius.md,
-
-        [theme.fn.smallerThan('sm')]: {
-            flexDirection: 'column',
-        },
     },
 
     title: {
@@ -58,14 +54,16 @@ const useStyles = createStyles((theme) => ({
 
 interface StatsGroupProps {
     data: { title: string; value: number, unit?: string}[];
+    footer?: React.ReactNode
 }
 
 /**
  * StatsGroup
  * @param data
+ * @param children
  * @constructor
  */
-export const StatsGroup = ({ data }: StatsGroupProps) => {
+export const StatsGroup = ({ data, footer }: StatsGroupProps) => {
     const { classes } = useStyles();
     const stats = data.map((stat) => {
         const value = (() => {
@@ -82,5 +80,8 @@ export const StatsGroup = ({ data }: StatsGroupProps) => {
             <Text className={classes.title}>{stat.title}</Text>
         </div>
     });
-    return <div className={classes.root}>{stats}</div>;
+    return <div className={classes.root}>
+        {stats}
+        {footer}
+    </div>;
 }

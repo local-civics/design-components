@@ -1,6 +1,7 @@
 import {IconArrowLeft, IconCategory2} from "@tabler/icons";
-import {useState}    from "react";
-import * as React    from 'react';
+import AvatarInit                     from "avatar-initials";
+import {useState}                     from "react";
+import * as React                     from 'react';
 import {
     createStyles,
     Badge,
@@ -9,10 +10,11 @@ import {
     Container, Stack, Grid,
     Select, ActionIcon, Group,
     LoadingOverlay,
-    UnstyledButton,
+    UnstyledButton, Avatar,
 }                                                         from '@mantine/core';
 import {StatsGroup}                                       from "../../components/data/StatsGroup/StatsGroup";
 import {Tabs}                                             from "../../components/navigation/Tabs/Tabs";
+import {compact}                                          from "../../utils/numbers";
 import {Item as ReflectionItem, Table as ReflectionTable} from "./ReflectionTable";
 import {SplitButton}                                      from "./SplitButton";
 import {Table, Item}                                      from "./Table";
@@ -61,6 +63,7 @@ export type LessonProps = {
     questions: QuestionItem[],
     trial?: boolean
     lessonsCompleted?: number
+    contributors?: {name: string}[]
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -79,6 +82,38 @@ export const Lesson = (props: LessonProps) => {
 
     const numberOfStudents = props.students.length
     const percentageOfLessonsCompleted = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
+    const contributors = props.contributors || []
+    const avatars = contributors.slice(0, 5).map((u, i) => {
+        const fullName = u.name
+        let initials = fullName.split(/[ -]/).map((n) => n.charAt(0)).join('');
+        const src = AvatarInit.initialAvatar({
+            background: '#1c7ed6',
+            color: '#fff',
+            fontFamily: "'Lato', 'Lato-Regular', 'Helvetica Neue'",
+            fontSize: 10,
+            fontWeight: 250,
+            size: 30,
+            initials: initials,
+        })
+
+        return <Avatar key={i} src={src} radius="xl" />
+    })
+
+    const remainingUsers = contributors.slice(5).length
+    if(remainingUsers){
+        const initials = "+" + compact(remainingUsers)
+        const src = AvatarInit.initialAvatar({
+            background: '#1c7ed6',
+            color: '#fff',
+            fontFamily: "'Lato', 'Lato-Regular', 'Helvetica Neue'",
+            fontSize: 10,
+            fontWeight: 250,
+            size: 30,
+            initials: initials,
+        })
+
+        avatars.push(<Avatar src={src} radius="xl" />)
+    }
 
     return (
         <Container size="lg" py="xl">
@@ -120,13 +155,21 @@ export const Lesson = (props: LessonProps) => {
                     <div style={{ position: 'relative' }}>
                         <LoadingOverlay visible={props.loading} overlayBlur={2} />
                         <Stack>
-                            <StatsGroup data={[
-                                {
-                                    title: props.trial ? "# OF SUBMISSIONS" : "LESSON COMPLETION",
-                                    value: props.trial ? props.lessonsCompleted || 0 : percentageOfLessonsCompleted,
-                                    unit: props.trial ? '' : '%',
-                                },
-                            ]}/>
+                            <StatsGroup
+                                data={[
+                                    {
+                                        title: props.trial ? "# OF SUBMISSIONS" : "LESSON COMPLETION",
+                                        value: props.trial ? props.lessonsCompleted || 0 : percentageOfLessonsCompleted,
+                                        unit: props.trial ? '' : '%',
+                                    },
+                                ]}
+                            />
+
+                            <Group position="apart">
+                                <Avatar.Group spacing="sm">
+                                    {avatars}
+                                </Avatar.Group>
+                            </Group>
 
                             {!props.trial && <Select
                                 clearable

@@ -18,8 +18,6 @@ const mockdata = [
         lessonsCompleted: 36,
         lessonsTotal: 36,
         href: "",
-        onCopy: () => {},
-        users: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}],
     },
     {
         title: "5.4 minor release (October 2022)",
@@ -27,8 +25,6 @@ const mockdata = [
         lessonsCompleted: 23,
         lessonsTotal: 36,
         href: "",
-        onCopy: () => {},
-        users: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}],
     },
     {
         title: "5.5 minor release (November 2022)",
@@ -36,8 +32,6 @@ const mockdata = [
         lessonsCompleted: 23,
         lessonsTotal: 36,
         href: "",
-        onCopy: () => {},
-        users: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}],
     },
 ]
 

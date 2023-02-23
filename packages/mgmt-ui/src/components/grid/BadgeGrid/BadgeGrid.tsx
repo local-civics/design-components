@@ -1,7 +1,6 @@
 import * as React                                                                      from "react";
-import {Card, Avatar, Text, Progress, Badge, Group, SimpleGrid, ThemeIcon, UnstyledButton} from '@mantine/core';
+import {Card, Text, Progress, Badge, Group, SimpleGrid, ThemeIcon, UnstyledButton} from '@mantine/core';
 import {IconBadge}                                                             from '@tabler/icons';
-import AvatarInit                                                                                      from 'avatar-initials';
 import {Link}                                                                          from "react-router-dom";
 
 /**
@@ -29,27 +28,9 @@ export type TaskCardProps = {
     lessonsCompleted: number
     lessonsTotal: number
     href: string
-    users: {name: string}[]
 }
 
 export function TaskCard(props: TaskCardProps) {
-    const avatars = props.users.slice(0, 3).map((u, i) => {
-        const fullName = u.name
-        let initials = fullName.split(/[ -]/).map((n) => n.charAt(0)).join('');
-        const src = AvatarInit.initialAvatar({
-            background: '#f4f6f7',
-            color: '#888888',
-            fontFamily: "'Lato', 'Lato-Regular', 'Helvetica Neue'",
-            fontSize: 10,
-            fontWeight: 250,
-            size: 30,
-            initials: initials,
-        })
-
-        return <Avatar key={i} src={src} radius="xl" />
-    })
-
-    const remainingUsers = props.users.slice(3).length
     const isComplete = props.lessonsCompleted >= props.lessonsTotal
 
     return (
@@ -83,13 +64,6 @@ export function TaskCard(props: TaskCardProps) {
             </Text>}
 
             {!!props.lessonsTotal && <Progress value={(props.lessonsCompleted / props.lessonsTotal) * 100} mt={5} />}
-
-            <Group position="apart" mt="md">
-                <Avatar.Group spacing="sm">
-                    {avatars}
-                    {!!remainingUsers && <Avatar radius="xl">+{remainingUsers}</Avatar> }
-                </Avatar.Group>
-            </Group>
         </Card>
     );
 }
