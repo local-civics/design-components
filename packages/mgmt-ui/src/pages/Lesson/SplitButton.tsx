@@ -1,8 +1,7 @@
 import * as React                                        from 'react'
-import { createStyles, Button, Menu, Group, ActionIcon } from '@mantine/core';
+import { createStyles, Button, Menu, Group, ActionIcon, Stack } from '@mantine/core';
 import {
     IconChevronDown,
-    IconPlaylistAdd,
     IconClipboardCopy, IconTableExport
 }                                                        from '@tabler/icons';
 import {Link}                                            from "react-router-dom";
@@ -35,39 +34,42 @@ export const SplitButton = (props: SplitButtonProps) => {
     const menuIconColor = theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 6];
 
     return (
-        <Group noWrap spacing={0}>
-            <Button<typeof Link> component={Link} to={props.href}
-                className={classes.button}
+        <Stack spacing="sm">
+            <Button
                 variant="gradient"
+                leftIcon={<IconClipboardCopy size={14} />}
+                onClick={props.onCopyLinkClick}
             >
-                Preview
+                Assign
             </Button>
-            <Menu transition="pop" position="bottom-end">
-                <Menu.Target>
-                    <ActionIcon
-                        variant="gradient"
-                        color={theme.primaryColor}
-                        size={36}
-                        className={classes.menuControl}
-                    >
-                        <IconChevronDown size={16} stroke={1.5} />
-                    </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    <Menu.Item
-                        icon={<IconClipboardCopy size={16} stroke={1.5} color={menuIconColor} />}
-                        onClick={props.onCopyLinkClick}
-                    >
-                        Copy link
-                    </Menu.Item>
-                    {!props.noExport && <Menu.Item
-                        icon={<IconTableExport size={16} stroke={1.5} color={menuIconColor} />}
-                        onClick={props.onExportDataClick}
-                    >
-                        Export data (.csv)
-                    </Menu.Item>}
-                </Menu.Dropdown>
-            </Menu>
-        </Group>
+            <Group noWrap spacing={0}>
+                <Button<typeof Link> component={Link} to={props.href}
+                    className={classes.button}
+                    variant="gradient"
+                >
+                    Preview
+                </Button>
+                <Menu transition="pop" position="bottom-end">
+                    <Menu.Target>
+                        <ActionIcon
+                            variant="gradient"
+                            color={theme.primaryColor}
+                            size={36}
+                            className={classes.menuControl}
+                        >
+                            <IconChevronDown size={16} stroke={1.5} />
+                        </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        {!props.noExport && <Menu.Item
+                            icon={<IconTableExport size={16} stroke={1.5} color={menuIconColor} />}
+                            onClick={props.onExportDataClick}
+                        >
+                            Export data (.csv)
+                        </Menu.Item>}
+                    </Menu.Dropdown>
+                </Menu>
+            </Group>
+        </Stack>
     );
 }

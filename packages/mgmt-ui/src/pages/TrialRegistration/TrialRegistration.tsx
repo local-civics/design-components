@@ -1,4 +1,4 @@
-import * as React                                                            from "react";
+import * as React   from "react";
 import {
     createStyles,
     Text,
@@ -7,12 +7,17 @@ import {
     TextInput,
     Button,
     Group,
-    Image,
+    Image, Autocomplete,
 }                   from '@mantine/core';
 import {
     IconPodium,
-    IconHistory,
-    IconLego, IconAffiliate, IconGrowth, IconTools, IconNews
+    IconTools,
+    IconNews,
+    IconSchool,
+    IconScribble,
+    IconBackpack,
+    IconPresentation,
+    IconBriefcase
 } from '@tabler/icons';
 import {SelectGrid} from "../../components/grid/SelectGrid/SelectGrid";
 
@@ -79,19 +84,33 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-const OPTIONS = [{ description: 'high school', title: 'High school', icon: IconHistory},
-    { description: 'k - 8th', title: 'K - 8th', icon: IconLego },
-    { description: 'civics', title: 'Civics', icon: IconNews },
-    { description: 'project-based learning', title: 'Project-based learning', icon: IconTools },
+const OPTIONS = [
+    { description: 'elementary', title: 'Elementary (K-5)', icon: IconScribble},
+    { description: 'middle', title: 'Middle (6-8)', icon: IconBackpack},
+    { description: 'high school', title: 'High School (9-12)', icon: IconSchool},
     { description: 'college', title: 'College', icon: IconPodium },
-    { description: 'career', title: 'Career', icon: IconAffiliate },
-    { description: 'student leadership', title: 'Student leadership', icon: IconGrowth },]
+    { description: 'career', title: 'Career', icon: IconBriefcase },
+    { description: 'work-based learning', title: 'Work-Based Learning', icon: IconPresentation },
+    { description: 'student leadership', title: 'Student Leadership', icon: IconPodium },
+    { description: 'civics', title: 'Civics', icon: IconNews },
+    { description: 'project-based learning', title: 'Project-Based Learning', icon: IconTools },
+]
 
 /**
  * TrialRegistrationProps
  */
 export type TrialRegistrationProps = {
-    onBegin: (data: {firstName: string, lastName: string, schoolName: string, interests: string[]}) => void
+    organizations: {organizationId: string, displayName: string}[]
+    onBegin: (data: NewTrialRegistration) => void
+    onQueryOrganizations: (name: string) => void;
+}
+
+export type NewTrialRegistration = {
+    firstName: string
+    lastName: string
+    organizationId: string
+    organizationName: string
+    interests: string[]
 }
 
 /**
@@ -103,7 +122,7 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
     const { classes } = useStyles();
     const [firstName, setFirstName] = React.useState("")
     const [lastName, setLastName] = React.useState("")
-    const [schoolName, setSchoolName] = React.useState("")
+    const [organization, setOrganization] = React.useState({organizationId: "", displayName: ""})
     const [interests, setInterests] = React.useState({})
 
     return (
@@ -153,16 +172,17 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
                             onChange={(e) => setLastName(e.target.value)}
                         />
 
-                        <TextInput
-                            label="School Name (Optional)"
+                        <Autocomplete
+                            label="School/Organization Name"
                             placeholder="What's the name of your school?"
-                            classNames={{ input: classes.input, label: classes.inputLabel }}
-                            onChange={(e) => setSchoolName(e.target.value)}
+                            data={props.organizations.map(o => {return {...o, value: o.displayName}})}
+                            onItemSubmit={(item) => setOrganization({organizationId: item.organizationId, displayName: item.displayName})}
+                            onChange={props.onQueryOrganizations}
                         />
                     </SimpleGrid>
 
                     <Text size={14} weight={500} mb="md" mt="xl">
-                        What are you interested in teaching?
+                        Where do you want to start? (Select as many as you want)
                     </Text>
                     <SelectGrid
                         items={OPTIONS}
@@ -172,7 +192,13 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
                     <Group position="right" mt="md">
                         <Button
                             disabled={!firstName || !lastName}
-                            onClick={() => props.onBegin({firstName, lastName, schoolName, interests: Object.keys(interests)})}
+                            onClick={() => props.onBegin({
+                                firstName,
+                                lastName,
+                                organizationId: organization.organizationId,
+                                organizationName: organization.displayName,
+                                interests: Object.keys(interests),
+                            })}
                             className={classes.control}>Begin trial</Button>
                     </Group>
                 </div>
