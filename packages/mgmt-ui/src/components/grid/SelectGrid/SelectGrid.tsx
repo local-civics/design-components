@@ -68,7 +68,7 @@ export function ImageCheckbox({
             className={cx(classes.button, className)}
         >
             <ThemeIcon variant="light" size="lg" color="blue">
-                <Icon size={40}/>
+                <Icon size={25}/>
             </ThemeIcon>
 
             <div className={classes.body}>

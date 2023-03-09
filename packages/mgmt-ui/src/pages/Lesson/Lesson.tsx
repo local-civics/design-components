@@ -115,6 +115,15 @@ export const Lesson = (props: LessonProps) => {
         avatars.push(<Avatar src={src} radius="xl" />)
     }
 
+    const tabs = props.trial ? [
+        {label: "By question", value: "question"},
+        {label: "By student", value: "students"},
+    ] : [
+        {label: "By question", value: "question"},
+        {label: "By student", value: "students"},
+        {label: "By reflection", value: "reflections"},
+    ]
+
     return (
         <Container size="lg" py="xl">
             <Stack spacing="md">
@@ -185,27 +194,23 @@ export const Lesson = (props: LessonProps) => {
                             />}
 
                             <Stack spacing={0}>
-                                {!props.trial && <Tabs
+                                <Tabs
                                     value={tab}
-                                    data={[
-                                        {label: "By question", value: "question"},
-                                        {label: "By student", value: "students"},
-                                        {label: "By reflection", value: "reflections"},
-                                    ]}
+                                    data={tabs}
                                     onChange={setTab}
-                                />}
+                                />
 
-                                { (!!props.trial || tab === "question") && <QuestionStack
+                                { tab === "question" && <QuestionStack
                                     loading={props.loading}
                                     items={props.questions}
                                 />}
 
-                                { (!props.trial && tab === "reflections") && <ReflectionTable
+                                { tab === "reflections" && <ReflectionTable
                                     loading={props.loading}
                                     items={props.reflections}
                                 /> }
 
-                                { (!props.trial && tab === "students") && <Table
+                                { tab === "students" && <Table
                                     loading={props.loading}
                                     items={props.students}
                                 />}

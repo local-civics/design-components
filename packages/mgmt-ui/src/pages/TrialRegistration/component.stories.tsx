@@ -15,7 +15,14 @@ export default {
  */
 const Template: Story<TrialRegistrationProps> = (args) => (
     <div className="h-full w-full overscroll-none font-proxima">
-        <TrialRegistration {...args} />
+        <TrialRegistration
+            {...args}
+           organizations={[
+               {organizationId: "1", displayName: "Result #1"},
+               {organizationId: "2", displayName: "Result #2"},
+               {organizationId: "3", displayName: "Result #3"},
+           ]}
+        />
         {/*<img className="object-cover w-screen h-screen" alt="landing" src="https://cdn.localcivics.io/hub/landing.jpg" />*/}
     </div>
 );
