@@ -177,7 +177,10 @@ export const TrialRegistration = (props: TrialRegistrationProps) => {
                             placeholder="What's the name of your school?"
                             data={props.organizations.map(o => {return {...o, value: o.displayName}})}
                             onItemSubmit={(item) => setOrganization({organizationId: item.organizationId, displayName: item.displayName})}
-                            onChange={props.onQueryOrganizations}
+                            onChange={(next) => {
+                                setOrganization({organizationId: "", displayName: next})
+                                return props.onQueryOrganizations(next)
+                            }}
                         />
                     </SimpleGrid>
 
