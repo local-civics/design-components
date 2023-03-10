@@ -25,6 +25,11 @@ const myBtn = () => <Button>Do something</Button>;
 
 ### **Development**
 
+Recommended Node and Npm version 
+
+`Node: V18.1.0 and later`
+`Npm : V8.19.0 and later`
+
 Clone the [design-components GitHub project](https://github.com/local-civics/design-components) then start Storybook.
 
 `npm install && cd packages/hub && npm run start`
