@@ -18,7 +18,7 @@ export type BadgeSectionProps = {
   badges?: BadgeProps[];
   options?: BadgesectionsOptions[];
   onFilterClick?: (filter: BadgesectionsOptions) => void;
-  onResetFilters?:()=>void
+  onResetFilters?: () => void;
 };
 
 /**
@@ -40,7 +40,6 @@ export const BadgeSection = (props: BadgeSectionProps) => {
     }
   };
 
- 
   React.useEffect(() => {
     setShowMore(props.showMore);
   }, [props.showMore]);
@@ -68,19 +67,22 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 <div
                   key={`${i}`}
                   onClick={() => props.onFilterClick && props.onFilterClick(_filterObj)}
-                  className={_filterObj.isActive ? `${filterClassName} active` : 'inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer'}
+                  className={
+                    _filterObj.isActive
+                      ? `${filterClassName} active`
+                      : "inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer"
+                  }
                 >
                   {_filterObj.name}
                 </div>
               );
             })}
-             <div
-                 
-                  onClick={() => props.onResetFilters && props.onResetFilters()}
-                  className='inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer'
-                >
-                 Clear
-                </div>
+            <div
+              onClick={() => props.onResetFilters && props.onResetFilters()}
+              className="inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer"
+            >
+              Clear
+            </div>
           </div>
         )}
       </div>
