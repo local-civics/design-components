@@ -998,6 +998,10 @@ const Template: Story<BadgeSectionProps> = (args) => (
           ],
         },
       ]}
+      options={[
+        { name: "progress", isActive: true },
+        { name: "completed", isActive: false },
+      ]}
       {...args}
     />
   </div>
