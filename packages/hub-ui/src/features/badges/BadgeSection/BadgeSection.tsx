@@ -18,7 +18,6 @@ export type BadgeSectionProps = {
   badges?: BadgeProps[];
   options?: BadgesectionsOptions[];
   onFilterClick?: (filter: BadgesectionsOptions) => void;
-  onResetFilters?: () => void;
 };
 
 /**
@@ -77,12 +76,6 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 </div>
               );
             })}
-            <div
-              onClick={() => props.onResetFilters && props.onResetFilters()}
-              className="inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer"
-            >
-              Clear
-            </div>
           </div>
         )}
       </div>
