@@ -3,7 +3,7 @@ import { Widget, WidgetBody, WidgetHeader } from "../../../components/Widget";
 import { Badge, BadgeProps } from "../Badge/Badge";
 import { Icon } from "../../../components/Icon/Icon";
 
-export type BadgesectionsOptions = {
+export type BadgeSectionOptions = {
   name?: string;
   isActive?: boolean;
 };
@@ -16,8 +16,8 @@ export type BadgeSectionProps = {
   readonly?: boolean;
   showMore?: boolean;
   badges?: BadgeProps[];
-  options?: BadgesectionsOptions[];
-  onFilterClick?: (filter: BadgesectionsOptions) => void;
+  options?: BadgeSectionOptions[];
+  onFilterClick?: (filter: BadgeSectionOptions) => void;
 };
 
 /**
@@ -66,6 +66,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 <div
                   key={`${i}`}
                   onClick={() => props.onFilterClick && props.onFilterClick(_filterObj)}
+                  style={{ marginBottom: "0.6rem" }}
                   className={
                     _filterObj.isActive
                       ? `${filterClassName} active`
