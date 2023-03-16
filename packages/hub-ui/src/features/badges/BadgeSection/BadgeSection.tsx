@@ -4,9 +4,14 @@ import { Badge, BadgeProps } from "../Badge/Badge";
 import { Icon } from "../../../components/Icon/Icon";
 
 export type ToggleOptionProps = {
-  label: string;
-  active: boolean;
-  isGrid: boolean;
+  label?: string;
+  active?: boolean;
+  isGrid?: boolean;
+};
+
+export type BadgeSectionOptions = {
+  name?: string;
+  isActive?: boolean;
 };
 
 /**
@@ -19,6 +24,8 @@ export type BadgeSectionProps = {
   badges?: BadgeProps[];
   toggleOptions?: ToggleOptionProps;
   onToggleClick?: () => void;
+  options?: BadgeSectionOptions[];
+  onFilterClick?: (filter: BadgeSectionOptions) => void;
 };
 
 /**
@@ -29,6 +36,7 @@ export type BadgeSectionProps = {
 export const BadgeSection = (props: BadgeSectionProps) => {
   const [showMore, setShowMore] = React.useState(props.showMore);
   const badges = props.badges || [];
+  const options = props.options || [];
   const progress: BadgeProps[] = [];
   const locked: BadgeProps[] = [];
   const available: BadgeProps[] = [];
@@ -55,15 +63,16 @@ export const BadgeSection = (props: BadgeSectionProps) => {
   });
 
   const preview = props.readonly ? collected.slice(0, 10) : badges.slice(0, 3);
+  const filterClassName = "inline-block px-4 py-3 text-black bg-gray-300 rounded-full cursor-pointer";
   const getGridStyle = (gridStyle: string) => {
     if (
-      (props.toggleOptions?.active && props.toggleOptions?.isGrid) ||
-      (!props.toggleOptions?.active && !props.toggleOptions?.isGrid)
+      (props?.toggleOptions?.active && props?.toggleOptions?.isGrid) ||
+      (!props?.toggleOptions?.active && !props?.toggleOptions?.isGrid)
     ) {
       return gridStyle;
     } else if (
-      (props.toggleOptions?.active && !props.toggleOptions?.isGrid) ||
-      (!props.toggleOptions?.active && props.toggleOptions?.isGrid)
+      (props?.toggleOptions?.active && !props?.toggleOptions?.isGrid) ||
+      (!props?.toggleOptions?.active && props?.toggleOptions?.isGrid)
     ) {
       return "grid-cols-1";
     }
@@ -81,24 +90,47 @@ export const BadgeSection = (props: BadgeSectionProps) => {
   };
   return (
     <div>
-      <div>
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            value=""
-            className="sr-only peer"
-            checked={props?.toggleOptions?.active}
-            onChange={() => props.onToggleClick && props.onToggleClick()}
-          />
-          <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-          <span
-            className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-            onClick={() => props.onToggleClick && props.onToggleClick()}
-          >
-            {props.toggleOptions?.label}
-          </span>
-        </label>
+      <div className="grid grid-cols-4 items-center">
+        {options.length && (
+          <div className="flex justify-center col-span-3 space-x-4">
+            {options.map((_filterObj, i) => {
+              return (
+                <div
+                  key={`${i}`}
+                  onClick={() => props.onFilterClick && props.onFilterClick(_filterObj)}
+                  style={{ marginBottom: "0.6rem" }}
+                  className={
+                    _filterObj.isActive
+                      ? `${filterClassName} active`
+                      : "inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white cursor-pointer"
+                  }
+                >
+                  {_filterObj.name}
+                </div>
+              );
+            })}
+          </div>
+        )}
+        <div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              value=""
+              className="sr-only peer"
+              checked={props?.toggleOptions?.active}
+              onChange={() => props.onToggleClick && props.onToggleClick()}
+            />
+            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <span
+              className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              onClick={() => props.onToggleClick && props.onToggleClick()}
+            >
+              {props.toggleOptions?.label}
+            </span>
+          </label>
+        </div>
       </div>
+
       <Widget isLoading={props.isLoading}>
         <WidgetHeader divide>
           <div className="p-2 flex w-full gap-x-2 text-zinc-600">
