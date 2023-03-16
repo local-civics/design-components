@@ -1,7 +1,13 @@
 import * as React from "react";
 import { Widget, WidgetBody, WidgetHeader } from "../../../components/Widget";
-import {Badge, BadgeProps} from "../Badge/Badge"
+import { Badge, BadgeProps } from "../Badge/Badge";
 import { Icon } from "../../../components/Icon/Icon";
+
+export type ToggleOptionProps = {
+  label: string;
+  active: boolean;
+  isGrid: boolean;
+};
 
 /**
  * BadgeSectionProps
@@ -11,6 +17,8 @@ export type BadgeSectionProps = {
   readonly?: boolean;
   showMore?: boolean;
   badges?: BadgeProps[];
+  toggleOptions?: ToggleOptionProps;
+  onToggleClick?: () => void;
 };
 
 /**
@@ -47,9 +55,50 @@ export const BadgeSection = (props: BadgeSectionProps) => {
   });
 
   const preview = props.readonly ? collected.slice(0, 10) : badges.slice(0, 3);
-
+  const getGridStyle = (gridStyle: string) => {
+    if (
+      (props.toggleOptions?.active && props.toggleOptions?.isGrid) ||
+      (!props.toggleOptions?.active && !props.toggleOptions?.isGrid)
+    ) {
+      return gridStyle;
+    } else if (
+      (props.toggleOptions?.active && !props.toggleOptions?.isGrid) ||
+      (!props.toggleOptions?.active && props.toggleOptions?.isGrid)
+    ) {
+      return "grid-cols-1";
+    }
+  };
+  const getLayout = (viewport: string) => {
+    if (viewport === "xl") {
+      return getGridStyle("xl:grid-cols-4");
+    } else if (viewport === "md" || viewport === "lg") {
+      return getGridStyle("md:max-xl:grid-cols-3");
+    } else if (viewport === "sm") {
+      return getGridStyle("sm:max-md:grid-cols-2");
+    }
+    // default style if screen viewport lessthan small
+    return getGridStyle("grid-cols-1");
+  };
   return (
     <div>
+      <div>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            value=""
+            className="sr-only peer"
+            checked={props?.toggleOptions?.active}
+            onChange={() => props.onToggleClick && props.onToggleClick()}
+          />
+          <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+          <span
+            className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+            onClick={() => props.onToggleClick && props.onToggleClick()}
+          >
+            {props.toggleOptions?.label}
+          </span>
+        </label>
+      </div>
       <Widget isLoading={props.isLoading}>
         <WidgetHeader divide>
           <div className="p-2 flex w-full gap-x-2 text-zinc-600">
@@ -60,7 +109,8 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
             <div className="shrink-0 mt-auto ml-auto text-sm">
               <span className="font-semibold">
-                {collected.length}{props.readonly ? "" : "/" + badges.length} Badges
+                {collected.length}
+                {props.readonly ? "" : "/" + badges.length} Badges
               </span>
               <span className="ml-1">collected</span>
             </div>
@@ -68,22 +118,26 @@ export const BadgeSection = (props: BadgeSectionProps) => {
         </WidgetHeader>
         <WidgetBody>
           <div className="pt-2 pb-5 px-2">
-            {!props.readonly &&
-                <div className="p-2 flex w-full gap-x-2 text-zinc-600">
-                  <div
-                      onClick={toggleShowMore}
-                      className="shrink-0 flex w-max ml-auto text-sm cursor-pointer text-zinc-400 hover:text-zinc-500"
-                  >
-                    <span>Show more</span>
-                    <div className="inline-block ml-1 overflow-hidden h-5 w-5">
-                      <Icon name="up & down arrow"/>
-                    </div>
+            {!props.readonly && (
+              <div className="p-2 flex w-full gap-x-2 text-zinc-600">
+                <div
+                  onClick={toggleShowMore}
+                  className="shrink-0 flex w-max ml-auto text-sm cursor-pointer text-zinc-400 hover:text-zinc-500"
+                >
+                  <span>Show more</span>
+                  <div className="inline-block ml-1 overflow-hidden h-5 w-5">
+                    <Icon name="up & down arrow" />
                   </div>
                 </div>
-            }
+              </div>
+            )}
 
             {!showMore && (
-              <div className="flex flex-wrap gap-4">
+              <div
+                className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
+                  "xl"
+                )} gap-4`}
+              >
                 {preview.map((b, i) => {
                   return <Badge key={i} {...b} readonly={props.readonly} />;
                 })}
@@ -94,7 +148,11 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {progress.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">In Progress</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div
+                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
+                        "xl"
+                      )} gap-4`}
+                    >
                       {progress.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -105,7 +163,11 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {collected.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Collected</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div
+                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
+                        "xl"
+                      )} gap-4`}
+                    >
                       {collected.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -116,7 +178,11 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {available.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Available</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div
+                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
+                        "xl"
+                      )}  gap-4`}
+                    >
                       {available.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -127,7 +193,11 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {locked.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Locked</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div
+                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
+                        "xl"
+                      )} gap-4`}
+                    >
                       {locked.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
