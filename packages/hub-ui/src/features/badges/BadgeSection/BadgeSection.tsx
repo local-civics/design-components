@@ -88,6 +88,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
     // default style if screen viewport lessthan small
     return getGridStyle("grid-cols-1");
   };
+  const layoutClassName = `grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout("xl")} gap-4`;
   return (
     <div>
       <div className="grid grid-cols-4 items-center">
@@ -125,7 +126,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
               className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
               onClick={() => props.onToggleClick && props.onToggleClick()}
             >
-              {props.toggleOptions?.label}
+              {props?.toggleOptions?.label}
             </span>
           </label>
         </div>
@@ -165,11 +166,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
             )}
 
             {!showMore && (
-              <div
-                className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
-                  "xl"
-                )} gap-4`}
-              >
+              <div className={layoutClassName}>
                 {preview.map((b, i) => {
                   return <Badge key={i} {...b} readonly={props.readonly} />;
                 })}
@@ -180,11 +177,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {progress.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">In Progress</p>
-                    <div
-                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
-                        "xl"
-                      )} gap-4`}
-                    >
+                    <div className={layoutClassName}>
                       {progress.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -195,11 +188,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {collected.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Collected</p>
-                    <div
-                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
-                        "xl"
-                      )} gap-4`}
-                    >
+                    <div className={layoutClassName}>
                       {collected.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -210,11 +199,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {available.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Available</p>
-                    <div
-                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
-                        "xl"
-                      )}  gap-4`}
-                    >
+                    <div className={layoutClassName}>
                       {available.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -225,11 +210,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {locked.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Locked</p>
-                    <div
-                      className={`grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout(
-                        "xl"
-                      )} gap-4`}
-                    >
+                    <div className={layoutClassName}>
                       {locked.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
