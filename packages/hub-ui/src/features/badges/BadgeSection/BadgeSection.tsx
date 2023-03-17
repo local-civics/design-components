@@ -3,6 +3,12 @@ import { Widget, WidgetBody, WidgetHeader } from "../../../components/Widget";
 import { Badge, BadgeProps } from "../Badge/Badge";
 import { Icon } from "../../../components/Icon/Icon";
 
+export type ToggleOptionProps = {
+  label?: string;
+  active?: boolean;
+  isGrid?: boolean;
+};
+
 export type BadgeSectionOptions = {
   name?: string;
   isActive?: boolean;
@@ -16,6 +22,8 @@ export type BadgeSectionProps = {
   readonly?: boolean;
   showMore?: boolean;
   badges?: BadgeProps[];
+  toggleOptions?: ToggleOptionProps;
+  onToggleClick?: () => void;
   options?: BadgeSectionOptions[];
   onFilterClick?: (filter: BadgeSectionOptions) => void;
 };
@@ -56,11 +64,36 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
   const preview = props.readonly ? collected.slice(0, 10) : badges.slice(0, 3);
   const filterClassName = "inline-block px-4 py-3 text-black bg-gray-300 rounded-full cursor-pointer";
+  const getGridStyle = (gridStyle: string) => {
+    if (
+      (props?.toggleOptions?.active && props?.toggleOptions?.isGrid) ||
+      (!props?.toggleOptions?.active && !props?.toggleOptions?.isGrid)
+    ) {
+      return gridStyle;
+    } else if (
+      (props?.toggleOptions?.active && !props?.toggleOptions?.isGrid) ||
+      (!props?.toggleOptions?.active && props?.toggleOptions?.isGrid)
+    ) {
+      return "grid-cols-1";
+    }
+  };
+  const getLayout = (viewport: string) => {
+    if (viewport === "xl") {
+      return getGridStyle("xl:grid-cols-4");
+    } else if (viewport === "md" || viewport === "lg") {
+      return getGridStyle("md:max-xl:grid-cols-3");
+    } else if (viewport === "sm") {
+      return getGridStyle("sm:max-md:grid-cols-2");
+    }
+    // default style if screen viewport lessthan small
+    return getGridStyle("grid-cols-1");
+  };
+  const layoutClassName = `grid ${getLayout("default")} ${getLayout("sm")} ${getLayout("md")} ${getLayout("xl")} gap-4`;
   return (
     <div>
-      <div>
+      <div className="grid grid-cols-4 items-center">
         {options.length && (
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center col-span-3 space-x-4">
             {options.map((_filterObj, i) => {
               return (
                 <div
@@ -79,7 +112,26 @@ export const BadgeSection = (props: BadgeSectionProps) => {
             })}
           </div>
         )}
+        <div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              value=""
+              className="sr-only peer"
+              checked={props?.toggleOptions?.active}
+              onChange={() => props.onToggleClick && props.onToggleClick()}
+            />
+            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <span
+              className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              onClick={() => props.onToggleClick && props.onToggleClick()}
+            >
+              {props?.toggleOptions?.label}
+            </span>
+          </label>
+        </div>
       </div>
+
       <Widget isLoading={props.isLoading}>
         <WidgetHeader divide>
           <div className="p-2 flex w-full gap-x-2 text-zinc-600">
@@ -114,7 +166,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
             )}
 
             {!showMore && (
-              <div className="flex flex-wrap gap-4">
+              <div className={layoutClassName}>
                 {preview.map((b, i) => {
                   return <Badge key={i} {...b} readonly={props.readonly} />;
                 })}
@@ -125,7 +177,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {progress.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">In Progress</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div className={layoutClassName}>
                       {progress.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -136,7 +188,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {collected.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Collected</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div className={layoutClassName}>
                       {collected.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -147,7 +199,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {available.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Available</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div className={layoutClassName}>
                       {available.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
@@ -158,7 +210,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {locked.length > 0 && (
                   <div>
                     <p className="mb-3 font-semibold">Locked</p>
-                    <div className="flex flex-wrap gap-4">
+                    <div className={layoutClassName}>
                       {locked.map((b, i) => {
                         return <Badge key={i} {...b} />;
                       })}
