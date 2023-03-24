@@ -34,6 +34,7 @@ const Template: Story<AppProps> = (args) => (
                      version={"v3.1.2"}
                      active={"Organization/People"}
                      onLogout={() => {}}
+                     onGettingStarted={() => {}}
                      links={{
                          "Classes": {notifications: 3, href: ""},
                          "Badges": {notifications: 12, href: ""},

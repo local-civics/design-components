@@ -41,12 +41,6 @@ export const Home = (props: HomeProps) => {
                         title={props.organization.name}
                         description={props.organization.description}
                         image={props.organization.image}
-                        action={
-                            {
-                                label: "Visit website",
-                                link: props.organization.website,
-                            }
-                        }
                     />
                 </Grid.Col>
             </Grid>
