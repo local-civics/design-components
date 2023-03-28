@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "@local-civics/hub-ui",
   "version": "0.1.98",
@@ -18,3 +19,25 @@
     "linkify-it": "^4.0.1"
   }
 }
+=======
+{
+  "name": "@local-civics/hub-ui",
+  "version": "0.1.98",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "start": "start-storybook -h localhost -p 6006",
+    "build": "rollup -c && tsc",
+    "watch": "rollup -cw",
+    "test": "jest --coverage=true --passWithNoTests",
+    "build-storybook": "build-storybook",
+    "chromatic": "npx chromatic",
+    "fmt": "npx prettier --write src"
+  },
+  "peerDependencies": {
+    "linkify-it": "^4.0.1"
+  }
+}
+>>>>>>> 7b988812a570c71b47146526971ac21a3242fd43
