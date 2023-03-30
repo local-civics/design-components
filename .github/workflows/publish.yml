@@ -19,7 +19,10 @@ jobs:
       contents: write
     # Job steps
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+          fetch-depth: 0 # To get all tags
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
