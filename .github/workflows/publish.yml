@@ -23,6 +23,7 @@ jobs:
         with:
           ref: master
           fetch-depth: 0 # To get all tags
+          token: ${{ secrets.PUBLISH_TOKEN }}
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
@@ -33,11 +34,12 @@ jobs:
         run: npm run build --workspaces
       - name: Bump patch version
         run: npm version patch --workspaces
+      - name: Publish to GitHub
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+         commit_message: Publish new patch version
         # commit the latest version
       - name: Publish to NPM
         run: npm publish --workspaces --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Publish new patch version
