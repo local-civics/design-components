@@ -12,7 +12,7 @@ import {
     IconHome2,
     IconGauge,
     IconLogout,
-    IconSwitchHorizontal, IconLambda, IconCategory2, IconAlbum, IconBuilding,
+    IconSwitchHorizontal, IconLambda, IconCategory2, IconAlbum, IconBuilding, IconVideo,
 } from '@tabler/icons';
 import {UserButton} from "../../users/UserButton/UserButton";
 import {LinksGroup} from "../NavbarLinksGroups/NavbarLinksGroups";
@@ -129,6 +129,7 @@ export interface NavbarProps {
     trial?: boolean
     loading?: boolean
     onLogout: () => void;
+    onGettingStarted: () => void;
     onSwitchAccounts?: () => void;
 }
 
@@ -211,6 +212,14 @@ export function Navbar(props: NavbarProps) {
                     </NavbarCore.Section>
 
                     { !props.loading && <NavbarCore.Section className={classes.footer}>
+                        { props.trial && <a href="#" className={classes.link} onClick={(event) => {
+                            event.preventDefault()
+                            props.onGettingStarted()
+                        }}>
+                            <IconVideo className={classes.linkIcon} stroke={1.5} />
+                            <span>Getting started</span>
+                        </a>}
+
                         { !!props.onSwitchAccounts && <a href="#" className={classes.link} onClick={(event) => {
                             event.preventDefault()
                             props.onSwitchAccounts && props.onSwitchAccounts()

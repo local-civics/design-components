@@ -1,13 +1,14 @@
-import * as React                                                                      from "react";
-import {Card, Text, Progress, Badge, Group, SimpleGrid, ThemeIcon, UnstyledButton} from '@mantine/core';
-import {IconBadge}                                                             from '@tabler/icons';
-import {Link}                                                                          from "react-router-dom";
+import * as React                                                                          from "react";
+import {Card, Text, SimpleGrid, UnstyledButton, Button} from '@mantine/core';
+import {IconClipboardCopy}                                                      from '@tabler/icons';
+import {Link}                                                                              from "react-router-dom";
 
 /**
  * BadgeGridProps
  */
 export type BadgeGridProps = {
     badges: TaskCardProps[]
+    onAssign: (taskId: string) => void;
 }
 
 /**
@@ -17,53 +18,40 @@ export type BadgeGridProps = {
  */
 export const BadgeGrid = (props: BadgeGridProps) => {
     const badges = props.badges.map(b => <TaskCard key={b.title} {...b}/>)
-    return <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+    return <SimpleGrid cols={4} breakpoints={[{ maxWidth: 'sm', cols: 1 }, { maxWidth: 'md', cols: 3 }]}>
         {badges}
     </SimpleGrid>
 }
 
 export type TaskCardProps = {
+    taskId: string
     title: string
     description: string
-    lessonsCompleted: number
-    lessonsTotal: number
     href: string
+    onAssign: (taskId: string) => void;
 }
 
 export function TaskCard(props: TaskCardProps) {
-    const isComplete = props.lessonsCompleted >= props.lessonsTotal
-
     return (
         <Card withBorder radius="md">
-            <Group position="apart" mb={20}>
-                <ThemeIcon size="lg" variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
-                    <IconBadge size={20} />
-                </ThemeIcon>
-                {!!props.lessonsTotal && isComplete && <Badge variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>Complete</Badge>}
-                {!!props.lessonsTotal && !isComplete && <Badge variant="filled">Incomplete</Badge>}
-            </Group>
-
-            <UnstyledButton<typeof Link> component={Link} to={props.href} mt="md" sx={{":hover": {textDecoration: "underline"}}}>
-                <Text size="lg" weight={500}>
+            <UnstyledButton<typeof Link> component={Link} to={props.href} sx={{":hover": {textDecoration: "underline"}}}>
+                <Text size="md" weight={500}>
                     {props.title}
                 </Text>
             </UnstyledButton>
-            <Text size="sm" color="dimmed" mt={5} mb={50}>
+
+            <Text size="sm" color="dimmed" mt={5} mb={25} h={100} sx={{overflowY: "scroll"}}>
                 {props.description}
             </Text>
 
-            {!!props.lessonsCompleted && <Text color="dimmed" size="sm" mt="md">
-                Lessons completed:{' '}
-                <Text
-                    span
-                    weight={500}
-                    sx={(theme) => ({ color: theme.colorScheme === 'dark' ? theme.white : theme.black })}
-                >
-                    {props.lessonsCompleted}
-                </Text>
-            </Text>}
-
-            {!!props.lessonsTotal && <Progress value={(props.lessonsCompleted / props.lessonsTotal) * 100} mt={5} />}
+            <Button
+                variant="gradient"
+                size="xs"
+                leftIcon={<IconClipboardCopy size={14} />}
+                onClick={() => props.onAssign(props.taskId)}
+            >
+                Assign
+            </Button>
         </Card>
     );
 }

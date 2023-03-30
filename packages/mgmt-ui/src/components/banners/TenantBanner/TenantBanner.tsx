@@ -1,4 +1,4 @@
-import {Button, Card, CardProps, createStyles, Overlay, Text} from "@mantine/core";
+import {Card, CardProps, createStyles, Overlay, Text} from "@mantine/core";
 import * as React                                             from "react";
 
 const useStyles = createStyles((theme) => ({
@@ -19,12 +19,6 @@ const useStyles = createStyles((theme) => ({
         left: 0,
     },
 
-    action: {
-        position: 'absolute',
-        bottom: theme.spacing.xl,
-        right: theme.spacing.xl,
-    },
-
     title: {
         color: theme.white,
         marginBottom: theme.spacing.xs / 2,
@@ -40,10 +34,6 @@ interface TenantBannerProps {
     title: string;
     description: string;
     image: string;
-    action: {
-        label: string;
-        link: string;
-    };
 }
 
 /**
@@ -51,7 +41,6 @@ interface TenantBannerProps {
  * @param title
  * @param description
  * @param image
- * @param action
  * @param style
  * @param className
  * @param others
@@ -61,7 +50,6 @@ export const TenantBanner = ({
                           title,
                           description,
                           image,
-                          action,
                           style,
                           className,
                           ...others
@@ -76,7 +64,7 @@ export const TenantBanner = ({
             {...others}
         >
             <Overlay
-                gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[4]} 100%)`}
+                gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[6]} 100%)`}
                 opacity={0.55}
                 zIndex={0}
             />
@@ -89,18 +77,6 @@ export const TenantBanner = ({
                 <Text size="sm" className={classes.description}>
                     {description}
                 </Text>
-
-                <Button
-                    className={classes.action}
-                    variant="white"
-                    color="dark"
-                    component="a"
-                    size="xs"
-                    href={action.link}
-                    target="_blank"
-                >
-                    {action.label}
-                </Button>
             </div>
         </Card>
     );
