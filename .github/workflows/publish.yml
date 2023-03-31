@@ -19,7 +19,11 @@ jobs:
       contents: write
     # Job steps
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+          fetch-depth: 0 # To get all tags
+          token: ${{ secrets.PUBLISH_TOKEN }}
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
@@ -30,11 +34,13 @@ jobs:
         run: npm run build --workspaces
       - name: Bump patch version
         run: npm version patch --workspaces
+      - name: Publish to GitHub
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "[skip ci] Publish new patch version"
+          push_options: --force
         # commit the latest version
       - name: Publish to NPM
         run: npm publish --workspaces --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Publish new patch version
