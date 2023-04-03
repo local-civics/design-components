@@ -49,13 +49,13 @@ export const BadgeButton = (props: BadgeButtonProps) => {
   const onClick = () => !isDisabled && props.onClick && props.onClick();
 
   return (
-    <div className="grid grid-cols-1 w-48 gap-y-3 text-zinc-600">
-      <div className="flex flex-col h-max w-48 overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
+    <div className="grid grid-cols-1 w-max gap-y-3 text-zinc-600">
+      <div className="flex flex-col h-max w-max overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
         <div
           onClick={onClick}
-          className={`relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
+          className={`relative overflow-hidden py-5 px-14 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
         >
-          <div className={`absolute top-2 right-2 w-7 h-7 ${statusIconColor}`}>
+          <div className={`absolute top-2 right-2 w-5 h-5 ${statusIconColor}`}>
             <Icon name={statusIconName} />
           </div>
           <div className={`w-max m-auto ${emblemOpacity}`}>
@@ -65,7 +65,7 @@ export const BadgeButton = (props: BadgeButtonProps) => {
               imageURL={props.imageURL}
               alt={props.displayName}
               level={props.level}
-              size={hasProgress ? "md" : "lg"}
+              size={hasProgress ? "sm" : "md"}
             />
           </div>
         </div>
