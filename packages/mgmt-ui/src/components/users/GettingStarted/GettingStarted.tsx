@@ -82,7 +82,7 @@ export const GettingStarted = (props: GettingStartedProps) => {
                 <Group position="center">
                     <div className={classes.inner}>
                         <div className={classes.content}>
-                            <Button radius="xl" size="md" className={classes.control}>
+                            <Button onClick={props.onClose} radius="xl" size="md" className={classes.control}>
                                 Skip tour
                             </Button>
                             <Title className={classes.title}>
