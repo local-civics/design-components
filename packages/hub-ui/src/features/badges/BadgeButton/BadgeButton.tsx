@@ -21,6 +21,7 @@ export type BadgeButtonProps = {
   progress?: number;
   target?: number;
   readonly?: boolean;
+  compact?: boolean
 
   onClick?: () => void;
 };
@@ -41,12 +42,38 @@ export const BadgeButton = (props: BadgeButtonProps) => {
     ? "progress"
     : "14-point star";
   const buttonCursor = isDisabled ? "cursor-default" : "cursor-pointer";
-  const buttonBg = isDisabled ? "" : props.finishedAt ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50";
+  const buttonBg = isDisabled ? "" : props.finishedAt && !props.compact ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50";
   const statusIconColor = props.finishedAt ? "text-green-500" : "text-zinc-600";
   const emblemOpacity = props.isLocked ? "opacity-50" : "";
   const progressPrefix = props.finishedAt ? "Collected" : "Started";
   const progressDate = new Date(props.finishedAt || props.startedAt || new Date());
   const onClick = () => !isDisabled && props.onClick && props.onClick();
+
+
+  if(props.compact){
+    return <div
+        onClick={onClick}
+        className={`text-zinc-600 relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
+    >
+      <div className="flex gap-5">
+        <div className={`w-max my-auto ${emblemOpacity}`}>
+          <BadgeEmblem
+              icon={props.icon}
+              iconURL={props.iconURL}
+              imageURL={props.imageURL}
+              alt={props.displayName}
+              level={props.level}
+              size="xs"
+          />
+        </div>
+
+        <div className="text-sm my-auto flex gap-x-2">
+          <span className="font-semibold text-zinc-600">{props.displayName}</span>
+          <span className="shrink-0 text-slate-500">Lv. {(props.level || 0) + 1}</span>
+        </div>
+      </div>
+    </div>
+  }
 
   return (
     <div className="grid grid-cols-1 w-max gap-y-3 text-zinc-600">

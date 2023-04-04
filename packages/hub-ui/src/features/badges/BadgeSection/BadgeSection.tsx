@@ -158,7 +158,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                 {!props.showMore && (
                     <div className={layoutClassName}>
                       {preview.map((b, i) => {
-                        return <Badge key={i} {...b} readonly={props.readonly} />;
+                        return <Badge key={i} {...b} compact={!grid} readonly={props.readonly} />;
                       })}
                     </div>
                 )}
@@ -169,7 +169,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                             {showSectionHeaders && <p className="mb-3 font-semibold">In Progress</p>}
                             <div className={layoutClassName}>
                               {progress.map((b, i) => {
-                                return <Badge key={i} {...b} />;
+                                return <Badge key={i} {...b} compact={!grid}/>;
                               })}
                             </div>
                           </div>
@@ -180,7 +180,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                             {showSectionHeaders && <p className="mb-3 font-semibold">Completed</p> }
                             <div className={layoutClassName}>
                               {collected.map((b, i) => {
-                                return <Badge key={i} {...b} />;
+                                return <Badge key={i} {...b} compact={!grid}/>;
                               })}
                             </div>
                           </div>
@@ -191,7 +191,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                             {showSectionHeaders && <p className="mb-3 font-semibold">Available</p> }
                             <div className={layoutClassName}>
                               {available.map((b, i) => {
-                                return <Badge key={i} {...b} />;
+                                return <Badge key={i} {...b} compact={!grid}/>;
                               })}
                             </div>
                           </div>
@@ -202,7 +202,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                             {showSectionHeaders && <p className="mb-3 font-semibold">Locked</p> }
                             <div className={layoutClassName}>
                               {locked.map((b, i) => {
-                                return <Badge key={i} {...b} />;
+                                return <Badge key={i} {...b} compact={!grid}/>;
                               })}
                             </div>
                           </div>
@@ -219,11 +219,11 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 };
 
 const getLayout = (grid?: boolean) => {
-  if(!grid){
+  if(grid){
     return "flex flex-wrap gap-4"
   }
 
-  return "grid gap-4 grid-cols-1 md:grid-cols-4 lg:grid-cols-5"
+  return "grid grid-cols-1 overflow-y-auto max-h-96"
 }
 
 const filtersByLabel = (filters?: BadgeFilterOption[]) => {
