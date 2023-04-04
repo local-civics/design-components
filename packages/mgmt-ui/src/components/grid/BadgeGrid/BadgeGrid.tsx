@@ -40,7 +40,7 @@ export function TaskCard(props: TaskCardProps) {
                 </Text>
             </UnstyledButton>
 
-            <Text size="sm" color="dimmed" mt={5} mb={25} h={100} sx={{overflowY: "scroll"}}>
+            <Text size="sm" color="dimmed" mt={5} mb={25} h={125} sx={{overflowY: "scroll"}}>
                 {props.description}
             </Text>
 

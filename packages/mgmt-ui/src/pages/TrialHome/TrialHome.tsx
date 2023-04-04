@@ -6,6 +6,7 @@ import {TenantBanner}            from "../../components/banners/TenantBanner/Ten
 
 const useStyles = createStyles((theme) => ({
     action: {
+        backgroundColor: "inherit",
         ":hover": {
           textDecoration: "underline"
         },
@@ -66,8 +67,8 @@ export const TrialHome = (props: TrialHomeProps) => {
                     image="https://cdn.localcivics.io/hub/landing.jpg"
                 />
             </Stack>
-            <Title mb={20} mt={20} className={classes.title}>
-                Based on the tags you selected,<br /> check out these lessons to get started with your students!
+            <Title maw={500} mb={20} mt={20} className={classes.title}>
+                Based on the tags you selected, check out these lessons to get started with your students!
             </Title>
             <BadgeGrid onAssign={props.onAssign} badges={props.badges}/>
         </Stack>
