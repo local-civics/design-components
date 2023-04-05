@@ -45,6 +45,7 @@ export type LearningFormProps = {
   rating?: number;
   items?: FormItemProps[];
   preview?: boolean;
+  stopWatch?: React.ReactNode;
 
   onHome?: () => void;
   onGoBack?: () => void;
@@ -146,7 +147,7 @@ export const LearningForm = (props: LearningFormProps) => {
 
   const bg = props.preview ? "" : "bg-gray-100";
   return (
-    <div className={`grid grid-cols-1 gap-y-12 ${bg} px-4 pb-12 lg:px-48`}>
+    <div className={`grid grid-cols-1 gap-y-12 ${bg} px-12 pb-24 lg:px-56`}>
       <div className="w-full max-w-[62.5rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
         <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
           <div
@@ -218,9 +219,11 @@ export const LearningForm = (props: LearningFormProps) => {
           </div>
         )}
       </form>
-
+      {props.stopWatch && (
+        <div className={`fixed bottom-20 right-5 transition ease-in-out mb-5`}>{props.stopWatch}</div>
+      )}
       {!props.preview && (
-        <div className={`fixed bottom-10 right-14 transition ease-in-out ${saveVisibility}`}>
+        <div className={`fixed bottom-5 right-14 transition ease-in-out ${saveVisibility}`}>
           <Button
             type="button"
             color="dark-blue"
@@ -231,7 +234,6 @@ export const LearningForm = (props: LearningFormProps) => {
             text="Save"
             onClick={saveDraft}
           />
-          
         </div>
       )}
 

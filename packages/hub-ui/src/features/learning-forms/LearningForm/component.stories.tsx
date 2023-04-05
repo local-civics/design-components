@@ -1,7 +1,7 @@
 import React from "react";
 import { LearningForm, LearningFormProps } from "./LearningForm";
 import { Story } from "@storybook/react";
-
+import { Stopwatch } from "../../../components/Stopwatch/Stopwatch";
 /**
  * Storybook component configuration
  */
@@ -56,6 +56,16 @@ const parksAndGreenForm: LearningFormProps = {
       required: true,
     },
   ],
+  stopWatch: (
+    <Stopwatch
+      time="22:01:01"
+      ctaList={[
+        { readOnly: false, ctaLabel: "start" },
+        { readOnly: false, ctaLabel: "stop" },
+        { readOnly: true, ctaLabel: "reset" },
+      ]}
+    />
+  ),
 };
 
 const publicSpeakingForm: LearningFormProps = {
@@ -182,6 +192,16 @@ const publicSpeakingForm: LearningFormProps = {
       format: "text",
     },
   ],
+  stopWatch: (
+    <Stopwatch
+      time="22:01:01"
+      ctaList={[
+        { readOnly: false, ctaLabel: "start" },
+        { readOnly: false, ctaLabel: "stop" },
+        { readOnly: true, ctaLabel: "reset" },
+      ]}
+    />
+  ),
 };
 
 /**
@@ -521,6 +541,16 @@ const communityMappingOfSelfForm: LearningFormProps = {
       ],
     },
   ],
+  stopWatch: (
+    <Stopwatch
+      time="22:01:01"
+      ctaList={[
+        { readOnly: false, ctaLabel: "start" },
+        { readOnly: false, ctaLabel: "stop" },
+        { readOnly: true, ctaLabel: "reset" },
+      ]}
+    />
+  ),
 };
 
 /**
