@@ -23,7 +23,7 @@ export const Stopwatch = (props: StopwatchProps) => {
   };
   return (
     <>
-      <div className="shadow-2xl shadow-gray-400 h-30 w-52 grid grid-cols-1 justify-items-center text-slate-600 text-md gap-4 p-4 box-border">
+      <div className="shadow-2xl shadow-gray-400 h-30 w-48 grid grid-cols-1 justify-items-center text-slate-600 text-md gap-4 p-4 box-border">
         <div className="shadow-xl w-36 text-center text-lg p-2">{props.time}</div>
         <div className="grid grid-cols-3 gap-2">
           {ctaList &&
