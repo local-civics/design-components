@@ -21,6 +21,7 @@ export type BadgeButtonProps = {
   progress?: number;
   target?: number;
   readonly?: boolean;
+  compact?: boolean
 
   onClick?: () => void;
 };
@@ -41,21 +42,47 @@ export const BadgeButton = (props: BadgeButtonProps) => {
     ? "progress"
     : "14-point star";
   const buttonCursor = isDisabled ? "cursor-default" : "cursor-pointer";
-  const buttonBg = isDisabled ? "" : props.finishedAt ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50";
+  const buttonBg = isDisabled ? "" : props.finishedAt && !props.compact ? "bg-sky-50 hover:bg-gray-50" : "hover:bg-sky-50";
   const statusIconColor = props.finishedAt ? "text-green-500" : "text-zinc-600";
   const emblemOpacity = props.isLocked ? "opacity-50" : "";
   const progressPrefix = props.finishedAt ? "Collected" : "Started";
   const progressDate = new Date(props.finishedAt || props.startedAt || new Date());
   const onClick = () => !isDisabled && props.onClick && props.onClick();
 
+
+  if(props.compact){
+    return <div
+        onClick={onClick}
+        className={`text-zinc-600 relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
+    >
+      <div className="flex gap-5">
+        <div className={`w-max my-auto ${emblemOpacity}`}>
+          <BadgeEmblem
+              icon={props.icon}
+              iconURL={props.iconURL}
+              imageURL={props.imageURL}
+              alt={props.displayName}
+              level={props.level}
+              size="xs"
+          />
+        </div>
+
+        <div className="text-sm my-auto flex gap-x-2">
+          <span className="font-semibold text-zinc-600">{props.displayName}</span>
+          <span className="shrink-0 text-slate-500">Lv. {(props.level || 0) + 1}</span>
+        </div>
+      </div>
+    </div>
+  }
+
   return (
-    <div className="grid grid-cols-1 w-48 gap-y-3 text-zinc-600">
-      <div className="flex flex-col h-max w-48 overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
+    <div className="grid grid-cols-1 w-max gap-y-3 text-zinc-600">
+      <div className="flex flex-col h-max w-max overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
         <div
           onClick={onClick}
-          className={`relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
+          className={`relative overflow-hidden py-5 px-14 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
         >
-          <div className={`absolute top-2 right-2 w-7 h-7 ${statusIconColor}`}>
+          <div className={`absolute top-2 right-2 w-5 h-5 ${statusIconColor}`}>
             <Icon name={statusIconName} />
           </div>
           <div className={`w-max m-auto ${emblemOpacity}`}>
@@ -65,7 +92,7 @@ export const BadgeButton = (props: BadgeButtonProps) => {
               imageURL={props.imageURL}
               alt={props.displayName}
               level={props.level}
-              size={hasProgress ? "md" : "lg"}
+              size={hasProgress ? "sm" : "md"}
             />
           </div>
         </div>
