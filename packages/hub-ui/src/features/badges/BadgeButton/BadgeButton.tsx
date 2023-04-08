@@ -53,9 +53,9 @@ export const BadgeButton = (props: BadgeButtonProps) => {
   if(props.compact){
     return <div
         onClick={onClick}
-        className={`text-zinc-600 relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
+        className={`text-zinc-600 relative overflow-hidden py-3 px-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
     >
-      <div className="flex gap-5">
+      <div className="flex gap-3">
         <div className={`w-max my-auto ${emblemOpacity}`}>
           <BadgeEmblem
               icon={props.icon}
@@ -63,7 +63,7 @@ export const BadgeButton = (props: BadgeButtonProps) => {
               imageURL={props.imageURL}
               alt={props.displayName}
               level={props.level}
-              size="xs"
+              size="xxs"
           />
         </div>
 
@@ -76,15 +76,15 @@ export const BadgeButton = (props: BadgeButtonProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 w-max gap-y-3 text-zinc-600">
-      <div className="flex flex-col h-max w-max overflow-hidden border border-zinc-100 rounded-md bg-gray-100">
+    <div className="grid grid-cols-1 w-44 overflow-x-hidden gap-y-3 text-zinc-600">
+      <div className="flex flex-col border h-max border-zinc-100 rounded-md bg-gray-100">
         <div
           onClick={onClick}
-          className={`relative overflow-hidden py-5 px-14 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
+          className={`relative overflow-hidden p-5 transition ease-in-out duration-600 ${buttonCursor} ${buttonBg}`}
         >
-          <div className={`absolute top-2 right-2 w-5 h-5 ${statusIconColor}`}>
+          { hasProgress && <div className={`absolute top-2 right-2 w-4 h-4 ${statusIconColor}`}>
             <Icon name={statusIconName} />
-          </div>
+          </div> }
           <div className={`w-max m-auto ${emblemOpacity}`}>
             <BadgeEmblem
               icon={props.icon}
@@ -92,22 +92,20 @@ export const BadgeButton = (props: BadgeButtonProps) => {
               imageURL={props.imageURL}
               alt={props.displayName}
               level={props.level}
-              size={hasProgress ? "sm" : "md"}
+              size={hasProgress ? "xs" : "md"}
             />
           </div>
         </div>
 
-        {hasProgress && (
-          <div className="grow grid grid-cols-1 gap-2 w-full h-20 bg-white shadow-sm p-4">
-            <div className="h-2">
-              <Progress rounded color="sky-blue" start={props.progress || 0} end={props.target || 1} />
-            </div>
-            <p className="text-xs">
-              {progressPrefix} {Intl.DateTimeFormat("en-US", { month: "long" }).format(progressDate)}{" "}
-              {ordNumber(progressDate.getDate())}
-            </p>
+        {hasProgress && <div className="grid grid-cols-1 w-full h-16 bg-white shadow-sm p-2">
+          <div className="h-2">
+            <Progress rounded color="sky-blue" start={props.progress || 0} end={props.target || 1} />
           </div>
-        )}
+          <p className="text-xs">
+            {progressPrefix} {Intl.DateTimeFormat("en-US", { month: "long" }).format(progressDate)}{" "}
+            {ordNumber(progressDate.getDate())}
+          </p>
+        </div>}
       </div>
 
       {!!props.displayName && (

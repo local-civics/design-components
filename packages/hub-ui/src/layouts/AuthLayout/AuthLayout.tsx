@@ -75,12 +75,12 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
         {!props.children && (
           <section className="w-full px-4 py-5 lg:px-36 flex flex-col gap-4">
             {props.header && (
-              <div className="w-full max-w-[62.5rem] m-auto min-h-16 lg:min-h-24 lg:flex">{props.header}</div>
+              <div className="w-full max-w-[64rem] m-auto min-h-16 lg:min-h-24 lg:flex">{props.header}</div>
             )}
 
             <div className="grow w-full min-h-96">
               {/* Body */}
-              <div className="w-full max-w-[62.5rem] m-auto grid grid-cols-1 gap-y-4 lg:flex lg:gap-x-2">
+              <div className="w-full max-w-[64rem] m-auto grid grid-cols-1 gap-y-4 lg:flex lg:gap-x-2">
                 {/* Left Panel */}
                 {props.sidebar && (
                   <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem] shrink-0">

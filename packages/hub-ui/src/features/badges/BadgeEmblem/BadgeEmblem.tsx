@@ -12,7 +12,7 @@ export type BadgeEmblemProps = {
   alt?: string;
   imageURL?: string;
   level?: number;
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: "xxs" | "xs" | "sm" | "md" | "lg";
 };
 
 /**
@@ -23,21 +23,23 @@ export type BadgeEmblemProps = {
 export const BadgeEmblem = (props: BadgeEmblemProps) => {
   const size = (() => {
     switch (props.size) {
+      case "xxs":
+      return ["h-max w-8", "w-4 h-4"];
       case "xs":
-        return ["h-max w-12", "w-8 h-8"];
+        return ["h-max w-16", "w-8 h-8"];
       case "sm":
         return ["h-max w-24", "w-12 h-12"];
       case "lg":
         return ["h-max w-40", "w-20 h-20"];
       default:
-        return ["h-max w-28", "w-16 h-16"];
+        return ["h-max w-28", "w-14 h-14"];
     }
   })();
 
   const hasIcon = !!props.icon || !!props.iconURL
 
   return (
-    <div className={`relative overflow-hidden ${size[0]}`}>
+    <div className={`relative m-auto overflow-hidden ${size[0]}`}>
         {!hasIcon && <img className="w-full h-full object-cover" alt={props.alt} src={props.imageURL} />}
         { hasIcon &&
             <>

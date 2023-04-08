@@ -4,10 +4,10 @@ import { Badge, BadgeProps } from "../Badge/Badge";
 import { Icon } from "../../../components/Icon/Icon";
 
 const DEFAULT_FILTERS = [
-  {label: "In Progress", isActive: true},
-  {label: "Completed", isActive: true},
-  {label: "Available", isActive: true},
-  {label: "Locked", isActive: true}
+  {label: "In Progress"},
+  {label: "Completed"},
+  {label: "Available"},
+  {label: "Locked"}
 ]
 
 export type BadgeFilterOption = {
@@ -22,9 +22,8 @@ export type BadgeSectionProps = {
   badges: BadgeProps[];
   isLoading?: boolean;
   readonly?: boolean;
-  showMore?: boolean;
-  grid?: boolean
-  onGridToggle?: (next: boolean) => void;
+  list?: boolean
+  onToggleLayout?: (next: boolean) => void;
   filters?: BadgeFilterOption[];
   onFilterChange?: (next: BadgeFilterOption[]) => void;
 };
@@ -35,7 +34,7 @@ export type BadgeSectionProps = {
  * @constructor
  */
 export const BadgeSection = (props: BadgeSectionProps) => {
-  const options = props.filters || [];
+  const options: BadgeFilterOption[] = props.filters || DEFAULT_FILTERS;
   const progress: BadgeProps[] = [];
   const locked: BadgeProps[] = [];
   const available: BadgeProps[] = [];
@@ -53,29 +52,30 @@ export const BadgeSection = (props: BadgeSectionProps) => {
     }
   });
 
-  const [grid, setGrid] = React.useState(props.grid)
-  const [filters, setFilters] = React.useState(filtersByLabel(props.filters))
+  const [list, setList] = React.useState(props.list)
+  const [filters, setFilters] = React.useState(filtersByLabel(props.filters || DEFAULT_FILTERS))
+  const filterValues = Object.values(filters)
   const propsFilterKey = JSON.stringify(props.filters)
-  const filterKey = JSON.stringify(filters)
+  const filterKey = JSON.stringify(filterValues)
   const preview = props.readonly ? collected.slice(0, 10) : props.badges.slice(0, 3);
   const filterClassName = "inline-block px-4 py-3 bg-gray-600 text-white rounded-full cursor-pointer";
-  const layoutClassName = getLayout(grid)
-  const numberOfActiveFilters = Object.values(filters).filter(v => v.isActive).length
-  const isWithoutFilters = numberOfActiveFilters == 0
-  const showSectionHeaders = numberOfActiveFilters > 1
+  const layoutClassName = getLayout(list)
+  const numberOfActiveFilters = activeFilters(filterValues).length
+  const isWithoutFilters = numberOfActiveFilters === 0
+  const showSectionHeaders = numberOfActiveFilters > 1 || numberOfActiveFilters === 0
 
   React.useEffect(() => {
-      setGrid(props.grid)
-  }, [props.grid])
+      setList(props.list)
+  }, [props.list])
 
   React.useEffect(() => {
-    if(grid !== undefined && props.grid !== grid && props.onGridToggle){
-      props.onGridToggle(grid)
+    if(list !== undefined && props.list !== list && props.onToggleLayout){
+      props.onToggleLayout(list)
     }
-  }, [grid])
+  }, [list])
 
   React.useEffect(() => {
-    setFilters(filtersByLabel(props.filters))
+    setFilters(filtersByLabel(props.filters||DEFAULT_FILTERS))
   }, [propsFilterKey])
 
   React.useEffect(() => {
@@ -88,7 +88,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
     <div>
       <Widget isLoading={props.isLoading}>
         <WidgetHeader divide>
-          <div className="p-2 flex w-full gap-x-2 text-zinc-600">
+          <div className="py-2 flex w-full gap-x-2 text-zinc-600">
             <div className="shrink-0 h-10 w-10">
               <Icon name="award ribbon" />
             </div>
@@ -104,11 +104,11 @@ export const BadgeSection = (props: BadgeSectionProps) => {
           </div>
         </WidgetHeader>
         <WidgetBody>
-          <div className="pt-2 pb-5 px-2">
+          <div className="pb-5">
             <div className="grid grid-cols-1 gap-y-5">
               <div className="flex flex-wrap gap-4 items-center justify-between text-sm">
                 {options.length > 0 && (
-                    <div className="flex justify-center col-span-3 space-x-4">
+                    <div className="flex justify-center col-span-3 space-x-4 text-sm">
                       {options.map((opt, i) => {
                         return (
                             <div
@@ -135,41 +135,41 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                       })}
                     </div>
                 )}
-                {grid !== undefined && <div>
+                <div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                         type="checkbox"
                         value=""
                         className="sr-only peer"
-                        checked={grid}
-                        onChange={() => setGrid(!grid)}
+                        checked={!list}
+                        onChange={() => setList(!list)}
                     />
                     <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                     <span
                         className="ml-3 text-sm font-bold text-gray-700"
-                        onClick={() => setGrid(!grid)}
+                        onChange={() => setList(!list)}
                     >
               Grid View?
             </span>
                   </label>
-                </div>}
+                </div>
               </div>
               <div>
-                {!props.showMore && (
+                {!!props.readonly && (
                     <div className={layoutClassName}>
                       {preview.map((b, i) => {
-                        return <Badge key={i} {...b} compact={!grid} readonly={props.readonly} />;
+                        return <Badge key={i} {...b} compact={list} readonly={props.readonly} />;
                       })}
                     </div>
                 )}
-                {!!props.showMore && (
+                {!props.readonly && (
                     <div className="text-zinc-600 grid grid-cols-1 gap-y-4">
                       {(isWithoutFilters || "In Progress" in filters && filters["In Progress"].isActive) && progress.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 font-semibold">In Progress</p>}
+                            {showSectionHeaders && <p className="mb-3 text-sm underline">In Progress</p>}
                             <div className={layoutClassName}>
                               {progress.map((b, i) => {
-                                return <Badge key={i} {...b} compact={!grid}/>;
+                                return <Badge key={i} {...b} compact={list}/>;
                               })}
                             </div>
                           </div>
@@ -177,10 +177,10 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
                       {(isWithoutFilters || "Completed" in filters && filters["Completed"].isActive) && collected.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 font-semibold">Completed</p> }
+                            {showSectionHeaders && <p className="mb-3 text-sm underline">Completed</p> }
                             <div className={layoutClassName}>
                               {collected.map((b, i) => {
-                                return <Badge key={i} {...b} compact={!grid}/>;
+                                return <Badge key={i} {...b} compact={list}/>;
                               })}
                             </div>
                           </div>
@@ -188,10 +188,10 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
                       {(isWithoutFilters || "Available" in filters && filters["Available"].isActive) && available.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 font-semibold">Available</p> }
+                            {showSectionHeaders && <p className="mb-3 text-sm underline">Available</p> }
                             <div className={layoutClassName}>
                               {available.map((b, i) => {
-                                return <Badge key={i} {...b} compact={!grid}/>;
+                                return <Badge key={i} {...b} compact={list}/>;
                               })}
                             </div>
                           </div>
@@ -199,10 +199,10 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
                       {(isWithoutFilters || "Locked" in filters && filters["Locked"].isActive) && locked.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 font-semibold">Locked</p> }
+                            {showSectionHeaders && <p className="mb-3 text-sm underline">Locked</p> }
                             <div className={layoutClassName}>
                               {locked.map((b, i) => {
-                                return <Badge key={i} {...b} compact={!grid}/>;
+                                return <Badge key={i} {...b} compact={list}/>;
                               })}
                             </div>
                           </div>
@@ -218,19 +218,22 @@ export const BadgeSection = (props: BadgeSectionProps) => {
   );
 };
 
-const getLayout = (grid?: boolean) => {
-  if(grid){
-    return "flex flex-wrap gap-4"
+const getLayout = (list?: boolean) => {
+  if(list){
+    return "grid grid-cols-1 overflow-y-auto max-h-96"
   }
 
-  return "grid grid-cols-1 overflow-y-auto max-h-96"
+  return "flex flex-wrap gap-3"
 }
 
-const filtersByLabel = (filters?: BadgeFilterOption[]) => {
+const filtersByLabel = (filters: BadgeFilterOption[]) => {
   const ans: Record<string, BadgeFilterOption> = {}
-  const params = filters || DEFAULT_FILTERS
-  params.forEach(v => {
+  filters.forEach(v => {
     ans[v.label] = v
   })
   return ans
+}
+
+const activeFilters = (filters: BadgeFilterOption[]) => {
+    return Object.values(filters).filter(v => v.isActive)
 }

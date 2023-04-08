@@ -1006,36 +1006,13 @@ const Template: Story<BadgeSectionProps> = (args) => (
 /**
  * Component stories
  */
-export const FlexView: Story<BadgeSectionProps> = Template.bind({});
-FlexView.args = {};
+export const DefaultView: Story<BadgeSectionProps> = Template.bind({});
+DefaultView.args = {};
 
 /**
  * Component stories
  */
-export const GridView: Story<BadgeSectionProps> = Template.bind({});
-GridView.args = {
-  grid: true,
-};
-
-/**
- * Component stories
- */
-export const FilterView: Story<BadgeSectionProps> = Template.bind({});
-FilterView.args = {
-  filters: [
-    {
-      label: "In Progress",
-      isActive: true,
-    },
-    {
-      label: "Completed"
-    },
-    {
-      label: "Available"
-    },
-    {
-      label: "Locked"
-    }
-  ],
-  grid: false,
+export const ListView: Story<BadgeSectionProps> = Template.bind({});
+ListView.args = {
+  list: true,
 };

@@ -148,7 +148,7 @@ export const LearningForm = (props: LearningFormProps) => {
   const bg = props.preview ? "" : "bg-gray-100";
   return (
     <div className={`grid grid-cols-1 gap-y-12 ${bg} px-12 pb-24 lg:px-56`}>
-      <div className="w-full max-w-[62.5rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
+      <div className="w-full max-w-[64rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
         <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
           <div
             onClick={() => {
@@ -174,7 +174,7 @@ export const LearningForm = (props: LearningFormProps) => {
         <img className="grow h-full max-h-[30rem] w-full object-cover" alt={props.displayName} src={props.imageURL} />
       </div>
 
-      <form className="w-full max-w-[62.5rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
+      <form className="w-full max-w-[64rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
         {items.map((item: FormItemProps) => {
           return <FormItem key={item.itemId} {...item} minText={0} disabled={!!props.preview} />;
         })}
