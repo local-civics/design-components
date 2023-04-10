@@ -39,7 +39,7 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
   const hasIcon = !!props.icon || !!props.iconURL
 
   return (
-    <div className={`relative m-auto overflow-hidden ${size[0]}`}>
+    <div className={`relative overflow-hidden ${size[0]}`}>
         {!hasIcon && <img className="w-full h-full object-cover" alt={props.alt} src={props.imageURL} />}
         { hasIcon &&
             <>
