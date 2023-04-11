@@ -1,6 +1,8 @@
-import React, { useCallback } from "react";
 import { Button } from "../Button/Button";
 
+/**
+ * StopwatchProps
+ */
 export type CtaListProps = {
   readOnly?: boolean;
   ctaLabel?: string;
@@ -11,6 +13,11 @@ export type StopwatchProps = {
   onCTAClick?: (ctaLabel: string) => void;
 };
 
+/**
+ * A component for Stopwatch.
+ * @param props
+ * @constructor
+ */
 export const Stopwatch = (props: StopwatchProps) => {
   const ctaList = props.ctaList || [];
   const getColor = (label: string) => {
