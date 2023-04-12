@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "../Button/Button";
 
 /**
@@ -19,7 +20,7 @@ export type StopwatchProps = {
  * @constructor
  */
 export const Stopwatch = (props: StopwatchProps) => {
-  const ctaList = props.ctaList || [];
+  const ctaList = props?.ctaList || [];
   const getColor = (label: string) => {
     if (label.toLowerCase() === "start") {
       return "green";
