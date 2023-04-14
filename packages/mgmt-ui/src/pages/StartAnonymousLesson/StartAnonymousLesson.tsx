@@ -117,7 +117,7 @@ export const StartAnonymousLesson = (props: StartAnonymousLessonProps) => {
                             {props.description}
                         </Text>
                         <Text color="dimmed" mt="md">
-                            Instructed by {props.educatorName}.
+                            You are now part of {props.educatorName} Class
                         </Text>
                     </div>
                     <div className={classes.form}>

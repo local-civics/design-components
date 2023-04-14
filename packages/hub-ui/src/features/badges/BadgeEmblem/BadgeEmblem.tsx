@@ -24,7 +24,7 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
   const size = (() => {
     switch (props.size) {
       case "xxs":
-      return ["h-max w-8", "w-4 h-4"];
+      return ["h-max w-12", "w-6 h-6"];
       case "xs":
         return ["h-max w-16", "w-8 h-8"];
       case "sm":
