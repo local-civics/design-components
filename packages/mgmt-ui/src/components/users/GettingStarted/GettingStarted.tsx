@@ -86,11 +86,10 @@ export const GettingStarted = (props: GettingStartedProps) => {
                                 Skip tour
                             </Button>
                             <Title className={classes.title}>
-                                An experience purpose built for educators like you!
+                                Get Started with Your Trial
                             </Title>
                             <Text color="dimmed" mt="md">
-                                Hello! We&apos;re excited that you chose try out a few of the tools that Local Civics can bring to your classroom.
-                                Watch this short video tour to get a sense of how to navigate around the platform.
+                                Welcome! We&apos;re excited that you are trying Local Civics lessons and badges with your students. Watch this short video tour to know how to navigate the platform.
                             </Text>
                             <video style={{marginTop: "20px", marginBottom: "20px"}} width="600" height="350" controls>
                                 <source src={props.videoURL} type="video/mp4"/>
