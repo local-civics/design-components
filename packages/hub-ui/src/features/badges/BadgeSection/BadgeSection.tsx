@@ -166,7 +166,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
                     <div className="text-zinc-600 grid grid-cols-1 gap-y-4">
                       {(isWithoutFilters || "In Progress" in filters && filters["In Progress"].isActive) && progress.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 text-sm underline">In Progress</p>}
+                            {showSectionHeaders && <p className="mb-3 text-md underline font-bold">In Progress</p>}
                             <div className={layoutClassName}>
                               {progress.map((b, i) => {
                                 return <Badge key={i} {...b} compact={list}/>;
@@ -177,7 +177,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
                       {(isWithoutFilters || "Completed" in filters && filters["Completed"].isActive) && collected.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 text-sm underline">Completed</p> }
+                            {showSectionHeaders && <p className="mb-3 text-md underline font-bold">Completed</p> }
                             <div className={layoutClassName}>
                               {collected.map((b, i) => {
                                 return <Badge key={i} {...b} compact={list}/>;
@@ -188,7 +188,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
                       {(isWithoutFilters || "Available" in filters && filters["Available"].isActive) && available.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 text-sm underline">Available</p> }
+                            {showSectionHeaders && <p className="mb-3 text-md underline font-bold">Available</p> }
                             <div className={layoutClassName}>
                               {available.map((b, i) => {
                                 return <Badge key={i} {...b} compact={list}/>;
@@ -199,7 +199,7 @@ export const BadgeSection = (props: BadgeSectionProps) => {
 
                       {(isWithoutFilters || "Locked" in filters && filters["Locked"].isActive) && locked.length > 0 && (
                           <div>
-                            {showSectionHeaders && <p className="mb-3 text-sm underline">Locked</p> }
+                            {showSectionHeaders && <p className="mb-3 text-md underline font-bold">Locked</p> }
                             <div className={layoutClassName}>
                               {locked.map((b, i) => {
                                 return <Badge key={i} {...b} compact={list}/>;
