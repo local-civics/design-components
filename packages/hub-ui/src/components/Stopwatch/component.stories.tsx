@@ -16,13 +16,13 @@ export default {
 const Template: Story<StopwatchProps> = (args) => (
   // eslint-disable-next-line react/react-in-jsx-scope
   <Stopwatch
-    time="22:01:01"
     ctaList={[
       { readOnly: false, ctaLabel: "start" },
       { readOnly: false, ctaLabel: "stop" },
       { readOnly: true, ctaLabel: "reset" },
     ]}
     {...args}
+    secondsElapsed={3675}
   />
 );
 

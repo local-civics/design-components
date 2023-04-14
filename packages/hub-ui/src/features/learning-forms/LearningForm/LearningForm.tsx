@@ -70,7 +70,6 @@ export const LearningForm = (props: LearningFormProps) => {
     autoSave(isDraft, props.onSaveDraft, () => setIsDraft(false)),
     [isDraft]
   );
-  const saveVisibility = isDraft ? "opacity-100 visible" : "opacity-0 invisible";
   const answers: FormItemProps[] = [];
   const saveDraft = async () => {
     if (!isDraft) {
@@ -91,7 +90,6 @@ export const LearningForm = (props: LearningFormProps) => {
   });
 
   const canReflect = !!reflection || answeredAllRequired;
-  const canSubmit = answeredAllRequired && reflection.length >= MIN_REFLECTION_LENGTH;
   const items = props.items || [];
   const currentAnswersKey = answers && answers.length > 0 ? JSON.stringify(answers) : null;
 
@@ -148,7 +146,7 @@ export const LearningForm = (props: LearningFormProps) => {
   const bg = props.preview ? "" : "bg-gray-100";
   return (
     <div className={`grid grid-cols-1 gap-y-12 ${bg} px-12 pb-24 lg:px-56`}>
-      <div className="w-full max-w-[64rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
+      <div className="w-full max-w-[55rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
         <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
           <div
             onClick={() => {
@@ -174,7 +172,7 @@ export const LearningForm = (props: LearningFormProps) => {
         <img className="grow h-full max-h-[30rem] w-full object-cover" alt={props.displayName} src={props.imageURL} />
       </div>
 
-      <form className="w-full max-w-[64rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
+      <form className="w-full max-w-[55rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
         {items.map((item: FormItemProps) => {
           return <FormItem key={item.itemId} {...item} minText={0} disabled={!!props.preview} />;
         })}
@@ -204,38 +202,39 @@ export const LearningForm = (props: LearningFormProps) => {
           <Rating disabled={!canReflect || !!props.preview} rating={rating} setRating={setRating} />
         </FormItem>
 
-        {!props.preview && (
-          <div className="w-max m-auto">
-            <Button
-              // disabled={!canSubmit}
-              type="submit"
-              color="blue"
-              size="md"
-              spacing="md"
-              border="rounded"
-              theme="dark"
-              text="Submit"
-            />
-          </div>
-        )}
-      </form>
-      {props.stopWatch && (
-        <div className={`fixed bottom-20 right-5 transition ease-in-out mb-5`}>{props.stopWatch}</div>
-      )}
-      {!props.preview && (
-        <div className={`fixed bottom-5 right-14 transition ease-in-out ${saveVisibility}`}>
-          <Button
-            type="button"
-            color="dark-blue"
-            size="md"
-            spacing="md"
-            border="rounded"
-            theme="dark"
-            text="Save"
-            onClick={saveDraft}
-          />
+        <div className="fixed bottom-5 left-5 grid grid-cols-1 gap-2">
+          {props.stopWatch && (
+              <div className="invisible md:visible transition ease-in-out">{props.stopWatch}</div>
+          )}
+          {!props.preview && (
+              <div className="flex gap-x-1">
+                <div className="invisible w-full md:visible transition ease-in-out">
+                  <Button
+                      type="button"
+                      color="secondary"
+                      size="full:md"
+                      spacing="md"
+                      border="rounded"
+                      theme="dark"
+                      text="Save"
+                      onClick={saveDraft}
+                  />
+                </div>
+                <div className="w-full">
+                  <Button
+                      type="submit"
+                      color="blue"
+                      size="full:md"
+                      spacing="md"
+                      border="rounded"
+                      theme="dark"
+                      text="Submit"
+                  />
+                </div>
+              </div>
+          )}
         </div>
-      )}
+      </form>
 
       {showExitDialogue && (
         <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">

@@ -1,4 +1,5 @@
-import React from "react";
+import React      from "react";
+import {compact}  from "../../utils/numbers";
 import { Button } from "../Button/Button";
 
 /**
@@ -9,7 +10,7 @@ export type CtaListProps = {
   ctaLabel?: string;
 };
 export type StopwatchProps = {
-  time?: string;
+  secondsElapsed: number;
   ctaList?: CtaListProps[];
   onCTAClick?: (ctaLabel: string) => void;
 };
@@ -21,34 +22,39 @@ export type StopwatchProps = {
  */
 export const Stopwatch = (props: StopwatchProps) => {
   const ctaList = props?.ctaList || [];
-  const getColor = (label: string) => {
-    if (label.toLowerCase() === "start") {
-      return "green";
-    } else if (label.toLowerCase() === "stop") {
-      return "rose";
-    }
-    return "blue";
-  };
+  const [hours, minutes, seconds] = parseSeconds(props.secondsElapsed)
   return (
     <>
-      <div className="shadow-2xl shadow-gray-400 h-30 w-48 grid grid-cols-1 justify-items-center text-slate-600 text-md gap-4 p-4 box-border">
-        <div className="shadow-xl w-36 text-center text-lg p-2">{props.time}</div>
+      <div className="h-30 w-60 bg-white grid grid-cols-1 justify-items-center text-slate-600 text-md gap-4 p-4 rounded-md border border-slate-300">
+        <div className="text-center text-lg p-2 grid grid-cols-3 gap-2 font-bold">
+          <div>
+            <div className="text-md p-1 bg-gray-50">{hours}</div>
+            <div className="font-bold text-xs">Hours</div>
+          </div>
+          <div>
+            <div className="text-md p-1 bg-gray-50">{minutes}</div>
+            <div className="font-bold text-xs">Minutes</div>
+          </div>
+          <div>
+            <div className="text-md p-1 bg-gray-50">{seconds}</div>
+            <div className="font-bold text-xs">Seconds</div>
+          </div>
+        </div>
         <div className="grid grid-cols-3 gap-2">
           {ctaList &&
             ctaList.length &&
             ctaList.map((ctaObj, i) => {
-              const color = getColor(ctaObj.ctaLabel || "");
               return (
                 <Button
                   key={i}
+                  type="button"
                   onClick={() => props.onCTAClick && props.onCTAClick(ctaObj.ctaLabel || "")}
                   theme="dark"
                   border="rounded"
                   size="sm"
                   spacing="xs"
-                  color={color}
+                  color="secondary"
                   text={ctaObj.ctaLabel}
-                  active={false}
                   disabled={ctaObj.readOnly}
                 />
               );
@@ -58,3 +64,25 @@ export const Stopwatch = (props: StopwatchProps) => {
     </>
   );
 };
+
+const parseSeconds = (s: number) => {
+  const hours = Math.floor((s || 0) / 3600)
+  let remainder = (s || 0) - (hours * 3600)
+  const minutes = Math.floor(remainder / 60)
+  remainder -= minutes * 60
+  const seconds = Math.floor(remainder)
+  const formattedHours = hours < 100 ? hours.toLocaleString('en-US', {
+    minimumIntegerDigits: 2,
+    useGrouping: false
+  }) : compact(hours)
+  const formattedMinutes = minutes.toLocaleString('en-US', {
+    minimumIntegerDigits: 2,
+    useGrouping: false
+  })
+  const formattedSeconds = seconds.toLocaleString('en-US', {
+    minimumIntegerDigits: 2,
+    useGrouping: false
+  })
+
+  return [formattedHours, formattedMinutes, formattedSeconds]
+}
