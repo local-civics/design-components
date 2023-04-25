@@ -45,6 +45,8 @@ export type LearningFormProps = {
   rating?: number;
   items?: FormItemProps[];
   preview?: boolean;
+  timeSpent?: number;
+  elapsedTime?: number;
   stopWatch?: React.ReactNode;
 
   onHome?: () => void;
@@ -123,6 +125,13 @@ export const LearningForm = (props: LearningFormProps) => {
       setIsDraft(true);
     }
   }, [currentAnswersKey]);
+
+  React.useEffect(() => {
+    if (props.timeSpent !== props.elapsedTime && !isDraft) {
+      setIsDraft(true);
+    }
+    return;
+  }, [props.timeSpent, props.elapsedTime]);
 
   const onReflectionChange = (responses?: string[]) => {
     if (!responses || responses.length === 0) {

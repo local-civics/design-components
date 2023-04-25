@@ -56,6 +56,8 @@ const parksAndGreenForm: LearningFormProps = {
       required: true,
     },
   ],
+  timeSpent: 100,
+  elapsedTime: 100,
   stopWatch: (
     <Stopwatch
       time="22:01:01"
