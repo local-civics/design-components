@@ -175,7 +175,6 @@ const CheckboxQuestion = (props: FormItemProps) => {
   const options = props.options || [];
   const responses = props.responses || [];
   const values: { [key: string]: boolean } = {};
-  const ref = React.useRef<HTMLInputElement>(null);
   let rawResponse: string = "";
   for (const val of responses) {
     if (val.startsWith("Other: ")) {
@@ -245,7 +244,7 @@ const CheckboxQuestion = (props: FormItemProps) => {
                     disabled={props.disabled}
                     onChange={onOtherChange}
                     placeholder="Input another option"
-                    ref={ref}
+
                   />
                 </>
               )}
