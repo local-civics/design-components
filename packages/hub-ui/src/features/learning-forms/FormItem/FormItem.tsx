@@ -175,10 +175,18 @@ const CheckboxQuestion = (props: FormItemProps) => {
   const options = props.options || [];
   const responses = props.responses || [];
   const values: { [key: string]: boolean } = {};
-  const ref = React.useRef<HTMLInputElement>(null);
-  const rawResponse = responses.length > 0 ? responses[0] : ref.current?.value || "";
-  const response = rawResponse.replace("Other: ", "");
-  const isOtherResponse = rawResponse.startsWith("Other: ");
+  let rawResponse: string = "";
+  for (const val of responses) {
+    if (val.startsWith("Other: ")) {
+      rawResponse = val;
+      break
+    }
+  };
+
+
+
+  const response = rawResponse && rawResponse.replace("Other: ", "");
+  const isOtherResponse = rawResponse && rawResponse.startsWith("Other: ");
 
   responses.forEach((key) => (values[key] = true));
 
@@ -189,8 +197,8 @@ const CheckboxQuestion = (props: FormItemProps) => {
     if (value && props.onResponseChange) {
       const newResponses = [];
       responses.forEach((v) => {
-        const outOfScope = !(v.startsWith("Other: ") && value.startsWith("Other: ")) && v !== value;
 
+        const outOfScope = !(v.startsWith("Other: ") && value.startsWith("Other: ")) && v !== value;
         if (outOfScope) {
           newResponses.push(v);
         }
@@ -204,12 +212,12 @@ const CheckboxQuestion = (props: FormItemProps) => {
     }
   };
   let isOneChecked = false;
-  React.useEffect(() => {}, []);
+  React.useEffect(() => { }, []);
+
   return (
     <fieldset className="grid grid-cols-1 gap-y-8">
       {options.map((option) => {
         isOneChecked = Object.keys(values).length ? true : false;
-
         return (
           <div key={option}>
             <label className="flex gap-x-4 items-center">
@@ -217,7 +225,7 @@ const CheckboxQuestion = (props: FormItemProps) => {
                 id="checkbox"
                 disabled={props.disabled}
                 className="cursor-pointer shrink-0"
-                required={props.required && !isOneChecked}
+                required={option ? props.required && !isOneChecked && !!isOtherResponse : props.required && !isOneChecked}
                 checked={values[option] || (!option && values[`Other: ${response}`])}
                 onChange={option ? onChange : onOtherChange}
                 type="checkbox"
@@ -232,11 +240,11 @@ const CheckboxQuestion = (props: FormItemProps) => {
                     className="w-full px-3 py-2 bg-white text-slate-500 focus:text-slate-600 text-sm placeholder-slate-400 border border-slate-300 rounded-sm shadow-sm
         focus:outline-none focus:ring-1 focus:ring-sky-500"
                     value={isOtherResponse ? response : ""}
-                    required={props.required}
+                    required={props.required && !isOneChecked}
                     disabled={props.disabled}
                     onChange={onOtherChange}
                     placeholder="Input another option"
-                    ref={ref}
+
                   />
                 </>
               )}
