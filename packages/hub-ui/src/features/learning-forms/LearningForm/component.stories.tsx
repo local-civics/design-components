@@ -62,9 +62,9 @@ const parksAndGreenForm: LearningFormProps = {
     <Stopwatch
       time="22:01:01"
       ctaList={[
-        { readOnly: false, ctaLabel: "start" },
-        { readOnly: false, ctaLabel: "stop" },
-        { readOnly: true, ctaLabel: "reset" },
+        { readOnly: false, ctaLabel: "Start" },
+        { readOnly: false, ctaLabel: "Pause" },
+
       ]}
     />
   ),
@@ -198,9 +198,9 @@ const publicSpeakingForm: LearningFormProps = {
     <Stopwatch
       time="22:01:01"
       ctaList={[
-        { readOnly: false, ctaLabel: "start" },
-        { readOnly: false, ctaLabel: "stop" },
-        { readOnly: true, ctaLabel: "reset" },
+        { readOnly: false, ctaLabel: "Start" },
+        { readOnly: false, ctaLabel: "Pause" },
+
       ]}
     />
   ),
@@ -547,9 +547,8 @@ const communityMappingOfSelfForm: LearningFormProps = {
     <Stopwatch
       time="22:01:01"
       ctaList={[
-        { readOnly: false, ctaLabel: "start" },
-        { readOnly: false, ctaLabel: "stop" },
-        { readOnly: true, ctaLabel: "reset" },
+        { readOnly: false, ctaLabel: "Start" },
+        { readOnly: false, ctaLabel: "Pause" },
       ]}
     />
   ),

@@ -18,9 +18,8 @@ const Template: Story<StopwatchProps> = (args) => (
   <Stopwatch
     time="22:01:01"
     ctaList={[
-      { readOnly: false, ctaLabel: "start" },
-      { readOnly: false, ctaLabel: "stop" },
-      { readOnly: true, ctaLabel: "reset" },
+      { readOnly: false, ctaLabel: "Start" },
+      { readOnly: false, ctaLabel: "Pause" },
     ]}
     {...args}
   />
