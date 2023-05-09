@@ -21,6 +21,7 @@ const Template: Story<StopwatchProps> = (args) => (
       { readOnly: false, ctaLabel: "Start" },
       { readOnly: false, ctaLabel: "Pause" },
     ]}
+    hide={false}
     {...args}
   />
 );
