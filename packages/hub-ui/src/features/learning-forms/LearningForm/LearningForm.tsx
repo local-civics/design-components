@@ -47,6 +47,7 @@ export type LearningFormProps = {
   preview?: boolean;
   timeSpent?: number;
   elapsedTime?: number;
+  stopWatchStarted?: boolean;
   stopWatch?: React.ReactNode;
 
   onHome?: () => void;
@@ -72,7 +73,8 @@ export const LearningForm = (props: LearningFormProps) => {
     autoSave(isDraft, props.onSaveDraft, () => setIsDraft(false)),
     [isDraft]
   );
-  const saveVisibility = isDraft ? "opacity-100 visible" : "opacity-0 invisible";
+
+  const saveVisibility = isDraft || props.stopWatchStarted ? "opacity-100 visible" : "opacity-0 invisible";
   const answers: FormItemProps[] = [];
   const saveDraft = async () => {
     if (!isDraft) {
@@ -126,12 +128,7 @@ export const LearningForm = (props: LearningFormProps) => {
     }
   }, [currentAnswersKey]);
 
-  React.useEffect(() => {
-    if (props.timeSpent !== props.elapsedTime && !isDraft) {
-      setIsDraft(true);
-    }
-    return;
-  }, [props.timeSpent, props.elapsedTime]);
+
 
   const onReflectionChange = (responses?: string[]) => {
     if (!responses || responses.length === 0) {
