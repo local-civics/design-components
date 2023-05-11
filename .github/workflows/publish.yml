@@ -23,7 +23,7 @@ jobs:
         with:
           ref: master
           fetch-depth: 0 # To get all tags
-          token: ${{ secrets.PUBLISH_TOKEN }}
+          token: ${{ secrets.BOT_TOKEN }}
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
