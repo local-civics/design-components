@@ -73,11 +73,12 @@ export const LearningForm = (props: LearningFormProps) => {
     autoSave(isDraft, props.onSaveDraft, () => setIsDraft(false)),
     [isDraft]
   );
-
-  const saveVisibility = isDraft || props.stopWatchStarted ? "opacity-100 visible" : "opacity-0 invisible";
+  const elapsedTime = props?.elapsedTime || 0
+  const timeSpent = props?.timeSpent || 0
+  const saveVisibility = isDraft ? "opacity-100 visible" : "opacity-0 invisible";
   const answers: FormItemProps[] = [];
   const saveDraft = async () => {
-    if (!isDraft) {
+    if (!isDraft && elapsedTime <= timeSpent) {
       return;
     }
 
