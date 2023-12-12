@@ -31,7 +31,7 @@ export const SearchButton = (props: SearchButtonProps) => {
       <span className="absolute inset-y-0 left-0 top-0 flex items-center pl-2">
         <Button icon="search" />
       </span>
-      <input disabled className={className} type="text" name="search" placeholder={props.placeholder} />
+      <input className={className} type="text" name="search" placeholder={props.placeholder} />
     </label>
   );
 };
