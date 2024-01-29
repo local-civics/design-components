@@ -44,6 +44,8 @@ or if you want to live updates,
 
 `NODE_ENV=production npm run storybook`
 
+Token for GitHub Actions provided by localcivics account
+
 ## Used by
 
 - [Hub](https://hub.localcivics.io)
