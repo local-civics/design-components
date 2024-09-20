@@ -6,7 +6,7 @@ import { FormItem, FormItemProps } from "../FormItem/FormItem";
 import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";
 
 const AUTOSAVE_TIMEOUT = 30 * 1000;
-const MIN_REFLECTION_LENGTH = 100;
+const MIN_REFLECTION_LENGTH = 0;
 
 // A utility for auto-saving drafts
 const autoSave = (
@@ -189,22 +189,17 @@ export const LearningForm = (props: LearningFormProps) => {
         <FormItem
           displayName={
             <>
-              <p>To earn your impact points for this activity, answer either of the following:</p>
-              <ul className="list-disc my-2 ml-5 text-sm">
-                <li>How would you explain what you learned here to a friend? OR</li>
-                <li>How does what you learned here connect to other school topics or everyday life?</li>
-              </ul>
+              <p>Optional Reflection: What is one takeaway you have from today's lesson?</p>
             </>
           }
-          description="(1-2 sentences minimum)"
+          description=""
           format="question"
           questionType="text"
           disabled={!canReflect || !!props.preview}
           onResponseChange={onReflectionChange}
-          required
           paragraph
           minText={MIN_REFLECTION_LENGTH}
-          responses={reflection ? [reflection] : undefined}
+          responses={reflection ? [reflection] : ["No Reflection Provided"]}
         />
 
         <FormItem>
