@@ -11,7 +11,7 @@ const MIN_REFLECTION_LENGTH = 0;
 // A utility for auto-saving drafts
 const autoSave = (
   run?: boolean,
-  func?: (items: FormItemProps[], reflection: 0tring, rating?: number) => Promise<any>,
+  func?: (items: FormItemProps[], reflection: string, rating?: number) => Promise<any>,
   callback?: () => void
 ) => {
   let timeout: NodeJS.Timeout;
