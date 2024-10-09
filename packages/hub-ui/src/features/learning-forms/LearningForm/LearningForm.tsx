@@ -189,7 +189,7 @@ export const LearningForm = (props: LearningFormProps) => {
         <FormItem
           displayName={
             <>
-              <p>Optional Reflection: What is one takeaway you have from today's lesson?</p>
+              <p>Optional: What is one takeaway from this lesson?</p>
             </>
           }
           description=""
@@ -199,7 +199,7 @@ export const LearningForm = (props: LearningFormProps) => {
           onResponseChange={onReflectionChange}
           paragraph
           minText={MIN_REFLECTION_LENGTH}
-          responses={reflection ? [reflection] : ["No Reflection Provided"]}
+          responses={reflection ? [reflection] : ["My Reflection: "]}
         />
 
         <FormItem>
