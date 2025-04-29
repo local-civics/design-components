@@ -29,6 +29,7 @@ const Template: Story<NavbarProps> = (args) => (
                 "Classes": {notifications: 3, href: ""},
                 "Badges": {notifications: 12, href: ""},
                 "Lessons": {notifications: 57, href: ""},
+                "Pathways": {notifications: 0, href: ""},
                 "Organization/People": {notifications: 123, href: "", hidden: true},
             }}
         />
