@@ -18,3 +18,4 @@ export * from './pages/TrialHome/TrialHome'
 export * from './pages/TrialRegistration/TrialRegistration'
 export * from './providers/AdminProvider/AdminProvider';
 export * from './shells/App/App';
+export * from './pages/Pathways/Pathways';
