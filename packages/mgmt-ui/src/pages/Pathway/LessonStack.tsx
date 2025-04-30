@@ -1,5 +1,5 @@
 import * as React          from 'react';
-import {Grid, Pathway, Text} from '@mantine/core';
+import {Grid, Badge, Text} from '@mantine/core';
 import {Link}              from "react-router-dom";
 
 /**
@@ -42,9 +42,9 @@ export function Stack(props: StackProps) {
                 </Text>
             </Grid.Col>
             <Grid.Col span={6}>
-                {row.completion >= 1 && <Pathway variant="filled">Complete</Pathway>}
-                {row.completion === 0 && !row.isStarted && <Pathway color="red" variant="filled">Not started</Pathway>}
-                {row.completion > 0 && row.completion < 1 && <Pathway color="violet" variant="filled">{Math.round((row.completion + Number.EPSILON) * 100)}% Complete</Pathway>}
+                {row.completion >= 1 && <Badge variant="filled">Complete</Badge>}
+                {row.completion === 0 && !row.isStarted && <Badge color="red" variant="filled">Not started</Badge>}
+                {row.completion > 0 && row.completion < 1 && <Badge color="violet" variant="filled">{Math.round((row.completion + Number.EPSILON) * 100)}% Complete</Badge>}
             </Grid.Col>
         </>
     ));
