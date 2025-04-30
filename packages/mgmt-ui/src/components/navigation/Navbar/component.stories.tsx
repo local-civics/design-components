@@ -27,9 +27,9 @@ const Template: Story<NavbarProps> = (args) => (
             active={args.active || "Organization/People"}
             links={{
                 "Classes": {notifications: 3, href: ""},
+                "Pathways": {notifications: 0, href: ""},
                 "Badges": {notifications: 12, href: ""},
                 "Lessons": {notifications: 57, href: ""},
-                "Pathways": {notifications: 0, href: ""},
                 "Organization/People": {notifications: 123, href: "", hidden: true},
             }}
         />
