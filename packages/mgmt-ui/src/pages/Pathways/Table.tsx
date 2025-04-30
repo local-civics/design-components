@@ -37,7 +37,7 @@ export function Table(props: TableProps) {
             title="No pathway items to display"
             description="We don't have any pathway items to show you just yet."
             loading={props.loading}
-            icon="badges"
+            icon="badges" //FIXME investigate icon
         />
     }
 
