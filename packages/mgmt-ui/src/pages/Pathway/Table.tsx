@@ -1,6 +1,6 @@
 import {DataTable}                                from "mantine-datatable";
 import * as React                                 from 'react';
-import {Avatar, Group, Text, ScrollArea, Pathway}   from '@mantine/core';
+import {Avatar, Group, Text, ScrollArea, Badge}   from '@mantine/core';
 import {Link}                                     from "react-router-dom";
 import {
     PlaceholderBanner
@@ -80,8 +80,8 @@ export function Table(props: TableProps) {
                     accessor: 'status',
                     render: (row: Item) => (
                         <>
-                            {!!row.isComplete && <Pathway variant="filled">Complete</Pathway>}
-                            {!row.isComplete && <Pathway color="red" variant="filled">Incomplete</Pathway>}
+                            {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
+                            {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
                         </>
                     )
                 }]}
