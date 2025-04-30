@@ -55,7 +55,7 @@ export const Pathways = (props: PathwaysProps) => {
                         </Title>
 
                         <Text color="dimmed" className={classes.description} mt="sm">
-                            Structured Learning Modules
+                            Curated learning experiences for skill-building
                         </Text>
                     </Grid.Col>
                 </Grid>
