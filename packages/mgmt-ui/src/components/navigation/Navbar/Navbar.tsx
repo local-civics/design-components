@@ -137,9 +137,9 @@ const data = [
     {label: 'Home', icon: IconHome2},
     {label: 'Dashboard', icon: IconGauge},
     {label: 'Classes', icon: IconCategory2},
+    {label: 'Pathways', icon: IconRoute},
     {label: 'Badges', icon: IconAlbum},
     {label: 'Lessons', icon: IconLambda},
-    {label: 'Pathways', icon: IconRoute},
     {label: 'Organization',
         icon: IconBuilding,
         links: [
