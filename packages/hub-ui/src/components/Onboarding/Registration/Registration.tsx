@@ -22,7 +22,7 @@ export const Registration = (props: RegistrationProps) => {
   const [givenName, setGivenName] = React.useState(props.givenName);
   const [familyName, setFamilyName] = React.useState(props.familyName);
   const [grade, setGrade] = React.useState(props.grade);
-  const [impactStatement, setImpactStatement] = React.useState(props.impactStatement);
+  const [impactStatement, setImpactStatement] = React.useState(props.impactStatement || "");
 
   const onRegister = () =>
     props.onRegister &&
@@ -121,8 +121,8 @@ export const Registration = (props: RegistrationProps) => {
           <div>
             <p className="mb-2 font-semibold text-slate-500 text-sm">Impact Statement</p>
             <textarea
-              required
-              minLength={100}
+              // required
+              // minLength={100} no longer required
               placeholder="E.g., I would like to encourage my community to become more educated on issues that directly affect us, as well as make sure my community is a place where everyone is welcome."
               onChange={(e) => setImpactStatement(e.target.value)}
               defaultValue={impactStatement || ""}

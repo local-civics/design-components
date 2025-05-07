@@ -93,12 +93,13 @@ const Delegate = (props: OnboardingProps) => {
 
   if (!props.hasRegistration) {
     if (!persona) {
-      return (
-          <RoleSelection
-              onStudent={() => setPersona("student")}
-              onEducator={() => setPersona("educator")}
-          />
-      );
+      // return (
+      //     <RoleSelection
+      //         onStudent={() => setPersona("student")} // integration time from our Notion page dictates educator accounts, not role selection
+      //         onEducator={() => setPersona("educator")}
+      //     />
+      // );
+      setPersona("student")
     }
 
 
@@ -115,16 +116,19 @@ const Delegate = (props: OnboardingProps) => {
   }
 
   if (!interests && !props.hasInterests) {
-    return (
-      <ImpactQuiz
-        persona={persona}
-        interests={props.interests}
-        onFinish={(interests) => {
-          setInterests(true)
-          props.onConfigureTenant && props.onConfigureTenant({ interests })
-        }}
-      />
-    );
+    // return (
+    //   <ImpactQuiz
+    //     persona={persona}
+    //     interests={props.interests}
+    //     onFinish={(interests) => {
+    //       setInterests(true)
+    //       props.onConfigureTenant && props.onConfigureTenant({ interests })
+    //     }}
+    //   />
+    // );
+    //Impact Quiz skipped for now; give blank interests to not disrupt flow
+    setInterests(true)
+    props.onConfigureTenant({})
   }
 
   return <Welcome givenName={props.givenName} onContinue={props.onFinish} />;

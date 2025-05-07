@@ -137,7 +137,7 @@ const data = [
     {label: 'Home', icon: IconHome2},
     {label: 'Dashboard', icon: IconGauge},
     {label: 'Classes', icon: IconCategory2},
-    {label: 'Pathways', icon: IconRoute},
+    // {label: 'Pathways', icon: IconRoute}, Removing pathways Sidebar tab for now
     {label: 'Badges', icon: IconAlbum},
     {label: 'Lessons', icon: IconLambda},
     {label: 'Organization',
