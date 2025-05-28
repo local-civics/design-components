@@ -22,7 +22,7 @@ export type ButtonColor =
 /**
  * The button size.
  */
-export type ButtonSize = "tiny" | "xs" | "sm" | "md" | "lg" | "xl" | "full:sm" | "full:md";
+export type ButtonSize = "tiny" | "xs" | "sm" | "md" | "md-small-text" | "lg" | "xl" | "full:sm" | "full:md";
 
 /**
  * The button spacing.
@@ -427,6 +427,10 @@ const withSize = (config: ButtonConfig, size?: ButtonSize) => {
       config.icon.size = "w-5 h-5";
       config.logo.size = "w-28 h-5 -ml-1";
       break;
+    case "md-small-text":
+      config.button.size.text = "text-sm";
+      config.icon.size = "w-5 h-5";
+      config.logo.size = "w-28 h-5 -ml-1";
     case "lg":
       config.button.size.text = "text-md";
       config.icon.size = "w-6 h-6";
