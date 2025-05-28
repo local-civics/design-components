@@ -39,7 +39,7 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
             color="blue"
             theme="dark"
             text="Edit Lesson"
-            size="md-small-text"
+            size="md"
             onClick={props.onEditLesson}
           />
 
@@ -50,7 +50,7 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
             color="blue"
             theme="dark"
             text="Back to Badge"
-            size="md-small-text"
+            size="md"
             onClick={props.onBackToBadge}
           />
         </div>

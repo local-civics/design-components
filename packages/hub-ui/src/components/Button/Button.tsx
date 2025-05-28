@@ -105,7 +105,7 @@ export const Button = (props: ButtonProps) => {
 
       {(props.text || props.footer) && (
         <div className="grid grid-cols-1 justify-items-start gap-4">
-          {props.text && <div className="text-left">{props.text}</div>}
+          {props.text && <div className="text-left whitespace-nowrap">{props.text}</div>}
           {props.footer && <div className="text-[0.5rem] font-semibold">{props.footer}</div>}
         </div>
       )}
