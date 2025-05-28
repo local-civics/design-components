@@ -35,6 +35,7 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
           <Button
             wide
             spacing="md"
+            justify="center"
             border="rounded"
             color="blue"
             theme="dark"
@@ -46,6 +47,7 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
           <Button
             wide
             spacing="md"
+            justify="center"
             border="rounded"
             color="blue"
             theme="dark"
