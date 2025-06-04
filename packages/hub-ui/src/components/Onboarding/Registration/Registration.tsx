@@ -22,7 +22,7 @@ export const Registration = (props: RegistrationProps) => {
   const [givenName, setGivenName] = React.useState(props.givenName);
   const [familyName, setFamilyName] = React.useState(props.familyName);
   const [grade, setGrade] = React.useState(props.grade);
-  const [impactStatement, setImpactStatement] = React.useState(props.impactStatement || "");
+  const [impactStatement, setImpactStatement] = React.useState(props.impactStatement || "None");
 
   const onRegister = () =>
     props.onRegister &&
@@ -30,7 +30,7 @@ export const Registration = (props: RegistrationProps) => {
       givenName,
       familyName,
       grade,
-      impactStatement: impactStatement || "",
+      impactStatement: impactStatement || "None",
     });
 
   return (
