@@ -34,25 +34,25 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
         <div className="my-5 grid grid-cols-2 gap-4">
           <Button
             wide
-            spacing="md"
+            spacing="sm"
             justify="center"
             border="rounded"
             color="blue"
             theme="dark"
             text="Edit Lesson"
-            size="md-small-text"
+            size="sm"
             onClick={props.onEditLesson}
           />
 
           <Button
             wide
-            spacing="md"
+            spacing="sm"
             justify="center"
             border="rounded"
             color="blue"
             theme="dark"
             text="Back to Badge"
-            size="md-small-text"
+            size="sm"
             onClick={props.onBackToBadge}
           />
         </div>
