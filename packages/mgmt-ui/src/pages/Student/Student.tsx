@@ -18,6 +18,7 @@ export type StudentProps = {
     impactStatement: string
     numberOfProblemsSolved: number
     percentageOfLessonsCompleted: number
+    numberOfLessonsCompleted: number
     badges: BadgeItem[],
     answers: AnswerItem[],
     reflections: ReflectionItem[],
@@ -28,7 +29,7 @@ export type StudentProps = {
 export const Student = (props: StudentProps) => {
     const [tab, setTab] = useState("badges")
     const numberOfBadges = props.badges.length
-    const percentageOfBadgesEarned = numberOfBadges > 0 ? props.badges.filter(b => b.isComplete).length / numberOfBadges : 0
+    // const percentageOfBadgesEarned = numberOfBadges > 0 ? props.badges.filter(b => b.isComplete).length / numberOfBadges : 0
 
     return <Container size="lg" py="xl">
         <Stack spacing="md">
@@ -63,13 +64,13 @@ export const Student = (props: StudentProps) => {
                         },
                         {
                             title: "LESSON COMPLETION",
-                            value: props.percentageOfLessonsCompleted,
-                            unit: "%"
+                            value: props.numberOfLessonsCompleted,
+                            unit: ""
                         },
                         {
                             title: "BADGE COMPLETION",
-                            value: percentageOfBadgesEarned,
-                            unit: "%"
+                            value: numberOfBadges,
+                            unit: ""
                         },
                     ]}/>
 
