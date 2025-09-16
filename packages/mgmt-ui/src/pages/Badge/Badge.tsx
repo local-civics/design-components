@@ -76,6 +76,7 @@ export const Badge = (props: BadgeProps) => {
     const [tab, setTab] = useState("lessons")
 
     const numberOfStudents = props.students.length
+    const numberOfBadges = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
     const percentageOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
 
     return (
@@ -121,8 +122,8 @@ export const Badge = (props: BadgeProps) => {
                             <StatsGroup data={[
                                 {
                                     title: props.trial ? "LESSONS SUBMITTED" : "BADGE COMPLETION",
-                                    value: props.trial ? props.lessonsCompleted || 0 : percentageOfBadgesEarned,
-                                    unit: props.trial ? '' : '%',
+                                    value: props.trial ? props.lessonsCompleted || 0 : numberOfBadges,
+                                    unit: props.trial ? '' : '',
                                 },
                             ]}/>
 
