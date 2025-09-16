@@ -121,8 +121,8 @@ export const Badge = (props: BadgeProps) => {
                             <StatsGroup data={[
                                 {
                                     title: props.trial ? "LESSONS SUBMITTED" : "BADGE COMPLETION",
-                                    value: props.trial ? props.lessonsCompleted || 0 : percentageOfBadgesEarned,
-                                    unit: props.trial ? '' : '%',
+                                    value: props.trial ? props.lessonsCompleted || 0 : props.lessonsCompleted,
+                                    unit: props.trial ? '' : '',
                                 },
                             ]}/>
 

@@ -169,8 +169,8 @@ export const Lesson = (props: LessonProps) => {
                                 data={[
                                     {
                                         title: props.trial ? "# OF SUBMISSIONS" : "LESSON COMPLETION",
-                                        value: props.trial ? props.lessonsCompleted || 0 : percentageOfLessonsCompleted,
-                                        unit: props.trial ? '' : '%',
+                                        value: props.trial ? props.lessonsCompleted || 0 : props.lessonsCompleted,
+                                        unit: props.trial ? '' : '',
                                     },
                                 ]}
                             />
