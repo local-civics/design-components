@@ -52,7 +52,7 @@ export const BadgeSuccessDialog = (props: BadgeSuccessDialogProps) => {
             )}
           </div>
         </div>
-        <a href="/badges" className="mt-4">
+        <a href="/home" className="mt-4">
           <Button
             color="sky"
             size="md"
