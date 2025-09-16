@@ -81,6 +81,7 @@ export const Lesson = (props: LessonProps) => {
     const [tab, setTab] = useState("question")
 
     const numberOfStudents = props.students.length
+    const numberOfLessons = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
     const percentageOfLessonsCompleted = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
     const contributors = props.contributors || []
     const avatars = contributors.slice(0, 5).map((u, i) => {
