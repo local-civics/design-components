@@ -76,7 +76,7 @@ export const Badge = (props: BadgeProps) => {
     const [tab, setTab] = useState("lessons")
 
     const numberOfStudents = props.students.length
-    const numberOfBadges = props.students.filter(u => u.isComplete).length 
+    const numberOfBadges = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
     const percentageOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
 
     return (
