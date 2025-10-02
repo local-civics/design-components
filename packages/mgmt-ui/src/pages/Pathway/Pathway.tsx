@@ -50,7 +50,7 @@ export type PathwayClass = {
  */
 export type PathwayProps = {
     loading: boolean
-    displayName: string,
+    title: string,
     description: string
     classes: PathwayClass[]
     lessons: LessonItem[]
@@ -77,6 +77,7 @@ export const Pathway = (props: PathwayProps) => {
 
     const numberOfStudents = props.students.length
     const percentageOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
+    const numberOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
 
     return (
         <Container size="lg" py="xl">
@@ -96,7 +97,7 @@ export const Pathway = (props: PathwayProps) => {
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
-                                    {props.displayName || "Badge"}
+                                    {props.title || "Pathway"}
                                 </Title>
 
                                 <Text color="dimmed" className={classes.description} mt="sm">
@@ -121,8 +122,8 @@ export const Pathway = (props: PathwayProps) => {
                             <StatsGroup data={[
                                 {
                                     title: props.trial ? "BADGES SUBMITTED" : "PATHWAY COMPLETION",
-                                    value: props.trial ? props.lessonsCompleted || 0 : percentageOfBadgesEarned,
-                                    unit: props.trial ? '' : '%',
+                                    value: props.trial ? 0: numberOfBadgesEarned,
+                                    unit: props.trial ? '' : '',
                                 },
                             ]}/>
 
