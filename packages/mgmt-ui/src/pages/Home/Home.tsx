@@ -16,8 +16,9 @@ export type HomeProps = {
 
     onDashboardClick: () => void;
     onClassesClick: () => void;
-    onLessonsClick: () => void;
+    onPathwaysClick: () => void;
     onBadgesClick: () => void;
+    onLessonsClick: () => void;
 }
 
 /**
@@ -62,9 +63,9 @@ export const Home = (props: HomeProps) => {
                 </Grid.Col>
                 <Grid.Col>
                     <CardGradient
-                        title="Lessons"
-                        description="Explore units of instruction and/or see corresponding class progress."
-                        onClick={props.onLessonsClick}
+                        title="Pathways"
+                        description="Curated learning experiences for skill-building."
+                        onClick={props.onPathwaysClick}
                     />
                 </Grid.Col>
                 <Grid.Col>
@@ -72,6 +73,13 @@ export const Home = (props: HomeProps) => {
                         title="Badges"
                         description="Project-sized skills acquisition and standards alignment."
                         onClick={props.onBadgesClick}
+                    />
+                </Grid.Col>
+                <Grid.Col>
+                    <CardGradient
+                        title="Lessons"
+                        description="Explore units of instruction and/or see corresponding class progress."
+                        onClick={props.onLessonsClick}
                     />
                 </Grid.Col>
             </Grid>
