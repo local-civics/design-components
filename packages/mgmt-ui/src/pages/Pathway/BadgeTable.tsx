@@ -9,8 +9,8 @@ import {
  * Item
  */
 export interface Item {
-    lessonId: string
-    lessonName: string
+    badgeId: string
+    badgeName: string
     percentageCompletion: number
     href: string
 }
@@ -46,10 +46,10 @@ export function Table(props: TableProps) {
 
     const rows = props.items.map((row) => {
         const percentageCompletion = Math.round((row.percentageCompletion + Number.EPSILON) * 100)
-        return <tr key={row.lessonName}>
+        return <tr key={row.badgeName}>
             <td>
                 <Text<typeof Link> component={Link} to={row.href}>
-                    {row.lessonName}
+                    {row.badgeName}
                 </Text>
             </td>
             <td>{percentageCompletion}%</td>
