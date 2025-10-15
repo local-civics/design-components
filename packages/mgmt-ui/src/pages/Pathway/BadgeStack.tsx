@@ -6,7 +6,7 @@ import {Link}              from "react-router-dom";
  * Item
  */
 export interface Item {
-    lessonName: string
+    badgeName: string
     completion: number
     isStarted?: boolean
     href: string
@@ -38,7 +38,7 @@ export function Stack(props: StackProps) {
         <>
             <Grid.Col span={6}>
                 <Text<typeof Link> component={Link} to={row.href} color="dark.4" weight="bold" size="md">
-                    {row.lessonName}
+                    {row.badgeName}
                 </Text>
             </Grid.Col>
             <Grid.Col span={6}>

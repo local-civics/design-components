@@ -15,7 +15,7 @@ import {StatsGroup}                               from "../../components/data/St
 import {Tabs}                                     from "../../components/navigation/Tabs/Tabs";
 import {SplitButton}                              from "./SplitButton";
 import {Table, Item}                              from "./Table";
-import {Table as LessonTable, Item as LessonItem} from "./LessonTable"
+import {Table as BadgeTable, Item as BadgeItem} from "./BadgeTable"
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -53,12 +53,12 @@ export type PathwayProps = {
     title: string,
     description: string
     classes: PathwayClass[]
-    lessons: LessonItem[]
+    badges: BadgeItem[]
     classId: string
     students: PathwayUserItem[]
     href: string
     trial?: boolean
-    lessonsCompleted?: number
+    badgesCompleted?: number
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -143,15 +143,15 @@ export const Pathway = (props: PathwayProps) => {
                                 { !props.trial && <Tabs
                                     value={tab}
                                     data={[
-                                        {label: "By Badge", value: "lessons"},
+                                        {label: "By Badge", value: "badges"},
                                         {label: "By student", value: "students"},
                                     ]}
                                     onChange={setTab}
                                 />}
 
-                                { (!!props.trial || tab === "lessons") && <LessonTable
+                                { (!!props.trial || tab === "badges") && <BadgeTable
                                     loading={props.loading}
-                                    items={props.lessons}
+                                    items={props.badges}
                                 /> }
 
                                 { (!props.trial && tab === "students") && <Table

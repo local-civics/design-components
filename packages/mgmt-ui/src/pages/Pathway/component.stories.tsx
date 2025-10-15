@@ -21,7 +21,7 @@ const Template: Story<PathwayProps> = (args) => (
                 {...args}
                 classes={args.classes || []}
                 students={args.students || []}
-                lessons={args.lessons || []}
+                badges={args.badges || []}
             />
         </MemoryRouter>
     </div>
@@ -49,20 +49,20 @@ Mock.args = {
         avatar: "",
         name: "Jane Doe",
         email: "jane.doe@localcivics.io",
-        lessons: [{
-            lessonName: "Example lesson",
+        badges: [{
+            badgeName: "Example badge",
             completion: 0,
             href: "",
         },{
-            lessonName: "Example lesson 2",
+            badgeName: "Example badge 2",
             completion: 0.5,
             href: "",
         }]
     }],
-    lessons: [{
-        lessonId: "",
+    badges: [{
+        badgeId: "",
         href: "",
-        lessonName: "Example lesson",
+        badgeName: "Example badge",
         percentageCompletion: 0.4,
     }],
 };
