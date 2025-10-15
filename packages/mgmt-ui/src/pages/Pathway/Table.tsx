@@ -5,7 +5,7 @@ import {Link}                                     from "react-router-dom";
 import {
     PlaceholderBanner
 }                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {Stack as LessonStack, Item as LessonItem} from "./LessonStack";
+import {Stack as BadgeStack, Item as BadgeItem} from "./BadgeStack";
 
 /**
  * Item
@@ -16,7 +16,7 @@ export interface Item {
     name: string
     email: string
     isComplete?: boolean
-    lessons: LessonItem[]
+    badges: BadgeItem[]
 }
 
 /**
@@ -87,7 +87,7 @@ export function Table(props: TableProps) {
                 }]}
                 rowExpansion={{
                     content: ({ record }: {record: Item}) => (
-                        <LessonStack items={record.lessons}/>
+                        <BadgeStack items={record.badges}/>
                     ),
                 }}
             />
