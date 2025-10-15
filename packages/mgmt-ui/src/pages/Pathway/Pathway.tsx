@@ -15,7 +15,7 @@ import {StatsGroup}                               from "../../components/data/St
 import {Tabs}                                     from "../../components/navigation/Tabs/Tabs";
 import {SplitButton}                              from "./SplitButton";
 import {Table, Item}                              from "./Table";
-import {Table as BadgeTable, Item as BadgeItem} from "./BadgeTable"
+import {Table as BadgeTable, Item as BadgeItem}   from "./BadgeTable";
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -73,7 +73,7 @@ export type PathwayProps = {
  */
 export const Pathway = (props: PathwayProps) => {
     const { classes } = useStyles();
-    const [tab, setTab] = useState("lessons")
+    const [tab, setTab] = useState("badges")
 
     const numberOfStudents = props.students.length
     const percentageOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
