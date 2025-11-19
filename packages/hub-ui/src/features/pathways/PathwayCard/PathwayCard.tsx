@@ -95,7 +95,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
                         <span className="font-semibold">{b.displayName}</span>
                       </div>
                       <div className="text-xs">
-                        <span>{b.displayName}</span>
+                        {/* <span>{b.TagsOfSomeSort TODO: }</span> */}
                         {<span className="ml-1 text-green-500 font-semibold whitespace-nowrap">
                           {b.weight} {b.weight === 1 ? "point" : "points"}
                         </span>}
