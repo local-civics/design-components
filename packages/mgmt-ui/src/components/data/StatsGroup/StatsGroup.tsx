@@ -75,8 +75,12 @@ export const StatsGroup = ({ data, footer }: StatsGroupProps) => {
             return stat.value
         })()
 
+        // falls back to 0 for undefined, null, NaN, etc
+        const safeValue = Number.isFinite(value) ? value : 0;
+
+
         return <div key={stat.title} className={classes.stat}>
-            <Text className={classes.count}>{value.toLocaleString()}{stat.unit}</Text>
+            <Text className={classes.count}>{safeValue.toLocaleString()}{stat.unit}</Text>
             <Text className={classes.title}>{stat.title}</Text>
         </div>
     });
