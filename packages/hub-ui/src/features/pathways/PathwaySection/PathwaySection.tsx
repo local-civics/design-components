@@ -75,7 +75,7 @@ export const PathwaySection = (props: PathwaySectionProps) => {
             <div className="shrink-0 h-10 w-10">
               <Icon name="award ribbon" />
             </div>
-            <p className="shrink-0 my-auto font-semibold">Pathways</p>
+            <p className="shrink-0 my-auto font-semibold">Pathways and Seals</p>
 
             <div className="shrink-0 mt-auto ml-auto text-sm">
               <span className="font-semibold">
