@@ -63,15 +63,14 @@ export function Table(props: TableProps) {
     }
 
     const openDeleteModal = (student: Item) => openConfirmModal({
-        title: `Delete "${student.givenName && student.familyName ? `${student.givenName} ${student.familyName}` : student.email}"?`,
+        title: `Remove "${student.givenName && student.familyName ? `${student.givenName} ${student.familyName}` : student.email}" from this class?`,
         centered: true,
         children: (
             <Text size="sm">
-                Are you sure you want to delete this person? This action is destructive and you will have
-                to contact support to restore your data.
+                Click confirm if you want to remove the student from this specific class. This will NOT remove the student from the Tech Platform.
             </Text>
         ),
-        labels: { confirm: 'Delete', cancel: "No don't delete them" },
+        labels: { confirm: 'Remove Student', cancel: "Cancel" },
         confirmProps: { color: 'red' },
         onConfirm: () => props.onDelete && props.onDelete(student),
     });
