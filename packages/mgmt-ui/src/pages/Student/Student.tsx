@@ -28,7 +28,7 @@ export type StudentProps = {
 
 export const Student = (props: StudentProps) => {
     const [tab, setTab] = useState("badges")
-    const numberOfBadges = props.badges.length
+    const numberOfBadgesCompleted = props.badges.length > 0 ? props.badges.filter(b => b.isComplete).length : 0
     // const percentageOfBadgesEarned = numberOfBadges > 0 ? props.badges.filter(b => b.isComplete).length / numberOfBadges : 0
 
     return <Container size="lg" py="xl">
@@ -69,7 +69,7 @@ export const Student = (props: StudentProps) => {
                         },
                         {
                             title: "BADGE COMPLETION",
-                            value: numberOfBadges,
+                            value: numberOfBadgesCompleted,
                             unit: ""
                         },
                     ]}/>
