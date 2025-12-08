@@ -20,15 +20,22 @@ export type StudentProps = {
     percentageOfLessonsCompleted: number
     numberOfLessonsCompleted: number
     badges: BadgeItem[],
+    lessons: LessonItem[],
     answers: AnswerItem[],
     reflections: ReflectionItem[],
 
     onBackClick: () => void
 }
-
+type LessonItem = {
+    lessonId: string
+    lessonName: string
+    isComplete: boolean
+}
 export const Student = (props: StudentProps) => {
     const [tab, setTab] = useState("badges")
     const numberOfBadgesCompleted = props.badges.length > 0 ? props.badges.filter(b => b.isComplete).length : 0
+    const TEMPORARY_numberOfLessonsCompleted = props.lessons.filter(l => l.isComplete).length
+
     // const percentageOfBadgesEarned = numberOfBadges > 0 ? props.badges.filter(b => b.isComplete).length / numberOfBadges : 0
 
     return <Container size="lg" py="xl">
@@ -64,7 +71,7 @@ export const Student = (props: StudentProps) => {
                         },
                         {
                             title: "LESSON COMPLETION",
-                            value: props.numberOfLessonsCompleted,
+                            value: TEMPORARY_numberOfLessonsCompleted,
                             unit: ""
                         },
                         {
