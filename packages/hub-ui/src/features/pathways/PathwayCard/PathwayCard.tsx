@@ -39,7 +39,7 @@ export type PathwayCardProps = {
  */
 export const PathwayCard = (props: PathwayCardProps) => {
   const badges = props.badges || [];
-  const progress = props.progress || 0;
+  const completedCount = badges.filter(b => b.completedAt).length;
   const target = props.target || badges.length;
   
 
@@ -77,7 +77,8 @@ export const PathwayCard = (props: PathwayCardProps) => {
         <div className="p-5 grid grid-cols-1 gap-y-3 md:min-w-[30rem] max-w-[40rem] border-t border-zinc-200">
           <p className="font-semibold">Pathway Badges & Criteria</p>
           <p className="text-xs">This pathway is comprised of {target} Badges. It includes required and elective programming.</p>
-          <p className="text-xs">Progress: {progress} / {target} badges completed.</p>
+          <p className="text-xs">Progress: {completedCount} / {target} badges completed.</p>
+
 
           <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
             {badges.map((b) => {
