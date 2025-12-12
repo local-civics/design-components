@@ -12,6 +12,7 @@ export type BadgeItem = {
   displayName: string;
   categories: string[];
   completedAt?: string | null;
+  startedAt?: string | null;
   weight: number;
   onClick?: () => void;
 };
@@ -80,7 +81,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
 
           <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
             {badges.map((b) => {
-              const buttonText = b.completedAt ? "Completed" : "Start";//TODO get startedAT b.startedAt ? "Continue" : "Start";
+              const buttonText = b.completedAt ? "Completed" : b.startedAt ? "Continue" : "Start";
               const buttonTheme = b.completedAt ? "light" : "dark";
               const iconName = b.completedAt ? "check & circle" : "circle";
               const iconColor = b.completedAt ? "text-green-500" : "text-zinc-300";
