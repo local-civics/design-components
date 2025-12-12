@@ -5,6 +5,11 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "typings": "dist/index.d.ts",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/local-civics/design-components.git",
+  "directory": "packages/mgmt-ui"
+  },
   "scripts": {
     "start": "start-storybook -h localhost -p 6006",
     "build": "rollup -c && tsc",
