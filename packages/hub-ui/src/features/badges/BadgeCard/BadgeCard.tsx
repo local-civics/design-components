@@ -99,7 +99,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
                 const iconColor = choice?.completedAt ? "text-green-500" : "text-zinc-300";
 
                 return (
-                  !!choice && (
+                  true && (
                     <div key={id} className="flex gap-x-2 items-center">
                       <div className={`shrink-0 h-4 w-4 ${iconColor}`}>
                         <Icon name={iconName} />
