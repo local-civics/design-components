@@ -113,7 +113,7 @@ export const BadgeCard = (props: BadgeCardProps) => {
                           {!!choice.xp && <span className="ml-1 text-green-500 font-semibold whitespace-nowrap">{choice.xp} points</span>}
                         </div>
                       </div>
-                      { (!!choice?.completedAt || !props.preview) && <div className="shrink-0 w-full max-w-[7rem]">
+                      { (!props.preview) && <div className="shrink-0 w-full max-w-[7rem]">
                         <Button
                           onClick={choice.onClick}
                           spacing="sm"
