@@ -78,6 +78,8 @@ export type ClassProps = {
     onDeleteMember: (student: MemberItem) => void;
     onChangeUserRole: (user: MemberItem, role: string | null) => void;
     onCopyLinkClick: () => void;
+    onExportDataClick: () => void;
+
 }
 
 /**
@@ -182,6 +184,7 @@ export const Class = (props: ClassProps) => {
                         { !props.loading && <SplitButton
                             onAddMembersClick={() => setOpened(true)}
                             onCopyClassLinkClick={props.onCopyLinkClick}
+                            onExportDataClick={props.onExportDataClick}
                         />}
                     </Grid.Col>
                 </Grid>
