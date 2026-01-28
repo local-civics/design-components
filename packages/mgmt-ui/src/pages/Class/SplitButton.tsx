@@ -2,12 +2,13 @@ import * as React                                                      from 'rea
 import {Button, Stack} from '@mantine/core';
 import {
     IconPlaylistAdd,
-    IconClipboardCopy
+    IconClipboardCopy, IconTableExport
 }                                                                      from '@tabler/icons';
 
 export type SplitButtonProps = {
     onAddMembersClick: () => void;
     onCopyClassLinkClick: () => void;
+    onExportDataClick: () => void;
 }
 
 export const SplitButton = (props: SplitButtonProps) => {
@@ -25,6 +26,12 @@ export const SplitButton = (props: SplitButtonProps) => {
                 onClick={props.onCopyClassLinkClick}
             >
                 Copy class link
+            </Button>
+            <Button
+                leftIcon={<IconTableExport size={14} />}
+                onClick={props.onExportDataClick}
+            >
+                Export data (.csv)
             </Button>
         </Stack>
     );
