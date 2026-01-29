@@ -148,7 +148,7 @@ export const App = (props: AppProps) => {
                         <div style={{ width: 15 }}>
                             <Image fit="contain" src="https://cdn.localcivics.io/brand/l.png"/>
                         </div>
-                        <Title color="dimmed" size="h5">Local Civics</Title>
+                        <Title color="dimmed" size="h5">PathLink</Title>
                     </Group>
                     <Text size="xs" color="dimmed" className={classes.description}>
                         We connect students to powerful civic learning experiences.
