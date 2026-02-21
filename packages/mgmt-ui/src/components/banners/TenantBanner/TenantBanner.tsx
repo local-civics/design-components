@@ -1,5 +1,6 @@
-import {Card, CardProps, createStyles, Overlay, Text} from "@mantine/core";
 import * as React                                             from "react";
+import { Card, CardProps, createStyles, Overlay, Text, Group, Button } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 
 const useStyles = createStyles((theme) => ({
     card: {
@@ -28,12 +29,17 @@ const useStyles = createStyles((theme) => ({
         color: theme.white,
         maxWidth: 220,
     },
+    code: {
+        color: theme.white,
+        maxWidth: 220,
+    },
 }));
 
 interface TenantBannerProps {
     title: string;
     description: string;
     image: string;
+    code?: string;
 }
 
 /**
@@ -43,6 +49,7 @@ interface TenantBannerProps {
  * @param image
  * @param style
  * @param className
+ * @param code
  * @param others
  * @constructor
  */
@@ -52,9 +59,24 @@ export const TenantBanner = ({
                           image,
                           style,
                           className,
+                          code,
                           ...others
                       }: TenantBannerProps & Omit<CardProps, keyof TenantBannerProps | 'children'>) => {
     const { classes, cx, theme } = useStyles();
+    const handleCopy = async () => {
+        if (!code) return;
+      
+        try {
+          await navigator.clipboard.writeText(code);
+          showNotification({
+            title: "Copied!",
+            message: "Community code copied to clipboard.",
+            autoClose: 3000,
+          });
+        } catch (err) {
+          console.error("Failed to copy code", err);
+        }
+      };
 
     return (
         <Card
@@ -77,6 +99,28 @@ export const TenantBanner = ({
                 <Text size="sm" className={classes.description}>
                     {description}
                 </Text>
+                
+              
+                <Group mt="sm" spacing="xs">
+                    <Text size="sm" className={classes.code}>
+                        Community Code: {code || "—"}
+                    </Text>
+
+                    {code && (
+                        <Button
+                        size="xs"
+                        variant="white"
+                        onClick={handleCopy}
+                        styles={{
+                            root: {
+                            backgroundColor: "rgba(255,255,255,0.9)",
+                            },
+                        }}
+                        >
+                        Copy
+                        </Button>
+                    )}
+                </Group>
             </div>
         </Card>
     );
