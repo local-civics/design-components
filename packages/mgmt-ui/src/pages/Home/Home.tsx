@@ -12,7 +12,7 @@ export type HomeProps = {
     avatarURL: string
     name: string
     impactStatement: string
-    organization: {name: string, description: string, image: string, website: string}
+    organization: {name: string, description: string, image: string, website: string, accessCode: string}
 
     onDashboardClick: () => void;
     onClassesClick: () => void;
@@ -42,6 +42,7 @@ export const Home = (props: HomeProps) => {
                         title={props.organization.name}
                         description={props.organization.description}
                         image={props.organization.image}
+                        code={props.organization.accessCode}
                     />
                 </Grid.Col>
             </Grid>
