@@ -42,7 +42,6 @@ export const SplitButton = (props: SplitButtonProps) => {
             >
                 Assign
             </Button>
-            <Group noWrap spacing={0}>
                 <Button<typeof Link> component={Link} to={props.href}
                     className={classes.button}
                     variant="gradient"
@@ -50,18 +49,11 @@ export const SplitButton = (props: SplitButtonProps) => {
                     Preview
                 </Button>
                 <Button
-                leftIcon={<IconClipboardCopy size={14} />}
-                onClick={props.onCopyLinkClick}
-            >
-                Copy class link
-            </Button>
-            <Button
                 leftIcon={<IconTableExport size={14} />}
                 onClick={props.onExportDataClick}
             >
                 Export data (.csv)
             </Button>
-            </Group>
         </Stack>
     );
 }

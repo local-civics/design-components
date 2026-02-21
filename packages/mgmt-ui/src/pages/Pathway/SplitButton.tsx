@@ -1,5 +1,5 @@
 import * as React                                        from 'react'
-import { createStyles, Button, Menu, Group, ActionIcon } from '@mantine/core';
+import { createStyles, Button, Stack, Menu, Group, ActionIcon } from '@mantine/core';
 import {
     IconChevronDown,
     IconPlaylistAdd,
@@ -34,7 +34,7 @@ export const SplitButton = (props: SplitButtonProps) => {
     const menuIconColor = theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 6];
 
     return (
-        <Group noWrap spacing={0}>
+        <Stack spacing="sm">
             <Button<typeof Link> component={Link} to={props.href}
                 className={classes.button}
                 variant="gradient"
@@ -53,6 +53,6 @@ export const SplitButton = (props: SplitButtonProps) => {
             >
                 Export data (.csv)
             </Button>
-        </Group>
+        </Stack>
     );
 }
