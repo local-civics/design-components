@@ -49,26 +49,18 @@ export const SplitButton = (props: SplitButtonProps) => {
                 >
                     Preview
                 </Button>
-                <Menu transition="pop" position="bottom-end">
-                    <Menu.Target>
-                        <ActionIcon
-                            variant="gradient"
-                            color={theme.primaryColor}
-                            size={36}
-                            className={classes.menuControl}
-                        >
-                            <IconChevronDown size={16} stroke={1.5} />
-                        </ActionIcon>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        {!props.noExport && <Menu.Item
-                            icon={<IconTableExport size={16} stroke={1.5} color={menuIconColor} />}
-                            onClick={props.onExportDataClick}
-                        >
-                            Export data (.csv)
-                        </Menu.Item>}
-                    </Menu.Dropdown>
-                </Menu>
+                <Button
+                leftIcon={<IconClipboardCopy size={14} />}
+                onClick={props.onCopyLinkClick}
+            >
+                Copy class link
+            </Button>
+            <Button
+                leftIcon={<IconTableExport size={14} />}
+                onClick={props.onExportDataClick}
+            >
+                Export data (.csv)
+            </Button>
             </Group>
         </Stack>
     );
