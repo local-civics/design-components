@@ -3,6 +3,7 @@ import { Icon, IconName } from "../../../components/Icon/Icon";
 import { Button } from "../../../components/Button/Button";
 import { Card } from "../../../components/Card/Card";
 import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
+import {PathwayProgressBarChart} from "../PathwayProgressBarChart/PathwayProgressBarChart";
 
 /**
  * BadgeItem
@@ -17,6 +18,8 @@ export type BadgeItem = {
   onClick?: () => void;
 };
 
+export type PathwayCriteria = Record<string,number>;
+
 /**
  * PathwayCardProps
  */
@@ -28,6 +31,8 @@ export type PathwayCardProps = {
   progress?: number;
   target?: number;
   displayTags?: string[];
+  criteria?: PathwayCriteria;
+  points?: Record<string, number>;
   onClose?: () => void;
   onSubmit?: () => void;
 };
@@ -41,7 +46,8 @@ export const PathwayCard = (props: PathwayCardProps) => {
   const badges = props.badges || [];
   const completedCount = badges.filter(b => b.completedAt).length;
   const target = props.target || badges.length;
-  
+  const categoryTargets = props.criteria ?? {};
+  const points = props.points ?? {};
 
 //TODO: should pass this to a PathwayEmblem instead making a file at 
 //design-components/packages/hub-ui/src/features/pathways/PathwayEmblem/PathwayEmblem.tsx
@@ -77,8 +83,13 @@ export const PathwayCard = (props: PathwayCardProps) => {
         <div className="p-5 grid grid-cols-1 gap-y-3 md:min-w-[30rem] max-w-[40rem] border-t border-zinc-200">
           <p className="font-semibold">Pathway Badges & Criteria</p>
           <p className="text-xs">This pathway is comprised of {target} Badges. It includes required and elective programming.</p>
-          <p className="text-xs">Progress: {completedCount} / {target} badges completed.</p>
 
+          <p className="text-xs">Progress: {completedCount} / {target} badges completed.</p>
+          <PathwayProgressBarChart
+            targets={categoryTargets}
+            points={points}
+            height="sm"
+          />
 
           <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
             {badges.map((b) => {
@@ -125,7 +136,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
           <div className="pt-5 px-5 flex border-t border-zinc-200">
             <div className="w-full max-w-[7rem] ml-auto">
               <Button
-                  disabled={true} //TODO: enable Pathway Submission
+                  disabled={true} //TODO: enable Pathway Submission?
                   onClick={props.onSubmit}
                   spacing="sm"
                   border="rounded"
