@@ -45,7 +45,7 @@ export const SplitButton = (props: SplitButtonProps) => {
                 leftIcon={<IconClipboardCopy size={14} />}
                 onClick={props.onCopyLinkClick}
             >
-                Copy class link
+                Copy link
             </Button>
             <Button
                 leftIcon={<IconTableExport size={14} />}
