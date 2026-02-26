@@ -35,18 +35,18 @@ export const SplitButton = (props: SplitButtonProps) => {
 
     return (
         <Stack spacing="sm">
-            <Button
-                variant="gradient"
-                leftIcon={<IconClipboardCopy size={14} />}
-                onClick={props.onCopyLinkClick}
-            >
-                Assign
-            </Button>
                 <Button<typeof Link> component={Link} to={props.href}
                     className={classes.button}
                     variant="gradient"
                 >
                     Preview
+                </Button>
+                <Button
+                variant="gradient"
+                leftIcon={<IconClipboardCopy size={14} />}
+                onClick={props.onCopyLinkClick}
+                >
+                    Copy link
                 </Button>
                 <Button
                 leftIcon={<IconTableExport size={14} />}
