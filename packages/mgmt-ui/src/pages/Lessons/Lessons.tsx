@@ -57,7 +57,7 @@ export const Lessons = (props: LessonsProps) => {
                         </Title>
 
                         <Text color="dimmed" className={classes.description} mt="sm">
-                            Explore units of instruction and/or see corresponding class progress.
+                            Bite-sized activities and learning experiences accelerating students achievement
                         </Text>
                     </Grid.Col>
                 </Grid>

@@ -53,7 +53,7 @@ export const Dashboard = (props: DashboardProps) => {
             <Stack spacing={0}>
                 <Title size="h3">Dashboard</Title>
                 <Text color="dimmed" size="sm" mt="md">
-                    Fast-track learning for your students.
+                    Track your students’ pathway progress
                 </Text>
             </Stack>
             <Stack>
