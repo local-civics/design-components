@@ -1,6 +1,6 @@
 # design-components
 
-Monorepo for Local Civics React components 
+Monorepo for Local Civics React components
 
 ## Install
 
