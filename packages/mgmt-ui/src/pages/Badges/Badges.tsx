@@ -57,7 +57,7 @@ export const Badges = (props: BadgesProps) => {
                         </Title>
 
                         <Text color="dimmed" className={classes.description} mt="sm">
-                            Project-sized skills acquisition and standards alignment.
+                            Key milestones that reflect skill development, micro-credentials, or academic progress
                         </Text>
                     </Grid.Col>
                 </Grid>

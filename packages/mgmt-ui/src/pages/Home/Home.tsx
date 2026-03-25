@@ -51,35 +51,35 @@ export const Home = (props: HomeProps) => {
                 <Grid.Col>
                     <CardGradient
                         title="Dashboard"
-                        description="Track class performance across core areas of focus."
+                        description="Track your students’ pathway progress"
                         onClick={props.onDashboardClick}
                     />
                 </Grid.Col>
                 <Grid.Col>
                     <CardGradient
                         title="Classes"
-                        description="Organize people into classes."
+                        description="Create classes, cohorts, or custom subgroups"
                         onClick={props.onClassesClick}
                     />
                 </Grid.Col>
                 <Grid.Col>
                     <CardGradient
                         title="Pathways"
-                        description="Curated learning experiences for skill-building."
+                        description="Explore all your unique pathway requirements in one clear space"
                         onClick={props.onPathwaysClick}
                     />
                 </Grid.Col>
                 <Grid.Col>
                     <CardGradient
                         title="Badges"
-                        description="Project-sized skills acquisition and standards alignment."
+                        description="Key milestones that reflect skill development, micro-credentials, or academic progress"
                         onClick={props.onBadgesClick}
                     />
                 </Grid.Col>
                 <Grid.Col>
                     <CardGradient
                         title="Lessons"
-                        description="Explore units of instruction and/or see corresponding class progress."
+                        description="Bite-sized activities and learning experiences accelerating students achievement"
                         onClick={props.onLessonsClick}
                     />
                 </Grid.Col>

@@ -119,7 +119,7 @@ export const Classes = (props: ClassesProps) => {
                             </Title>
 
                             <Text color="dimmed" className={classes.description} mt="sm">
-                                A class can be for a specific period of time, grade, team, or other cohorts.
+                                Create classes, cohorts, or custom subgroups
                             </Text>
                         </Grid.Col>
                         <Grid.Col sm="content">
