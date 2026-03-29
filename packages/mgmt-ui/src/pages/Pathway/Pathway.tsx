@@ -56,6 +56,7 @@ export type PathwayProps = {
     badges: BadgeItem[]
     classId: string
     students: PathwayUserItem[]
+    categories: { categoryId: string; name: string }[]
     href: string
     trial?: boolean
     badgesCompleted?: number
@@ -157,6 +158,7 @@ export const Pathway = (props: PathwayProps) => {
                                 { (!props.trial && tab === "students") && <Table
                                     loading={props.loading}
                                     items={props.students}
+                                    categories={props.categories}
                                 />}
                             </Stack>
                         </Stack>

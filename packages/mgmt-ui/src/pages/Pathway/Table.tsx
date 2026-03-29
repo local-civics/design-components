@@ -17,6 +17,7 @@ export interface Item {
     email: string
     isComplete?: boolean
     badges: BadgeItem[]
+    categoryPoints?: Record<string, number>
 }
 
 /**
@@ -26,12 +27,20 @@ export type TableData = {
     loading: boolean
     items: Item[]
 }
-
+/**
+ * Category
+ */
+export type Category = {
+    categoryId: string
+    name: string
+}
 
 /**
  * TableProps
  */
-export type TableProps = TableData
+export type TableProps = TableData & {
+    categories: Category[]
+}
 
 /**
  * Table
@@ -84,7 +93,20 @@ export function Table(props: TableProps) {
                             {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
                         </>
                     )
-                }]}
+
+                },
+                ...props.categories.map((category) => ({
+                    accessor: category.categoryId,
+                    title: category.name,
+                    render: (row: Item) => (
+                        <Badge color="blue" variant="filled">
+                            {row.categoryPoints?.[category.categoryId] ?? 0}
+                        </Badge>
+                    )
+                }))
+            ]}
+
+
                 rowExpansion={{
                     content: ({ record }: {record: Item}) => (
                         <BadgeStack items={record.badges}/>
