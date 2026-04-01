@@ -43,11 +43,52 @@ export type PathwayCardProps = {
  * @constructor
  */
 export const PathwayCard = (props: PathwayCardProps) => {
+
   const badges = props.badges || [];
   const completedCount = badges.filter(b => b.completedAt).length;
   const target = props.target || badges.length;
   const categoryTargets = props.criteria ?? {};
   const points = props.points ?? {};
+
+  const allCategories = Array.from(
+    new Set(badges.flatMap(b => b.categories || []))
+  );
+  
+  type CategoryFilter = {
+    label: string;
+    isActive?: boolean;
+  };
+  
+  const [filters, setFilters] = React.useState<Record<string, CategoryFilter>>(
+    () => {
+      const obj: Record<string, CategoryFilter> = {};
+      allCategories.forEach(cat => {
+        obj[cat] = { label: cat, isActive: false };
+      });
+      return obj;
+    }
+  );
+  const toggleFilter = (label: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [label]: {
+        ...prev[label],
+        isActive: !prev[label].isActive
+      }
+    }));
+  };
+
+  const activeFilters = Object.values(filters).filter(f => f.isActive);
+
+  const filteredBadges =
+  activeFilters.length === 0
+    ? badges
+    : badges.filter(b =>
+        activeFilters.some(f =>
+          (b.categories || []).includes(f.label)
+        )
+      );
+  const filterClassName = "inline-block px-4 py-2 bg-gray-600 text-white rounded-full cursor-pointer text-sm";
 
 //TODO: should pass this to a PathwayEmblem instead making a file at 
 //design-components/packages/hub-ui/src/features/pathways/PathwayEmblem/PathwayEmblem.tsx
@@ -85,14 +126,36 @@ export const PathwayCard = (props: PathwayCardProps) => {
           <p className="text-xs">This pathway is comprised of {target} Badges. It includes required and elective programming.</p>
 
           <p className="text-xs">Progress: {completedCount} / {target} badges completed.</p>
+          
           <PathwayProgressBarChart
-            targets={categoryTargets}
-            points={points}
-            height="sm"
-          />
+              targets={categoryTargets}
+              points={points}
+              height="sm"
+            />
 
-          <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
-            {badges.map((b) => {
+            <div className="flex flex-wrap gap-2 mt-3">
+              {allCategories.map((cat, i) => {
+                const isActive = filters[cat]?.isActive;
+
+                return (
+                  <div
+                    key={i}
+                    onClick={() => toggleFilter(cat)}
+                    className={
+                      isActive
+                        ? `${filterClassName} bg-gray-700`
+                        : "inline-block px-4 py-2 rounded-full hover:bg-gray-200 cursor-pointer text-sm"
+                    }
+                  >
+                    {cat}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
+
+            {filteredBadges.map((b) => {
               const buttonText = b.completedAt ? "Completed" : b.startedAt ? "Continue" : "Start";
               const buttonTheme = b.completedAt ? "light" : "dark";
               const iconName = b.completedAt ? "check & circle" : "circle";
