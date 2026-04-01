@@ -70,10 +70,23 @@ export const PathwayCard = (props: PathwayCardProps) => {
     }
   );
 
-  const toggleFilter = (id: string) => {
+  React.useEffect(() => {
     setFilters(prev => {
-      if (!prev[id]) return prev;
+      const next: Record<string, CategoryFilter> = {};
   
+      categoryIds.forEach(id => {
+        next[id] = {
+          id,
+          isActive: prev[id]?.isActive ?? false
+        };
+      });
+  
+      return next;
+    });
+  }, [categoryIds]);
+
+  const toggleFilter = (id: string) => {
+    setFilters(prev => {  
       return {
         ...prev,
         [id]: {
