@@ -32,6 +32,7 @@ export type PathwayCardProps = {
   target?: number;
   displayTags?: string[];
   criteria?: PathwayCriteria;
+  categoryNames?: Record<string, string>;
   points?: Record<string, number>;
   onClose?: () => void;
   onSubmit?: () => void;
@@ -48,34 +49,39 @@ export const PathwayCard = (props: PathwayCardProps) => {
   const completedCount = badges.filter(b => b.completedAt).length;
   const target = props.target || badges.length;
   const categoryTargets = props.criteria ?? {};
+  const categoryIds = Object.keys(categoryTargets);
   const points = props.points ?? {};
-
-  const allCategories = Array.from(
-    new Set(badges.flatMap(b => b.categories || []))
-  );
   
   type CategoryFilter = {
-    label: string;
+    id: string;
     isActive?: boolean;
   };
   
   const [filters, setFilters] = React.useState<Record<string, CategoryFilter>>(
     () => {
       const obj: Record<string, CategoryFilter> = {};
-      allCategories.forEach(cat => {
-        obj[cat] = { label: cat, isActive: false };
+      categoryIds.forEach(id => {
+        obj[id] = {
+          id,
+          isActive: false
+        };
       });
       return obj;
     }
   );
-  const toggleFilter = (label: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [label]: {
-        ...prev[label],
-        isActive: !prev[label].isActive
-      }
-    }));
+
+  const toggleFilter = (id: string) => {
+    setFilters(prev => {
+      if (!prev[id]) return prev;
+  
+      return {
+        ...prev,
+        [id]: {
+          ...prev[id],
+          isActive: !prev[id].isActive
+        }
+      };
+    });
   };
 
   const activeFilters = Object.values(filters).filter(f => f.isActive);
@@ -85,7 +91,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
     ? badges
     : badges.filter(b =>
         activeFilters.some(f =>
-          (b.categories || []).includes(f.label)
+          (b.categories || []).includes(f.id)
         )
       );
   const filterClassName = "inline-block px-4 py-2 bg-gray-600 text-white rounded-full cursor-pointer text-sm";
@@ -126,7 +132,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
           <p className="text-xs">This pathway is comprised of {target} Badges. It includes required and elective programming.</p>
 
           <p className="text-xs">Progress: {completedCount} / {target} badges completed.</p>
-          
+
           <PathwayProgressBarChart
               targets={categoryTargets}
               points={points}
@@ -134,32 +140,33 @@ export const PathwayCard = (props: PathwayCardProps) => {
             />
 
             <div className="flex flex-wrap gap-2 mt-3">
-              {allCategories.map((cat, i) => {
-                const isActive = filters[cat]?.isActive;
+            {categoryIds.map((id) => {
+            const isActive = filters[id]?.isActive;
+            const label = props.categoryNames?.[id] ?? id;
 
-                return (
-                  <div
-                    key={i}
-                    onClick={() => toggleFilter(cat)}
-                    className={
-                      isActive
-                        ? `${filterClassName} bg-gray-700`
-                        : "inline-block px-4 py-2 rounded-full hover:bg-gray-200 cursor-pointer text-sm"
-                    }
-                  >
-                    {cat}
-                  </div>
-                );
-              })}
-            </div>
+            return (
+              <div
+                key={id}
+                onClick={() => toggleFilter(id)}
+                className={
+                  isActive
+                    ? `${filterClassName} bg-gray-700`
+                    : "inline-block px-4 py-2 rounded-full hover:bg-gray-200 cursor-pointer text-sm"
+                      }
+                    >
+                      {label}
+                    </div>
+                  );
+                })}
+                </div>
 
-            <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
+                <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
 
-            {filteredBadges.map((b) => {
-              const buttonText = b.completedAt ? "Completed" : b.startedAt ? "Continue" : "Start";
-              const buttonTheme = b.completedAt ? "light" : "dark";
-              const iconName = b.completedAt ? "check & circle" : "circle";
-              const iconColor = b.completedAt ? "text-green-500" : "text-zinc-300";
+                {filteredBadges.map((b) => {
+                  const buttonText = b.completedAt ? "Completed" : b.startedAt ? "Continue" : "Start";
+                  const buttonTheme = b.completedAt ? "light" : "dark";
+                  const iconName = b.completedAt ? "check & circle" : "circle";
+                  const iconColor = b.completedAt ? "text-green-500" : "text-zinc-300";
 
               return (
                   <div key={b.badgeId} className="flex gap-x-2 items-center">
