@@ -57,6 +57,15 @@ export const PathwayCard = (props: PathwayCardProps) => {
     [props.criteria]
   );
 
+  const categoryIdByLabel = React.useMemo(
+    () =>
+      Object.entries(props.categoryNames ?? {}).reduce((acc, [id, label]) => {
+        acc[label] = id;
+        return acc;
+      }, {} as Record<string, string>),
+    [props.categoryNames]
+  );
+
   const [activeFilters, setActiveFilters] = React.useState<Set<string>>(
     () => new Set()
   );
@@ -65,7 +74,9 @@ export const PathwayCard = (props: PathwayCardProps) => {
   activeFilters.size === 0
     ? badges
     : badges.filter(b =>
-        b.categories?.some(c => activeFilters.has(c))
+        b.categories?.some(categoryId =>
+          activeFilters.has(categoryId)
+        )
       );
 
   const filterClassName = "inline-block px-4 py-2 bg-gray-600 text-white rounded-full cursor-pointer text-sm";
@@ -135,7 +146,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
             return (
               <div
                 key={id}
-                onClick={() => toggleFilter(id)}
+                onClick={() => toggleFilter(categoryIdByLabel[label] ?? id)}
                 className={
                   isActive
                     ? `${filterClassName} bg-gray-700`
