@@ -70,6 +70,14 @@ export const PathwayCard = (props: PathwayCardProps) => {
 
   const filterClassName = "inline-block px-4 py-2 bg-gray-600 text-white rounded-full cursor-pointer text-sm";
 
+  const toggleFilter = (id: string) => {
+    setActiveFilters(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
 //TODO: should pass this to a PathwayEmblem instead making a file at 
 //design-components/packages/hub-ui/src/features/pathways/PathwayEmblem/PathwayEmblem.tsx
   return (
