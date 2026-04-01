@@ -73,11 +73,11 @@ export const PathwayCard = (props: PathwayCardProps) => {
 
   const filterClassName = "inline-block px-4 py-2 bg-gray-600 text-white rounded-full cursor-pointer text-sm";
 
-  console.log("ACTIVE FILTERS:", Array.from(activeFilters));
-  console.log("BADGE SAMPLE:", badges.slice(0, 5).map(b => b.categories));
-  console.log("MATCH TEST:", badges.slice(0, 5).map(b =>
-    b.categories?.map(c => activeFilters.has(c))
-  ));
+  // console.log("ACTIVE FILTERS:", Array.from(activeFilters));
+  // console.log("BADGE SAMPLE:", badges.slice(0, 5).map(b => b.categories));
+  // console.log("MATCH TEST:", badges.slice(0, 5).map(b =>
+  //   b.categories?.map(c => activeFilters.has(c))
+  // ));
 
   const toggleFilter = (categoryId: string) => {
     setActiveFilters((prev) => {
