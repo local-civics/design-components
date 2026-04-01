@@ -32,6 +32,7 @@ export type PathwayCardProps = {
   target?: number;
   displayTags?: string[];
   criteria?: PathwayCriteria;
+  rawCriteria?: PathwayCriteria;
   categoryNames?: Record<string, string>;
   points?: Record<string, number>;
   onClose?: () => void;
@@ -53,7 +54,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
 
   
   const categoryIds = React.useMemo(
-    () => Object.keys(props.criteria ?? {}),
+    () => Object.keys(props.rawCriteria ?? {}),
     [props.criteria]
   );
 
