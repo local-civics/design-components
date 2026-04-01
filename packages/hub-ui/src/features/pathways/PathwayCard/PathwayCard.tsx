@@ -57,15 +57,6 @@ export const PathwayCard = (props: PathwayCardProps) => {
     [props.criteria]
   );
 
-  const categoryIdByLabel = React.useMemo(
-    () =>
-      Object.entries(props.categoryNames ?? {}).reduce((acc, [id, label]) => {
-        acc[label] = id;
-        return acc;
-      }, {} as Record<string, string>),
-    [props.categoryNames]
-  );
-
   const [activeFilters, setActiveFilters] = React.useState<Set<string>>(
     () => new Set()
   );
@@ -87,13 +78,15 @@ export const PathwayCard = (props: PathwayCardProps) => {
     b.categories?.map(c => activeFilters.has(c))
   ));
 
-  const toggleFilter = (id: string) => {
-    setActiveFilters(prev => {
+  const toggleFilter = (categoryId: string) => {
+    setActiveFilters((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      next.has(categoryId) ? next.delete(categoryId) : next.add(categoryId);
       return next;
     });
   };
+  
+
 
 //TODO: should pass this to a PathwayEmblem instead making a file at 
 //design-components/packages/hub-ui/src/features/pathways/PathwayEmblem/PathwayEmblem.tsx
@@ -138,27 +131,27 @@ export const PathwayCard = (props: PathwayCardProps) => {
               height="sm"
             />
 
-            <div className="flex flex-wrap gap-2 mt-3">
-            {categoryIds.map((id) => {
-            const isActive = activeFilters.has(id);
-            const label = props.categoryNames?.[id] ?? id;
 
-            return (
-              <div
-                key={id}
-                onClick={() => toggleFilter(categoryIdByLabel[label] ?? id)}
-                className={
-                  isActive
-                    ? `${filterClassName} bg-gray-700`
-                    : "inline-block px-4 py-2 rounded-full hover:bg-gray-200 cursor-pointer text-sm"
-                      }
-                    >
-                      {label}
-                    </div>
-                  );
-                })}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {categoryIds.map((id) => {
+                    const isActive = activeFilters.has(id);
+                    const label = props.categoryNames?.[id] ?? id; // Display for the user
+
+                    return (
+                      <div
+                        key={id}
+                        onClick={() => toggleFilter(id)} // Use raw categoryId internally
+                        className={
+                          isActive
+                            ? `${filterClassName} bg-gray-700`
+                            : "inline-block px-4 py-2 rounded-full hover:bg-gray-200 cursor-pointer text-sm"
+                        }
+                      >
+                        {label}
+                      </div>
+                    );
+                  })}
                 </div>
-
                 <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
 
                 {filteredBadges.map((b) => {
