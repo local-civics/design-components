@@ -49,65 +49,34 @@ export const PathwayCard = (props: PathwayCardProps) => {
   const completedCount = badges.filter(b => b.completedAt).length;
   const target = props.target || badges.length;
   const categoryTargets = props.criteria ?? {};
-  const categoryIds = Object.keys(categoryTargets);
   const points = props.points ?? {};
+
   
-  type CategoryFilter = {
-    id: string;
-    isActive?: boolean;
-  };
-  
-  const [filters, setFilters] = React.useState<Record<string, CategoryFilter>>(
-    () => {
-      const obj: Record<string, CategoryFilter> = {};
-      categoryIds.forEach(id => {
-        obj[id] = {
-          id,
-          isActive: false
-        };
-      });
-      return obj;
-    }
+  const categoryIds = React.useMemo(
+    () => Object.keys(props.criteria ?? {}),
+    [props.criteria]
   );
 
-  React.useEffect(() => {
-    setFilters(prev => {
-      const next: Record<string, CategoryFilter> = {};
-  
-      categoryIds.forEach(id => {
-        next[id] = {
-          id,
-          isActive: prev[id]?.isActive ?? false
-        };
-      });
-  
-      return next;
-    });
-  }, [categoryIds]);
-
-  const toggleFilter = (id: string) => {
-    setFilters(prev => {  
-      return {
-        ...prev,
-        [id]: {
-          ...prev[id],
-          isActive: !prev[id].isActive
-        }
-      };
-    });
-  };
-
-  const activeFilters = Object.values(filters).filter(f => f.isActive);
+  const [activeFilters, setActiveFilters] = React.useState<Set<string>>(
+    () => new Set()
+  );
 
   const filteredBadges =
-  activeFilters.length === 0
+  activeFilters.size === 0
     ? badges
     : badges.filter(b =>
-        activeFilters.some(f =>
-          (b.categories || []).includes(f.id)
-        )
+        b.categories?.some(c => activeFilters.has(c))
       );
+
   const filterClassName = "inline-block px-4 py-2 bg-gray-600 text-white rounded-full cursor-pointer text-sm";
+
+  const toggleFilter = (id: string) => {
+    setActiveFilters(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
 
 //TODO: should pass this to a PathwayEmblem instead making a file at 
 //design-components/packages/hub-ui/src/features/pathways/PathwayEmblem/PathwayEmblem.tsx
@@ -154,7 +123,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
 
             <div className="flex flex-wrap gap-2 mt-3">
             {categoryIds.map((id) => {
-            const isActive = filters[id]?.isActive;
+            const isActive = activeFilters.has(id);
             const label = props.categoryNames?.[id] ?? id;
 
             return (
