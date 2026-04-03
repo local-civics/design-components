@@ -81,9 +81,13 @@ export const PathwayCard = (props: PathwayCardProps) => {
 
   const toggleFilter = (categoryId: string) => {
     setActiveFilters((prev) => {
-      const next = new Set(prev);
-      next.has(categoryId) ? next.delete(categoryId) : next.add(categoryId);
-      return next;
+      // If already selected, clear like radio with optional deselect
+      if (prev.has(categoryId)) {
+        return new Set();
+      }
+  
+      // or replace with ONLY this category
+      return new Set([categoryId]);
     });
   };
   
@@ -145,7 +149,7 @@ export const PathwayCard = (props: PathwayCardProps) => {
                         className={
                           isActive
                             ? `${filterClassName} bg-gray-700`
-                            : "inline-block px-4 py-2 rounded-full hover:bg-gray-200 cursor-pointer text-sm"
+                            : "inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-full cursor-pointer text-sm hover:bg-gray-300"
                         }
                       >
                         {label}
