@@ -1,33 +1,66 @@
-import {openConfirmModal}                                                           from "@mantine/modals";
-import * as React                                                                   from 'react';
-import {Table as MantineTable, Group, Text, ActionIcon, ScrollArea, UnstyledButton} from '@mantine/core';
+import {openConfirmModal} from "@mantine/modals";
+import * as React from 'react';
 import {
-    IconTrash
-}                                                                                   from '@tabler/icons';
-import {Link}                                                                       from "react-router-dom";
-import {PlaceholderBanner}                                                          from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+    Table as MantineTable, 
+    Group, 
+    Text, 
+    ActionIcon, 
+    ScrollArea, 
+    UnstyledButton, 
+    createStyles, 
+    Center
+} from '@mantine/core';
+import {
+    IconTrash,
+    IconSelector,
+    IconChevronDown,
+    IconChevronUp
+} from '@tabler/icons';
+import {Link} from "react-router-dom";
+import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {useSortableData} from "../../utils/hooks"; // Import the hook
 
-/**
- * Item
- */
+const useStyles = createStyles((theme) => ({
+    th: { padding: '0 !important' },
+    control: {
+        width: '100%',
+        padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
+        '&:hover': {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+        },
+    },
+}));
+
 export type Item = { href: string, classId: string, name: string; description: string, numberOfStudents: number }
 
-/**
- * TableProps
- */
 export interface TableProps {
     loading: boolean
     items: Item[];
-
     onDeleteClass: (item: Item) => void
 }
 
 /**
- * Table
- * @param props
- * @constructor
+ * Internal Header Component to handle the Sort UI
  */
+function Th({ children, reversed, sorted, onSort }: { children: React.ReactNode, reversed: boolean, sorted: boolean, onSort(): void }) {
+    const { classes } = useStyles();
+    const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+    return (
+        <th className={classes.th}>
+            <UnstyledButton onClick={onSort} className={classes.control}>
+                <Group position="apart">
+                    <Text weight={500} size="sm">{children}</Text>
+                    <Center><Icon size={14} stroke={1.5} /></Center>
+                </Group>
+            </UnstyledButton>
+        </th>
+    );
+}
+
 export function Table(props: TableProps) {
+    // 1. Initialize sorting on the underlying data
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
+
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No classes to display"
@@ -51,7 +84,8 @@ export function Table(props: TableProps) {
         onConfirm: () => props.onDeleteClass(group),
     });
 
-    const rows = props.items.map((row) => (
+    // 2. Map over sortedItems instead of props.items
+    const rows = sortedItems.map((row) => (
         <tr key={row.classId}>
             <td>
                 <UnstyledButton<typeof Link> component={Link} to={row.href}>
@@ -75,9 +109,22 @@ export function Table(props: TableProps) {
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
-                    <th>Class Name</th>
-                    <th>Description</th>
-                    <th># of Students</th>
+                    {/* 3. Link headers to the sorting hook */}
+                    <Th 
+                        sorted={sortConfig.key === 'name'} 
+                        reversed={sortConfig.direction === 'desc'} 
+                        onSort={() => requestSort('name')}
+                    >Class Name</Th>
+                    <Th 
+                        sorted={sortConfig.key === 'description'} 
+                        reversed={sortConfig.direction === 'desc'} 
+                        onSort={() => requestSort('description')}
+                    >Description</Th>
+                    <Th 
+                        sorted={sortConfig.key === 'numberOfStudents'} 
+                        reversed={sortConfig.direction === 'desc'} 
+                        onSort={() => requestSort('numberOfStudents')}
+                    ># of Students</Th>
                     <th></th>
                 </tr>
                 </thead>
