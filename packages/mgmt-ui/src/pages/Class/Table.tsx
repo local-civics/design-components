@@ -1,5 +1,5 @@
 import {openConfirmModal} from "@mantine/modals";
-import * as React from 'react';
+import * as React from         'react';
 import {
     Avatar,
     Table as MantineTable,
@@ -9,14 +9,34 @@ import {
     UnstyledButton,
     ScrollArea,
     Select,
-    Box
+    Box,
+    Center,
+    createStyles
 }                              from '@mantine/core';
-import {IconCheck, IconTrash}  from '@tabler/icons';
+import {
+    IconCheck, 
+    IconTrash,
+    IconSelector,
+    IconChevronDown,
+    IconChevronUp
+}                              from '@tabler/icons';
 import {Link}                  from "react-router-dom";
 import {
     PlaceholderBanner
 }                              from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {relativeTimeFromDates} from "../../utils/time";
+import {useSortableData}       from "../../utils/useSortableData";
+
+const useStyles = createStyles((theme) => ({
+    th: { padding: '0 !important' },
+    control: {
+        width: '100%',
+        padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
+        '&:hover': {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+        },
+    },
+}));
 
 /**
  * Item
@@ -49,11 +69,32 @@ export interface TableProps {
 }
 
 /**
+ * Th Helper for Sortable Headers
+ */
+function Th({ children, reversed, sorted, onSort }: { children: React.ReactNode, reversed: boolean, sorted: boolean, onSort(): void }) {
+    const { classes } = useStyles();
+    const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+    return (
+        <th className={classes.th}>
+            <UnstyledButton onClick={onSort} className={classes.control}>
+                <Group position="apart">
+                    <Text weight={500} size="sm">{children}</Text>
+                    <Center><Icon size={14} stroke={1.5} /></Center>
+                </Group>
+            </UnstyledButton>
+        </th>
+    );
+}
+
+/**
  * Table
  * @param props
  * @constructor
  */
 export function Table(props: TableProps) {
+    // Initialize sorting hook
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
+    
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No members to display"
@@ -122,13 +163,44 @@ export function Table(props: TableProps) {
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Badges Earned</th>
-                        <th>Lessons Completed</th>
-                        <th>Account Created?</th>
-                        <th>Last Active</th>
-                        <th></th>
+                        {/* 3. Link headers to sorting keys */}
+                        <Th 
+                            sorted={sortConfig.key === 'givenName'} 
+                            reversed={sortConfig.direction === 'desc'} 
+                            onSort={() => requestSort('givenName')}
+                        >Name</Th>
+                        
+                        <Th 
+                            sorted={sortConfig.key === 'isAdmin'} 
+                            reversed={sortConfig.direction === 'desc'} 
+                            onSort={() => requestSort('isAdmin')}
+                        >Role</Th>
+                        
+                        <Th 
+                            sorted={sortConfig.key === 'badgesEarned'} 
+                            reversed={sortConfig.direction === 'desc'} 
+                            onSort={() => requestSort('badgesEarned')}
+                        >Badges Earned</Th>
+                        
+                        <Th 
+                            sorted={sortConfig.key === 'lessonsCompleted'} 
+                            reversed={sortConfig.direction === 'desc'} 
+                            onSort={() => requestSort('lessonsCompleted')}
+                        >Lessons Completed</Th>
+                        
+                        <Th 
+                            sorted={sortConfig.key === 'hasAccount'} 
+                            reversed={sortConfig.direction === 'desc'} 
+                            onSort={() => requestSort('hasAccount')}
+                        >Account Created?</Th>
+                        
+                        <Th 
+                            sorted={sortConfig.key === 'lastActivity'} 
+                            reversed={sortConfig.direction === 'desc'} 
+                            onSort={() => requestSort('lastActivity')}
+                        >Last Active</Th>
+                        
+                        <th></th> {/* Actions column (Trash can) */}
                     </tr>
                 </thead>
                 <tbody>{rows}</tbody>

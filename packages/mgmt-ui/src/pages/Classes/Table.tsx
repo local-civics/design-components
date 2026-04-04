@@ -109,22 +109,25 @@ export function Table(props: TableProps) {
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                 <tr>
-                    {/* 3. Link headers to the sorting hook */}
+                    {/* KEEP: Sortable */}
                     <Th 
                         sorted={sortConfig.key === 'name'} 
                         reversed={sortConfig.direction === 'desc'} 
                         onSort={() => requestSort('name')}
                     >Class Name</Th>
-                    <Th 
-                        sorted={sortConfig.key === 'description'} 
-                        reversed={sortConfig.direction === 'desc'} 
-                        onSort={() => requestSort('description')}
-                    >Description</Th>
+
+                    {/* CHANGE: Static header (No sorting logic or icons) */}
+                    <th style={{ padding: '7px 16px' }}>
+                        <Text weight={500} size="sm">Description</Text>
+                    </th>
+
+                    {/* KEEP: Sortable */}
                     <Th 
                         sorted={sortConfig.key === 'numberOfStudents'} 
                         reversed={sortConfig.direction === 'desc'} 
                         onSort={() => requestSort('numberOfStudents')}
                     ># of Students</Th>
+                    
                     <th></th>
                 </tr>
                 </thead>
