@@ -18,7 +18,7 @@ import {
 } from '@tabler/icons';
 import {Link} from "react-router-dom";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {useSortableData} from "../../utils/hooks"; // Import the hook
+import {useSortableData} from "../../utils/hooks/useSortableData"; // Import the hook
 
 const useStyles = createStyles((theme) => ({
     th: { padding: '0 !important' },
