@@ -92,7 +92,7 @@ export function Table(props: TableProps) {
                     accessor: 'name',
                     title: 'Student Name',
                     sortable: true,
-                    titleStyle: { whiteSpace: 'nowrap' }, // Prevents UI stacking
+                    titleStyle: { whiteSpace: 'nowrap' as const }, // Prevents UI stacking
                     render: (row: Item) => (
                         <Group spacing="sm" noWrap>
                             <Avatar size={40} src={row.avatar} radius={40}/>
@@ -110,7 +110,7 @@ export function Table(props: TableProps) {
                     accessor: 'status',
                     title: 'Status',
                     sortable: true, 
-                    titleStyle: { whiteSpace: 'nowrap' },
+                    titleStyle: { whiteSpace: 'nowrap' as const },
                     render: (row: Item) => ( 
                         <Badge color={row.isComplete ? "blue" : "red"} variant="filled">
                                 {row.isComplete ? "Complete" : "Incomplete"}
@@ -121,7 +121,7 @@ export function Table(props: TableProps) {
                     accessor: category.categoryId,
                     title: category.name,
                     sortable: true,
-                    titleStyle: { whiteSpace: 'nowrap' }, 
+                    titleStyle: { whiteSpace: 'nowrap' as const }, 
                     render: (row: Item) => (
                         <Badge color="blue" variant="filled">
                             {row.categoryPoints?.[category.categoryId] ?? 0} pts
