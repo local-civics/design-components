@@ -76,9 +76,9 @@ export function Table(props: TableProps) {
         />
     }
 
-    const rows = props.sortedItems.map((row) => {
+    const rows = sortedItems.map((row: Item) => {
         const percentageCompletion = Math.round((row.percentageCompletion + Number.EPSILON) * 100)
-        return <tr key={row.badgeName}>
+        return <tr key={row.badgeId}>
             <td>
                 <Text<typeof Link> component={Link} to={row.href}>
                     {row.badgeName}
