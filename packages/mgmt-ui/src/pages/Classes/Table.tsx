@@ -45,11 +45,11 @@ export interface TableProps {
 function Th({ children, reversed, sorted, onSort }: { children: React.ReactNode, reversed: boolean, sorted: boolean, onSort(): void }) {
     const { classes } = useStyles();
     const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
-    return (
+        return (
         <th className={classes.th}>
             <UnstyledButton onClick={onSort} className={classes.control}>
-                <Group position="apart">
-                    <Text weight={500} size="sm">{children}</Text>
+                <Group position="apart" noWrap spacing="xs">
+                    <Text weight={500} size="sm" sx={{ whiteSpace: 'nowrap' }}>{children}</Text>
                     <Center><Icon size={14} stroke={1.5} /></Center>
                 </Group>
             </UnstyledButton>
