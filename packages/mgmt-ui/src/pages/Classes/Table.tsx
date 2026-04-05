@@ -49,7 +49,9 @@ function Th({ children, reversed, sorted, onSort }: { children: React.ReactNode,
         <th className={classes.th}>
             <UnstyledButton onClick={onSort} className={classes.control}>
                 <Group position="apart" noWrap spacing="xs">
-                    <Text weight={500} size="sm" sx={{ whiteSpace: 'nowrap' }}>{children}</Text>
+                    <Text weight={500} size="sm" sx={{ whiteSpace: 'nowrap' as const }}>
+                        {children}
+                        </Text>
                     <Center><Icon size={14} stroke={1.5} /></Center>
                 </Group>
             </UnstyledButton>
