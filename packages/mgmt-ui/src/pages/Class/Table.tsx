@@ -74,7 +74,7 @@ export interface TableProps {
 function Th({ children, reversed, sorted, onSort }: { children: React.ReactNode, reversed: boolean, sorted: boolean, onSort(): void }) {
     const { classes } = useStyles();
     const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
-        return (
+    return (
         <th className={classes.th}>
             <UnstyledButton onClick={onSort} className={classes.control}>
                 <Group position="apart" noWrap spacing="xs">
