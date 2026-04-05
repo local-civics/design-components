@@ -77,8 +77,8 @@ function Th({ children, reversed, sorted, onSort }: { children: React.ReactNode,
     return (
         <th className={classes.th}>
             <UnstyledButton onClick={onSort} className={classes.control}>
-                <Group position="apart">
-                    <Text weight={500} size="sm">{children}</Text>
+                <Group position="apart" noWrap spacing="xs">
+                    <Text weight={500} size="sm" sx={{ whiteSpace: 'nowrap' as const }}>{children}</Text>
                     <Center><Icon size={14} stroke={1.5} /></Center>
                 </Group>
             </UnstyledButton>
@@ -163,7 +163,7 @@ export function Table(props: TableProps) {
             <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
                 <thead>
                     <tr>
-                        {/* 3. Link headers to sorting keys */}
+                        {/*Link headers to sorting keys */}
                         <Th 
                             sorted={sortConfig.key === 'givenName'} 
                             reversed={sortConfig.direction === 'desc'} 

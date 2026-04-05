@@ -1,11 +1,12 @@
-import {DataTable}                                from "mantine-datatable";
+import {DataTable, DataTableSortStatus}           from "mantine-datatable";
 import * as React                                 from 'react';
 import {Avatar, Group, Text, ScrollArea, Badge}   from '@mantine/core';
 import {Link}                                     from "react-router-dom";
 import {
     PlaceholderBanner
 }                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {Stack as BadgeStack, Item as BadgeItem} from "./BadgeStack";
+import {Stack as BadgeStack, Item as BadgeItem}   from "./BadgeStack";
+import { useSortableData }                        from "../../utils/useSortableData";
 
 /**
  * Item
@@ -48,6 +49,17 @@ export type TableProps = TableData & {
  * @param props
  */
 export function Table(props: TableProps) {
+    // Flatten category points into the top level for the sorting hook
+    const preparedItems = React.useMemo(() => {
+        return props.items.map(item => ({
+            ...item,
+            status: item.isComplete, 
+            ...item.categoryPoints
+        }));
+    }, [props.items]);
+
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
+
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No badges to display"
@@ -56,6 +68,11 @@ export function Table(props: TableProps) {
             icon="badges"
         />
     }
+
+    const sortStatus: DataTableSortStatus = {
+        columnAccessor: sortConfig.key as string,
+        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
@@ -67,13 +84,17 @@ export function Table(props: TableProps) {
                 withColumnBorders
                 striped
                 highlightOnHover
-                records={props.items}
+                records={sortedItems}
                 idAccessor="userId"
+                sortStatus={sortStatus}
+                onSortStatusChange={(status) => requestSort(status.columnAccessor)} // Added to trigger sort
                 columns={[{
                     accessor: 'name',
                     title: 'Student Name',
+                    sortable: true,
+                    titleStyle: { whiteSpace: 'nowrap' as const }, // Prevents UI stacking
                     render: (row: Item) => (
-                        <Group spacing="sm">
+                        <Group spacing="sm" noWrap>
                             <Avatar size={40} src={row.avatar} radius={40}/>
                             <div>
                                 <Text size="sm" weight={500}>
@@ -87,26 +108,27 @@ export function Table(props: TableProps) {
                     ),
                 },{
                     accessor: 'status',
-                    render: (row: Item) => (
-                        <>
-                            {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
-                            {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
-                        </>
+                    title: 'Status',
+                    sortable: true, 
+                    titleStyle: { whiteSpace: 'nowrap' as const },
+                    render: (row: Item) => ( 
+                        <Badge color={row.isComplete ? "blue" : "red"} variant="filled">
+                                {row.isComplete ? "Complete" : "Incomplete"}
+                        </Badge>
                     )
-
                 },
                 ...props.categories.map((category) => ({
                     accessor: category.categoryId,
                     title: category.name,
+                    sortable: true,
+                    titleStyle: { whiteSpace: 'nowrap' as const }, 
                     render: (row: Item) => (
                         <Badge color="blue" variant="filled">
-                            {row.categoryPoints?.[category.categoryId] ?? 0}
+                            {row.categoryPoints?.[category.categoryId] ?? 0} pts
                         </Badge>
                     )
                 }))
             ]}
-
-
                 rowExpansion={{
                     content: ({ record }: {record: Item}) => (
                         <BadgeStack items={record.badges}/>
