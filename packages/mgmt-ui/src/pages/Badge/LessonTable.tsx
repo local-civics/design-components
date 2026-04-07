@@ -1,10 +1,11 @@
 import * as React                                from 'react';
-import {Table as MantineTable, ScrollArea, Text} from '@mantine/core';
+import {ScrollArea, Text}                        from '@mantine/core';
 import {Link}                                    from "react-router-dom";
+import { DataTable, DataTableSortStatus }        from "mantine-datatable"
 import {
     PlaceholderBanner
 }                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-
+import { useSortableData }                       from "../../utils/useSortableData";
 /**
  * Item
  */
@@ -35,6 +36,8 @@ export type TableProps = TableData
  * @param props
  */
 export function Table(props: TableProps) {
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
+
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No lessons to display"
@@ -43,30 +46,40 @@ export function Table(props: TableProps) {
             icon="badges"
         />
     }
-
-    const rows = props.items.map((row) => {
-        const percentageCompletion = Math.round((row.percentageCompletion + Number.EPSILON) * 100)
-        return <tr key={row.lessonName}>
-            <td>
-                <Text<typeof Link> component={Link} to={row.href}>
-                    {row.lessonName}
-                </Text>
-            </td>
-            <td>{percentageCompletion}%</td>
-        </tr>
-    });
+    const sortStatus: DataTableSortStatus = {
+        columnAccessor: sortConfig.key as string,
+        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
-            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
-                <thead>
-                <tr>
-                    <th>Lesson Name</th>
-                    <th>Lesson Completion</th>
-                </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </MantineTable>
+            <DataTable
+                verticalSpacing="sm"
+                sx={{ minWidth: 700 }}
+                highlightOnHover
+                striped
+                records={sortedItems}
+                sortStatus={sortStatus}
+                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
+                columns={[
+                    {
+                        accessor: 'lessonName',
+                        title: 'Lesson Name',
+                        sortable: true,
+                        render: (row) => (
+                            <Text<typeof Link> component={Link} to={row.href}>
+                                {row.lessonName}
+                            </Text>
+                        )
+                    },
+                    {
+                        accessor: 'percentageCompletion',
+                        title: 'Lesson Completion',
+                        sortable: true,
+                        render: (row) => `${Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%`
+                    }
+                ]}
+            />
         </ScrollArea.Autosize>
     );
 }

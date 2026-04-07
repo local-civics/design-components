@@ -63,10 +63,10 @@ export function Table(props: TableProps) {
             }
             return flatItem;
         });
-    }, [props.items]);
+    }, [props.items, props.categories]);
 
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
-
+    
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No badges to display"
