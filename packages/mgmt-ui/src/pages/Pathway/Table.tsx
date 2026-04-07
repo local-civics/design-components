@@ -49,13 +49,20 @@ export type TableProps = TableData & {
  * @param props
  */
 export function Table(props: TableProps) {
-    // Flatten category points into the top level for the sorting hook
+    // flatten category points for sorting hook
     const preparedItems = React.useMemo(() => {
-        return props.items.map(item => ({
-            ...item,
-            status: item.isComplete, 
-            ...item.categoryPoints
-        }));
+        return props.items.map(item => {
+            const flatItem = {
+                ...item,
+                status: item.isComplete ? 1 : 0, // convert boolean to number for sorting
+            };
+            if (item.categoryPoints) {
+                Object.keys(item.categoryPoints).forEach(catId => {
+                    (flatItem as any)[catId] = item.categoryPoints![catId];
+                });
+            }
+            return flatItem;
+        });
     }, [props.items]);
 
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
@@ -122,9 +129,9 @@ export function Table(props: TableProps) {
                     title: category.name,
                     sortable: true,
                     titleStyle: { whiteSpace: 'nowrap' as const }, 
-                    render: (row: Item) => (
+                    render: (row: any) => (
                         <Badge color="blue" variant="filled">
-                            {row.categoryPoints?.[category.categoryId] ?? 0} pts
+                        {row[category.categoryId] ?? 0} pts
                         </Badge>
                     )
                 }))

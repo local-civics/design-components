@@ -117,7 +117,7 @@ export function Table(props: TableProps) {
         onConfirm: () => props.onDelete && props.onDelete(student),
     });
 
-    const rows = props.items.map((row) => (
+    const rows = sortedItems.map((row) => (
         <tr key={row.email}>
             <td>
                 <UnstyledButton<typeof Link> component={Link} to={row.href}>
