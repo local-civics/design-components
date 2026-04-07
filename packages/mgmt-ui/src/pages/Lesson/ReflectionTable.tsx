@@ -1,8 +1,9 @@
 import * as React                                                                      from 'react';
-import {Table as MantineTable, ScrollArea} from '@mantine/core';
+import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import {
     PlaceholderBanner
 }                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import { useSortableData } from "../../utils/useSortableData";
 
 /**
  * Item
@@ -38,6 +39,8 @@ export type TableProps = TableData & TableMethods
  * @param props
  */
 export function Table(props: TableProps) {
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
+
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No reflections to display"
@@ -47,26 +50,23 @@ export function Table(props: TableProps) {
         />
     }
 
-    const rows = props.items.map((row) => (
-        <tr key={row.studentName}>
-            <td>{row.studentName}</td>
-            <td>{row.reflection}</td>
-            <td>{row.rating.toLocaleString()}</td>
-        </tr>
-    ));
-
+    const sortStatus: DataTableSortStatus = {
+        columnAccessor: sortConfig.key as string,
+        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };
+    
     return (
         <ScrollArea.Autosize maxHeight={600}>
-            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
-                <thead>
-                <tr>
-                    <th>Student Name</th>
-                    <th>Reflection</th>
-                    <th>Rating</th>
-                </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </MantineTable>
+            <DataTable
+                records={sortedItems} // sorted items instead of props.items
+                sortStatus={sortStatus}
+                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
+                columns={[
+                    { accessor: 'studentName', title: 'Student Name', sortable: true },
+                    { accessor: 'reflection', title: 'Reflection' },
+                    { accessor: 'rating', title: 'Rating', sortable: true },
+                ]}
+            />
         </ScrollArea.Autosize>
     );
 }

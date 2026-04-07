@@ -11,7 +11,8 @@ import {
     PlaceholderBanner
 } from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {Stack as AnswerStack, Item as AnswerItem} from "./AnswerStack"
-import {DataTable} from "mantine-datatable"
+import { DataTable, DataTableSortStatus } from "mantine-datatable";
+import { useSortableData } from "../../utils/useSortableData";
 
 /**
  * Item
@@ -41,6 +42,13 @@ export interface TableProps {
  * @param props
  */
 export function Table(props: TableProps) {
+    const preparedItems = React.useMemo(() => {
+        return props.items.map(item => ({
+            ...item,
+            status: item.isComplete ? 2 : (item.isStarted ? 1 : 0),
+        }));
+    }, [props.items]);
+
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No students to display"
@@ -49,6 +57,14 @@ export function Table(props: TableProps) {
             icon="lessons"
         />
     }
+
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
+    
+    const sortStatus: DataTableSortStatus = {
+        columnAccessor: sortConfig.key as string,
+        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };    
+
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
@@ -61,10 +77,13 @@ export function Table(props: TableProps) {
                 striped
                 highlightOnHover
                 idAccessor="userId"
-                records={props.items}
+                records={sortedItems}
+                sortStatus={sortStatus}
+                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
                 columns={[{
                     accessor: 'name',
                     title: 'Student Name',
+                    sortable: true,
                     render: (row: Item) => (
                         <UnstyledButton>
                             <Group spacing="sm">
@@ -82,6 +101,8 @@ export function Table(props: TableProps) {
                     ),
                 },{
                     accessor: 'status',
+                    title: 'Status',
+                    sortable: true,
                     render: (row: Item) => (
                         <>
                             {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
