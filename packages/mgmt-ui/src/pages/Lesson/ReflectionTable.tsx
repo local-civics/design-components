@@ -1,9 +1,8 @@
-import * as React                                                                      from 'react';
+import * as React                         from 'react';
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import {
-    PlaceholderBanner
-}                                                                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import { useSortableData } from "../../utils/useSortableData";
+import { ScrollArea } from '@mantine/core';
+import { PlaceholderBanner }                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import { useSortableData }                from "../../utils/useSortableData";
 
 /**
  * Item
