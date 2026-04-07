@@ -1,6 +1,6 @@
 {
   "name": "@local-civics/mgmt-ui",
-  "version": "0.1.188",
+  "version": "0.1.189",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
