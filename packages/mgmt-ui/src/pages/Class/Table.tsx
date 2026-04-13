@@ -58,6 +58,14 @@ export type TableProps = TableData & {
  * @constructor
  */
 export function Table(props: TableProps) {
+    const preparedItems = React.useMemo(() => {
+        return props.items.map(item => ({
+            ...item,
+            fullName: item.givenName && item.familyName 
+                ? `${item.givenName} ${item.familyName}`.toLowerCase() 
+                : item.email.toLowerCase(),
+        }));
+    }, [props.items]);
     // Initialize sorting hook
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
     
@@ -101,7 +109,7 @@ export function Table(props: TableProps) {
                 onSortStatusChange={(status) => requestSort(status.columnAccessor)}
                 columns={[
                     {
-                        accessor: 'givenName',
+                        accessor: 'fullName',
                         title: 'Name',
                         sortable: true,
                         render: (row: Item) => (
@@ -164,7 +172,7 @@ export function Table(props: TableProps) {
                     {
                         accessor: 'actions',
                         title: '',
-                        textAlign: 'right',
+                        textAlignment: 'right',
                         render: (row: Item) => (
                             <Group noWrap spacing={0} position="right">
                                 { !row.readonly && !!props.onDelete && (
