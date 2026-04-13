@@ -52,8 +52,13 @@ export function Table(props: TableProps) {
     // flatten category points for sorting hook
     const preparedItems = React.useMemo(() => {
         return props.items.map(item => {
+            const fullName = item.givenName && item.familyName 
+                ? `${item.givenName} ${item.familyName}`.toLowerCase() 
+                : item.email.toLowerCase();
+
             const flatItem = {
                 ...item,
+                fullName, // New fullName field for sorting
                 status: item.isComplete ? 1 : 0, // convert boolean to number for sorting
             };
             if (item.categoryPoints) {
@@ -96,7 +101,7 @@ export function Table(props: TableProps) {
                 sortStatus={sortStatus}
                 onSortStatusChange={(status) => requestSort(status.columnAccessor)} // Added to trigger sort
                 columns={[{
-                    accessor: 'name',
+                    accessor: 'fullName',
                     title: 'Student Name',
                     sortable: true,
                     titleStyle: { whiteSpace: 'nowrap' as const }, // Prevents UI stacking

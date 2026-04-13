@@ -8,7 +8,8 @@ import {
     ActionIcon,
     ScrollArea,
     Select,
-    Badge,
+    Box,
+    UnstyledButton,
 }                                                                   from '@mantine/core';
 import { IconCheck, IconTrash, IconX }                              from '@tabler/icons';
 import {Link}                                                       from "react-router-dom";
