@@ -13,6 +13,7 @@ import {
     IconGauge,
     IconLogout,
     IconSwitchHorizontal, IconLambda, IconCategory2, IconAlbum, IconBuilding, IconVideo, IconRoute,
+    IconClipboard,
 } from '@tabler/icons';
 import {UserButton} from "../../users/UserButton/UserButton";
 import {LinksGroup} from "../NavbarLinksGroups/NavbarLinksGroups";
@@ -140,6 +141,7 @@ const data = [
     {label: 'Pathways', icon: IconRoute},
     {label: 'Badges', icon: IconAlbum},
     {label: 'Lessons', icon: IconLambda},
+    {label: 'File Locker', icon: IconClipboard},
     {label: 'Organization',
         icon: IconBuilding,
         links: [

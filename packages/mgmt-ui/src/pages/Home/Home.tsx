@@ -19,6 +19,8 @@ export type HomeProps = {
     onPathwaysClick: () => void;
     onBadgesClick: () => void;
     onLessonsClick: () => void;
+    onFileLockerClick: () => void;
+
 }
 
 /**
@@ -81,6 +83,13 @@ export const Home = (props: HomeProps) => {
                         title="Lessons"
                         description="Bite-sized activities and learning experiences accelerating students achievement"
                         onClick={props.onLessonsClick}
+                    />
+                </Grid.Col>
+                <Grid.Col>
+                    <CardGradient
+                        title="File Locker"
+                        description="A secure space to view student-submitted work and provide feedback"
+                        onClick={props.onFileLockerClick}
                     />
                 </Grid.Col>
             </Grid>

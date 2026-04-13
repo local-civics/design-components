@@ -15,7 +15,7 @@ import {StatsGroup}                               from "../../components/data/St
 import {Tabs}                                     from "../../components/navigation/Tabs/Tabs";
 import {SplitButton}                              from "./SplitButton";
 import {Table, Item}                              from "./Table";
-import {Table as BadgeTable, Item as BadgeItem}   from "./BadgeTable";
+import {Table as LessonTable, Item as LessonItem} from "./FileTable"
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -32,34 +32,33 @@ const useStyles = createStyles((theme) => ({
 }));
 
 /**
- * PathwayUserItem
+ * FileLockerUserItem
  */
-export type PathwayUserItem = Item
+export type FileLockerUserItem = Item
 
 /**
- * PathwayClass
+ * FileLockerClass
  */
-export type PathwayClass = {
+export type FileLockerClass = {
     classId: string
     name: string
     active: boolean
 }
 
 /**
- * PathwayProps
+ * FileLockerProps
  */
-export type PathwayProps = {
+export type FileLockerProps = {
     loading: boolean
-    title: string,
+    displayName: string,
     description: string
-    classes: PathwayClass[]
-    badges: BadgeItem[]
+    classes: FileLockerClass[]
+    lessons: LessonItem[]
     classId: string
-    students: PathwayUserItem[]
-    categories: { categoryId: string; name: string }[]
+    students: FileLockerUserItem[]
     href: string
     trial?: boolean
-    badgesCompleted?: number
+    lessonsCompleted?: number
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -68,18 +67,19 @@ export type PathwayProps = {
 }
 
 /**
- * Pathway
+ * FileLocker
  * @param props
  * @constructor
  */
-export const Pathway = (props: PathwayProps) => {
+export const FileLocker = (props: FileLockerProps) => {
     const { classes } = useStyles();
-    const [tab, setTab] = useState("badges")
+    const [tab, setTab] = useState("students")
 
     const numberOfStudents = props.students.length
-    const percentageOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
-    const numberOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
-
+    const numberOfFiles = props.students.reduce(
+        (acc, s) => acc + (s.submissions?.length || 0),
+        0
+    )
     return (
         <Container size="lg" py="xl">
             <Stack spacing="md">
@@ -98,7 +98,7 @@ export const Pathway = (props: PathwayProps) => {
                         <Group>
                             <Stack spacing={0}>
                                 <Title order={2} className={classes.title} mt="md">
-                                    {props.title || "Pathway"}
+                                    {props.displayName || "File"}
                                 </Title>
 
                                 <Text color="dimmed" className={classes.description} mt="sm">
@@ -122,8 +122,8 @@ export const Pathway = (props: PathwayProps) => {
                         <Stack>
                             <StatsGroup data={[
                                 {
-                                    title: props.trial ? "BADGES SUBMITTED" : "PATHWAY COMPLETION",
-                                    value: props.trial ? 0: numberOfBadgesEarned,
+                                    title: props.trial ? "LESSONS SUBMITTED" : "FILES",
+                                    value: props.trial ? props.lessonsCompleted || 0 : numberOfFiles,
                                     unit: props.trial ? '' : '',
                                 },
                             ]}/>
@@ -144,22 +144,33 @@ export const Pathway = (props: PathwayProps) => {
                                 { !props.trial && <Tabs
                                     value={tab}
                                     data={[
-                                        {label: "By Badge", value: "badges"},
                                         {label: "By student", value: "students"},
+                                        {label: "By pathway", value: "pathways"},
+                                        {label: "By badge", value: "badges"},
+                                        {label: "By lesson", value: "lessons"},
                                     ]}
                                     onChange={setTab}
                                 />}
 
-                                { (!!props.trial || tab === "badges") && <BadgeTable
-                                    loading={props.loading}
-                                    items={props.badges}
-                                /> }
-
                                 { (!props.trial && tab === "students") && <Table
                                     loading={props.loading}
                                     items={props.students}
-                                    categories={props.categories}
                                 />}
+                                {/* { (!props.trial && tab === "pathways") && <PathwayTable
+                                    loading={props.loading}
+                                    items={props.pathways}
+                                />}
+
+                                { (!props.trial && tab === "badges") && <BadgeTable
+                                    loading={props.loading}
+                                    items={props.badges}
+                                />}
+
+                                { (!!props.trial || tab === "lessons") && <LessonTable
+                                    loading={props.loading}
+                                    items={props.lessons}
+                                /> } */}
+
                             </Stack>
                         </Stack>
                     </div>
