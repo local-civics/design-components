@@ -1,6 +1,7 @@
 import * as React          from 'react';
 import {Grid, Badge, Text} from '@mantine/core';
 import {Link}              from "react-router-dom";
+import { Button } from "@mantine/core"
 
 export interface Item {
     link: string
@@ -24,24 +25,31 @@ export function Stack(props: StackProps) {
     return (
         <Grid gutter="md" sx={{ padding: 20, minWidth: 700 }}>
         {/* Header row */}
-        <Grid.Col span={6}><Text color="dark.4" weight="bold" size="md">By link</Text></Grid.Col>
-        <Grid.Col span={6}><Text color="dark.4" weight="bold" size="md">By badge</Text></Grid.Col>
-        <Grid.Col span={6}><Text color="dark.4" weight="bold" size="md">By Lesson</Text></Grid.Col>
-        <Grid.Col span={6}><Text color="dark.4" weight="bold" size="md">By Question</Text></Grid.Col>
+        <Grid.Col span={3}><Text color="dark.4" weight="bold" size="md">Link</Text></Grid.Col>
+        <Grid.Col span={3}><Text color="dark.4" weight="bold" size="md">Badge</Text></Grid.Col>
+        <Grid.Col span={3}><Text color="dark.4" weight="bold" size="md">Lesson</Text></Grid.Col>
+        <Grid.Col span={3}><Text color="dark.4" weight="bold" size="md">Question</Text></Grid.Col>
         {props.items.map((row, i) => (
             <React.Fragment key={i}>
-                <Grid.Col span={6}>
-                    <a href={row.link} target="_blank" rel="noopener noreferrer">
-                        View File
-                    </a>
-                </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={3}>
+                <Button
+                    component="a"
+                    href={row.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    size="xs"
+                    variant="light"
+                >
+                    View File
+                </Button>
+            </Grid.Col>
+                <Grid.Col span={3}>
                     <Text>{row.badgeName}</Text>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={3}>
                     <Text>{row.lessonName}</Text>
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={3}>
                     <Text>{row.question}</Text>
                 </Grid.Col>
             </React.Fragment>
