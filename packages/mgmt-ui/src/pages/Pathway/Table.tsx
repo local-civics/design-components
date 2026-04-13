@@ -19,6 +19,7 @@ export interface Item {
     isComplete?: boolean
     badges: BadgeItem[]
     categoryPoints?: Record<string, number>
+    [key: string]: any;
 }
 
 /**
@@ -51,18 +52,40 @@ export type TableProps = TableData & {
 export function Table(props: TableProps) {
     // flatten category points for sorting hook
     const preparedItems = React.useMemo(() => {
-        return props.items.map(item => {
-            const flatItem = {
+        // 1. Log the RAW data coming from the hook
+        console.group("Pathway Table Data Check");
+        console.log("Raw items from props:", props.items);
+        console.log("Categories available:", props.categories);
+
+        const mapped = props.items.map(item => {
+            const flatItem: Item = {
                 ...item,
-                status: item.isComplete ? 1 : 0, // convert boolean to number for sorting
+                status: item.isComplete ? 1 : 0, 
             };
+
             if (item.categoryPoints) {
                 Object.keys(item.categoryPoints).forEach(catId => {
-                    (flatItem as any)[catId] = item.categoryPoints![catId];
+                    flatItem[catId] = item.categoryPoints![catId];
                 });
             }
             return flatItem;
         });
+
+        // 2. Log the TRANSFORMED data that the table actually uses
+        console.log("Transformed items (Flat):", mapped);
+        
+        // 3. Specifically check the first student to see if IDs match
+        if (mapped.length > 0 && props.categories.length > 0) {
+            const firstStudent = mapped[0];
+            const firstCatId = props.categories[0].categoryId;
+            console.log(`Matching Check: Does student have key [${firstCatId}]?`, 
+                firstStudent.hasOwnProperty(firstCatId) ? "YES ✅" : "NO ❌",
+                "Value:", firstStudent[firstCatId]
+            );
+        }
+        console.groupEnd();
+
+        return mapped;
     }, [props.items, props.categories]);
 
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
