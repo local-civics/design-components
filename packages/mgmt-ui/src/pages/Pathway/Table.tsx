@@ -52,9 +52,10 @@ export type TableProps = TableData & {
 export function Table(props: TableProps) {
     // flatten category points for sorting hook
     const preparedItems = React.useMemo(() => {
-        // 1. Log the RAW data coming from the hook
+        // 1. Log the RAW data hitting hook
         console.group("Pathway Table Data Check");
-        console.log("Raw items from props:", props.items);
+        console.log("Raw items from props:", props);
+        console.log("Raw items from prop.itemss:", props.items);
         console.log("Categories available:", props.categories);
 
         const mapped = props.items.map(item => {
@@ -71,20 +72,18 @@ export function Table(props: TableProps) {
             return flatItem;
         });
 
-        // 2. Log the TRANSFORMED data that the table actually uses
+        // 2. Log the TRANSFORMED data
         console.log("Transformed items (Flat):", mapped);
         
-        // 3. Specifically check the first student to see if IDs match
-        if (mapped.length > 0 && props.categories.length > 0) {
-            const firstStudent = mapped[0];
-            const firstCatId = props.categories[0].categoryId;
-            console.log(`Matching Check: Does student have key [${firstCatId}]?`, 
-                firstStudent.hasOwnProperty(firstCatId) ? "YES ✅" : "NO ❌",
-                "Value:", firstStudent[firstCatId]
-            );
+        // 3. Specifically check the first student
+        const firstCatId = props.categories?.[0]?.categoryId;
+        if (mapped.length > 0 && firstCatId) {
+            console.log(`Matching Check for ID [${firstCatId}]:`, mapped[0][firstCatId] !== undefined ? "✅ FOUND" : "❌ MISSING");
+            console.groupEnd();
+        } else if (props.categories) {
+           console.groupEnd();
         }
-        console.groupEnd();
-
+        
         return mapped;
     }, [props.items, props.categories]);
 
