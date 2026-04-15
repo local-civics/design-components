@@ -1,62 +1,24 @@
-import {openConfirmModal} from "@mantine/modals";
-import * as React from 'react';
-import {
-    Table as MantineTable, 
-    Group, 
-    Text, 
-    ActionIcon, 
-    ScrollArea, 
-    UnstyledButton, 
-    createStyles, 
-    Center
-} from '@mantine/core';
-import {
-    IconTrash,
-    IconSelector,
-    IconChevronDown,
-    IconChevronUp
-} from '@tabler/icons';
-import {Link} from "react-router-dom";
-import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {useSortableData} from "../../utils/useSortableData"; // Import the hook
+import {openConfirmModal}                                       from "@mantine/modals";
+import * as React                                               from 'react';
+import { DataTable, DataTableSortStatus }                       from 'mantine-datatable';
+import { Group, Text, ActionIcon, ScrollArea, UnstyledButton }  from '@mantine/core';
+import { IconTrash }                                            from '@tabler/icons';
+import {Link}                                                   from "react-router-dom";
+import {PlaceholderBanner}                                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {useSortableData}                                        from "../../utils/useSortableData";
 
-const useStyles = createStyles((theme) => ({
-    th: { padding: '0 !important' },
-    control: {
-        width: '100%',
-        padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
-        '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-        },
-    },
-}));
-
-export type Item = { href: string, classId: string, name: string; description: string, numberOfStudents: number }
+export type Item = { 
+    href: string, 
+    classId: string, 
+    name: string; 
+    description: string, 
+    numberOfStudents: number 
+}
 
 export interface TableProps {
     loading: boolean
     items: Item[];
     onDeleteClass: (item: Item) => void
-}
-
-/**
- * Internal Header Component to handle the Sort UI
- */
-function Th({ children, reversed, sorted, onSort }: { children: React.ReactNode, reversed: boolean, sorted: boolean, onSort(): void }) {
-    const { classes } = useStyles();
-    const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
-        return (
-        <th className={classes.th}>
-            <UnstyledButton onClick={onSort} className={classes.control}>
-                <Group position="apart" noWrap spacing="xs">
-                    <Text weight={500} size="sm" sx={{ whiteSpace: 'nowrap' as const }}>
-                        {children}
-                        </Text>
-                    <Center><Icon size={14} stroke={1.5} /></Center>
-                </Group>
-            </UnstyledButton>
-        </th>
-    );
 }
 
 export function Table(props: TableProps) {
@@ -86,55 +48,69 @@ export function Table(props: TableProps) {
         onConfirm: () => props.onDeleteClass(group),
     });
 
-    // 2. Map over sortedItems instead of props.items
-    const rows = sortedItems.map((row) => (
-        <tr key={row.classId}>
-            <td>
-                <UnstyledButton<typeof Link> component={Link} to={row.href}>
-                    <Text size={14}>{row.name}</Text>
-                </UnstyledButton>
-             </td>
-            <td><Text size={14}>{row.description}</Text></td>
-            <td><Text size={14}>{row.numberOfStudents||0}</Text></td>
-            <td>
-                <Group noWrap spacing={0} position="right">
-                    <ActionIcon color="red">
-                        <IconTrash onClick={() => openDeleteModal(row)} size={16} stroke={1.5} />
-                    </ActionIcon>
-                </Group>
-            </td>
-        </tr>
-    ));
+    const sortStatus: DataTableSortStatus = {
+        columnAccessor: sortConfig.key as string,
+        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
-            <MantineTable verticalSpacing={20} sx={{ minWidth: 700 }} highlightOnHover striped>
-                <thead>
-                <tr>
-                    {/* KEEP: Sortable */}
-                    <Th 
-                        sorted={sortConfig.key === 'name'} 
-                        reversed={sortConfig.direction === 'desc'} 
-                        onSort={() => requestSort('name')}
-                    >Class Name</Th>
-
-                    {/* CHANGE: Static header (No sorting logic or icons) */}
-                    <th style={{ padding: '7px 16px' }}>
-                        <Text weight={500} size="sm">Description</Text>
-                    </th>
-
-                    {/* KEEP: Sortable */}
-                    <Th 
-                        sorted={sortConfig.key === 'numberOfStudents'} 
-                        reversed={sortConfig.direction === 'desc'} 
-                        onSort={() => requestSort('numberOfStudents')}
-                    ># of Students</Th>
-                    
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </MantineTable>
+            <DataTable
+                withBorder={false}
+                borderRadius="sm"
+                verticalSpacing="sm"
+                sx={{ minWidth: 700 }}
+                highlightOnHover
+                striped
+                records={sortedItems}
+                idAccessor="classId"
+                sortStatus={sortStatus}
+                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
+                columns={[
+                    {
+                        accessor: 'name',
+                        title: 'Class Name',
+                        sortable: true,
+                        render: (row) => (
+                            <UnstyledButton<typeof Link> component={Link} to={row.href}>
+                                <Text size={14} weight={500}>
+                                    {row.name}
+                                </Text>
+                            </UnstyledButton>
+                        ),
+                    },
+                    {
+                        accessor: 'description',
+                        title: 'Description',
+                        // Static column (no sortable: true)
+                        render: (row) =>
+                            <Text size={14}>
+                                {row.description}
+                            </Text>
+                    },
+                    {
+                        accessor: 'numberOfStudents',
+                        title: '# of Students',
+                        sortable: true,
+                        render: (row) =>
+                            <Text size={14}>
+                                {row.numberOfStudents || 0}
+                            </Text>
+                    },
+                    {
+                        accessor: 'actions',
+                        title: '',
+                        textAlign: 'right',
+                        render: (row) => (
+                            <Group noWrap spacing={0} position="right">
+                                <ActionIcon color="red" onClick={() => openDeleteModal(row)}>
+                                    <IconTrash size={16} stroke={1.5} />
+                                </ActionIcon>
+                            </Group>
+                        ),
+                    },
+                ]}
+            />
         </ScrollArea.Autosize>
     );
 }
