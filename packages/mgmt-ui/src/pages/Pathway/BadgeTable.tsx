@@ -1,8 +1,9 @@
 import * as React                                                                           from 'react';
 import { ScrollArea, Text }                                                                 from '@mantine/core';
 import { DataTable, DataTableSortStatus }                                                   from 'mantine-datatable';
-import { Link }                                                                               from "react-router-dom";
-import { PlaceholderBanner }                                                                                           from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import { IconSelector, IconChevronUp }                                                      from '@tabler/icons';
+import { Link }                                                                             from "react-router-dom";
+import { PlaceholderBanner }                                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import { useSortableData }                                                                  from "../../utils/useSortableData";
 
 /**
@@ -45,10 +46,13 @@ export function Table(props: TableProps) {
         />
     }
 
-    const sortStatus: DataTableSortStatus = {
-        columnAccessor: sortConfig.key as string,
-        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
-    };
+    const sortStatus = React.useMemo(() => {
+        if (sortConfig.direction === null) return undefined;
+        return {
+            columnAccessor: sortConfig.key as string,
+            direction: sortConfig.direction as 'asc' | 'desc',
+        } as DataTableSortStatus<Item>;
+    }, [sortConfig]);
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
@@ -61,6 +65,10 @@ export function Table(props: TableProps) {
                 idAccessor="badgeId"
                 sortStatus={sortStatus}
                 onSortStatusChange={(status) => requestSort(status.columnAccessor)}
+                sortIcons={{
+                    sorted: <IconChevronUp size={14} />,
+                    unsorted: <IconSelector size={14} />,
+                }}
                 columns={[
                     {
                         accessor: 'badgeName',

@@ -67,13 +67,13 @@ export function Table(props: TableProps) {
         />
     }
 
-    const sortStatus: DataTableSortStatus | undefined = 
-        sortConfig.direction !== null 
-            ? {
-                columnAccessor: sortConfig.key as string,
-                direction: sortConfig.direction, // Now strictly 'asc' | 'desc'
-            } 
-            : undefined;
+    const sortStatus = React.useMemo(() => {
+        if (sortConfig.direction === null) return undefined;
+        return {
+            columnAccessor: sortConfig.key as string,
+            direction: sortConfig.direction as 'asc' | 'desc',
+        } as DataTableSortStatus<Item>;
+    }, [sortConfig]);
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
