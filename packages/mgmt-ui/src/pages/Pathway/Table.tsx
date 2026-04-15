@@ -1,10 +1,9 @@
 import {DataTable, DataTableSortStatus}           from "mantine-datatable";
 import * as React                                 from 'react';
 import {Avatar, Group, Text, ScrollArea, Badge}   from '@mantine/core';
+import { IconSelector, IconChevronUp }            from '@tabler/icons';
 import {Link}                                     from "react-router-dom";
-import {
-    PlaceholderBanner
-}                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import { PlaceholderBanner }                      from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {Stack as BadgeStack, Item as BadgeItem}   from "./BadgeStack";
 import { useSortableData }                        from "../../utils/useSortableData";
 
@@ -50,46 +49,16 @@ export type TableProps = TableData & {
  * @param props
  */
 export function Table(props: TableProps) {
-    // flatten category points for sorting hook
     const preparedItems = React.useMemo(() => {
-        // 1. Log the RAW data hitting hook
-        console.group("Pathway Table Data Check");
-        console.log("Raw items from props:", props);
-        console.log("Raw items from prop.itemss:", props.items);
-        console.log("Categories available:", props.categories);
-
-        const mapped = props.items.map(item => {
-            const flatItem: Item = {
-                ...item,
-                status: item.isComplete ? 1 : 0, 
-            };
-
-            if (item.categoryPoints) {
-                Object.keys(item.categoryPoints).forEach(catId => {
-                    flatItem[catId] = item.categoryPoints![catId];
-                });
-            }
-            return flatItem;
-        });
-
-        // 2. Log the TRANSFORMED data
-        console.log("Transformed items (Flat):", mapped);
-        
-        // 3. Specifically check the first student
-        const firstCatId = props.categories?.[0]?.categoryId;
-        if (mapped.length > 0 && firstCatId) {
-            console.log(`Matching Check for ID [${firstCatId}]:`, mapped[0][firstCatId] !== undefined ? "✅ FOUND" : "❌ MISSING");
-            console.groupEnd();
-        } else if (props.categories) {
-           console.groupEnd();
-        }
-        
-        return mapped;
-    }, [props.items, props.categories]);
+        return (props.items || []).map(item => ({
+            ...item,
+            ...item.categoryPoints, // Spreads all category IDs and their point values
+        }));
+    }, [props.items]);
 
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
     
-    if(props.items.length === 0){
+    if(props.loading && props.items.length === 0){
         return <PlaceholderBanner
             title="No badges to display"
             description="There has not been any badge progress just yet."
@@ -136,7 +105,7 @@ export function Table(props: TableProps) {
                         </Group>
                     ),
                 },{
-                    accessor: 'status',
+                    accessor: 'isComplete',
                     title: 'Status',
                     sortable: true, 
                     titleStyle: { whiteSpace: 'nowrap' as const },
@@ -147,6 +116,7 @@ export function Table(props: TableProps) {
                     )
                 },
                 ...props.categories.map((category) => ({
+                    // Use dot notation: 'categoryPoints.ID'
                     accessor: category.categoryId,
                     title: category.name,
                     sortable: true,
