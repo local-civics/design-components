@@ -67,7 +67,17 @@ export function Table(props: TableProps) {
                         title: 'Badge Name',
                         sortable: true,
                         render: (row) => (
-                            <Text<typeof Link> component={Link} to={row.href} color="blue">
+                            <Text<typeof Link> component={Link} to={row.href} 
+                            sx={(theme) => ({
+                                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+                                textDecoration: 'none',
+                                fontWeight: 500,
+                                '&:hover': {
+                                    textDecoration: 'underline', // Adds an underline only on hover for UX
+                                    color: theme.colors.blue[6]  // Optional: change color only on hover
+                                },
+                            })}
+                        >
                                 {row.badgeName}
                             </Text>
                         ),

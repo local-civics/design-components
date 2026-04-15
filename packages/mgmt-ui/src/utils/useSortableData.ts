@@ -59,9 +59,8 @@ export function useSortableData<T>(items: T[], config: SortConfig<T> = { key: ''
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc';
     } else if (sortConfig.key === key && sortConfig.direction === 'desc') {
-      direction = null; 
-    }
-    
+          direction = null; 
+        }
     setSortConfig({ key, direction });
   };
 
