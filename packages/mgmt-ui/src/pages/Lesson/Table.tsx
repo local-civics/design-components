@@ -1,4 +1,4 @@
-import * as React                                                                                from 'react';
+import * as React                                                                   from 'react';
 import {
     Avatar,
     Badge,
@@ -49,6 +49,13 @@ export function Table(props: TableProps) {
         }));
     }, [props.items]);
 
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
+    
+    const sortStatus: DataTableSortStatus = {
+        columnAccessor: sortConfig.key as string,
+        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };    
+
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No students to display"
@@ -57,14 +64,6 @@ export function Table(props: TableProps) {
             icon="lessons"
         />
     }
-
-    const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
-    
-    const sortStatus: DataTableSortStatus = {
-        columnAccessor: sortConfig.key as string,
-        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
-    };    
-
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
