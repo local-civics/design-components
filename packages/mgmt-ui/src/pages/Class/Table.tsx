@@ -67,7 +67,7 @@ export function Table(props: TableProps) {
         }));
     }, [props.items]);
     // Initialize sorting hook
-    const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
     
     if(props.items.length === 0){
         return <PlaceholderBanner

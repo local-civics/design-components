@@ -46,13 +46,10 @@ export function Table(props: TableProps) {
         />
     }
 
-    const sortStatus = React.useMemo(() => {
-        if (!sortConfig.key || sortConfig.direction === null) return undefined;
-        return {
-            columnAccessor: sortConfig.key as string,
-            direction: sortConfig.direction as 'asc' | 'desc',
-        } as DataTableSortStatus;
-    }, [sortConfig]);
+    const sortStatus: DataTableSortStatus = {
+    columnAccessor: sortConfig.key as string,
+    direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
@@ -66,7 +63,7 @@ export function Table(props: TableProps) {
                 records={sortedItems}
                 idAccessor="badgeId"
                 sortStatus={sortStatus}
-                onSortStatusChange={(any) => requestSort(status.columnAccessor)}
+                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
                 columns={[
                     {
                         accessor: 'badgeName',

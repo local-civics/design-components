@@ -55,9 +55,9 @@ export function useSortableData<T>(items: T[], config: SortConfig<T> = { key: ''
   const requestSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
-        direction = 'desc';
+      direction = 'desc';
     }
-
+    
     setSortConfig({ key, direction });
   };
 

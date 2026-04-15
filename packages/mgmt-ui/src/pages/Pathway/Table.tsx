@@ -67,13 +67,10 @@ export function Table(props: TableProps) {
         />
     }
 
-    const sortStatus = React.useMemo(() => {
-        if (sortConfig.direction === null) return undefined;
-        return {
-            columnAccessor: sortConfig.key as string,
-            direction: sortConfig.direction as 'asc' | 'desc',
-        } as DataTableSortStatus; 
-    }, [sortConfig]);
+    const sortStatus: DataTableSortStatus = {
+        columnAccessor: sortConfig.key as string,
+        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
+    };
 
     return (
         <ScrollArea.Autosize maxHeight={600}>
@@ -120,13 +117,13 @@ export function Table(props: TableProps) {
                 },
                 ...props.categories.map((category) => ({
                     // Use dot notation: 'categoryPoints.ID'
-                    accessor: `categoryPoints.${category.categoryId}`,
+                    accessor: category.categoryId,
                     title: category.name,
                     sortable: true,
                     titleStyle: { whiteSpace: 'nowrap' as const }, 
                     render: (row: any) => (
                         <Badge color="blue" variant="filled">
-                        {row.categoryPoints?.[category.categoryId] ?? 0} pts
+                        {row[category.categoryId] ?? 0} pts
                         </Badge>
                     )
                 }))
