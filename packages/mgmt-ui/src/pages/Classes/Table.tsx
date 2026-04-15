@@ -100,7 +100,6 @@ export function Table(props: TableProps) {
                     {
                         accessor: 'actions',
                         title: '',
-                        textAlign: 'right',
                         render: (row) => (
                             <Group noWrap spacing={0} position="right">
                                 <ActionIcon color="red" onClick={() => openDeleteModal(row)}>
