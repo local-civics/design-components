@@ -58,13 +58,15 @@ export function Table(props: TableProps) {
         <ScrollArea.Autosize maxHeight={600}>
             <DataTable
                 verticalSpacing="sm"
+                withBorder={false} 
+                borderRadius="sm"
                 sx={{ minWidth: 700 }}
                 highlightOnHover
                 striped
                 records={sortedItems}
                 idAccessor="badgeId"
                 sortStatus={sortStatus}
-                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
+                onSortStatusChange={(any) => requestSort(status.columnAccessor)}
                 columns={[
                     {
                         accessor: 'badgeName',
