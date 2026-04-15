@@ -52,15 +52,12 @@ export function useSortableData<T>(items: T[], config: SortConfig<T> = { key: ''
     return sortableItems;
   }, [items, sortConfig]);
 
-  const requestSort = (key: keyof T | string) => {
-    let direction: SortDirection = 'asc';
-    
-    // Cycle through states: asc -> desc -> null (unsorted)
+  const requestSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    } else if (sortConfig.key === key && sortConfig.direction === 'desc') {
-          direction = null; 
-        }
+        direction = 'desc';
+    }
+
     setSortConfig({ key, direction });
   };
 

@@ -56,7 +56,7 @@ export function Table(props: TableProps) {
         }));
     }, [props.items]);
 
-    const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
+    const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
     
     if(props.loading && props.items.length === 0){
         return <PlaceholderBanner
@@ -72,7 +72,7 @@ export function Table(props: TableProps) {
         return {
             columnAccessor: sortConfig.key as string,
             direction: sortConfig.direction as 'asc' | 'desc',
-        } as DataTableSortStatus<Item>;
+        } as DataTableSortStatus; 
     }, [sortConfig]);
 
     return (
@@ -89,10 +89,6 @@ export function Table(props: TableProps) {
                 idAccessor="userId"
                 sortStatus={sortStatus}
                 onSortStatusChange={(status) => requestSort(status.columnAccessor)} // Added to trigger sort
-                sortIcons={{
-                    sorted: <IconChevronUp size={14} />,   // Mantine flips this automatically for desc
-                    unsorted: <IconSelector size={14} />,  // The double-arrow "neutral" state
-                }}
                 columns={[{
                     accessor: 'name',
                     title: 'Student Name',

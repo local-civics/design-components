@@ -47,11 +47,11 @@ export function Table(props: TableProps) {
     }
 
     const sortStatus = React.useMemo(() => {
-        if (sortConfig.direction === null) return undefined;
+        if (!sortConfig.key || sortConfig.direction === null) return undefined;
         return {
             columnAccessor: sortConfig.key as string,
             direction: sortConfig.direction as 'asc' | 'desc',
-        } as DataTableSortStatus<Item>;
+        } as DataTableSortStatus;
     }, [sortConfig]);
 
     return (
@@ -65,10 +65,6 @@ export function Table(props: TableProps) {
                 idAccessor="badgeId"
                 sortStatus={sortStatus}
                 onSortStatusChange={(status) => requestSort(status.columnAccessor)}
-                sortIcons={{
-                    sorted: <IconChevronUp size={14} />,
-                    unsorted: <IconSelector size={14} />,
-                }}
                 columns={[
                     {
                         accessor: 'badgeName',
