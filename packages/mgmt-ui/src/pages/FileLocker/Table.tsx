@@ -20,6 +20,7 @@ export interface Item {
 export interface SubmissionItem {
     link: string
     badgeName: string
+    badgeId: string
     lessonName: string
     question: string
 }
@@ -36,7 +37,10 @@ export type TableData = {
 /**
  * TableProps
  */
-export type TableProps = TableData
+export type TableProps = TableData & {
+    hideBadge?: boolean
+    hideLesson?: boolean
+}
 
 /**
  * Table
@@ -106,8 +110,13 @@ export function Table(props: TableProps) {
                     render: (row: Item) => row.submissions.length
                 }]}
                 rowExpansion={{
-                    content: ({ record }: {record: Item}) => (
-                <FileStack items={record.submissions}/>                    ),
+                    content: ({ record }) => (
+                        <FileStack
+                            items={record.submissions}
+                            hideBadge={props.hideBadge}
+                            hideLesson={props.hideLesson}
+                        />
+                    ),
                 }}
             />
         </ScrollArea.Autosize>
