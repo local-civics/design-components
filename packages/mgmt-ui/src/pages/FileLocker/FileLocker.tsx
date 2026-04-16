@@ -16,6 +16,8 @@ import {Tabs}                                     from "../../components/navigat
 import {SplitButton}                              from "./SplitButton";
 import {Table, Item}                              from "./Table";
 import {Table as LessonTable, Item as LessonItem} from "./FileTable"
+import { useFilteredStudents } from "./useFilteredStudents"
+import { Accordion } from "@mantine/core"
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -30,6 +32,113 @@ const useStyles = createStyles((theme) => ({
         maxWidth: 600,
     },
 }));
+
+type Badge = {
+    badgeId: string
+    displayName: string
+}
+
+type BadgeTableProps = {
+    badges: Badge[]
+    students: FileLockerUserItem[]
+}
+
+const BadgeTable: React.FC<BadgeTableProps & { loading: boolean }> = ({ badges, students, loading }) => {
+    const { byBadge } = useFilteredStudents(students)
+
+    return (
+        <Accordion>
+            {badges.map((b) => (
+                <Accordion.Item key={b.badgeId} value={b.badgeId}>
+                    <Accordion.Control>
+                        {b.displayName}
+                    </Accordion.Control>
+
+                    <Accordion.Panel>
+                        <Table
+                            loading={loading}
+                            items={byBadge(b.badgeId)}
+                            hideBadge
+                        />
+                    </Accordion.Panel>
+                </Accordion.Item>
+            ))}
+        </Accordion>
+    )
+}
+type Lesson = {
+    lessonId: string
+    lessonName: string
+}
+
+type LessonTableProps = {
+    lessons: Lesson[]
+    students: FileLockerUserItem[]
+}
+
+const LessonTableWrapper: React.FC<LessonTableProps & { loading: boolean }> = ({ lessons, students, loading }) => {
+    const { byLesson } = useFilteredStudents(students)
+
+    return (
+        <Accordion>
+            {lessons.map((l) => (
+                <Accordion.Item key={l.lessonId} value={l.lessonId}>
+                    <Accordion.Control>
+                        {l.lessonName}
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                        <Table
+                            loading={loading}
+                            items={byLesson(l.lessonName)}
+                            hideLesson
+                        />
+                    </Accordion.Panel>
+                </Accordion.Item>
+            ))}
+        </Accordion>
+    )
+}
+type Pathway = {
+    pathwayId: string
+    title: string
+    description: string
+}
+
+type PathwayTableProps = {
+    pathways: Pathway[]
+    badges: any[]
+    students: FileLockerUserItem[]
+}
+
+export const PathwayTable: React.FC<PathwayTableProps & { loading: boolean }> = ({
+    pathways,
+    badges,
+    students,
+    loading,
+}) => {
+    const { byPathway } = useFilteredStudents(students)
+
+    return (
+        <Accordion>
+            {pathways.map((p) => (
+                <Accordion.Item key={p.pathwayId} value={p.pathwayId}>
+                    <Accordion.Control>
+                        <strong>{p.title}</strong>
+                        <div>{p.description}</div>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                        <Table
+                            loading={loading}
+                            items={byPathway(p.pathwayId, badges)}
+                        />
+                    </Accordion.Panel>
+                </Accordion.Item>
+            ))}
+        </Accordion>
+    )
+}
+
+//TODO Refactor
 
 /**
  * FileLockerUserItem
@@ -59,6 +168,17 @@ export type FileLockerProps = {
     href: string
     trial?: boolean
     lessonsCompleted?: number
+    pathways?: {
+        pathwayId: string
+        title: string
+        description: string
+    }[]
+    
+    badges?: {
+        badgeId: string
+        displayName: string
+        categories?: string[]
+    }[]
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -80,6 +200,7 @@ export const FileLocker = (props: FileLockerProps) => {
         (acc, s) => acc + (s.submissions?.length || 0),
         0
     )
+
     return (
         <Container size="lg" py="xl">
             <Stack spacing="md">
@@ -156,20 +277,32 @@ export const FileLocker = (props: FileLockerProps) => {
                                     loading={props.loading}
                                     items={props.students}
                                 />}
-                                {/* { (!props.trial && tab === "pathways") && <PathwayTable
-                                    loading={props.loading}
-                                    items={props.pathways}
-                                />}
+                                {tab === "pathways" && (
+                                    <PathwayTable
+                                        pathways={props.pathways || []}
+                                        badges={props.badges || []}
+                                        students={props.students}
+                                        loading={props.loading}
+                                    />
+                                )}
 
-                                { (!props.trial && tab === "badges") && <BadgeTable
-                                    loading={props.loading}
-                                    items={props.badges}
-                                />}
+                                {tab === "badges" && (
+                                    <BadgeTable
+                                        badges={props.badges || []}
+                                        students={props.students}
+                                        loading={props.loading}
 
-                                { (!!props.trial || tab === "lessons") && <LessonTable
-                                    loading={props.loading}
-                                    items={props.lessons}
-                                /> } */}
+                                    />
+                                )}
+
+                                {tab === "lessons" && (
+                                    <LessonTableWrapper
+                                        lessons={props.lessons}
+                                        students={props.students}
+                                        loading={props.loading}
+
+                                    />
+                                )}
 
                             </Stack>
                         </Stack>
