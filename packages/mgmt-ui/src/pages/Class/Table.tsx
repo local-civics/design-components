@@ -58,6 +58,14 @@ export type TableProps = TableData & {
  * @constructor
  */
 export function Table(props: TableProps) {
+
+    console.group("Class Table Data Check");
+    console.log("1. Raw props:", props);
+    console.log("2. Raw items from prop.items:", props.items);
+    if (props.items.length > 0) {
+        console.log("3. Type of lastActivity (first item):", typeof props.items[0].lastActivity, props.items[0].lastActivity);
+    }
+
     const preparedItems = React.useMemo(() => {
         return props.items.map(item => ({
             ...item,
@@ -66,9 +74,16 @@ export function Table(props: TableProps) {
                 : item.email.toLowerCase(),
         }));
     }, [props.items]);
+
+    console.log("4. Prepared items (before sort hook):", preparedItems);
+
+    console.groupEnd();
+    
     // Initialize sorting hook
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
     
+    console.log("5. Final sorted items:", sortedItems);
+
     if(props.items.length === 0){
         return <PlaceholderBanner
             title="No members to display"
