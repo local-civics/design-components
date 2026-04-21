@@ -124,7 +124,7 @@ export function Table(props: TableProps) {
                         <th>Role</th>
                         <th>Account Created?</th>
                         <th># of Classes</th>
-                        <th>Last Active</th>
+                        {/* <th>Last Active</th> */}
                         <th></th>
                     </tr>
                 </thead>
