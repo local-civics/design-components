@@ -45,27 +45,38 @@ type BadgeTableProps = {
 
 const BadgeTable: React.FC<BadgeTableProps & { loading: boolean }> = ({ badges, students, loading }) => {
     const { byBadge } = useFilteredStudents(students)
+    const countFiles = (students: FileLockerUserItem[]) =>
+        students.reduce((acc, s) => acc + (s.submissions?.length || 0), 0)
 
     return (
         <Accordion>
-            {badges.map((b) => (
-                <Accordion.Item key={b.badgeId} value={b.badgeId}>
-                    <Accordion.Control>
-                        {b.displayName}
-                    </Accordion.Control>
+            {badges.map((b) => {
+                const studentsForBadge = byBadge(b.badgeId)
+                const fileCount = countFiles(studentsForBadge)
 
-                    <Accordion.Panel>
-                        <Table
-                            loading={loading}
-                            items={byBadge(b.badgeId)}
-                            hideBadge
-                        />
-                    </Accordion.Panel>
-                </Accordion.Item>
-            ))}
+                return (
+                    <Accordion.Item key={b.badgeId} value={b.badgeId}>
+                        <Accordion.Control>
+                            <Group position="apart" w="100%">
+                                <Text>{b.displayName}</Text>
+                                <BadgeCore size="sm">{fileCount}</BadgeCore>
+                            </Group>
+                        </Accordion.Control>
+
+                        <Accordion.Panel>
+                            <Table
+                                loading={loading}
+                                items={studentsForBadge}
+                                hideBadge
+                            />
+                        </Accordion.Panel>
+                    </Accordion.Item>
+                )
+            })}
         </Accordion>
     )
 }
+
 type Lesson = {
     lessonId: string
     lessonName: string
@@ -79,25 +90,38 @@ type LessonTableProps = {
 const LessonTableWrapper: React.FC<LessonTableProps & { loading: boolean }> = ({ lessons, students, loading }) => {
     const { byLesson } = useFilteredStudents(students)
 
+    const countFiles = (students: FileLockerUserItem[]) =>
+        students.reduce((acc, s) => acc + (s.submissions?.length || 0), 0)
+
     return (
         <Accordion>
-            {lessons.map((l) => (
-                <Accordion.Item key={l.lessonId} value={l.lessonId}>
-                    <Accordion.Control>
-                        {l.lessonName}
-                    </Accordion.Control>
-                    <Accordion.Panel>
-                        <Table
-                            loading={loading}
-                            items={byLesson(l.lessonName)}
-                            hideLesson
-                        />
-                    </Accordion.Panel>
-                </Accordion.Item>
-            ))}
+            {lessons.map((l) => {
+                const studentsForLesson = byLesson(l.lessonName)
+                const fileCount = countFiles(studentsForLesson)
+
+                return (
+                    <Accordion.Item key={l.lessonId} value={l.lessonId}>
+                        <Accordion.Control>
+                            <Group position="apart" w="100%">
+                                <Text>{l.lessonName}</Text>
+                                <BadgeCore size="sm">{fileCount}</BadgeCore>
+                            </Group>
+                        </Accordion.Control>
+
+                        <Accordion.Panel>
+                            <Table
+                                loading={loading}
+                                items={studentsForLesson}
+                                hideLesson
+                            />
+                        </Accordion.Panel>
+                    </Accordion.Item>
+                )
+            })}
         </Accordion>
     )
 }
+
 type Pathway = {
     pathwayId: string
     title: string
@@ -118,22 +142,36 @@ export const PathwayTable: React.FC<PathwayTableProps & { loading: boolean }> = 
 }) => {
     const { byPathway } = useFilteredStudents(students)
 
+    const countFiles = (students: FileLockerUserItem[]) =>
+        students.reduce((acc, s) => acc + (s.submissions?.length || 0), 0)
+
     return (
         <Accordion>
-            {pathways.map((p) => (
-                <Accordion.Item key={p.pathwayId} value={p.pathwayId}>
-                    <Accordion.Control>
-                        <strong>{p.title}</strong>
-                        <div>{p.description}</div>
-                    </Accordion.Control>
-                    <Accordion.Panel>
-                        <Table
-                            loading={loading}
-                            items={byPathway(p.pathwayId, badges)}
-                        />
-                    </Accordion.Panel>
-                </Accordion.Item>
-            ))}
+            {pathways.map((p) => {
+                const studentsForPathway = byPathway(p.pathwayId, badges)
+                const fileCount = countFiles(studentsForPathway)
+
+                return (
+                    <Accordion.Item key={p.pathwayId} value={p.pathwayId}>
+                        <Accordion.Control>
+                            <Group position="apart" w="100%">
+                                <div>
+                                    <strong>{p.title}</strong>
+                                    <div>{p.description}</div>
+                                </div>
+                                <BadgeCore size="sm">{fileCount}</BadgeCore>
+                            </Group>
+                        </Accordion.Control>
+
+                        <Accordion.Panel>
+                            <Table
+                                loading={loading}
+                                items={studentsForPathway}
+                            />
+                        </Accordion.Panel>
+                    </Accordion.Item>
+                )
+            })}
         </Accordion>
     )
 }
