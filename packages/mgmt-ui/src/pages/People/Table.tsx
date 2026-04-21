@@ -104,7 +104,7 @@ export function Table(props: TableProps) {
             </td>
             <td>{row.hasAccount && <IconCheck color="green" />}</td>
             <td>{row.numberOfClasses}</td>
-            <td>{row.lastActivity ? relativeTimeFromDates(row.lastActivity) : ""}</td>
+            {/* <td>{row.lastActivity ? relativeTimeFromDates(row.lastActivity) : ""}</td> */}
             <td>
                 <Group noWrap spacing={0} position="right">
                     { !row.readonly && !!props.onDelete && <ActionIcon color="red">
