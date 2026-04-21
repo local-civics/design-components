@@ -35,7 +35,7 @@ export const SplitButton = (props: SplitButtonProps) => {
 
     return (
         <Stack spacing="sm">
-            <Button<typeof Link> component={Link} to={props.href}
+            {/* <Button<typeof Link> component={Link} to={props.href}
                 className={classes.button}
                 variant="gradient"
             >
@@ -46,7 +46,7 @@ export const SplitButton = (props: SplitButtonProps) => {
                 onClick={props.onCopyLinkClick}
             >
                 Copy link
-            </Button>
+            </Button> */}
             <Button
                 leftIcon={<IconTableExport size={14} />}
                 onClick={props.onExportDataClick}
