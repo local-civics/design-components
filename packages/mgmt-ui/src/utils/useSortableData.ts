@@ -44,12 +44,9 @@ export function useSortableData<T>(items: T[], config: SortConfig<T> = { key: ''
 
         // Default String Sort (e.g., Student Name, Class Name)
         // Uses localeCompare for safe alphabetical sorting
-        const stringA = String(aValue).trim();
-        const stringB = String(bValue).trim();
-
         return sortConfig.direction === 'asc'
-          ? stringA.localeCompare(stringB)
-          : stringB.localeCompare(stringA);
+          ? String(aValue).localeCompare(String(bValue))
+          : String(bValue).localeCompare(String(aValue));
       });
     }
     return sortableItems;

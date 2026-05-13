@@ -1,104 +1,209 @@
 import * as React from "react";
-import { Card } from "../../../components/Card/Card";
+import { Icon, IconName } from "../../../components/Icon/Icon";
 import { Button } from "../../../components/Button/Button";
+import { Card } from "../../../components/Card/Card";
 import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
+import {PathwayProgressBarChart} from "../PathwayProgressBarChart/PathwayProgressBarChart";
 
-import { PathwayOverview } from "../PathwayOverview/PathwayOverview";
-import { PathwayTranscript } from "../PathwayTranscript/PathwayTranscript";
+/**
+ * BadgeItem
+ */
+export type BadgeItem = {
+  badgeId: string;
+  displayName: string;
+  categories: string[];
+  completedAt?: string | null;
+  startedAt?: string | null;
+  weight: number;
+  onClick?: () => void;
+};
 
-import { PathwayCardProps, SharedPathwayProps } from "../types";
+export type PathwayCriteria = Record<string,number>;
+
+/**
+ * PathwayCardProps
+ */
+export type PathwayCardProps = {
+  imageURL?: string;
+  title?: string;
+  description?: string;
+  badges?: BadgeItem[];
+  progress?: number;
+  target?: number;
+  displayTags?: string[];
+  criteria?: PathwayCriteria;
+  rawCriteria?: PathwayCriteria;
+  categoryNames?: Record<string, string>;
+  points?: Record<string, number>;
+  onClose?: () => void;
+  onSubmit?: () => void;
+};
 
 /**
  * PathwayCard
- * Controller/router between Overview and Transcript views.
+ * @param props
+ * @constructor
  */
 export const PathwayCard = (props: PathwayCardProps) => {
-  const [view, setView] = React.useState<"overview" | "transcript">("overview");
 
-  // Logic: Calculate dynamic date of issue for the transcript
-  const today = React.useMemo(() => new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }), []);
+  const badges = props.badges || [];
+  const completedCount = badges.filter(b => b.completedAt).length;
+  const target = props.target || badges.length;
+  const categoryTargets = props.criteria ?? {};
+  const points = props.points ?? {};
 
-  /**
-   * Logic: Map technical IDs to  "Proper Names" for the ProgressBar chart.
-   * This ensures the chart displays "Civic Knowledge" instead of "civic-id".
-   */
-  const mappedTargets = React.useMemo(() => {
-    const t: Record<string, number> = {};
-    Object.entries(props.criteria ?? {}).forEach(([id, val]) => {
-      t[props.categoryNames?.[id] || id] = val;
+  
+  const categoryIds = React.useMemo(
+    () => Object.keys(props.rawCriteria ?? {}),
+    [props.criteria]
+  );
+
+  const [activeFilters, setActiveFilters] = React.useState<Set<string>>(
+    () => new Set()
+  );
+
+  const filteredBadges =
+  activeFilters.size === 0
+    ? badges
+    : badges.filter(b =>
+        b.categories?.some(categoryId =>
+          activeFilters.has(categoryId)
+        )
+      );
+
+  const filterClassName = "inline-block px-4 py-2 bg-gray-600 text-white rounded-full cursor-pointer text-sm";
+
+  // console.log("ACTIVE FILTERS:", Array.from(activeFilters));
+  // console.log("BADGE SAMPLE:", badges.slice(0, 5).map(b => b.categories));
+  // console.log("MATCH TEST:", badges.slice(0, 5).map(b =>
+  //   b.categories?.map(c => activeFilters.has(c))
+  // ));
+
+  const toggleFilter = (categoryId: string) => {
+    setActiveFilters((prev) => {
+      // If already selected, clear like radio with optional deselect
+      if (prev.has(categoryId)) {
+        return new Set();
+      }
+  
+      // or replace with ONLY this category
+      return new Set([categoryId]);
     });
-    return t;
-  }, [props.criteria, props.categoryNames]);
-
-  const mappedPoints = React.useMemo(() => {
-    const p: Record<string, number> = {};
-    Object.entries(props.points ?? {}).forEach(([id, val]) => {
-      p[props.categoryNames?.[id] || id] = val;
-    });
-    return p;
-  }, [props.points, props.categoryNames]);
-
-  // Combine data into the Shared interface expected by sub-components
-  const sharedProps: SharedPathwayProps = {
-    ...props,
-    mappedTargets,
-    mappedPoints,
-    today,
-    badges: props.badges || [],
   };
+  
 
+
+//TODO: should pass this to a PathwayEmblem instead making a file at 
+//design-components/packages/hub-ui/src/features/pathways/PathwayEmblem/PathwayEmblem.tsx
   return (
     <Card onClose={props.onClose}>
-      <div className="pb-5 text-zinc-600 min-w-[35rem] max-w-[50rem]">
-        
-        {/* HEADER: Shared between both views */}
-        <div className="pb-5 px-5 flex justify-between items-start">
-          <div className="flex gap-x-3">
-            <BadgeEmblem iconURL={props.imageURL} alt={props.title} size="md" />
-            <div className="max-w-[20rem]">
-              <p className="font-bold text-lg leading-tight">{props.title}</p>
-              <p className="text-xs text-zinc-400 uppercase font-bold tracking-wider mt-1">
-                {view === "overview" ? "Pathway Overview" : "Official Transcript"}
-              </p>
-            </div>
-          </div>
+      <div className="pb-5 text-zinc-600">
+        <div className="pb-5 px-5 flex gap-x-2">
 
-          <div className="flex gap-x-2">
-            {view === "transcript" && (
-              <Button
-                text="Print"
-                size="sm"
-                theme="light"
-                color="blue"
-                border="rounded"
-                onClick={() => window.print()}
-              />
-            )}
-            <Button
-              text={view === "overview" ? "View Transcript" : "Back"}
-              size="sm"
-              theme={view === "overview" ? "light" : "dark"}
-              color="blue"
-              border="rounded"
-              onClick={() => setView(view === "overview" ? "transcript" : "overview")}
-            />
+          <BadgeEmblem
+          iconURL={props.imageURL} //This is correct, the iconrl is populated in the BadgeEmblem for badges. level, imageUARL, and icon are undefined.
+          alt={props.title}
+          size="md"
+          />
+
+          <div className="max-w-[20rem]">
+          <p className="font-semibold">{props.title}</p>
+          <div className="text-xs">
+            <span className="text-zinc-500 font-semibold">Tags</span>
+            {(props.displayTags ?? []).length > 0 && (
+              <div className="inline-block ml-1 text-green-500">
+                {(props.displayTags ?? []).map((tag, index) => (
+                  <span key={index} className="font-semibold mr-1">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              )}
+
+          </div>
+            {!!props.description && <p className="mt-2 text-sm">{props.description}</p>}
           </div>
         </div>
+        <div className="p-5 grid grid-cols-1 gap-y-3 md:min-w-[30rem] max-w-[40rem] border-t border-zinc-200">
+          <p className="font-semibold">Pathway Badges & Criteria</p>
+          <p className="text-xs">This pathway is comprised of {target} Badges. It includes required and elective programming.</p>
 
-        {/* VIEW ROUTING */}
-        {view === "overview" ? (
-          <>
-            <PathwayOverview {...sharedProps} />
-            
-            {/* Footer: Main action button only for Overview */}
-            <div className="pt-5 px-5 flex border-t border-zinc-100">
-              <div className="w-full max-w-[7rem] ml-auto">
-                <Button
-                  disabled={true} 
+          <p className="text-xs">Progress: {completedCount} / {target} badges completed.</p>
+
+          <PathwayProgressBarChart
+              targets={categoryTargets}
+              points={points}
+              height="sm"
+            />
+
+
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {categoryIds.map((id) => {
+                    const isActive = activeFilters.has(id);
+                    const label = props.categoryNames?.[id] ?? id; // Display for the user
+
+                    return (
+                      <div
+                        key={id}
+                        onClick={() => toggleFilter(id)} // Use raw categoryId internally
+                        className={
+                          isActive
+                            ? `${filterClassName} bg-gray-700`
+                            : "inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-full cursor-pointer text-sm hover:bg-gray-300"
+                        }
+                      >
+                        {label}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-2 grid grid-cols-1 gap-y-2 max-h-[18rem] overflow-y-auto">
+
+                {filteredBadges.map((b) => {
+                  const buttonText = b.completedAt ? "Completed" : b.startedAt ? "Continue" : "Start";
+                  const buttonTheme = b.completedAt ? "light" : "dark";
+                  const iconName = b.completedAt ? "check & circle" : "circle";
+                  const iconColor = b.completedAt ? "text-green-500" : "text-zinc-300";
+
+              return (
+                  <div key={b.badgeId} className="flex gap-x-2 items-center">
+                    <div className={`shrink-0 h-4 w-4 ${iconColor}`}>
+                      <Icon name={iconName} />
+                    </div>
+                    <div className="grow">
+                      <div>
+                        <span className="font-semibold">{b.displayName}</span>
+                      </div>
+                      <div className="text-xs">
+                        {/* <span>{b.TagsOfSomeSort TODO: }</span> */}
+                        {<span className="ml-1 text-green-500 font-semibold whitespace-nowrap">
+                          {b.weight} {b.weight === 1 ? "point" : "points"}
+                        </span>}
+                      </div>
+                    </div>
+                    { <div className="shrink-0 w-full max-w-[7rem]">
+                      <Button
+                        onClick={b.onClick}
+                        spacing="sm"
+                        border="rounded"
+                        size="full:sm"
+                        color="blue"
+                        theme={buttonTheme}
+                        text={buttonText}
+                      />
+                    </div> }
+                  </div>
+              );
+            })}
+      
+          </div>
+
+
+        </div>
+          <div className="pt-5 px-5 flex border-t border-zinc-200">
+            <div className="w-full max-w-[7rem] ml-auto">
+              <Button
+                  disabled={true} //TODO: enable Pathway Submission?
                   onClick={props.onSubmit}
                   spacing="sm"
                   border="rounded"
@@ -106,14 +211,10 @@ export const PathwayCard = (props: PathwayCardProps) => {
                   color="blue"
                   theme="dark"
                   text="Submit"
-                />
-              </div>
+              />
             </div>
-          </>
-        ) : (
-          <PathwayTranscript {...sharedProps} />
-        )}
+          </div>
       </div>
-    </Card>
+      </Card>
   );
 };

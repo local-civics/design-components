@@ -1,13 +1,18 @@
 import * as React from "react";
-import { PathwayCard } from "../PathwayCard/PathwayCard";
-import { PathwayCardProps } from "../types";
+import { PathwayCard, PathwayCardProps } from "../PathwayCard/PathwayCard";
 
 /**
  * PathwayProps
  */
 export type PathwayProps = PathwayCardProps & {
   pathwayId?: string;
-};
+  title?: string;
+  description?: string;
+  imageURL?: string;
+  displayTags?: string[];
+
+    onClose?: () => void;
+  };
 
 /**
  * Pathway
