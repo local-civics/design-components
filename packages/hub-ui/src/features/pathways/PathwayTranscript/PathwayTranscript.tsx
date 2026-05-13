@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Icon } from "../../../components/Icon/Icon"; //
 import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
 import { PathwayProgressBarChart } from "../PathwayProgressBarChart/PathwayProgressBarChart";
 import { SharedPathwayProps } from "../types";
@@ -46,9 +45,23 @@ export const PathwayTranscript = (props: SharedPathwayProps) => {
       <section className="space-y-8">
         <div className="flex justify-between items-center border-b border-zinc-200 pb-3">
           <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Completed Activity</p>
-          <div className="flex bg-white border border-zinc-200 p-1 rounded-md">
-            <button onClick={() => setLayout("list")} className={`p-1 rounded ${layout === "list" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}><Icon name="pen paper" size="xs"/></button>
-            <button onClick={() => setLayout("grid")} className={`p-1 rounded ${layout === "grid" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}><Icon name="formal pie chart" size="xs"/></button>
+          <div className="flex bg-white border border-zinc-200 p-1 rounded-md text-xs font-bold">
+            <button
+              onClick={() => setLayout("list")}
+              className={`px-3 py-1.5 rounded transition-colors ${
+                layout === "list" ? "bg-zinc-100 text-blue-600" : "text-zinc-400 hover:text-zinc-600"
+              }`}
+            >
+              List View
+            </button>
+            <button 
+              onClick={() => setLayout("grid")} 
+              className={`px-3 py-1.5 rounded transition-colors ${
+                layout === "grid" ? "bg-zinc-100 text-blue-600" : "text-zinc-400 hover:text-zinc-600"
+              }`}
+            >
+              Grid View
+            </button>
           </div>
         </div>
 
