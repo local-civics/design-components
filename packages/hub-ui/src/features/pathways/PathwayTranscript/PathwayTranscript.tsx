@@ -1,18 +1,20 @@
 import * as React from "react";
-import { Icon } from "../../../components/Icon/Icon";
+import { Icon } from "../../../components/Icon/Icon"; //
 import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
 import { PathwayProgressBarChart } from "../PathwayProgressBarChart/PathwayProgressBarChart";
 import { SharedPathwayProps } from "../types";
 
 export const PathwayTranscript = (props: SharedPathwayProps) => {
   const [layout, setLayout] = React.useState<"list" | "grid">("list");
+
+  const badges = props.badges || [];
+  const completedBadges = badges.filter(b => !!b.completedAt);
+
   const rootIds = Object.keys(props.categoryParents || {}).filter(id => !props.categoryParents?.[id]);
   const level2Ids = Object.keys(props.categoryParents || {}).filter(id => {
     const parentId = props.categoryParents?.[id];
     return parentId && rootIds.includes(parentId);
   });
-
-  const completedBadges = props.badges.filter(b => !!b.completedAt);
 
   return (
     <div className="p-6 space-y-10 border-t border-zinc-100 bg-zinc-50/30 animate-in fade-in duration-500">
@@ -45,8 +47,8 @@ export const PathwayTranscript = (props: SharedPathwayProps) => {
         <div className="flex justify-between items-center border-b border-zinc-200 pb-3">
           <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Completed Activity</p>
           <div className="flex bg-white border border-zinc-200 p-1 rounded-md">
-            <button onClick={() => setLayout("list")} className={`p-1 rounded ${layout === "list" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}><Icon name="list" size="xs"/></button>
-            <button onClick={() => setLayout("grid")} className={`p-1 rounded ${layout === "grid" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}><Icon name="grid" size="xs"/></button>
+            <button onClick={() => setLayout("list")} className={`p-1 rounded ${layout === "list" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}><Icon name="pen paper" size="xs"/></button>
+            <button onClick={() => setLayout("grid")} className={`p-1 rounded ${layout === "grid" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}><Icon name="formal pie chart" size="xs"/></button>
           </div>
         </div>
 
