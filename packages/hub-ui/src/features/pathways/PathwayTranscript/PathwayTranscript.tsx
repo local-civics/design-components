@@ -4,17 +4,22 @@ import { PathwayProgressBarChart } from "../PathwayProgressBarChart/PathwayProgr
 import { SharedPathwayProps } from "../types";
 
 export const PathwayTranscript = (props: SharedPathwayProps) => {
+  console.log("1. Raw Badges from Props:", props.badges);
+  console.log("2. Category Hierarchy:", props.categoryParents);
   const [layout, setLayout] = React.useState<"list" | "grid">("list");
 
   const badges = props.badges || [];
   const completedBadges = badges.filter(b => !!b.completedAt);
+  console.log("3. Badges with completedAt flag:", completedBadges);
 
   const rootIds = Object.keys(props.categoryParents || {}).filter(id => !props.categoryParents?.[id]);
   const level2Ids = Object.keys(props.categoryParents || {}).filter(id => {
     const parentId = props.categoryParents?.[id];
     return parentId && rootIds.includes(parentId);
   });
-
+  console.log("4. Level 2 Category IDs found:", level2Ids);
+  // ------------------
+  
   return (
     <div className="p-6 space-y-10 border-t border-zinc-100 bg-zinc-50/30 animate-in fade-in duration-500">
       <div className="grid grid-cols-3 gap-4 bg-white p-5 rounded-xl border border-zinc-100 shadow-sm text-sm">
