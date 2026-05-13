@@ -67,14 +67,18 @@ export function Table(props: TableProps) {
     // }
 
     const preparedItems = React.useMemo(() => {
-        return props.items.map(item => ({
-            ...item,
-            fullName: item.givenName && item.familyName 
-                ? `${item.givenName} ${item.familyName}`.toLowerCase() 
-                : item.email.toLowerCase(),
-        }));
-    }, [props.items]);
+        return props.items.map(item => {
+            const givenName = item.givenName?.trim();
+            const familyName = item.familyName?.trim();
 
+            return {
+                ...item,
+                fullName: givenName && familyName 
+                    ? `${givenName} ${familyName}`.toLowerCase() 
+                    : item.email.toLowerCase(), 
+                };
+        });
+    }, [props.items]);
     // console.log("4. Prepared items (before sort hook):", preparedItems);
 
     console.groupEnd();
