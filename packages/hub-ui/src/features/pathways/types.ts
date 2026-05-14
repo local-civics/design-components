@@ -5,6 +5,7 @@ export type BadgeItem = {
   completedAt?: string | null;
   startedAt?: string | null;
   weight: number;
+  iconURL?: string;
   onClick?: () => void;
 };
 

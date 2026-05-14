@@ -58,7 +58,7 @@ export const PathwayTranscript = (props: SharedPathwayProps) => {
                 {groupBadges.map((b: any) => (
                   <div key={b.badgeId} className={`p-4 bg-white rounded-xl border border-zinc-200 shadow-sm ${layout === 'grid' ? 'flex flex-col' : 'flex items-center justify-between'}`}>
                     <div className="flex items-center gap-x-3">
-                      <BadgeEmblem size="sm" iconURL={props.imageURL} />
+                      <BadgeEmblem size="sm" iconURL={b.iconURL} />
                       <div>
                         <p className="text-xs font-bold text-zinc-800">{b.displayName}</p>
                         {statusLabel && <p className="text-[9px] text-amber-500 font-black uppercase mt-0.5">{statusLabel}</p>}
