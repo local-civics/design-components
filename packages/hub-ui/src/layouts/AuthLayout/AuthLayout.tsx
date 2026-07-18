@@ -1,5 +1,5 @@
 import React from "react";
-import { Loader, NavBar, NavBarProps, NavLink } from "../../components";
+import { Footer, Loader, NavBar, NavBarProps, NavLink } from "../../components";
 
 /**
  * AuthLayoutProps
@@ -7,8 +7,9 @@ import { Loader, NavBar, NavBarProps, NavLink } from "../../components";
 export type AuthLayoutProps = {
   isLoading?: boolean;
   pathname?: string;
-  page?: "profile" | "explore" | "calendar";
+  page?: "profile";
   disabled?: boolean;
+  topNav?: boolean;
   header?: React.ReactNode;
   subheader?: React.ReactNode;
   sidebar?: React.ReactNode;
@@ -18,12 +19,7 @@ export type AuthLayoutProps = {
 
   onHome?: () => void;
   onProfile?: () => void;
-  onExplore?: () => void;
-  onCalendar?: () => void;
   onLogout?: () => void;
-  onFAQ?: () => void;
-  onPrivacy?: () => void;
-  onTerms?: () => void;
   onSwitchAccount?: () => void;
 };
 
@@ -35,38 +31,21 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
   return (
     <main className="relative h-screen w-full bg-white font-proxima">
       <Loader isLoading={props.isLoading}>
-        <NavBar>
-          <NavLink disabled={!props.onHome || props.disabled} name="home" onClick={props.onHome} />
-          {props.onFAQ && <NavLink name="faq" onClick={props.onFAQ} />}
-          {props.onPrivacy && <NavLink name="privacy" onClick={props.onPrivacy} />}
-          {props.onTerms && <NavLink name="terms" onClick={props.onTerms} />}
-          {props.onProfile && (
-            <NavLink
-              disabled={props.disabled}
-              name="profile"
-              onClick={props.onProfile}
-              active={props.page === "profile"}
-            />
-          )}
-          {props.onExplore && (
-            <NavLink
-              disabled={props.disabled}
-              name="explore"
-              onClick={props.onExplore}
-              active={props.page === "explore"}
-            />
-          )}
-          {props.onCalendar && (
-            <NavLink
-              disabled={props.disabled}
-              name="calendar"
-              onClick={props.onCalendar}
-              active={props.page === "calendar"}
-            />
-          )}
-          {props.onSwitchAccount && <NavLink name="switch accounts" onClick={props.onSwitchAccount}/>}
-          {props.onLogout && <NavLink name="Logout" onClick={props.onLogout} />}
-        </NavBar>
+        {props.topNav !== false && (
+          <NavBar>
+            <NavLink disabled={!props.onHome || props.disabled} name="home" onClick={props.onHome} />
+            {props.onProfile && (
+              <NavLink
+                disabled={props.disabled}
+                name="profile"
+                onClick={props.onProfile}
+                active={props.page === "profile"}
+              />
+            )}
+            {props.onSwitchAccount && <NavLink name="switch accounts" onClick={props.onSwitchAccount}/>}
+            {props.onLogout && <NavLink name="Logout" onClick={props.onLogout} />}
+          </NavBar>
+        )}
 
         {props.children && (
           <section className="absolute top-0 left-0 h-full overflow-auto pt-16 w-full">{props.children}</section>
@@ -83,11 +62,8 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
               <div className="w-full max-w-[64rem] m-auto grid grid-cols-1 gap-y-4 lg:flex lg:gap-x-2">
                 {/* Left Panel */}
                 {props.sidebar && (
-                  <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[16rem] shrink-0">
+                  <div className="grid grid-cols-1 max-w-full md:flex md:flex-col gap-2 lg:w-[230px] shrink-0 lg:sticky lg:top-0 lg:h-screen lg:self-start lg:overflow-y-auto">
                     <div className="flex flex-col gap-4 lg:gap-x-2 lg:gap-y-3">{props.sidebar}</div>
-                    <p className="hidden place-self-center lg:inline-block text-xs text-slate-300">
-                      Local Civics © {new Date().getFullYear()}
-                    </p>
                   </div>
                 )}
 
@@ -104,6 +80,8 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
                 )}
               </div>
             </div>
+
+            <Footer />
           </section>
         )}
       </Loader>

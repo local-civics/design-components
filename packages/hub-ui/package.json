@@ -19,6 +19,9 @@
     "chromatic": "npx chromatic",
     "fmt": "npx prettier --write src"
   },
+  "dependencies": {
+    "@tabler/icons": "^1.111.0"
+  },
   "peerDependencies": {
     "linkify-it": "^4.0.1"
   }

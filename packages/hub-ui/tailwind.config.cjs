@@ -26,6 +26,14 @@ module.exports = {
           400: "#232A3A",
           600: "#0a0f2e",
         },
+        mint: {
+          100: "#D0FBF0",
+          400: "#1EE2AF",
+        },
+        gold: {
+          100: "#FFF8D6",
+          400: "#FFD44D",
+        },
       },
     },
     fontFamily: {

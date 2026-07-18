@@ -4,6 +4,7 @@ export * from "./Board";
 export * from "./Button";
 export * from "./Calendar";
 export * from "./Card";
+export * from "./Footer";
 export * from "./Home";
 export * from "./Icon";
 export * from "../features/learning-forms";
@@ -19,6 +20,7 @@ export * from "./Profile";
 export * from "./Progress";
 export * from "./Search";
 export * from "../features/service-tracking";
+export * from "./Sidebar";
 export * from "./Stopwatch"
 export * from "./Task";
 export * from "./Widget";
