@@ -1,10 +1,33 @@
 import * as React from "react";
 import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
 import { PathwayProgressBarChart } from "../PathwayProgressBarChart/PathwayProgressBarChart";
-import { SharedPathwayProps } from "../types";
+import { PathwayCardProps } from "../types";
 
-export const PathwayTranscript = (props: SharedPathwayProps) => {
+export const PathwayTranscript = (props: PathwayCardProps) => {
   const [layout, setLayout] = React.useState<"list" | "grid">("list");
+
+  // Maps technical category ids to display names, same remap `PathwayCard` used to do externally
+  // before this component read straight from `rawCriteria`/`points`/`categoryNames`.
+  const today = React.useMemo(
+    () => new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+    []
+  );
+
+  const mappedTargets = React.useMemo(() => {
+    const t: Record<string, number> = {};
+    Object.entries(props.rawCriteria ?? {}).forEach(([id, val]) => {
+      t[props.categoryNames?.[id] || id] = val;
+    });
+    return t;
+  }, [props.rawCriteria, props.categoryNames]);
+
+  const mappedPoints = React.useMemo(() => {
+    const p: Record<string, number> = {};
+    Object.entries(props.points ?? {}).forEach(([id, val]) => {
+      p[props.categoryNames?.[id] || id] = val;
+    });
+    return p;
+  }, [props.points, props.categoryNames]);
 
   const badges = props.badges || [];
   const completedBadges = badges.filter((b: any) => !!b.completedAt);
@@ -94,7 +117,7 @@ export const PathwayTranscript = (props: SharedPathwayProps) => {
         <div>
           <p className="text-zinc-400 uppercase text-[9px] font-black mb-1">Status</p>
           <p className="text-blue-500 font-bold text-[10px] uppercase">Verified Record</p>
-          <p className="text-zinc-400 text-[10px] mt-0.5">{props.today || new Date().toLocaleDateString()}</p>
+          <p className="text-zinc-400 text-[10px] mt-0.5">{today}</p>
         </div>
       </div>
 
@@ -128,7 +151,7 @@ export const PathwayTranscript = (props: SharedPathwayProps) => {
       <section>
         <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest mb-3">Criteria & Progress</p>
         <div className="p-5 border border-zinc-100 rounded-xl bg-white shadow-sm">
-          <PathwayProgressBarChart targets={props.mappedTargets} points={props.mappedPoints} height="md" />
+          <PathwayProgressBarChart targets={mappedTargets} points={mappedPoints} height="md" />
         </div>
       </section>
 
