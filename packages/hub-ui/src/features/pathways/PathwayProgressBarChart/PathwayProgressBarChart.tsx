@@ -11,6 +11,14 @@ export type PathwayProgressBarChartProps = {
   height?: PathwayProgressBarHeight;
 };
 
+type ProgressAccent = "sky-blue" | "mint" | "gold";
+
+/**
+ * Accent cycles cyan → mint → gold across category rows, same convention used across the rest of
+ * the redesigned student pages.
+ */
+const ACCENT_ORDER: ProgressAccent[] = ["sky-blue", "mint", "gold"];
+
 export const PathwayProgressBarChart = ({
   targets,
   points,
@@ -24,21 +32,21 @@ export const PathwayProgressBarChart = ({
   if (!entries.length) return null;
 
   return (
-    <div className="grid grid-cols-1 gap-2">
-      {entries.map(([categoryId, max]) => {
+    <div className="grid grid-cols-1 gap-3">
+      {entries.map(([categoryId, max], i) => {
         const value = points[categoryId] ?? 0;
 
         return (
-          <div key={categoryId} className="grid grid-cols-1 gap-1">
+          <div key={categoryId} className="grid grid-cols-1 gap-1.5">
             <div className="flex justify-between items-center">
-              <p className="capitalize text-xs text-slate-400">{categoryId}</p>
+              <p className="capitalize text-xs font-semibold text-slate-400">{categoryId}</p>
               <p className={classname(config.magnitude)}>
                 {value} / {max}
               </p>
             </div>
 
             <div className={classname(config.progress)}>
-              <Progress start={value} end={max || 1} />
+              <Progress start={value} end={max || 1} color={ACCENT_ORDER[i % ACCENT_ORDER.length]} />
             </div>
           </div>
         );
@@ -63,7 +71,7 @@ const defaultChartConfig = (): ChartConfig => {
       height: "",
     },
     magnitude: {
-      base: "text-gray-400",
+      base: "font-bold text-dark-blue-400",
       text: "",
     },
   };

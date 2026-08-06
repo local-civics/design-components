@@ -1,18 +1,39 @@
 import * as React from "react";
+import { IconLayoutGrid, IconList } from "@tabler/icons";
 import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
+import { Pill, PillAccent } from "../../home-dashboard/Pill/Pill";
 import { PathwayProgressBarChart } from "../PathwayProgressBarChart/PathwayProgressBarChart";
-import { PathwayCardProps } from "../types";
+import { BadgeItem, PathwayCardProps } from "../types";
 
+type Status = "In Progress" | "Completed" | "Available";
+
+const STATUS_PILL_ACCENT: Record<Status, PillAccent> = {
+  "In Progress": "cyan",
+  Completed: "mint",
+  Available: "gold",
+};
+
+/**
+ * A read-only, print-friendly summary of a single pathway's progress — the same data already
+ * shown on `PathwayDetail`, condensed into a record-style layout. Toggled alongside
+ * `PathwayDetail` from `Pathway.tsx`, not a routed page of its own.
+ *
+ * In-progress badge activity is intentionally omitted: that classification depends on
+ * `startedAt`, which isn't reliably populated without lesson-level data yet. Only completed
+ * activity is shown until that's sorted out.
+ * @param props
+ * @constructor
+ */
 export const PathwayTranscript = (props: PathwayCardProps) => {
   const [layout, setLayout] = React.useState<"list" | "grid">("list");
 
-  // Maps technical category ids to display names, same remap `PathwayCard` used to do externally
-  // before this component read straight from `rawCriteria`/`points`/`categoryNames`.
   const today = React.useMemo(
     () => new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
     []
   );
 
+  // Maps technical category ids to display names, same remap `PathwayCard` used to do externally
+  // before this component read straight from `rawCriteria`/`points`/`categoryNames`.
   const mappedTargets = React.useMemo(() => {
     const t: Record<string, number> = {};
     Object.entries(props.rawCriteria ?? {}).forEach(([id, val]) => {
@@ -30,64 +51,69 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
   }, [props.points, props.categoryNames]);
 
   const badges = props.badges || [];
-  const completedBadges = badges.filter((b: any) => !!b.completedAt);
-  const inProgressBadges = badges.filter((b: any) => !b.completedAt && !!b.startedAt);
+  const completedBadges = badges.filter((b) => !!b.completedAt);
 
-  const rootIds = Object.keys(props.categoryParents || {}).filter(id => !props.categoryParents?.[id]);
-  const level2Ids = Object.keys(props.categoryParents || {}).filter(id => {
+  const rootIds = Object.keys(props.categoryParents || {}).filter((id) => !props.categoryParents?.[id]);
+  const level2Ids = Object.keys(props.categoryParents || {}).filter((id) => {
     const parentId = props.categoryParents?.[id];
     return parentId && rootIds.includes(parentId);
   });
 
-  // Total Points Earned (Points for the top level categoryId)
+  // Total points earned, read off the top-level categoryId.
   const targetKeys = props.rawCriteria || props.criteria || {};
-  const topLevelId = rootIds.find(id => targetKeys[id] !== undefined) || rootIds[0];
-  const totalPointsEarned = topLevelId ? (props.points?.[topLevelId] || 0) : 0;
+  const topLevelId = rootIds.find((id) => targetKeys[id] !== undefined) || rootIds[0];
+  const totalPointsEarned = topLevelId ? props.points?.[topLevelId] || 0 : 0;
 
-  // 2. Badges Earned Count
   const badgesEarnedCount = completedBadges.length;
 
-  // REQ 4: Seal Earned (Check points vs target for the categoryIds present)
-  const criteriaKeys = Object.keys(targetKeys);
-  const sealEarned = criteriaKeys.length > 0 && criteriaKeys.every(id => {
-    const target = targetKeys[id] || 0;
-    const earned = props.points?.[id] || 0;
-    return earned >= target;
-  });
+  // Same status vocabulary/derivation as PathwayDetail. Kept local rather than passed as a prop
+  // since the two are independently-toggled siblings in Pathway.tsx, not parent/child.
+  const target = badges.length;
+  const anyStarted = badges.some((b) => b.startedAt);
+  const status: Status =
+    target > 0 && badgesEarnedCount === target
+      ? "Completed"
+      : anyStarted || badgesEarnedCount > 0
+      ? "In Progress"
+      : "Available";
 
-  const safeRender = (val: any) => (typeof val === "string" || typeof val === "number" ? val : "");
-  
-  const renderBadgePool = (badgePool: any[], sectionTitle: string, statusLabel?: string) => {
+  const safeRender = (val: unknown) => (typeof val === "string" || typeof val === "number" ? val : "");
+
+  const renderBadgePool = (badgePool: BadgeItem[]) => {
     if (badgePool.length === 0) return null;
 
     return (
-      <div className="space-y-8 pt-4">
-        <div className="flex items-center gap-x-2 border-b border-zinc-100 pb-2">
-           <h2 className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">{sectionTitle}</h2>
-           <span className="bg-zinc-100 text-zinc-500 text-[10px] px-2 py-0.5 rounded-full font-bold">{badgePool.length}</span>
+      <div className="space-y-8">
+        <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+          <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Completed Activity</h2>
+          <span className="rounded-full bg-mint-400/15 px-2 py-0.5 text-[10px] font-bold text-mint-400">
+            {badgePool.length}
+          </span>
         </div>
-        
-        {level2Ids.map(l2Id => {
-          const groupBadges = badgePool.filter((b: any) => b.categories.includes(l2Id));
+
+        {level2Ids.map((l2Id) => {
+          const groupBadges = badgePool.filter((b) => b.categories.includes(l2Id));
           if (groupBadges.length === 0) return null;
 
           return (
-            <div key={l2Id} className="space-y-4">
-              <h3 className="font-bold text-base text-zinc-800 flex items-center gap-x-2">
-                <div className="h-4 w-1 bg-blue-600 rounded-full" />
+            <div key={l2Id} className="space-y-3">
+              <h3 className="flex items-center gap-2 text-sm font-bold text-dark-blue-400">
+                <span className="h-4 w-1 rounded-full bg-sky-blue-400" />
                 {props.categoryNames?.[l2Id] || l2Id}
               </h3>
-              <div className={layout === "grid" ? "grid grid-cols-3 gap-4" : "space-y-3"}>
-                {groupBadges.map((b: any) => (
-                  <div key={b.badgeId} className={`p-4 bg-white rounded-xl border border-zinc-200 shadow-sm ${layout === 'grid' ? 'flex flex-col' : 'flex items-center justify-between'}`}>
-                    <div className="flex items-center gap-x-3">
+              <div className={layout === "grid" ? "grid grid-cols-3 gap-3" : "space-y-2"}>
+                {groupBadges.map((b) => (
+                  <div
+                    key={b.badgeId}
+                    className={`rounded-xl border border-slate-200 bg-white p-4 shadow-sm ${
+                      layout === "grid" ? "flex flex-col items-center gap-2 text-center" : "flex items-center justify-between"
+                    }`}
+                  >
+                    <div className={`flex items-center gap-3 ${layout === "grid" ? "flex-col" : ""}`}>
                       <BadgeEmblem size="sm" iconURL={b.iconURL} />
-                      <div>
-                        <p className="text-xs font-bold text-zinc-800">{b.displayName}</p>
-                        {statusLabel && <p className="text-[9px] text-amber-500 font-black uppercase mt-0.5">{statusLabel}</p>}
-                      </div>
+                      <p className="text-xs font-bold text-dark-blue-400">{b.displayName}</p>
                     </div>
-                    <span className="font-black text-blue-600 text-xs">{b.weight} pts</span>
+                    <span className="text-xs font-black text-mint-400">{b.weight} pts</span>
                   </div>
                 ))}
               </div>
@@ -98,76 +124,92 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
     );
   };
 
-
-
   return (
-    <div className="p-6 space-y-10 border-t border-zinc-100 bg-zinc-50/30 animate-in fade-in duration-500">
+    <div className="space-y-8 p-6">
       {/* STUDENT HEADER */}
-      <div className="grid grid-cols-3 gap-4 bg-white p-5 rounded-xl border border-zinc-100 shadow-sm text-sm">
+      <div className="grid grid-cols-3 gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-sm shadow-sm">
         <div>
-          <p className="text-zinc-400 uppercase text-[9px] font-black mb-1">Student</p>
-          <p className="font-bold text-zinc-800">{safeRender(props.studentName) || "Guest User"}</p>
-          <p className="text-zinc-500 text-[11px] mt-0.5">{safeRender(props.studentEmail)}</p>
+          <p className="mb-1 text-[9px] font-black uppercase tracking-widest text-slate-400">Student</p>
+          <p className="font-bold text-dark-blue-400">{safeRender(props.studentName) || "Guest User"}</p>
+          <p className="mt-0.5 text-[11px] text-slate-500">{safeRender(props.studentEmail)}</p>
         </div>
         <div>
-          <p className="text-zinc-400 uppercase text-[9px] font-black mb-1">Organization</p>
-          <p className="font-bold text-zinc-800">{safeRender(props.schoolName) || "Not Provided"}</p>
-          <p className="text-zinc-500 text-[11px] mt-0.5">{props.gradeLevel ? `Grade ${safeRender(props.gradeLevel)}` : ""}</p>
+          <p className="mb-1 text-[9px] font-black uppercase tracking-widest text-slate-400">Organization</p>
+          <p className="font-bold text-dark-blue-400">{safeRender(props.schoolName) || "Not Provided"}</p>
+          <p className="mt-0.5 text-[11px] text-slate-500">
+            {props.gradeLevel ? `Grade ${safeRender(props.gradeLevel)}` : ""}
+          </p>
         </div>
         <div>
-          <p className="text-zinc-400 uppercase text-[9px] font-black mb-1">Status</p>
-          <p className="text-blue-500 font-bold text-[10px] uppercase">Verified Record</p>
-          <p className="text-zinc-400 text-[10px] mt-0.5">{today}</p>
+          <p className="mb-1 text-[9px] font-black uppercase tracking-widest text-slate-400">Record Status</p>
+          <Pill label="Verified" accent="mint" />
+          <p className="mt-1 text-[10px] text-slate-400">{today}</p>
         </div>
       </div>
 
       {/* PATHWAY DETAILS & ACHIEVEMENTS SUMMARY */}
-      <section className="space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-black text-zinc-900 tracking-tight">{props.title || "Untitled Pathway"}</h1>
-          <p className="text-sm text-zinc-500 max-w-3xl leading-relaxed">{props.description || "No description provided for this pathway."}</p>
+      <section className="space-y-4">
+        <div className="space-y-1.5">
+          <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">
+            {props.title || "Untitled Pathway"}
+          </h1>
+          <p className="max-w-3xl text-sm leading-relaxed text-slate-500">
+            {props.description || "No description provided for this pathway."}
+          </p>
         </div>
-        {/* 3-Column Metrics Bar (REQ 3: Ignored Lessons) */}
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white border border-zinc-200 p-4 rounded-xl shadow-sm flex flex-col items-center justify-center text-center">
-            <span className="text-2xl font-black text-blue-600">{totalPointsEarned.toLocaleString()}</span>
-            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-1">Total Pts</span>
+
+        <div className="grid grid-cols-3 gap-3">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm">
+            <span className="text-2xl font-black text-dark-blue-400">{totalPointsEarned.toLocaleString()}</span>
+            <span className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Points</span>
           </div>
-          <div className="bg-white border border-zinc-200 p-4 rounded-xl shadow-sm flex flex-col items-center justify-center text-center">
-            <span className="text-2xl font-black text-blue-600">{badgesEarnedCount}</span>
-            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-1">Badges Earned</span>
+          <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm">
+            <span className="text-2xl font-black text-dark-blue-400">{badgesEarnedCount}</span>
+            <span className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">Badges Earned</span>
           </div>
-          <div className="bg-white border border-zinc-200 p-4 rounded-xl shadow-sm flex flex-col items-center justify-center text-center">
-            {/* REQ 4: Seal Earned Boolean Display */}
-            <span className={`text-2xl font-black ${sealEarned ? "text-emerald-500" : "text-zinc-300"}`}>
-              {sealEarned ? "Yes" : "No"}
-            </span>
-            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-1">Seal Earned</span>
+          <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm">
+            <Pill label={status} accent={STATUS_PILL_ACCENT[status]} />
+            <span className="mt-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">Pathway Status</span>
           </div>
         </div>
       </section>
 
-      {/* CRITERIA & PROGRESS BAR CHART */}
-      <section>
-        <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest mb-3">Criteria & Progress</p>
-        <div className="p-5 border border-zinc-100 rounded-xl bg-white shadow-sm">
+      {/* CRITERIA & PROGRESS */}
+      <section className="space-y-3">
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Criteria &amp; Progress</p>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
           <PathwayProgressBarChart targets={mappedTargets} points={mappedPoints} height="md" />
         </div>
       </section>
 
-      {/* COMPLETED & IN PROGRESS ACTIVITY */}
-      <section className="space-y-12">
-        <div className="flex justify-between items-center border-b border-zinc-200 pb-3">
-          <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Activity History</p>
-          <div className="flex bg-white border border-zinc-200 p-1 rounded-md text-[10px] font-bold uppercase">
-            <button onClick={() => setLayout("list")} className={`px-3 py-1.5 rounded ${layout === "list" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}>List View</button>
-            <button onClick={() => setLayout("grid")} className={`px-3 py-1.5 rounded ${layout === "grid" ? "bg-zinc-100 text-blue-600" : "text-zinc-400"}`}>Grid View</button>
+      {/* COMPLETED ACTIVITY */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Activity History</p>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={() => setLayout("grid")}
+              className={`flex h-7 w-7 items-center justify-center rounded-md ${
+                layout === "grid" ? "bg-slate-100 text-dark-blue-400" : "text-slate-300 hover:text-slate-400"
+              }`}
+            >
+              <IconLayoutGrid size={14} stroke={1.75} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setLayout("list")}
+              className={`flex h-7 w-7 items-center justify-center rounded-md ${
+                layout === "list" ? "bg-slate-100 text-dark-blue-400" : "text-slate-300 hover:text-slate-400"
+              }`}
+            >
+              <IconList size={14} stroke={1.75} />
+            </button>
           </div>
         </div>
 
-        {/* Render Completed first, then In Progress below it */}
-        {renderBadgePool(completedBadges, "Completed Activity")}
-        {renderBadgePool(inProgressBadges, "In Progress", "Started")}
+        {renderBadgePool(completedBadges)}
+        {completedBadges.length === 0 && <p className="text-sm text-slate-400">No completed activity yet.</p>}
       </section>
     </div>
   );
