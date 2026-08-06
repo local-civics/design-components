@@ -4,7 +4,6 @@ import {
   IconAlbum,
   IconBriefcase,
   IconClipboard,
-  IconFileText,
   IconLogout,
   IconMessageCircle,
   IconRoute,
@@ -27,7 +26,6 @@ export type DashboardSidebarTabName =
   | "pathways"
   | "badges"
   | "file-locker"
-  | "transcript"
   | "portfolio"
   | "comments";
 
@@ -79,7 +77,6 @@ const TABS: SidebarTab[] = [
   { name: "pathways", label: "Pathways", icon: IconRoute, accent: "mint" },
   { name: "badges", label: "Badges", icon: IconAlbum, accent: "gold" },
   { name: "file-locker", label: "File Locker", icon: IconClipboard, accent: "cyan" },
-  { name: "transcript", label: "Transcript", icon: IconFileText, accent: "mint" },
   { name: "portfolio", label: "Portfolio", icon: IconBriefcase, accent: "gold" },
   { name: "comments", label: "Comments", icon: IconMessageCircle, accent: "cyan" },
 ];
@@ -88,7 +85,7 @@ const TABS: SidebarTab[] = [
  * The single left nav used across the whole student side of the app (Home, Pathway/Badge detail
  * pages, and any future page that adopts `DashboardShell`) — never render a page-specific copy of
  * this. Tabs with no matching `links` entry render disabled, which is how not-yet-built
- * destinations (File Locker, Transcript, Portfolio, Comments) show up today.
+ * destinations (File Locker, Portfolio, Comments) show up today.
  */
 export const DashboardSidebar = (props: DashboardSidebarProps) => {
   return (

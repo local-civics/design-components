@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { Button } from "../../../components/Button/Button";
 import { Icon } from "../../../components/Icon/v0/Icon";
 import { FormExitDialog } from "../FormExitDialog/FormExitDialog";
 import { FormItem, FormItemProps } from "../FormItem/FormItem";
@@ -152,11 +151,10 @@ export const LearningForm = (props: LearningFormProps) => {
     }
   };
 
-  const bg = props.preview ? "" : "bg-gray-100";
   return (
-    <div className={`grid grid-cols-1 gap-y-12 ${bg} px-12 pb-24 lg:px-56`}>
-      <div className="w-full max-w-[64rem] m-auto md:grid md:grid-cols-2 bg-white rounded-b overflow-hidden shadow-sm">
-        <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-slate-600 max-w-md">
+    <div className="grid grid-cols-1 gap-y-12 px-12 pb-24 lg:px-56">
+      <div className="w-full max-w-[64rem] m-auto md:grid md:grid-cols-2 bg-white rounded-2xl overflow-hidden border border-sky-blue-400/30 shadow-[0_4px_20px_rgba(59,208,242,0.10)]">
+        <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-dark-blue-400 max-w-md">
           <div
             onClick={() => {
               if (props.preview && props.onEditLesson) {
@@ -165,20 +163,32 @@ export const LearningForm = (props: LearningFormProps) => {
                 setShowExitDialogue(true);
               }
             }}
-            className="flex h-max gap-x-2 cursor-pointer items-center text-slate-300 hover:text-slate-500"
+            className="flex h-max gap-x-2 cursor-pointer items-center text-slate-400 hover:text-sky-blue-400"
           >
             <div className="w-3 h-3 min-w-3">
               <Icon name="leftArrow" />
             </div>
-            <span className="text-md">Back</span>
+            <span className="text-xs font-bold">Back</span>
           </div>
-          {!!props.displayName && <h2 className="h-max font-semibold text-2xl">{props.displayName}</h2>}
+          {!!props.displayName && <h2 className="h-max font-extrabold text-2xl text-dark-blue-400">{props.displayName}</h2>}
           {!!props.description && (
-            <p className="h-max max-h-[14rem] overflow-y-auto whitespace-pre-line">{props.description}</p>
+            <p className="h-max max-h-[14rem] overflow-y-auto whitespace-pre-line text-sm text-slate-500 leading-relaxed">{props.description}</p>
           )}
-          {!!props.eta && <p className="text-sm h-max font-semibold">Estimated Completion Time: {props.eta}</p>}
+          {!!props.eta && <p className="text-xs h-max font-bold text-dark-blue-400">Estimated Completion Time: {props.eta}</p>}
         </div>
-        <img className="grow h-full max-h-[30rem] w-full object-cover" alt={props.displayName} src={props.imageURL} />
+        {props.imageURL ? (
+          <img className="grow h-full max-h-[30rem] w-full object-cover" alt={props.displayName} src={props.imageURL} />
+        ) : (
+          <div className="relative grow h-full min-h-[14rem] max-h-[30rem] w-full overflow-hidden bg-[linear-gradient(160deg,#232A3A,#3BD0F2)]">
+            <div className="absolute inset-0 [background-image:radial-gradient(circle,rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:20px_20px]" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" className="text-white/45">
+                <path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M14 2v6h6M8 12h8M8 16h8M8 8h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </div>
+          </div>
+        )}
       </div>
 
       <form className="w-full max-w-[64rem] m-auto grid grid-cols-1 gap-y-12" onSubmit={onSubmit}>
@@ -208,16 +218,12 @@ export const LearningForm = (props: LearningFormProps) => {
 
         {!props.preview && (
           <div className="w-max m-auto">
-            <Button
-              // disabled={!canSubmit}
+            <button
               type="submit"
-              color="blue"
-              size="md"
-              spacing="md"
-              border="rounded"
-              theme="dark"
-              text="Submit"
-            />
+              className="rounded-xl bg-dark-blue-400 px-7 py-2.5 text-xs font-bold text-white hover:bg-dark-blue-400/90"
+            >
+              Submit
+            </button>
           </div>
         )}
       </form>
@@ -226,16 +232,13 @@ export const LearningForm = (props: LearningFormProps) => {
       )}
       {!props.preview && (
         <div className={`fixed bottom-5 right-14 transition ease-in-out ${saveVisibility}`}>
-          <Button
+          <button
             type="button"
-            color="dark-blue"
-            size="md"
-            spacing="md"
-            border="rounded"
-            theme="dark"
-            text="Save"
             onClick={saveDraft}
-          />
+            className="rounded-xl bg-dark-blue-400 px-7 py-2.5 text-xs font-bold text-white hover:bg-dark-blue-400/90"
+          >
+            Save
+          </button>
         </div>
       )}
 
@@ -273,19 +276,17 @@ const Rating = (props: { disabled?: boolean; rating?: number; setRating?: (ratin
   const circlePointer = props.disabled ? "" : "cursor-pointer";
 
   const buttons = Array.from({ length: maxPoints }, (_, i) => {
-    const color = i < confidence ? "text-sky-200" : "text-slate-200";
+    const color = i < confidence ? "bg-gold-400" : "bg-slate-200";
     return (
       <div key={i} onMouseEnter={() => onMouseEnter(i + 1)} onMouseLeave={onMouseLeave}>
-        <div className={`${circlePointer} h-4 w-4 ${color}`} onClick={() => onClick(i + 1)}>
-          <Icon name="circle" />
-        </div>
+        <div className={`${circlePointer} h-4 w-4 rounded-full ${color}`} onClick={() => onClick(i + 1)} />
       </div>
     );
   });
   const labels = Array.from({ length: maxPoints }, (_, i) => {
     if (i === 0) {
       return (
-        <p key={i} className="inline-block text-sm text-monochrome-500">
+        <p key={i} className="inline-block text-[11.5px] font-bold text-sky-blue-400">
           Poor
         </p>
       );
@@ -293,13 +294,13 @@ const Rating = (props: { disabled?: boolean; rating?: number; setRating?: (ratin
 
     if (i === maxPoints - 1) {
       return (
-        <p key={i} className="inline-block text-sm text-monochrome-500">
+        <p key={i} className="inline-block text-[11.5px] font-bold text-sky-blue-400">
           Amazing
         </p>
       );
     }
 
-    return <p key={i} className="inline-block text-monochrome-500" />;
+    return <p key={i} className="inline-block" />;
   });
 
   React.useEffect(() => {
@@ -310,13 +311,13 @@ const Rating = (props: { disabled?: boolean; rating?: number; setRating?: (ratin
 
   return (
     <div className="m-auto inline-block py-4">
-      <h6 className="font-bold pb-2 mb-4 text-md text-slate-600 font-semibold">
+      <h6 className="font-bold pb-2 mb-4 text-base text-dark-blue-400">
         {"Almost there, rate this activity before submitting."}
       </h6>
       <div className="w-max m-auto">
         <div className={`ml-5 w-[17.7rem] grid grid-cols-5 justify-self-center items-center gap-7 mb-2`}>{buttons}</div>
         <div
-          className={`ml-5 w-[16.7rem] text-[0.5rem] text-slate-600 grid grid-cols-5 justify-self-center items-center`}
+          className={`ml-5 w-[16.7rem] text-[0.5rem] grid grid-cols-5 justify-self-center items-center`}
         >
           {labels}
         </div>
