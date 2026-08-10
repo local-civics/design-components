@@ -1,26 +1,5 @@
-import * as React                       from 'react';
-import {
-    createStyles,
-    Badge as BadgeCore,
-    Title,
-    Text,
-    Container, Stack, Grid, LoadingOverlay,
-}                                       from '@mantine/core';
-import {Table, Item}         from "./Table";
-
-const useStyles = createStyles((theme) => ({
-    title: {
-        fontSize: 34,
-        fontWeight: 900,
-        [theme.fn.smallerThan('sm')]: {
-            fontSize: 24,
-        },
-    },
-
-    description: {
-        maxWidth: 600,
-    },
-}));
+import * as React from 'react';
+import {Table, Item} from "./Table";
 
 /**
  * PathwaysItem
@@ -41,33 +20,14 @@ export type PathwaysProps = {
  * @constructor
  */
 export const Pathways = (props: PathwaysProps) => {
-    const { classes } = useStyles();
     return (
-        <Container size="lg" py="xl">
-            <Stack spacing="md">
-                <Grid>
-                    <Grid.Col sm="auto">
-                        <BadgeCore variant="filled" size="lg">
-                            Pathways
-                        </BadgeCore>
-                        <Title order={2} className={classes.title} mt="md">
-                            Pathways
-                        </Title>
+        <div className="mx-auto flex max-w-4xl flex-col gap-5 px-4 py-8">
+            <div className="space-y-1">
+                <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Pathways</h1>
+                <p className="text-sm text-slate-500">Explore all your unique pathway requirements in one clear space</p>
+            </div>
 
-                        <Text color="dimmed" className={classes.description} mt="sm">
-                            Explore all your unique pathway requirements in one clear space
-                        </Text>
-                    </Grid.Col>
-                </Grid>
-
-                <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <Table
-                        loading={props.loading}
-                        items={props.pathways}
-                    />
-                </div>
-            </Stack>
-        </Container>
+            <Table loading={props.loading} items={props.pathways} />
+        </div>
     )
 }

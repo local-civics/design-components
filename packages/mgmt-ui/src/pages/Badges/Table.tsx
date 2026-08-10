@@ -1,7 +1,5 @@
-import * as React                                                         from 'react';
-import { Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
-import {Link}                                                             from "react-router-dom";
-import {PlaceholderBanner}                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import * as React from 'react';
+import {Link} from "react-router-dom";
 
 /**
  * Item
@@ -32,50 +30,30 @@ export type TableProps = TableData
  * @constructor
  */
 export function Table(props: TableProps) {
-    if(props.items.length === 0){
-        return <PlaceholderBanner
-            title="No badges to display"
-            description="We don't have any badges to show you just yet."
-            loading={props.loading}
-            icon="badges"
-        />
+    if (props.loading) {
+        return <div className="text-sm text-slate-400">Loading…</div>;
     }
 
-    const rows = props.items.map((row) => (
-        <tr key={row.badgeId}>
-            <td>
-                <UnstyledButton<typeof Link> component={Link} to={row.href}
-                    sx={(theme) => ({
-                        display: 'block',
-                        width: '100%',
-                        padding: theme.spacing.md,
-                        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-                        '&:hover': {
-                            backgroundColor:
-                                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-                        },
-                    })}>
-                    <Group>
-                        <div>
-                            <Text size="sm" weight={500}>
-                                {row.name}
-                            </Text>
-                            <Text size="xs" color="dimmed">
-                                {row.description}
-                            </Text>
-                        </div>
-                    </Group>
-                </UnstyledButton>
-            </td>
-        </tr>
-    ));
+    if (props.items.length === 0) {
+        return (
+            <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-400 shadow-sm">
+                No badges to display.
+            </div>
+        );
+    }
 
     return (
-        <ScrollArea.Autosize maxHeight={600}>
-            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
-                <tbody>{rows}</tbody>
-            </MantineTable>
-        </ScrollArea.Autosize>
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            {props.items.map((row, i) => (
+                <Link
+                    key={row.badgeId}
+                    to={row.href}
+                    className={`block px-5 py-4 no-underline hover:bg-slate-50 ${i < props.items.length - 1 ? "border-b border-slate-100" : ""}`}
+                >
+                    <div className="text-sm font-bold text-dark-blue-400">{row.name}</div>
+                    {row.description && <div className="mt-1 text-xs leading-relaxed text-slate-500">{row.description}</div>}
+                </Link>
+            ))}
+        </div>
     );
 }

@@ -1,4 +1,5 @@
 import postcss from "rollup-plugin-postcss";
+import scss from "rollup-plugin-scss"
 import svgr from "@svgr/rollup"
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild';
@@ -35,7 +36,7 @@ export default [
     ],
   }),
   bundle({
-    plugins: [dts()],
+    plugins: [scss(), dts()],
     output: {
       file: 'dist/index.d.ts',
       format: 'es',

@@ -1,127 +1,26 @@
 import * as React from 'react';
 import {
-    Navbar as NavbarCore,
-    Avatar,
-    Image,
-    Center,
-    createStyles,
-    Group, Code, ScrollArea, Burger,
-    Badge,
-} from '@mantine/core';
-import {
-    IconHome2,
-    IconGauge,
-    IconLogout,
-    IconSwitchHorizontal, IconLambda, IconCategory2, IconAlbum, IconBuilding, IconVideo, IconRoute,
+    IconAlbum,
+    IconBuilding,
+    IconCategory2,
     IconClipboard,
+    IconGauge,
+    IconHome2,
+    IconLambda,
+    IconLogout,
+    IconRoute,
+    IconSwitchHorizontal,
+    IconVideo,
+    TablerIcon,
 } from '@tabler/icons';
-import {UserButton} from "../../users/UserButton/UserButton";
-import {LinksGroup} from "../NavbarLinksGroups/NavbarLinksGroups";
-
-const useStyles = createStyles((theme, _params, getRef) => {
-    const icon = getRef('icon');
-    return {
-        navbar: {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.white,
-        },
-
-        navHeader: {
-            // Media query with value from theme
-            [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-                height: 71,
-                position: 'absolute',
-                top: 0,
-            },
-        },
-
-        navBody: {
-            // Media query with value from theme
-            [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-                display: 'none',
-            },
-        },
-
-        burger: {
-            [theme.fn.largerThan('sm')]: {
-                display: 'none',
-            },
-        },
-
-        header: {
-            padding: theme.spacing.md,
-            paddingTop: 0,
-            marginLeft: -theme.spacing.md,
-            marginRight: -theme.spacing.md,
-            color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-            borderBottom: `1px solid ${
-                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-            }`,
-        },
-
-        link: {
-            ...theme.fn.focusStyles(),
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            fontSize: theme.fontSizes.sm,
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7],
-            padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
-            borderRadius: theme.radius.sm,
-            fontWeight: 500,
-
-            '&:hover': {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-
-                [`& .${icon}`]: {
-                    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-                },
-            },
-        },
-
-        linkIcon: {
-            ref: icon,
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
-            marginRight: theme.spacing.sm,
-        },
-
-        links: {
-            marginLeft: -theme.spacing.md,
-            marginRight: -theme.spacing.md,
-        },
-
-        user: {
-            margin: theme.spacing.md,
-            marginLeft: 0,
-            marginRight: 0,
-        },
-
-        linksInner: {
-            paddingBottom: theme.spacing.xl,
-        },
-
-        footer: {
-            paddingTop: theme.spacing.md,
-            paddingBottom: theme.spacing.md,
-            borderTop: `1px solid ${
-                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2]
-            }`,
-        },
-
-        active: {
-            '&, &:hover': {
-                backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
-                color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
-            },
-        },
-    }
-});
+import { UserButton } from "../../users/UserButton/UserButton";
+import { LinksGroup, LinksGroupAccent } from "../NavbarLinksGroups/NavbarLinksGroups";
 
 /**
  * NavbarProps
  */
 export interface NavbarProps {
-    active: string
+    active?: string
     version: string
     image: string
     name: string
@@ -134,21 +33,15 @@ export interface NavbarProps {
     onSwitchAccounts?: () => void;
 }
 
-const data = [
-    {label: 'Home', icon: IconHome2},
-    {label: 'Dashboard', icon: IconGauge},
-    {label: 'Classes', icon: IconCategory2},
-    {label: 'Pathways', icon: IconRoute},
-    {label: 'Badges', icon: IconAlbum},
-    {label: 'Lessons', icon: IconLambda},
-    {label: 'File Locker', icon: IconClipboard},
-    {label: 'Organization',
-        icon: IconBuilding,
-        links: [
-            {label: 'Overview'},
-            {label: 'People'},
-        ],
-    }
+const data: { label: string; icon: TablerIcon; accent: LinksGroupAccent; links?: { label: string }[] }[] = [
+    { label: 'Home', icon: IconHome2, accent: "cyan" },
+    { label: 'Dashboard', icon: IconGauge, accent: "mint" },
+    { label: 'Classes', icon: IconCategory2, accent: "gold" },
+    { label: 'Pathways', icon: IconRoute, accent: "cyan" },
+    { label: 'Badges', icon: IconAlbum, accent: "mint" },
+    { label: 'Lessons', icon: IconLambda, accent: "gold" },
+    { label: 'File Locker', icon: IconClipboard, accent: "cyan" },
+    { label: 'Organization', icon: IconBuilding, accent: "gold", links: [{ label: 'Overview' }, { label: 'People' }] },
 ]
 
 const TRIAL_PAGES = [
@@ -157,13 +50,20 @@ const TRIAL_PAGES = [
     'Badges',
 ]
 
+/**
+ * The educator/admin left nav. Same behavior as before this round's restyle — item list, per-item
+ * notification counts, the `hidden`/trial visibility rules, the Organization sub-menu — only the
+ * markup/styling moved from Mantine's `createStyles` theme to Tailwind utility classes (matching
+ * the flat cyan/mint/gold system already shipped on the student side), plus `active` is now
+ * optional rather than required (it was forcing at least one caller to pass an empty string just
+ * to satisfy the type, which meant no row ever highlighted for it).
+ * @param props
+ * @constructor
+ */
 export function Navbar(props: NavbarProps) {
-    const { classes, cx } = useStyles();
-    const [burgerOpen, setBurgerOpen] = React.useState(false)
-    const toggle = () => setBurgerOpen(!burgerOpen)
     const links = data.map((item) => {
         const context = props.links[item.label] || {notifications: 0, href: ""}
-        if(context.hidden || props.trial && TRIAL_PAGES.indexOf(item.label) === -1){
+        if(context.hidden || (props.trial && TRIAL_PAGES.indexOf(item.label) === -1)){
             return null
         }
 
@@ -177,70 +77,50 @@ export function Navbar(props: NavbarProps) {
             {...item}
             {...context}
             links={(item.links || []).map((link) => {
-                return {...link, ...props.links[`${item.label}/${link.label}`] || {notifications: 0, href: ""}}
+                return {...link, ...(props.links[`${item.label}/${link.label}`] || {notifications: 0, href: ""})}
             })}
         />
     });
 
     return (
-        <>
-            <NavbarCore width={{ sm: 300 }} p="md" className={cx(classes.navbar, {[classes.navHeader]: !burgerOpen})}>
-                <NavbarCore.Section className={classes.header}>
-                    <Group position="apart">
-                        <Center>
-                            <Avatar color="blue" radius="sm">
-                                <div style={{ width: 15, marginLeft: 'auto', marginRight: 'auto' }}>
-                                    <Image fit="contain" src="https://cdn.localcivics.io/brand/l.png"/>
-                                </div>
-                            </Avatar>
-                        </Center>
-                        <Group position="apart">
-                            <Code sx={{ fontWeight: 700 }}>{props.version}</Code>
-                            { !!props.trial && <Badge color="violet" radius="xs">Trial</Badge>}
-                            <Burger opened={burgerOpen} onClick={toggle} className={classes.burger} size="sm" />
-                        </Group>
-                    </Group>
-                </NavbarCore.Section>
-
-                <div className={cx({[classes.navBody]: !burgerOpen})}>
-                    { !props.loading && <UserButton
-                        className={classes.user}
-                        image={props.image}
-                        name={props.name}
-                        email={props.email}
-                    /> }
-
-                    <NavbarCore.Section grow className={classes.links} component={ScrollArea}>
-                        <div className={classes.linksInner}>{links}</div>
-                    </NavbarCore.Section>
-
-                    { !props.loading && <NavbarCore.Section className={classes.footer}>
-                        { props.trial && <a href="#" className={classes.link} onClick={(event) => {
-                            event.preventDefault()
-                            props.onGettingStarted()
-                        }}>
-                            <IconVideo className={classes.linkIcon} stroke={1.5} />
-                            <span>Getting started</span>
-                        </a>}
-
-                        { !!props.onSwitchAccounts && <a href="#" className={classes.link} onClick={(event) => {
-                            event.preventDefault()
-                            props.onSwitchAccounts && props.onSwitchAccounts()
-                        }}>
-                            <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-                            <span>Change account</span>
-                        </a>}
-
-                        <a href="#" className={classes.link} onClick={(event) => {
-                            event.preventDefault()
-                            props.onLogout()
-                        }}>
-                            <IconLogout className={classes.linkIcon} stroke={1.5} />
-                            <span>Logout</span>
-                        </a>
-                    </NavbarCore.Section> }
+        <nav className="flex h-full w-[230px] shrink-0 flex-col border-r border-slate-200 bg-white">
+            <div className="flex items-center justify-between border-b border-slate-100 p-4">
+                <div className="w-24">
+                    <img className="w-full object-contain" src="https://cdn.localcivics.io/brand/localcivics.png" alt="Logo" />
                 </div>
-            </NavbarCore>
-        </>
+                {!!props.trial && (
+                    <span className="rounded-full bg-gold-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
+                        Trial
+                    </span>
+                )}
+            </div>
+
+            {!props.loading && <UserButton image={props.image} name={props.name} email={props.email} />}
+
+            <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-2.5">{links}</div>
+
+            {!props.loading && (
+                <div className="flex flex-col gap-0.5 border-t border-slate-200 p-2.5">
+                    {props.trial && <UtilLink label="Getting started" icon={IconVideo} onClick={props.onGettingStarted} />}
+                    {!!props.onSwitchAccounts && (
+                        <UtilLink label="Change account" icon={IconSwitchHorizontal} onClick={props.onSwitchAccounts} />
+                    )}
+                    <UtilLink label="Logout" icon={IconLogout} onClick={props.onLogout} />
+                </div>
+            )}
+        </nav>
     );
 }
+
+const UtilLink = (props: { label: string; icon: TablerIcon; onClick: () => void }) => {
+    const Icon = props.icon;
+    return (
+        <div
+            onClick={props.onClick}
+            className="flex cursor-pointer items-center gap-2.5 rounded-[10px] px-3.5 py-2 text-slate-400 hover:bg-slate-50 hover:text-slate-500"
+        >
+            <Icon size={13} stroke={1.75} />
+            <span className="text-[11.5px]">{props.label}</span>
+        </div>
+    );
+};

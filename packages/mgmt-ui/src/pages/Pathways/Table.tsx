@@ -1,7 +1,6 @@
-import * as React                                                         from 'react';
-import { Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
-import {Link}                                                             from "react-router-dom";
-import {PlaceholderBanner}                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import * as React from 'react';
+import {Link} from "react-router-dom";
+import {IconChevronRight} from "@tabler/icons";
 
 /**
  * Item
@@ -32,50 +31,33 @@ export type TableProps = TableData
  * @constructor
  */
 export function Table(props: TableProps) {
-    if(props.items.length === 0){
-        return <PlaceholderBanner
-            title="No pathway items to display"
-            description="We don't have any pathway items to show you just yet."
-            loading={props.loading}
-            icon="badges" //FIXME investigate icon
-        />
+    if (props.loading) {
+        return <div className="text-sm text-slate-400">Loading…</div>;
     }
 
-    const rows = props.items.map((row) => (
-        <tr key={row.badgeId}>
-            <td>
-                <UnstyledButton<typeof Link> component={Link} to={row.href}
-                    sx={(theme) => ({
-                        display: 'block',
-                        width: '100%',
-                        padding: theme.spacing.md,
-                        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-                        '&:hover': {
-                            backgroundColor:
-                                theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[1],
-                        },
-                    })}>
-                    <Group>
-                        <div>
-                            <Text size="sm" weight={500}>
-                                {row.name}
-                            </Text>
-                            <Text size="xs" color="dimmed">
-                                {row.description}
-                            </Text>
-                        </div>
-                    </Group>
-                </UnstyledButton>
-            </td>
-        </tr>
-    ));
+    if (props.items.length === 0) {
+        return (
+            <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-400 shadow-sm">
+                No pathways to display.
+            </div>
+        );
+    }
 
     return (
-        <ScrollArea.Autosize maxHeight={600}>
-            <MantineTable horizontalSpacing={0} verticalSpacing={0} sx={{ minWidth: 700 }}>
-                <tbody>{rows}</tbody>
-            </MantineTable>
-        </ScrollArea.Autosize>
+        <div className="flex flex-col gap-3">
+            {props.items.map((row) => (
+                <Link
+                    key={row.badgeId}
+                    to={row.href}
+                    className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm hover:bg-slate-50"
+                >
+                    <div className="min-w-0 flex-1">
+                        <div className="text-sm font-bold text-dark-blue-400">{row.name}</div>
+                        {row.description && <div className="mt-1 text-xs leading-relaxed text-slate-500">{row.description}</div>}
+                    </div>
+                    <IconChevronRight size={16} stroke={2} className="shrink-0 text-slate-300" />
+                </Link>
+            ))}
+        </div>
     );
 }
