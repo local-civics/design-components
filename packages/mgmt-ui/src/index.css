@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "ProximaNova";
+  src: url(https://cdn.localcivics.io/fonts/ProximaNova.otf) format("opentype");
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  font-weight: bold;
+  src: url(https://cdn.localcivics.io/fonts/ProximaNovaBold.otf) format("opentype");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Tailwind's preflight is disabled here (see tailwind.config.cjs) to avoid fighting Mantine's own
+ * global reset on the pages this round doesn't touch. But every Tailwind `border`/`border-{color}`
+ * utility silently depends on preflight's `border-style: solid` default — without it, the browser's
+ * native default (`border-style: none`) means border-width and border-color render with no visible
+ * effect at all. This is the one rule from preflight actually needed; using the lowest-specificity
+ * selector (`*`) so it never overrides a component's own more specific border-style (e.g. Mantine's
+ * dashed Dropzone).
+ */
+*, ::before, ::after {
+  border-width: 0;
+  border-style: solid;
+}

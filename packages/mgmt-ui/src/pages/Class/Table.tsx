@@ -1,21 +1,8 @@
-import {openConfirmModal}                                           from "@mantine/modals";
-import * as React                                                   from 'react';
-import { DataTable, DataTableSortStatus }                           from 'mantine-datatable'
-import {
-    Avatar,
-    Group,
-    Text,
-    ActionIcon,
-    ScrollArea,
-    Select,
-    Box,
-    UnstyledButton,
-}                                                                   from '@mantine/core';
-import { IconCheck, IconTrash, IconX }                              from '@tabler/icons';
-import {Link}                                                       from "react-router-dom";
-import { PlaceholderBanner }                                        from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import {relativeTimeFromDates}                                      from "../../utils/time";
-import {useSortableData}                                            from "../../utils/useSortableData";
+import {openConfirmModal} from "@mantine/modals";
+import {Text} from '@mantine/core';
+import * as React from 'react';
+import {Link} from "react-router-dom";
+import {IconCheck, IconTrash} from '@tabler/icons';
 
 /**
  * Item
@@ -52,154 +39,99 @@ export type TableProps = TableData & {
     onRoleChange: (user: Item, role: string | null) => void;
 }
 
+const openDeleteModal = (student: Item, onDelete: (member: Item) => void) => openConfirmModal({
+    title: `Remove "${student.givenName && student.familyName ? `${student.givenName} ${student.familyName}` : student.email}" from this class?`,
+    centered: true,
+    children: (
+        <Text size="sm">
+            Click confirm if you want to remove the student from this specific class. This will NOT remove the student from the Tech Platform.
+        </Text>
+    ),
+    labels: { confirm: 'Remove Student', cancel: "Cancel" },
+    confirmProps: { color: 'red' },
+    onConfirm: () => onDelete(student),
+});
+
 /**
- * Table
+ * Table. Same delete-confirmation (`openConfirmModal`) and role-change behavior as before this
+ * round's restyle — only the row markup moved from `mantine-datatable` to Tailwind.
  * @param props
  * @constructor
  */
 export function Table(props: TableProps) {
-
-    // console.group("Class Table Data Check");
-    // console.log("1. Raw props:", props);
-    // console.log("2. Raw items from prop.items:", props.items);
-    // if (props.items.length > 0) {
-    //     console.log("3. Type of lastActivity (first item):", typeof props.items[0].lastActivity, props.items[0].lastActivity);
-    // }
-
-    const preparedItems = React.useMemo(() => {
-        return props.items.map(item => ({
-            ...item,
-            fullName: item.givenName && item.familyName 
-                ? `${item.givenName} ${item.familyName}`.toLowerCase() 
-                : item.email.toLowerCase(),
-        }));
-    }, [props.items]);
-
-    // console.log("4. Prepared items (before sort hook):", preparedItems);
-
-    console.groupEnd();
-    
-    // Initialize sorting hook
-    const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
-    
-    // console.log("5. Final sorted items:", sortedItems);
-
-    if(props.items.length === 0){
-        return <PlaceholderBanner
-            title="No members to display"
-            description="You have not rostered any students yet."
-            loading={props.loading}
-            icon="groups"
-        />
+    if (props.loading) {
+        return <div className="text-sm text-slate-400">Loading…</div>;
     }
-    
-    const sortStatus: DataTableSortStatus = {
-        columnAccessor: sortConfig.key as string,
-        direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
-    };
 
-    const openDeleteModal = (student: Item) => openConfirmModal({
-        title: `Remove "${student.givenName && student.familyName ? `${student.givenName} ${student.familyName}` : student.email}" from this class?`,
-        centered: true,
-        children: (
-            <Text size="sm">
-                Click confirm if you want to remove the student from this specific class. This will NOT remove the student from the Tech Platform.
-            </Text>
-        ),
-        labels: { confirm: 'Remove Student', cancel: "Cancel" },
-        confirmProps: { color: 'red' },
-        onConfirm: () => props.onDelete && props.onDelete(student),
-    });
-    
+    if (props.items.length === 0) {
+        return (
+            <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-400 shadow-sm">
+                You have not rostered any students yet.
+            </div>
+        );
+    }
+
     return (
-        <ScrollArea>
-            <DataTable
-                verticalSpacing={20}
-                sx={{ minWidth: 700 }}
-                highlightOnHover
-                striped
-                records={sortedItems}
-                idAccessor="email"
-                sortStatus={sortStatus}
-                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
-                columns={[
-                    {
-                        accessor: 'fullName',
-                        title: 'Name',
-                        sortable: true,
-                        render: (row: Item) => (
-                            <UnstyledButton<typeof Link> component={Link} to={row.href}>
-                                <Group spacing="sm">
-                                    <Avatar size={40} src={row.avatar} radius={40} />
-                                    <div>
-                                        <Text size="sm" weight={500}>
-                                            {row.givenName && row.familyName ? `${row.givenName} ${row.familyName}` : row.email}
-                                        </Text>
-                                        <Text size="xs" color="dimmed">
-                                            {row.email}
-                                        </Text>
-                                    </div>
-                                </Group>
-                            </UnstyledButton>
-                        ),
-                    },
-                    {
-                        accessor: 'isAdmin',
-                        title: 'Role',
-                        sortable: true,
-                        render: (row: Item) => (
-                            <Box maw={150}>
-                                <Select
-                                    size="sm"
-                                    disabled={row.readonly}
-                                    value={row.isAdmin ? "educator" : "student"}
-                                    onChange={(value) => props.onRoleChange && props.onRoleChange(row, value)}
-                                    data={[
-                                        { label: 'Student', value: 'student' },
-                                        { label: 'Educator', value: 'educator' },
-                                    ]}
-                                />
-                            </Box>
-                        )
-                    },
-                    {
-                        accessor: 'badgesEarned',
-                        title: 'Badges Earned',
-                        sortable: true,
-                    },
-                    {
-                        accessor: 'lessonsCompleted',
-                        title: 'Lessons Completed',
-                        sortable: true,
-                    },
-                    {
-                        accessor: 'hasAccount',
-                        title: 'Account Created?',
-                        sortable: true,
-                        render: (row: Item) => row.hasAccount ? <IconCheck color="green" /> : null
-                    },
-                    // {
-                    //     accessor: 'lastActivity',
-                    //     title: 'Last Active',
-                    //     sortable: true,
-                    //     render: (row: Item) => row.lastActivity ? relativeTimeFromDates(row.lastActivity) : ""
-                    // },
-                    {
-                        accessor: 'actions',
-                        title: '',
-                        textAlignment: 'right',
-                        render: (row: Item) => (
-                            <Group noWrap spacing={0} position="right">
-                                { !row.readonly && !!props.onDelete && (
-                                    <ActionIcon color="red" onClick={() => openDeleteModal(row)}>
-                                        <IconTrash size={16} stroke={1.5} />
-                                    </ActionIcon>
-                                )}
-                            </Group>
-                        )
-                    }
-                ]}
-            />
-        </ScrollArea>
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="grid grid-cols-[2.2fr_1.2fr_1fr_1.2fr_1fr_0.6fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                <div>Name</div>
+                <div>Role</div>
+                <div>Badges Earned</div>
+                <div>Lessons Completed</div>
+                <div>Account Created?</div>
+                <div />
+            </div>
+            {props.items.map((row, i) => {
+                const name = row.givenName && row.familyName ? `${row.givenName} ${row.familyName}` : row.email;
+                const initials = (row.givenName?.[0] || row.email[0] || "?") + (row.familyName?.[0] || "");
+                return (
+                    <div
+                        key={row.email}
+                        className={`grid grid-cols-[2.2fr_1.2fr_1fr_1.2fr_1fr_0.6fr] items-center gap-3 px-5 py-3.5 ${
+                            i < props.items.length - 1 ? "border-b border-slate-100" : ""
+                        }`}
+                    >
+                        <Link to={row.href} className="flex min-w-0 items-center gap-2.5 no-underline">
+                            {row.avatar ? (
+                                <img className="h-8 w-8 shrink-0 rounded-full object-cover" src={row.avatar} alt={name} />
+                            ) : (
+                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-[10px] font-bold text-dark-blue-400">
+                                    {initials.toUpperCase()}
+                                </div>
+                            )}
+                            <div className="min-w-0">
+                                <div className="truncate text-xs font-bold text-dark-blue-400">{name}</div>
+                                <div className="truncate text-[10.5px] text-slate-400">{row.email}</div>
+                            </div>
+                        </Link>
+
+                        <select
+                            disabled={row.readonly}
+                            value={row.isAdmin ? "educator" : "student"}
+                            onChange={(e) => props.onRoleChange && props.onRoleChange(row, e.target.value)}
+                            className="w-fit rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 disabled:opacity-50"
+                        >
+                            <option value="student">Student</option>
+                            <option value="educator">Educator</option>
+                        </select>
+
+                        <div className="text-xs font-bold text-dark-blue-400">{row.badgesEarned}</div>
+                        <div className="text-xs font-bold text-dark-blue-400">{row.lessonsCompleted}</div>
+                        <div>{row.hasAccount && <IconCheck size={16} stroke={3} className="text-mint-400" />}</div>
+                        <div>
+                            {!row.readonly && !!props.onDelete && (
+                                <button
+                                    type="button"
+                                    onClick={() => openDeleteModal(row, props.onDelete)}
+                                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-300 hover:bg-red-50 hover:text-red-500"
+                                >
+                                    <IconTrash size={14} stroke={1.75} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
     );
 }

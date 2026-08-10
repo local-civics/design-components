@@ -1,77 +1,39 @@
-import * as React                                                                     from 'react';
-import { useState }                                                                   from 'react';
-import { Group, Badge, Box, Collapse, ThemeIcon, Text, createStyles } from '@mantine/core';
-import { TablerIcon, IconChevronLeft, IconChevronRight }                              from '@tabler/icons';
-import {Link}                                                                         from "react-router-dom";
-import {compact}                                                                      from "../../../utils/numbers";
+import * as React from 'react';
+import { useState } from 'react';
+import { TablerIcon, IconChevronRight } from '@tabler/icons';
+import { Link } from "react-router-dom";
+import { compact } from "../../../utils/numbers";
 
-const useStyles = createStyles((theme, _params, getRef) => {
-    const icon = getRef('icon');
-    return {
-        control: {
-            fontWeight: 500,
-            width: '100%',
-            padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-            fontSize: theme.fontSizes.sm,
+/**
+ * The accent color cycled across sidebar rows, same fixed rotation as the rest of the app.
+ */
+export type LinksGroupAccent = "cyan" | "mint" | "gold";
 
-            '&:hover': {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-            },
-        },
-
-        controlButton: {
-            cursor: 'pointer',
-        },
-
-        badge: {
-            pointerEvents: 'none',
-        },
-
-        link: {
-            fontWeight: 500,
-            display: 'block',
-            textDecoration: 'none',
-            padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
-            paddingLeft: 31,
-            marginLeft: 30,
-            fontSize: theme.fontSizes.sm,
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-            borderLeft: `1px solid ${
-                theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[3]
-            }`,
-
-            '&:hover': {
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-            },
-        },
-
-        linkActive: {
-            '&, &:hover': {
-                backgroundColor: theme.fn.variant({variant: 'light', color: theme.primaryColor})
-                    .background,
-                color: theme.fn.variant({variant: 'light', color: theme.primaryColor}).color,
-                [`& .${icon}`]: {
-                    color: theme.fn.variant({variant: 'light', color: theme.primaryColor}).color,
-                },
-            },
-        },
-
-        chevron: {
-            transition: 'transform 200ms ease',
-        },
-
-        linkIcon: {
-            ref: icon,
-        },
-    }
-});
+const ACCENT_CLASSNAMES: Record<LinksGroupAccent, { row: string; chip: string; icon: string; pill: string }> = {
+    cyan: {
+        row: "bg-sky-blue-400/15 border-sky-blue-400/30",
+        chip: "bg-sky-blue-400/25",
+        icon: "text-sky-blue-400",
+        pill: "bg-sky-blue-400/15 text-dark-blue-400",
+    },
+    mint: {
+        row: "bg-mint-400/15 border-mint-400/30",
+        chip: "bg-mint-400/25",
+        icon: "text-mint-400",
+        pill: "bg-mint-400/15 text-dark-blue-400",
+    },
+    gold: {
+        row: "bg-gold-400/15 border-gold-400/30",
+        chip: "bg-gold-400/25",
+        icon: "text-gold-400",
+        pill: "bg-gold-400/15 text-dark-blue-400",
+    },
+};
 
 interface LinksGroupProps {
     icon: TablerIcon;
     label: string;
+    accent?: LinksGroupAccent;
     initiallyOpened?: boolean;
     active?: string
     notifications: number
@@ -79,8 +41,15 @@ interface LinksGroupProps {
     links?: { notifications: number, label: string, href: string;}[];
 }
 
-export function LinksGroup({ icon: Icon, href, label, initiallyOpened, links, active, notifications}: LinksGroupProps) {
-    const { classes, theme, cx } = useStyles();
+/**
+ * A single sidebar row — a plain link, or (when `links` is non-empty) a chevron-toggled group that
+ * auto-opens when one of its children is active and auto-closes when it isn't, while still
+ * allowing manual toggling in between. Same behavior as before this round's restyle (chevron/
+ * auto-open/notification-badge logic unchanged) — only the markup/styling moved from Mantine's
+ * `createStyles` theme to Tailwind utility classes, plus a new optional `accent` for the
+ * cyan/mint/gold rotation the redesigned sidebar uses (defaults to cyan if omitted).
+ */
+export function LinksGroup({ icon: Icon, href, label, accent = "cyan", initiallyOpened, links, active, notifications}: LinksGroupProps) {
     const hasLinks = Array.isArray(links) && links.length > 0;
     const hasActiveLinks = Array.isArray(links) && links.map(l => !!active && active === `${label}/${l.label}`).reduce((a, b) => a || b, false)
     const [opened, setOpened] = useState(initiallyOpened || hasActiveLinks || false);
@@ -89,63 +58,67 @@ export function LinksGroup({ icon: Icon, href, label, initiallyOpened, links, ac
         setOpened(hasActiveLinks)
     }, [hasActiveLinks])
 
-    const ChevronIcon = theme.dir === 'ltr' ? IconChevronRight : IconChevronLeft;
+    const isActive = !!active && !hasLinks && label === active;
+    const accentClasses = ACCENT_CLASSNAMES[accent];
+
     const items = (hasLinks ? links : []).map((link) => {
-        return <Box
-            className={cx(classes.link, { [classes.linkActive]: !!active && active === `${label}/${link.label}`})}
-            key={link.label}>
-            <Group position="apart" spacing={0}>
-                <Text<typeof Link> component={Link} to={link.href}>
-                    {link.label}
-                </Text>
+        const linkActive = !!active && active === `${label}/${link.label}`;
+        return (
+            <Link
+                key={link.label}
+                to={link.href}
+                className={`flex items-center justify-between gap-2 rounded-[8px] border px-3 py-2 text-xs no-underline transition-colors ${
+                    linkActive
+                        ? `${accentClasses.row} font-bold text-dark-blue-400`
+                        : "border-transparent font-medium text-slate-500 hover:bg-slate-50"
+                }`}
+            >
+                {link.label}
                 {!!link.notifications && (
-                    <Badge size="sm" variant="filled" className={classes.badge}>
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${accentClasses.pill}`}>
                         {compact(link.notifications)}
-                    </Badge>
+                    </span>
                 )}
-            </Group>
-        </Box>
+            </Link>
+        );
     });
 
+    const rowInner = (
+        <div className="flex flex-1 items-center gap-2.5">
+            <div className={`flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-lg ${isActive ? accentClasses.chip : "bg-slate-50"}`}>
+                <Icon size={14} stroke={isActive ? 2.2 : 1.75} className={isActive ? accentClasses.icon : "text-slate-400"} />
+            </div>
+            <span className={`flex-1 text-xs ${isActive ? "font-bold text-dark-blue-400" : "font-medium text-slate-500"}`}>{label}</span>
+        </div>
+    );
+
     return (
-        <>
-            <Group
-                className={cx(classes.control, {
-                    [classes.linkActive]: !!active && !hasLinks && label === active,
-                    [classes.controlButton]: hasLinks
-                })}
-                onClick={() => setOpened((o) => !o)}
-                position="apart"
-                spacing={0}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <ThemeIcon variant="light" size={30}>
-                        <Icon className={classes.linkIcon} size={18} />
-                    </ThemeIcon>
-                    <Box ml="md">
-                        <Text<typeof Link> component={Link} to={href}>
-                            {label}
-                        </Text>
-                    </Box>
-                </Box>
+        <div>
+            <div
+                onClick={() => hasLinks && setOpened((o) => !o)}
+                className={`flex items-center gap-2.5 rounded-[10px] border px-3.5 py-2.5 transition-colors ${
+                    isActive ? accentClasses.row : "border-transparent hover:bg-slate-50"
+                } ${hasLinks ? "cursor-pointer" : ""}`}
+            >
+                {hasLinks ? rowInner : <Link to={href} className="flex flex-1 items-center gap-2.5 no-underline">{rowInner}</Link>}
 
                 {!!notifications && (
-                    <Badge size="sm" variant="filled" className={classes.badge}>
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${accentClasses.pill}`}>
                         {compact(notifications)}
-                    </Badge>
+                    </span>
                 )}
 
                 {hasLinks && (
-                    <ChevronIcon
-                        className={classes.chevron}
-                        size={14}
-                        stroke={1.5}
-                        style={{
-                            transform: opened ? `rotate(${theme.dir === 'rtl' ? -90 : 90}deg)` : 'none',
-                        }}
+                    <IconChevronRight
+                        size={13}
+                        stroke={2.2}
+                        className={`shrink-0 text-slate-300 transition-transform ${opened ? "rotate-90" : ""}`}
                     />
                 )}
-            </Group>
-            {hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
-        </>
+            </div>
+            {hasLinks && opened && (
+                <div className="ml-[29px] mt-0.5 flex flex-col gap-0.5 border-l border-slate-100 pl-2.5">{items}</div>
+            )}
+        </div>
     );
 }

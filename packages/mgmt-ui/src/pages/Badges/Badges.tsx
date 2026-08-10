@@ -1,26 +1,6 @@
-import * as React                       from 'react';
-import {
-    createStyles,
-    Badge as BadgeCore,
-    Title,
-    Text,
-    Container, Stack, Grid, Autocomplete, LoadingOverlay,
-}                                       from '@mantine/core';
-import {Table, Item}         from "./Table";
-
-const useStyles = createStyles((theme) => ({
-    title: {
-        fontSize: 34,
-        fontWeight: 900,
-        [theme.fn.smallerThan('sm')]: {
-            fontSize: 24,
-        },
-    },
-
-    description: {
-        maxWidth: 600,
-    },
-}));
+import * as React from 'react';
+import {IconSearch} from "@tabler/icons";
+import {Table, Item} from "./Table";
 
 /**
  * BadgeItem
@@ -43,39 +23,24 @@ export type BadgesProps = {
  * @constructor
  */
 export const Badges = (props: BadgesProps) => {
-    const { classes } = useStyles();
     return (
-        <Container size="lg" py="xl">
-            <Stack spacing="md">
-                <Grid>
-                    <Grid.Col sm="auto">
-                        <BadgeCore variant="filled" size="lg">
-                            Badges
-                        </BadgeCore>
-                        <Title order={2} className={classes.title} mt="md">
-                            Badges and micro-credentials
-                        </Title>
+        <div className="mx-auto flex max-w-4xl flex-col gap-5 px-4 py-8">
+            <div className="space-y-1">
+                <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Badges and micro-credentials</h1>
+                <p className="text-sm text-slate-500">Project-sized skills acquisition and standards alignment.</p>
+            </div>
 
-                        <Text color="dimmed" className={classes.description} mt="sm">
-                            Key milestones that reflect skill development, micro-credentials, or academic progress
-                        </Text>
-                    </Grid.Col>
-                </Grid>
-
-                <Autocomplete
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                <IconSearch size={15} stroke={1.75} className="text-slate-400" />
+                <input
+                    type="text"
                     placeholder="Search for a badge that fits your needs"
-                    data={props.badges.map(item => item.name)}
-                    onChange={props.onAutocompleteChange}
+                    onChange={(e) => props.onAutocompleteChange(e.target.value)}
+                    className="flex-1 border-none bg-transparent text-sm text-dark-blue-400 outline-none placeholder:text-slate-400"
                 />
+            </div>
 
-                <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <Table
-                        loading={props.loading}
-                        items={props.badges}
-                    />
-                </div>
-            </Stack>
-        </Container>
+            <Table loading={props.loading} items={props.badges} />
+        </div>
     )
 }
