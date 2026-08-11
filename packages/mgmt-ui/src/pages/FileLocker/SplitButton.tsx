@@ -1,27 +1,5 @@
-import * as React                                        from 'react'
-import { createStyles, Button, Stack, Menu, Group, ActionIcon } from '@mantine/core';
-import {
-    IconChevronDown,
-    IconPlaylistAdd,
-    IconClipboardCopy, IconTableExport
-}                                                        from '@tabler/icons';
-import {Link}                                            from "react-router-dom";
-
-const useStyles = createStyles((theme) => ({
-    button: {
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-        marginLeft: 0,
-        marginRight: 0,
-    },
-
-    menuControl: {
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0,
-        border: 0,
-        borderLeft: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white}`,
-    },
-}));
+import * as React from 'react'
+import {IconTableExport} from '@tabler/icons';
 
 export type SplitButtonProps = {
     href: string
@@ -29,30 +7,19 @@ export type SplitButtonProps = {
     onExportDataClick: () => void;
 }
 
+/**
+ * Kept as its own component/name for continuity even though only one action renders today (Copy
+ * link's trigger has been commented out since before this round's restyle - onCopyLinkClick stays
+ * wired through in case it's re-enabled later, same as before).
+ */
 export const SplitButton = (props: SplitButtonProps) => {
-    const { classes, theme } = useStyles();
-    const menuIconColor = theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 6];
-
     return (
-        <Stack spacing="sm">
-            {/* <Button<typeof Link> component={Link} to={props.href}
-                className={classes.button}
-                variant="gradient"
-            >
-                Preview
-            </Button>
-            <Button
-                leftIcon={<IconClipboardCopy size={14} />}
-                onClick={props.onCopyLinkClick}
-            >
-                Copy link
-            </Button> */}
-            <Button
-                leftIcon={<IconTableExport size={14} />}
-                onClick={props.onExportDataClick}
-            >
-                Export data (.csv)
-            </Button>
-        </Stack>
+        <button
+            onClick={props.onExportDataClick}
+            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-gold-400 to-[#f5c300] px-4 py-2.5 text-xs font-extrabold text-dark-blue-400"
+        >
+            <IconTableExport size={14} stroke={2}/>
+            Export data (.csv)
+        </button>
     );
 }

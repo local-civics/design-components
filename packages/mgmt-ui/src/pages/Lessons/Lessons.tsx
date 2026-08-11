@@ -1,26 +1,6 @@
-import * as React                from 'react';
-import {
-    createStyles,
-    Badge,
-    Title,
-    Text,
-    Container, Stack, Grid, Autocomplete, LoadingOverlay,
-} from '@mantine/core';
+import * as React from 'react';
+import {IconSearch} from "@tabler/icons";
 import {Table, Item} from "./Table";
-
-const useStyles = createStyles((theme) => ({
-    title: {
-        fontSize: 34,
-        fontWeight: 900,
-        [theme.fn.smallerThan('sm')]: {
-            fontSize: 24,
-        },
-    },
-
-    description: {
-        maxWidth: 600,
-    },
-}));
 
 /**
  * LessonItem
@@ -43,39 +23,24 @@ export type LessonsProps = {
  * @constructor
  */
 export const Lessons = (props: LessonsProps) => {
-    const { classes } = useStyles();
     return (
-        <Container size="lg" py="xl">
-            <Stack spacing="md">
-                <Grid>
-                    <Grid.Col sm="auto">
-                        <Badge variant="filled" size="lg">
-                            Lessons
-                        </Badge>
-                        <Title order={2} className={classes.title} mt="md">
-                            Lessons
-                        </Title>
+        <div className="mx-auto flex max-w-4xl flex-col gap-5 px-4 py-8">
+            <div className="space-y-1">
+                <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Lessons</h1>
+                <p className="text-sm text-slate-500">Bite-sized activities and learning experiences accelerating students achievement</p>
+            </div>
 
-                        <Text color="dimmed" className={classes.description} mt="sm">
-                            Bite-sized activities and learning experiences accelerating students achievement
-                        </Text>
-                    </Grid.Col>
-                </Grid>
-
-                <Autocomplete
+            <div className="relative">
+                <IconSearch size={16} stroke={2} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                    type="text"
                     placeholder="Search for a lesson that fits your needs"
-                    data={props.lessons.map(item => item.name)}
-                    onChange={props.onAutocompleteChange}
+                    onChange={(e) => props.onAutocompleteChange(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-dark-blue-400 placeholder:text-slate-400 focus:border-sky-blue-400 focus:outline-none"
                 />
+            </div>
 
-                <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                    <Table
-                        loading={props.loading}
-                        items={props.lessons}
-                    />
-                </div>
-            </Stack>
-        </Container>
+            <Table loading={props.loading} items={props.lessons} />
+        </div>
     )
 }

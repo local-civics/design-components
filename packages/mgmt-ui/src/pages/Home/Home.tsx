@@ -1,8 +1,7 @@
-import * as React               from 'react';
-import {Container, Grid, Stack} from '@mantine/core';
-import {CardGradient}           from "../../components/cards/CardGradient";
-import {UserInfo}               from "../../components/users/UserInfo/UserInfo";
-import {TenantBanner}           from "../../components/banners/TenantBanner/TenantBanner";
+import * as React from 'react';
+import {IconAlbum, IconCategory2, IconClipboard, IconGauge, IconRoute} from '@tabler/icons';
+import {showNotification} from '@mantine/notifications';
+import {CardGradient} from "../../components/cards/CardGradient";
 
 /**
  * HomeProps
@@ -29,70 +28,84 @@ export type HomeProps = {
  * @constructor
  */
 export const Home = (props: HomeProps) => {
-    return <Container size="lg">
-        <Stack spacing="lg">
-            <Grid gutter="md">
-                <Grid.Col md={6}>
-                    <UserInfo
-                        variant="compact"
-                        name={props.name}
-                        impactStatement={props.impactStatement}
-                    />
-                </Grid.Col>
-                <Grid.Col md={6}>
-                    <TenantBanner
-                        title={props.organization.name}
-                        description={props.organization.description}
-                        image={props.organization.image}
-                        code={props.organization.accessCode}
-                    />
-                </Grid.Col>
-            </Grid>
+    const accessCode = props.organization.accessCode
 
-            <Grid gutter="md">
-                <Grid.Col>
-                    <CardGradient
-                        title="Dashboard"
-                        description="Track your students’ pathway progress"
-                        onClick={props.onDashboardClick}
-                    />
-                </Grid.Col>
-                <Grid.Col>
-                    <CardGradient
-                        title="Classes"
-                        description="Create classes, cohorts, or custom subgroups"
-                        onClick={props.onClassesClick}
-                    />
-                </Grid.Col>
-                <Grid.Col>
-                    <CardGradient
-                        title="Pathways"
-                        description="Explore all your unique pathway requirements in one clear space"
-                        onClick={props.onPathwaysClick}
-                    />
-                </Grid.Col>
-                <Grid.Col>
-                    <CardGradient
-                        title="Badges"
-                        description="Key milestones that reflect skill development, micro-credentials, or academic progress"
-                        onClick={props.onBadgesClick}
-                    />
-                </Grid.Col>
-                <Grid.Col>
-                    <CardGradient
-                        title="Lessons"
-                        description="Bite-sized activities and learning experiences accelerating students achievement"
-                        onClick={props.onLessonsClick}
-                    />
-                </Grid.Col>
-                <Grid.Col>
-                    <CardGradient
-                        title="File Locker"
-                        description="A secure space to view student-submitted work and provide feedback"
-                        onClick={props.onFileLockerClick}
-                    />
-                </Grid.Col>
-            </Grid>
-        </Stack>
-    </Container>
+    const onCopyAccessCode = async () => {
+        if (!accessCode) return;
+
+        try {
+            await navigator.clipboard.writeText(accessCode);
+            showNotification({
+                title: 'Copied!',
+                message: "Community code copied to clipboard.",
+                autoClose: 3000,
+            });
+        } catch (err) {
+            console.error("Failed to copy code", err);
+        }
+    };
+
+    return <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-5">
+        <div className="flex items-stretch gap-5">
+            <div className="flex-1">
+                <div className="text-[28px] font-extrabold text-dark-blue-400">{props.name}</div>
+                <div className="mt-1.5 text-[12.5px] text-slate-400">{props.impactStatement}</div>
+            </div>
+
+            <div className="flex w-[440px] shrink-0 flex-col justify-between gap-3 rounded-2xl bg-gradient-to-br from-dark-blue-600 via-dark-blue-400 to-sky-blue-400 p-5">
+                <div>
+                    <div className="text-base font-extrabold text-white">{props.organization.name}</div>
+                    <div className="mt-1.5 text-[11.5px] leading-relaxed text-white/70">{props.organization.description}</div>
+                </div>
+
+                {accessCode && <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-white/70">Community code: {accessCode}</span>
+                    <button
+                        onClick={onCopyAccessCode}
+                        className="rounded-md bg-white/90 px-2.5 py-1 text-[10.5px] font-bold text-dark-blue-400 hover:bg-white"
+                    >
+                        Copy
+                    </button>
+                </div>}
+            </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+            <CardGradient
+                title="Dashboard"
+                description="Track your students’ pathway progress"
+                accent="mint"
+                icon={<IconGauge size={18} stroke={1.75}/>}
+                onClick={props.onDashboardClick}
+            />
+            <CardGradient
+                title="Classes"
+                description="Create classes, cohorts, or custom subgroups"
+                accent="gold"
+                icon={<IconCategory2 size={18} stroke={1.75}/>}
+                onClick={props.onClassesClick}
+            />
+            <CardGradient
+                title="Pathways"
+                description="Explore all your unique pathway requirements in one clear space"
+                accent="cyan"
+                icon={<IconRoute size={18} stroke={1.75}/>}
+                onClick={props.onPathwaysClick}
+            />
+            <CardGradient
+                title="Badges"
+                description="Key milestones that reflect skill development, micro-credentials, or academic progress"
+                accent="mint"
+                icon={<IconAlbum size={18} stroke={1.75}/>}
+                onClick={props.onBadgesClick}
+            />
+            <CardGradient
+                title="File Locker"
+                description="A secure space to view student-submitted work and provide feedback"
+                accent="cyan"
+                icon={<IconClipboard size={18} stroke={1.75}/>}
+                onClick={props.onFileLockerClick}
+            />
+        </div>
+    </div>
 }

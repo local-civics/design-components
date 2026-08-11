@@ -30,3 +30,33 @@ const Template: Story<LessonsProps> = (args) => (
  */
 export const Component: Story<LessonsProps> = Template.bind({});
 Component.args = {};
+
+/**
+ * Mock stories
+ */
+export const Mock: Story<LessonsProps> = Template.bind({});
+Mock.args = {
+    lessons: [
+        {
+            lessonId: "1",
+            name: "Understanding Local Government",
+            description: "Explore how city councils and school boards make decisions.",
+            pathway: "Civic Readiness",
+            href: "",
+        },
+        {
+            lessonId: "2",
+            name: "Writing to Your Representative",
+            description: "Draft a letter advocating for a cause you care about.",
+            pathway: "Civic Readiness",
+            href: "",
+        },
+        {
+            lessonId: "3",
+            name: "Media Literacy Basics",
+            description: "Identify bias and credibility in news sources.",
+            pathway: "",
+            href: "",
+        },
+    ],
+};

@@ -26,3 +26,21 @@
   border-width: 0;
   border-style: solid;
 }
+
+/*
+ * Same root cause as the border-style rule above: with preflight disabled, a button with no
+ * explicit background class falls back to native OS button chrome (gray background, black text)
+ * instead of transparent. Restoring just the specific preflight button rules every unstyled button
+ * depends on — buttons that already set their own background/padding via Tailwind classes are
+ * unaffected, since a class selector beats this bare element selector.
+ */
+button {
+  background-color: transparent;
+  background-image: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  cursor: pointer;
+}
