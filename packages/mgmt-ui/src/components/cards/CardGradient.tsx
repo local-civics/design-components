@@ -1,67 +1,48 @@
 import * as React from 'react';
-import { createStyles, Paper, Text, ThemeIcon } from '@mantine/core';
-import { IconColorSwatch } from '@tabler/icons';
 
-const useStyles = createStyles((theme, props: CardGradientProps) => {
-    const from = props.from || 'blue'
-    const to = props.to || 'green'
-    return {
-        card: {
-            position: 'relative',
-            cursor: 'pointer',
-            overflow: 'hidden',
-            transition: 'transform 150ms ease, box-shadow 100ms ease',
-            padding: theme.spacing.xl,
-            paddingLeft: theme.spacing.xl * 2,
+export type CardGradientAccent = "cyan" | "mint" | "gold";
 
-            '&:hover': {
-                boxShadow: theme.shadows.md,
-                transform: 'scale(1.02)',
-            },
+const ACCENT_BORDER: Record<CardGradientAccent, string> = {
+    cyan: "border-l-sky-blue-400",
+    mint: "border-l-mint-400",
+    gold: "border-l-gold-400",
+};
 
-            '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: 6,
-                backgroundImage: theme.fn.linearGradient(0, theme.colors[from][6], theme.colors[to][6]),
-            },
-        },
-    }
-});
+const ACCENT_GRADIENT: Record<CardGradientAccent, string> = {
+    cyan: "from-sky-blue-400",
+    mint: "from-mint-400",
+    gold: "from-gold-400",
+};
 
 export type CardGradientProps = {
     title: string;
     description: string;
     onClick: () => void;
     icon?: React.ReactNode
-    from?: string
-    to?: string
+    accent?: CardGradientAccent
 }
 
+/**
+ * A clickable link-card used on Teacher Home. Same title/description/onClick contract as before
+ * this round's restyle; the Mantine from/to gradient color-name props are replaced with a single
+ * accent prop matching the app-wide cyan/mint/gold rotation (see Navbar.tsx's own per-item accent
+ * mapping, reused here for the same 5 sections). Not part of the public barrel - Home.tsx is its
+ * only consumer, so this prop-contract change carries no other blast radius.
+ */
 export function CardGradient(props: CardGradientProps) {
-    const { classes } = useStyles(props);
-    const from = props.from || 'blue'
-    const to = props.to || 'green'
-    const icon = props.icon || <IconColorSwatch size={28} stroke={1.5} />
+    const accent = props.accent || "cyan"
     return (
-        <Paper withBorder radius="md" className={classes.card} onClick={props.onClick}>
-            <ThemeIcon
-                size="xl"
-                radius="md"
-                variant="gradient"
-                gradient={{ deg: 0, from, to }}
-            >
-                {icon}
-            </ThemeIcon>
-            <Text size="xl" weight={500} mt="md">
-                {props.title}
-            </Text>
-            <Text size="sm" mt="sm" color="dimmed">
-                {props.description}
-            </Text>
-        </Paper>
+        <div
+            onClick={props.onClick}
+            className={`flex cursor-pointer items-center gap-[18px] rounded-2xl border border-l-4 border-slate-200 bg-white px-[22px] py-[18px] transition-transform hover:scale-[1.02] hover:shadow-md ${ACCENT_BORDER[accent]}`}
+        >
+            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-gradient-to-br ${ACCENT_GRADIENT[accent]} to-dark-blue-400 text-white`}>
+                {props.icon}
+            </div>
+            <div>
+                <div className="text-[15.5px] font-extrabold text-dark-blue-400">{props.title}</div>
+                <div className="mt-0.5 text-xs text-slate-500">{props.description}</div>
+            </div>
+        </div>
     );
 }
