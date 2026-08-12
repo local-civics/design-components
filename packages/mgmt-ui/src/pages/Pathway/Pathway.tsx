@@ -81,7 +81,7 @@ export const Pathway = (props: PathwayProps) => {
     const numberOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
 
     return (
-        <Container size="lg" py="xl">
+        <Container fluid py="xl">
             <Stack spacing="md">
                 <Grid>
                     <Grid.Col sm="auto">

@@ -107,7 +107,7 @@ export const Classes = (props: ClassesProps) => {
                     </Button>
                 </form>
             </Drawer>
-            <Container size="lg" py="xl">
+            <Container fluid py="xl">
                 <Stack spacing="md">
                     <Grid>
                         <Grid.Col sm="auto">

@@ -80,7 +80,7 @@ export const Badge = (props: BadgeProps) => {
     const percentageOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length / numberOfStudents : 0
 
     return (
-        <Container size="lg" py="xl">
+        <Container fluid py="xl">
             <Stack spacing="md">
                 <Grid>
                     <Grid.Col sm="auto">

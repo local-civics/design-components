@@ -126,7 +126,7 @@ export const Lesson = (props: LessonProps) => {
     ]
 
     return (
-        <Container size="lg" py="xl">
+        <Container fluid py="xl">
             <Stack spacing="md">
                 <Grid>
                     <Grid.Col sm="auto">

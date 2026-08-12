@@ -23,7 +23,9 @@ const Template: Story<StudentProps> = (args) => (
             impactStatement={args.impactStatement || "I want to equip my students with transformational leadership skills so they could make impact in their communities!"}
             numberOfProblemsSolved={args.numberOfProblemsSolved || 17}
             percentageOfLessonsCompleted={args.percentageOfLessonsCompleted || 0}
+            numberOfLessonsCompleted={args.numberOfLessonsCompleted || 0}
             badges={args.badges || []}
+            lessons={args.lessons || []}
             answers={args.answers || []}
             reflections={args.reflections || []}
         />
@@ -53,17 +55,27 @@ Mock.args = {
     }],
     answers: [
         {
-            lessonId: "",
+            lessonId: "lesson-1",
             lessonName: "An example lesson",
+            badgeName: "Unit 1 Badge",
             questionName: "An example question",
             answer: ["My example answer"],
+            href: "",
+        },
+        {
+            lessonId: "lesson-1",
+            lessonName: "An example lesson",
+            badgeName: "Unit 1 Badge",
+            questionName: "A second question in the same lesson",
+            answer: ["Another example answer"],
             href: "",
         }
     ],
     reflections: [
         {
-            lessonId: "",
+            lessonId: "lesson-1",
             lessonName: "An example lesson",
+            badgeName: "Unit 1 Badge",
             reflection: "An example reflection",
             rating: 2,
             href: "",

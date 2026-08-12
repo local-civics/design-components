@@ -26,7 +26,7 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
     const {student} = props
 
     return (
-        <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-8">
+        <div className="flex w-full flex-col gap-4 px-4 py-8">
             <div className="flex items-center gap-2 text-xs text-slate-400">
                 <button onClick={props.onBack} className="font-bold text-sky-blue-400 hover:underline">File Locker</button>
                 <span>/</span>

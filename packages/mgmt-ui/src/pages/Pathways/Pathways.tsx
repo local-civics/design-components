@@ -21,7 +21,7 @@ export type PathwaysProps = {
  */
 export const Pathways = (props: PathwaysProps) => {
     return (
-        <div className="mx-auto flex max-w-4xl flex-col gap-5 px-4 py-8">
+        <div className="flex flex-col gap-5 px-4 py-8">
             <div className="space-y-1">
                 <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Pathways</h1>
                 <p className="text-sm text-slate-500">Explore all your unique pathway requirements in one clear space</p>

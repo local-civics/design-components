@@ -45,7 +45,7 @@ export const Home = (props: HomeProps) => {
         }
     };
 
-    return <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-5">
+    return <div className="flex w-full flex-col gap-5">
         <div className="flex items-stretch gap-5">
             <div className="flex-1">
                 <div className="text-[28px] font-extrabold text-dark-blue-400">{props.name}</div>

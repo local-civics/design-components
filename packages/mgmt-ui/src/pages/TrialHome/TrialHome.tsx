@@ -42,7 +42,7 @@ export type TrialHomeProps = BadgeGridProps & {
  */
 export const TrialHome = (props: TrialHomeProps) => {
     const { classes } = useStyles();
-    return <Container size="lg">
+    return <Container fluid>
         <Badge>{props.daysRemaining} day{props.daysRemaining !== 1 ? "s" : ""} left</Badge>
         <Button
             className={classes.action}

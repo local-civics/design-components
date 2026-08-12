@@ -24,7 +24,7 @@ export type BadgesProps = {
  */
 export const Badges = (props: BadgesProps) => {
     return (
-        <div className="mx-auto flex max-w-4xl flex-col gap-5 px-4 py-8">
+        <div className="flex flex-col gap-5 px-4 py-8">
             <div className="space-y-1">
                 <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Badges and micro-credentials</h1>
                 <p className="text-sm text-slate-500">Project-sized skills acquisition and standards alignment.</p>
