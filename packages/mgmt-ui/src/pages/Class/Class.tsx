@@ -60,7 +60,7 @@ export const Class = (props: ClassProps) => {
                 <DropzoneButton {...props} close={() => setOpened(false)} />
             </Drawer>
 
-            <div className="mx-auto flex max-w-5xl flex-col gap-5 px-4 py-8">
+            <div className="flex flex-col gap-5 px-4 py-8">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="space-y-1.5">
                         <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">

@@ -76,7 +76,7 @@ export const Organization = (props: OrganizationProps) => {
     const { classes } = useStyles();
     return (
         <>
-            <Container size="lg" py="xl">
+            <Container fluid py="xl">
                 <Stack spacing="md">
                 <Grid>
                     <Grid.Col sm="auto">

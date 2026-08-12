@@ -48,7 +48,7 @@ export type DashboardProps = {
 export const Dashboard = (props: DashboardProps) => {
     const [tab, setTab] = useState("students")
 
-    return <Container size="lg" py="xl">
+    return <Container fluid py="xl">
         <Stack>
             <Stack spacing={0}>
                 <Title size="h3">Dashboard</Title>

@@ -1,9 +1,5 @@
-import {DataTable}                                                                     from "mantine-datatable";
-import * as React                                                                      from 'react';
-import {ScrollArea, Badge, Text} from '@mantine/core';
-import {
-    PlaceholderBanner
-}                                                 from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import * as React from 'react';
+import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
@@ -22,7 +18,6 @@ export type TableData = {
     items: Item[]
 }
 
-
 /**
  * TableProps
  */
@@ -34,7 +29,7 @@ export type TableProps = TableData
  * @param props
  */
 export function Table(props: TableProps) {
-    if(props.items.length === 0){
+    if (props.items.length === 0) {
         return <PlaceholderBanner
             title="No badges to display"
             description="There has not been any badge progress just yet."
@@ -44,35 +39,18 @@ export function Table(props: TableProps) {
     }
 
     return (
-        <ScrollArea.Autosize maxHeight={600}>
-            <DataTable
-                verticalSpacing="sm"
-                sx={{ minWidth: 700 }}
-                withBorder={false}
-                borderRadius="sm"
-                withColumnBorders
-                striped
-                highlightOnHover
-                records={props.items}
-                idAccessor="badgeId"
-                columns={[{
-                    accessor: 'name',
-                    title: 'Badge Name',
-                    render: (row: Item) => (
-                        <>
-                            <Text>{row.badgeName}</Text>
-                        </>
-                    ),
-                },{
-                    accessor: 'status',
-                    render: (row: Item) => (
-                        <>
-                            {!!row.isComplete && <Badge variant="filled">Complete</Badge>}
-                            {!row.isComplete && <Badge color="red" variant="filled">Incomplete</Badge>}
-                        </>
-                    )
-                }]}
-            />
-        </ScrollArea.Autosize>
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            {props.items.map((row, i) => (
+                <div
+                    key={row.badgeId || row.badgeName}
+                    className={`flex items-center justify-between gap-4 px-5 py-4 ${i < props.items.length - 1 ? "border-b border-slate-100" : ""}`}
+                >
+                    <div className="text-sm font-bold text-dark-blue-400">{row.badgeName}</div>
+                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${row.isComplete ? "bg-mint-100 text-dark-blue-400" : "bg-slate-100 text-slate-500"}`}>
+                        {row.isComplete ? "Complete" : "Incomplete"}
+                    </span>
+                </div>
+            ))}
+        </div>
     );
 }

@@ -250,7 +250,7 @@ export const FileLocker = (props: FileLockerProps) => {
     }
 
     return (
-        <div className="mx-auto flex w-full max-w-4xl flex-col gap-5 px-4 py-8">
+        <div className="flex w-full flex-col gap-5 px-4 py-8">
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <button onClick={props.onBackClick} className="flex items-center gap-1 text-xs font-bold text-sky-blue-400 hover:underline">

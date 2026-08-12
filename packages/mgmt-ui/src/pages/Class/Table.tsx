@@ -3,6 +3,7 @@ import {Text} from '@mantine/core';
 import * as React from 'react';
 import {Link} from "react-router-dom";
 import {IconCheck, IconTrash} from '@tabler/icons';
+import {useSortableData} from "../../utils/useSortableData";
 
 /**
  * Item
@@ -59,6 +60,15 @@ const openDeleteModal = (student: Item, onDelete: (member: Item) => void) => ope
  * @constructor
  */
 export function Table(props: TableProps) {
+    const preparedItems = React.useMemo(() => {
+        return props.items.map(item => ({
+            ...item,
+            fullName: item.givenName && item.familyName ? `${item.givenName} ${item.familyName}`.toLowerCase() : item.email.toLowerCase(),
+        }));
+    }, [props.items]);
+
+    const {items: sortedItems, requestSort, sortConfig} = useSortableData(preparedItems);
+
     if (props.loading) {
         return <div className="text-sm text-slate-400">Loading…</div>;
     }
@@ -71,59 +81,75 @@ export function Table(props: TableProps) {
         );
     }
 
+    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
+
     return (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid grid-cols-[2.2fr_1.2fr_1fr_1.2fr_1fr_0.6fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">
-                <div>Name</div>
-                <div>Role</div>
-                <div>Badges Earned</div>
-                <div>Lessons Completed</div>
-                <div>Account Created?</div>
+            {/* Header/email text intentionally darker (slate-500) than the shared slate-400 token Pathways/Badges/Lessons/FileLocker's tables still use — scoped to this page pending design feedback, see plan. */}
+            <div className="grid grid-cols-[2.2fr_1.2fr_1fr_1.2fr_1fr_0.6fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                <button onClick={() => requestSort("fullName")} className="flex items-center text-left hover:text-slate-700">Name{indicator("fullName")}</button>
+                <button onClick={() => requestSort("isAdmin")} className="flex items-center justify-center text-center hover:text-slate-700">Role{indicator("isAdmin")}</button>
+                <button onClick={() => requestSort("badgesEarned")} className="flex items-center justify-center text-center hover:text-slate-700">Badges Earned{indicator("badgesEarned")}</button>
+                <button onClick={() => requestSort("lessonsCompleted")} className="flex items-center justify-center text-center hover:text-slate-700">Lessons Completed{indicator("lessonsCompleted")}</button>
+                <button onClick={() => requestSort("hasAccount")} className="flex items-center justify-center text-center hover:text-slate-700">Account Created?{indicator("hasAccount")}</button>
                 <div />
             </div>
-            {props.items.map((row, i) => {
+            {sortedItems.map((row, i) => {
                 const name = row.givenName && row.familyName ? `${row.givenName} ${row.familyName}` : row.email;
                 const initials = (row.givenName?.[0] || row.email[0] || "?") + (row.familyName?.[0] || "");
+                const identity = (
+                    <>
+                        {row.avatar ? (
+                            <img className="h-8 w-8 shrink-0 rounded-full object-cover" src={row.avatar} alt={name} />
+                        ) : (
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-[10px] font-bold text-dark-blue-400">
+                                {initials.toUpperCase()}
+                            </div>
+                        )}
+                        <div className="min-w-0">
+                            <div className="truncate text-xs font-bold text-dark-blue-400">{name}</div>
+                            <div className="truncate text-[10.5px] text-slate-500">{row.email}</div>
+                        </div>
+                    </>
+                );
                 return (
                     <div
                         key={row.email}
                         className={`grid grid-cols-[2.2fr_1.2fr_1fr_1.2fr_1fr_0.6fr] items-center gap-3 px-5 py-3.5 ${
-                            i < props.items.length - 1 ? "border-b border-slate-100" : ""
+                            i < sortedItems.length - 1 ? "border-b border-slate-100" : ""
                         }`}
                     >
-                        <Link to={row.href} className="flex min-w-0 items-center gap-2.5 no-underline">
-                            {row.avatar ? (
-                                <img className="h-8 w-8 shrink-0 rounded-full object-cover" src={row.avatar} alt={name} />
-                            ) : (
-                                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-[10px] font-bold text-dark-blue-400">
-                                    {initials.toUpperCase()}
-                                </div>
-                            )}
-                            <div className="min-w-0">
-                                <div className="truncate text-xs font-bold text-dark-blue-400">{name}</div>
-                                <div className="truncate text-[10.5px] text-slate-400">{row.email}</div>
+                        {row.href ? (
+                            <Link to={row.href} className="flex min-w-0 items-center gap-2.5 no-underline">
+                                {identity}
+                            </Link>
+                        ) : (
+                            <div className="flex min-w-0 items-center gap-2.5">
+                                {identity}
                             </div>
-                        </Link>
+                        )}
 
-                        <select
-                            disabled={row.readonly}
-                            value={row.isAdmin ? "educator" : "student"}
-                            onChange={(e) => props.onRoleChange && props.onRoleChange(row, e.target.value)}
-                            className="w-fit rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 disabled:opacity-50"
-                        >
-                            <option value="student">Student</option>
-                            <option value="educator">Educator</option>
-                        </select>
+                        <div className="flex justify-center">
+                            <select
+                                disabled={row.readonly}
+                                value={row.isAdmin ? "educator" : "student"}
+                                onChange={(e) => props.onRoleChange && props.onRoleChange(row, e.target.value)}
+                                className="w-fit rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 disabled:opacity-50"
+                            >
+                                <option value="student">Student</option>
+                                <option value="educator">Educator</option>
+                            </select>
+                        </div>
 
-                        <div className="text-xs font-bold text-dark-blue-400">{row.badgesEarned}</div>
-                        <div className="text-xs font-bold text-dark-blue-400">{row.lessonsCompleted}</div>
-                        <div>{row.hasAccount && <IconCheck size={16} stroke={3} className="text-mint-400" />}</div>
+                        <div className="text-center text-xs font-bold text-dark-blue-400">{row.badgesEarned}</div>
+                        <div className="text-center text-xs font-bold text-dark-blue-400">{row.lessonsCompleted}</div>
+                        <div className="flex justify-center">{row.hasAccount && <IconCheck size={16} stroke={3} className="text-mint-400" />}</div>
                         <div>
                             {!row.readonly && !!props.onDelete && (
                                 <button
                                     type="button"
                                     onClick={() => openDeleteModal(row, props.onDelete)}
-                                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-300 hover:bg-red-50 hover:text-red-500"
+                                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 hover:bg-red-50 hover:text-red-500"
                                 >
                                     <IconTrash size={14} stroke={1.75} />
                                 </button>
