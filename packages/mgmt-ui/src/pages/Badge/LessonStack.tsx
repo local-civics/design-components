@@ -1,6 +1,5 @@
-import * as React          from 'react';
-import {Grid, Badge, Text} from '@mantine/core';
-import {Link}              from "react-router-dom";
+import * as React from 'react';
+import {Link} from "react-router-dom";
 
 /**
  * Item
@@ -30,26 +29,20 @@ export type StackProps = StackData
  * @param props
  */
 export function Stack(props: StackProps) {
-    if(props.items.length === 0){
+    if (props.items.length === 0) {
         return null
     }
 
-    const rows = props.items.map((row) => (
-        <>
-            <Grid.Col span={6}>
-                <Text<typeof Link> component={Link} to={row.href} color="dark.4" weight="bold" size="md">
-                    {row.lessonName}
-                </Text>
-            </Grid.Col>
-            <Grid.Col span={6}>
-                {row.completion >= 1 && <Badge variant="filled">Complete</Badge>}
-                {row.completion === 0 && !row.isStarted && <Badge color="red" variant="filled">Not started</Badge>}
-                {row.completion > 0 && row.completion < 1 && <Badge color="violet" variant="filled">{Math.round((row.completion + Number.EPSILON) * 100)}% Complete</Badge>}
-            </Grid.Col>
-        </>
-    ));
-
-    return <Grid grow gutter="lg" sx={{ padding: 20, minWidth: 700 }}>
-        {rows}
-    </Grid>
+    return (
+        <div className="flex flex-col gap-2">
+            {props.items.map((row) => (
+                <div key={row.lessonName} className="flex items-center justify-between gap-4 py-1.5">
+                    <Link to={row.href} className="text-sm font-bold text-dark-blue-400 no-underline hover:underline">{row.lessonName}</Link>
+                    {row.completion >= 1 && <span className="shrink-0 rounded-full bg-mint-100 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">Complete</span>}
+                    {row.completion === 0 && !row.isStarted && <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500">Not started</span>}
+                    {row.completion > 0 && row.completion < 1 && <span className="shrink-0 rounded-full bg-gold-100 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">{Math.round((row.completion + Number.EPSILON) * 100)}% Complete</span>}
+                </div>
+            ))}
+        </div>
+    );
 }

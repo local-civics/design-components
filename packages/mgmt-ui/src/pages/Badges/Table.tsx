@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {Link} from "react-router-dom";
+import {IconAlbum, IconChevronRight} from "@tabler/icons";
+import {Emblem} from "../../components/media/Emblem/Emblem";
 
 /**
  * Item
@@ -8,6 +10,9 @@ export interface Item {
     badgeId: string,
     name: string;
     description: string
+    imageURL?: string
+    pathway?: string
+    numberOfLessons?: number
     href: string
 }
 
@@ -43,15 +48,30 @@ export function Table(props: TableProps) {
     }
 
     return (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            {props.items.map((row, i) => (
+        <div className="flex flex-col gap-3">
+            <div className="flex gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
+                <div className="flex-1">Badge</div>
+                <div className="w-40 shrink-0">Pathway</div>
+                <div className="w-28 shrink-0">Lessons</div>
+                <div className="w-4 shrink-0" />
+            </div>
+
+            {props.items.map((row) => (
                 <Link
                     key={row.badgeId}
                     to={row.href}
-                    className={`block px-5 py-4 no-underline hover:bg-slate-50 ${i < props.items.length - 1 ? "border-b border-slate-100" : ""}`}
+                    className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm hover:bg-slate-50"
                 >
-                    <div className="text-sm font-bold text-dark-blue-400">{row.name}</div>
-                    {row.description && <div className="mt-1 text-xs leading-relaxed text-slate-500">{row.description}</div>}
+                    <Emblem imageURL={row.imageURL} alt={row.name} size="sm" icon={IconAlbum} accent="mint" />
+                    <div className="min-w-0 flex-1">
+                        <div className="text-sm font-bold text-dark-blue-400">{row.name}</div>
+                        {row.description && <div className="mt-1 text-xs leading-relaxed text-slate-500">{row.description}</div>}
+                    </div>
+                    <div className="w-40 shrink-0 text-xs text-slate-500">{row.pathway || "—"}</div>
+                    <div className="w-28 shrink-0 text-xs text-slate-500">
+                        {row.numberOfLessons ? `${row.numberOfLessons} lesson${row.numberOfLessons === 1 ? "" : "s"}` : "—"}
+                    </div>
+                    <IconChevronRight size={16} stroke={2} className="w-4 shrink-0 text-slate-300" />
                 </Link>
             ))}
         </div>

@@ -1,5 +1,6 @@
 import * as React            from "react";
 import {MemoryRouter}        from "react-router-dom";
+import {AdminProvider}       from "../../providers/AdminProvider/AdminProvider";
 import {People, PeopleProps} from "./People";
 import { Story }             from "@storybook/react";
 
@@ -12,10 +13,12 @@ export default {
 };
 
 /**
- * Component storybook template
+ * Component storybook template. Wrapped in AdminProvider (Mantine's ModalsProvider lives there)
+ * since the delete-confirmation dialog is a real openConfirmModal call, same as Class Roster's
+ * story — without this wrapper the confirm modal has nowhere to portal into.
  */
 const Template: Story<PeopleProps> = (args) => (
-    <div className="h-full w-full overscroll-none font-proxima">
+    <AdminProvider><div className="h-full w-full overscroll-none font-proxima">
         <MemoryRouter>
             <People
                 {...args}
@@ -24,7 +27,7 @@ const Template: Story<PeopleProps> = (args) => (
                 users={args.users || []}
             />
         </MemoryRouter>
-    </div>
+    </div></AdminProvider>
 );
 
 /**

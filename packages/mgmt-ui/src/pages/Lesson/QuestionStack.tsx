@@ -1,9 +1,6 @@
-import * as React                                             from 'react';
-import {Stack as MantineStack, ScrollArea, Title, Text, Card} from '@mantine/core';
-import {Chart, AxisOptions}                                             from "react-charts";
-import {
-    PlaceholderBanner
-}                                                             from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import * as React from 'react';
+import {Chart, AxisOptions} from "react-charts";
+import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
  * Item
@@ -23,14 +20,14 @@ export type StackData = {
     items: Item[]
 }
 
-
 /**
  * StackProps
  */
 export type StackProps = StackData
 
 /**
- * Stack
+ * Stack. Chart rendering (react-charts) and its answer-tallying logic are unchanged from before
+ * this restyle - only the surrounding card chrome moved from Mantine to Tailwind.
  * @constructor
  * @param props
  */
@@ -57,8 +54,7 @@ export function Stack(props: StackProps) {
         []
     );
 
-
-    if(props.items.length === 0){
+    if (props.items.length === 0) {
         return <PlaceholderBanner
             title="No questions to display"
             description="There are no questions in this lesson."
@@ -67,71 +63,68 @@ export function Stack(props: StackProps) {
         />
     }
 
-    const rows = props.items.map((row) => {
-        if(row.chart){
-            const labelMap: any = {}
-            const choices = row.choices || []
-            choices.forEach(c => {
-                labelMap[c] = 0
-            })
+    return (
+        <div className="flex flex-col gap-3">
+            {props.items.map((row) => {
+                if (row.chart) {
+                    const labelMap: any = {}
+                    const choices = row.choices || []
+                    choices.forEach(c => {
+                        labelMap[c] = 0
+                    })
 
-            row.answers.forEach(a => a.forEach(r => {
-                if(r in labelMap){
-                    labelMap[r] = labelMap[r] ? labelMap[r] + 1 : 1
-                }
-            }))
-
-            return <Card key={row.question} withBorder p="xl" radius="md">
-                <MantineStack spacing={4}>
-                    <Title size="lg">{row.question}</Title>
-                    <Text size="sm">{row.answers.length} answers</Text>
-
-                    <div style={{ background: "white", height: "300px", width: "100%", position: 'relative' }}>
-                        <Chart
-                            options={{
-                                data: [{
-                                    label: '',
-                                    data: choices.map(k => {
-                                        return {
-                                            primary: truncateWithEllipses(k, 50),
-                                            secondary: labelMap[k]
-                                        }
-                                    }),
-                                }],
-                                primaryAxis,
-                                secondaryAxes,
-                            }}
-                        />
-                    </div>
-                </MantineStack>
-            </Card>
-        }
-
-        return <Card key={row.question} withBorder p="xl" radius="md">
-            <MantineStack spacing={4}>
-                <Title size="lg">{row.question}</Title>
-                <Text size="sm">{row.answers.length} answers</Text>
-
-                <ScrollArea.Autosize maxHeight={600}>
-                    <MantineStack spacing={4}>
-                        {
-                            row.answers.map(a => {
-                                const answerText = a.join("\n")
-                                return <Card key={answerText} p={5} radius={0} bg="gray.0">
-                                    <Text>{answerText}</Text>
-                                </Card>
-                            })
+                    row.answers.forEach(a => a.forEach(r => {
+                        if (r in labelMap) {
+                            labelMap[r] = labelMap[r] ? labelMap[r] + 1 : 1
                         }
-                    </MantineStack>
-                </ScrollArea.Autosize>
-            </MantineStack>
-        </Card>
-    });
+                    }))
 
+                    return (
+                        <div key={row.question} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div className="text-base font-extrabold text-dark-blue-400">{row.question}</div>
+                            <div className="mt-1 text-xs text-slate-500">{row.answers.length} answers</div>
 
-    return <MantineStack py={4} spacing={10} sx={{ minWidth: 700 }}>
-        {rows}
-    </MantineStack>
+                            <div className="relative mt-4 h-[300px] w-full bg-white">
+                                <Chart
+                                    options={{
+                                        data: [{
+                                            label: '',
+                                            data: choices.map(k => {
+                                                return {
+                                                    primary: truncateWithEllipses(k, 50),
+                                                    secondary: labelMap[k]
+                                                }
+                                            }),
+                                        }],
+                                        primaryAxis,
+                                        secondaryAxes,
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    )
+                }
+
+                return (
+                    <div key={row.question} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div className="text-base font-extrabold text-dark-blue-400">{row.question}</div>
+                        <div className="mt-1 text-xs text-slate-500">{row.answers.length} answers</div>
+
+                        <div className="mt-4 flex flex-col gap-2">
+                            {row.answers.map(a => {
+                                const answerText = a.join("\n")
+                                return (
+                                    <div key={answerText} className="rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
+                                        {answerText}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
+    )
 }
 
 const truncateWithEllipses = (text: string, max: number) => text.substr(0,max-1)+(text.length>max?'&hellip;':'')

@@ -24,6 +24,8 @@ const Template: Story<OrganizationProps> = (args) => (
                 numberOfEducators={15}
                 displayName={args.displayName || "Local Civics University"}
                 description={args.description || "Organization focused on the history of the United States"}
+                accessCode={args.accessCode || "ABC-123"}
+                peopleLink={args.peopleLink || ""}
             />
         </MemoryRouter>
     </div>

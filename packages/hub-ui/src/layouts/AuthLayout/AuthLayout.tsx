@@ -81,7 +81,7 @@ export const AuthLayout = (props: AuthLayoutProps & NavBarProps) => {
               </div>
             </div>
 
-            <Footer />
+            <Footer constrained />
           </section>
         )}
       </Loader>

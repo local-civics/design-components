@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {IconSearch} from "@tabler/icons";
 import {Table, Item} from "./Table";
+import {PathwayFilterPills} from "../../components/navigation/PathwayFilterPills/PathwayFilterPills";
 
 /**
  * BadgeItem
@@ -13,8 +14,11 @@ export type BadgeItem = Item
 export type BadgesProps = {
     loading: boolean
     badges: BadgeItem[]
+    pathways: { pathwayId: string, title: string }[]
+    selectedPathway: string
 
     onAutocompleteChange: (value: string) => void
+    onPathwayChange: (pathwayId: string) => void
 }
 
 /**
@@ -29,6 +33,8 @@ export const Badges = (props: BadgesProps) => {
                 <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Badges and micro-credentials</h1>
                 <p className="text-sm text-slate-500">Project-sized skills acquisition and standards alignment.</p>
             </div>
+
+            <PathwayFilterPills pathways={props.pathways} selected={props.selectedPathway} onChange={props.onPathwayChange} />
 
             <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
                 <IconSearch size={15} stroke={1.75} className="text-slate-400" />

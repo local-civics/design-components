@@ -1,72 +1,47 @@
-import * as React                                                             from 'react';
-import {
-    createStyles,
-    Paper,
-    Title,
-    Text,
-    TextInput,
-    Button,
-    Container,
-    Group,
-    Anchor,
-    Center,
-    Box,
-}                    from '@mantine/core';
+import * as React from 'react';
 import {IconPointer} from '@tabler/icons';
-import {Link}        from "react-router-dom";
+import {Link} from "react-router-dom";
 
-const useStyles = createStyles((theme) => ({
-    title: {
-        fontSize: 22,
-        fontWeight: 900,
-        fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    },
-
-    controls: {
-        [theme.fn.smallerThan('xs')]: {
-            flexDirection: 'column-reverse',
-        },
-    },
-
-    control: {
-        [theme.fn.smallerThan('xs')]: {
-            width: '100%',
-            textAlign: 'center',
-        },
-    },
-}));
-
+/**
+ * AccessCodeProps
+ */
 export type AccessCodeProps = {
     value: string
     peopleLink: string
     onCopyCode: () => void;
 }
 
+/**
+ * AccessCode
+ * @param props
+ * @constructor
+ */
 export function AccessCode(props: AccessCodeProps) {
-    const { classes } = useStyles();
-
     return (
-        <Container mx="0" px="0" size={460} my={30}>
-            <Title className={classes.title}>
-                Access code
-            </Title>
-            <Text color="dimmed" size="sm">
-                Grant access to join your organization
-            </Text>
+        <div className="max-w-[460px]">
+            <h2 className="text-lg font-extrabold text-dark-blue-400">Access code</h2>
+            <p className="text-sm text-slate-500">Grant access to join your organization</p>
 
-            <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
-                <TextInput value={props.value} readOnly/>
-                <Group position="apart" mt="lg" className={classes.controls}>
-                    <Anchor<typeof Link> component={Link} to={props.peopleLink}
-                        color="dimmed" size="sm" className={classes.control}>
-                        <Center inline>
-                            <IconPointer size={12} stroke={1.5} />
-                            <Box ml={5}>See people in my organization</Box>
-                        </Center>
-                    </Anchor>
-                    <Button onClick={props.onCopyCode} className={classes.control}>Copy code</Button>
-                </Group>
-            </Paper>
-        </Container>
+            <div className="mt-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <input
+                    value={props.value}
+                    readOnly
+                    className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-dark-blue-400"
+                />
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                    <Link to={props.peopleLink} className="flex items-center gap-1.5 text-xs font-bold text-slate-500 no-underline hover:text-slate-700">
+                        <IconPointer size={12} stroke={1.5} />
+                        See people in my organization
+                    </Link>
+                    <button
+                        type="button"
+                        onClick={props.onCopyCode}
+                        className="rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-4 py-2 text-xs font-bold text-dark-blue-400 shadow-[0_3px_12px_rgba(255,212,77,0.35)]"
+                    >
+                        Copy code
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }

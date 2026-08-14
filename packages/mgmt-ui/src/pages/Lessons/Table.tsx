@@ -9,6 +9,7 @@ export interface Item {
     lessonId: string,
     name: string;
     description: string
+    badge?: string
     pathway?: string
     href: string
 }
@@ -43,6 +44,7 @@ export function Table(props: TableProps) {
         <div className="flex flex-col gap-3">
             <div className="flex gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
                 <div className="flex-1">Lesson</div>
+                <div className="w-40 shrink-0">Badge</div>
                 <div className="w-40 shrink-0">Pathway</div>
                 <div className="w-4 shrink-0" />
             </div>
@@ -57,6 +59,7 @@ export function Table(props: TableProps) {
                         <div className="text-sm font-bold text-dark-blue-400">{row.name}</div>
                         {row.description && <div className="mt-1 text-xs leading-relaxed text-slate-500">{row.description}</div>}
                     </div>
+                    <div className="w-40 shrink-0 text-xs text-slate-500">{row.badge || "—"}</div>
                     <div className="w-40 shrink-0 text-xs text-slate-500">{row.pathway || "—"}</div>
                     <IconChevronRight size={16} stroke={2} className="w-4 shrink-0 text-slate-300" />
                 </Link>

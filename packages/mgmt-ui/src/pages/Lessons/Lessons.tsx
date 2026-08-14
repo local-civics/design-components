@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {IconSearch} from "@tabler/icons";
 import {Table, Item} from "./Table";
+import {PathwayFilterPills} from "../../components/navigation/PathwayFilterPills/PathwayFilterPills";
 
 /**
  * LessonItem
@@ -13,8 +14,11 @@ export type LessonItem = Item
 export type LessonsProps = {
     loading: boolean
     lessons: LessonItem[]
+    pathways: { pathwayId: string, title: string }[]
+    selectedPathway: string
 
     onAutocompleteChange: (next: string) => void
+    onPathwayChange: (pathwayId: string) => void
 }
 
 /**
@@ -29,6 +33,8 @@ export const Lessons = (props: LessonsProps) => {
                 <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Lessons</h1>
                 <p className="text-sm text-slate-500">Bite-sized activities and learning experiences accelerating students achievement</p>
             </div>
+
+            <PathwayFilterPills pathways={props.pathways} selected={props.selectedPathway} onChange={props.onPathwayChange} />
 
             <div className="relative">
                 <IconSearch size={16} stroke={2} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />

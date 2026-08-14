@@ -1,68 +1,44 @@
 import * as React from 'react'
-import { createStyles, Button, Menu, Group, ActionIcon } from '@mantine/core';
-import {
-    IconChevronDown,
-    IconPlaylistAdd,
-    IconClipboardCopy
-}                                                        from '@tabler/icons';
+import {IconPlaylistAdd, IconClipboardCopy} from '@tabler/icons';
 
-const useStyles = createStyles((theme) => ({
-    button: {
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-        marginLeft: 0,
-        marginRight: 0,
-    },
-
-    menuControl: {
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0,
-        border: 0,
-        borderLeft: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white}`,
-    },
-}));
-
+/**
+ * SplitButtonProps
+ */
 export type SplitButtonProps = {
     withOrganizationLink?: boolean
     onAddUsersClick: () => void;
     onCopyOrganizationLinkClick: () => void;
 }
 
+/**
+ * SplitButton. The original hid "Copy organization link" behind a dropdown menu, only shown when
+ * withOrganizationLink is true - flattened into a second always-visible button in that same case,
+ * matching the plain multi-button pattern already used everywhere else in this package rather than
+ * introducing the only dropdown menu in the restyled UI.
+ * @param props
+ * @constructor
+ */
 export const SplitButton = (props: SplitButtonProps) => {
-    const { classes, theme } = useStyles();
-    const menuIconColor = theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 5 : 6];
-
-    const hasMenu = !!props.withOrganizationLink
-
     return (
-        <Group noWrap spacing={0}>
-            <Button
-                className={hasMenu ? classes.button: ""}
-                leftIcon={<IconPlaylistAdd size={14} />}
+        <div className="flex gap-2">
+            <button
+                type="button"
                 onClick={props.onAddUsersClick}
+                className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-3.5 py-2 text-xs font-bold text-dark-blue-400 shadow-[0_3px_12px_rgba(255,212,77,0.35)]"
             >
+                <IconPlaylistAdd size={13} stroke={2} />
                 Add members
-            </Button>
-            { hasMenu && <Menu transition="pop" position="bottom-end">
-                <Menu.Target>
-                    <ActionIcon
-                        variant="filled"
-                        color={theme.primaryColor}
-                        size={36}
-                        className={classes.menuControl}
-                    >
-                        <IconChevronDown size={16} stroke={1.5} />
-                    </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    { !!props.withOrganizationLink && <Menu.Item
-                        icon={<IconClipboardCopy size={16} stroke={1.5} color={menuIconColor} />}
-                        onClick={props.onCopyOrganizationLinkClick}
-                    >
-                        Copy organization link
-                    </Menu.Item> }
-                </Menu.Dropdown>
-            </Menu> }
-        </Group>
+            </button>
+            {props.withOrganizationLink && (
+                <button
+                    type="button"
+                    onClick={props.onCopyOrganizationLinkClick}
+                    className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
+                >
+                    <IconClipboardCopy size={13} stroke={2} />
+                    Copy organization link
+                </button>
+            )}
+        </div>
     );
 }
