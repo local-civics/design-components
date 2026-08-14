@@ -1,13 +1,10 @@
-import * as React                                                                           from 'react';
-import { ScrollArea, Text }                                                                 from '@mantine/core';
-import { DataTable, DataTableSortStatus }                                                   from 'mantine-datatable';
-import { IconSelector, IconChevronUp }                                                      from '@tabler/icons';
-import { Link }                                                                             from "react-router-dom";
-import { PlaceholderBanner }                                                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
-import { useSortableData }                                                                  from "../../utils/useSortableData";
+import * as React from 'react';
+import {Link} from "react-router-dom";
+import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {useSortableData} from "../../utils/useSortableData";
 
 /**
- * Item 
+ * Item
  */
 export interface Item {
     badgeId: string
@@ -35,9 +32,9 @@ export type TableProps = TableData
  * @param props
  */
 export function Table(props: TableProps) {
-    const { items: sortedItems, requestSort, sortConfig } = useSortableData(props.items);
+    const {items: sortedItems, requestSort, sortConfig} = useSortableData(props.items);
 
-    if(props.items.length === 0){
+    if (props.items.length === 0) {
         return <PlaceholderBanner
             title="No badges to display"
             description="There are no badges in this pathway."
@@ -46,56 +43,25 @@ export function Table(props: TableProps) {
         />
     }
 
-    const sortStatus: DataTableSortStatus = {
-    columnAccessor: sortConfig.key as string,
-    direction: sortConfig.direction === 'desc' ? 'desc' : 'asc',
-    };
+    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
 
     return (
-        <ScrollArea.Autosize maxHeight={600}>
-            <DataTable
-                verticalSpacing="sm"
-                withBorder={false} 
-                borderRadius="sm"
-                sx={{ minWidth: 700 }}
-                highlightOnHover
-                striped
-                records={sortedItems}
-                idAccessor="badgeId"
-                sortStatus={sortStatus}
-                onSortStatusChange={(status) => requestSort(status.columnAccessor)}
-                columns={[
-                    {
-                        accessor: 'badgeName',
-                        title: 'Badge Name',
-                        sortable: true,
-                        render: (row) => (
-                            <Text<typeof Link> component={Link} to={row.href} 
-                            sx={(theme) => ({
-                                color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-                                textDecoration: 'none',
-                                fontWeight: 500,
-                                '&:hover': {
-                                    textDecoration: 'underline', // Adds an underline only on hover for UX
-                                    color: theme.colors.blue[6]  // Optional: change color only on hover
-                                },
-                            })}
-                        >
-                                {row.badgeName}
-                            </Text>
-                        ),
-                    },
-                    {
-                        accessor: 'percentageCompletion',
-                        title: 'Badge Completion',
-                        sortable: true,
-                        render: (row) => {
-                            const roundedValue = Math.round((row.percentageCompletion + Number.EPSILON) * 100);
-                            return `${roundedValue}%`;
-                        },
-                    },
-                ]}
-            />
-        </ScrollArea.Autosize>
+        <div className="flex flex-col gap-3">
+            <div className="flex gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
+                <button onClick={() => requestSort("badgeName")} className="flex-1 text-left hover:text-slate-600">Badge Name{indicator("badgeName")}</button>
+                <button onClick={() => requestSort("percentageCompletion")} className="w-36 shrink-0 text-right hover:text-slate-600">Badge Completion{indicator("percentageCompletion")}</button>
+            </div>
+
+            {sortedItems.map((row) => (
+                <Link
+                    key={row.badgeId}
+                    to={row.href}
+                    className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm hover:bg-slate-50"
+                >
+                    <div className="min-w-0 flex-1 text-sm font-bold text-dark-blue-400">{row.badgeName}</div>
+                    <div className="w-36 shrink-0 text-right text-xs text-slate-500">{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</div>
+                </Link>
+            ))}
+        </div>
     );
 }

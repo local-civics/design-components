@@ -1,17 +1,12 @@
-import {IconArrowLeft, IconCloudUpload, IconX, IconDownload} from "@tabler/icons";
-import {ParseResult}                                                          from "papaparse";
-import {useState}                                                             from "react";
-import * as React                                                             from 'react';
+import {IconArrowLeft, IconCloudUpload, IconX, IconDownload, IconSearch} from "@tabler/icons";
+import {ParseResult} from "papaparse";
+import {useState} from "react";
+import * as React from 'react';
 import {
-    createStyles,
     Title,
-    Text,
-    Container, Stack, Grid,
     Drawer,
-    Button, TextInput, Badge,
-    ActionIcon,
-    Group, Divider, LoadingOverlay, Autocomplete,
-    UnstyledButton,
+    Button, TextInput,
+    Group, Divider,
 } from '@mantine/core';
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { useForm }              from '@mantine/form';
@@ -19,39 +14,6 @@ import * as papa                from 'papaparse'
 import {StatsGroup}             from "../../components/data/StatsGroup/StatsGroup";
 import {SplitButton}            from "./SplitButton";
 import {Table, Item}            from "./Table";
-
-const useStyles = createStyles((theme) => ({
-    title: {
-        fontSize: 34,
-        fontWeight: 900,
-        [theme.fn.smallerThan('sm')]: {
-            fontSize: 24,
-        },
-    },
-    description: {
-        maxWidth: 600,
-    },
-    wrapper: {
-        position: 'relative',
-        marginBottom: 30,
-    },
-
-    dropzone: {
-        borderWidth: 1,
-        paddingBottom: 50,
-    },
-
-    icon: {
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4],
-    },
-
-    control: {
-        position: 'absolute',
-        width: 250,
-        left: 'calc(50% - 125px)',
-        bottom: -20,
-    },
-}));
 
 /**
  * UserItem
@@ -77,12 +39,11 @@ export type PeopleProps = {
 }
 
 /**
- * Class
+ * People
  * @param props
  * @constructor
  */
 export const People = (props: PeopleProps) => {
-    const { classes } = useStyles();
     const form = useForm({
         initialValues: {
             userId: '',
@@ -114,7 +75,7 @@ export const People = (props: PeopleProps) => {
                 padding="xl"
                 size="xl"
             >
-                <Stack spacing="md">
+                <div className="flex flex-col gap-4">
                     <DropzoneButton {...props} close={() => setOpened(false)} />
 
                     <Divider label="or" labelPosition="center" my="md" variant="dashed"/>
@@ -125,7 +86,7 @@ export const People = (props: PeopleProps) => {
                         setOpened(false)
                         props.onCreateUsers && props.onCreateUsers([values])
                     })}>
-                        <Stack>
+                        <div className="flex flex-col gap-3">
                             <TextInput
                                 withAsterisk
                                 label="Email"
@@ -144,82 +105,76 @@ export const People = (props: PeopleProps) => {
                                     {...form.getInputProps('familyName')}
                                 />
                             </Group>
-                            <Button type="submit" fullWidth mt="md">
+                            <button
+                                type="submit"
+                                className="mt-2 rounded-lg bg-dark-blue-400 px-4 py-2.5 text-xs font-bold text-white"
+                            >
                                 Submit
-                            </Button>
-                        </Stack>
+                            </button>
+                        </div>
                     </form>
-                </Stack>
+                </div>
             </Drawer>
-            <Container fluid py="xl">
-                <Stack spacing="md">
-                <Grid>
-                    <Grid.Col sm="auto">
-                        <UnstyledButton onClick={props.onBackClick}>
-                            <Badge
-                                variant="filled"
-                                leftSection={<ActionIcon color="blue" size="xs" radius="xl" variant="filled">
-                                    <IconArrowLeft size={14} />
-                                </ActionIcon>}
-                                size="lg">
-                                Back
-                            </Badge>
-                        </UnstyledButton>
-                        <Title order={2} className={classes.title} mt="md">People</Title>
-                        <Text color="dimmed" className={classes.description} mt="sm">Manage members of your organization</Text>
-                    </Grid.Col>
-                    <Grid.Col sm="content">
-                        { !props.loading && <SplitButton
+
+            <div className="flex flex-col gap-5 px-4 py-8">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="space-y-1.5">
+                        <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
+                            <IconArrowLeft size={13} stroke={2.5} />
+                            Back
+                        </div>
+                        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">People</h1>
+                        <p className="max-w-xl text-sm text-slate-500">Manage members of your organization</p>
+                    </div>
+
+                    {!props.loading && (
+                        <SplitButton
                             withOrganizationLink={props.withOrganizationLink}
                             onAddUsersClick={() => setOpened(true)}
                             onCopyOrganizationLinkClick={props.onCopyLinkClick}
-                        />}
-                    </Grid.Col>
-                </Grid>
-
-                <div style={{ position: 'relative' }}>
-                    <LoadingOverlay visible={props.loading} overlayBlur={2} />
-
-                    <Stack spacing="sm">
-                        <StatsGroup data={[
-                            {
-                                title: "# OF PEOPLE",
-                                value: props.users.length,
-                            },
-                            {
-                                title: "ACCOUNT CREATION",
-                                value: props.percentageOfAccountsCreated,
-                                unit: "%",
-                            },
-                            {
-                                title: "PERCENTAGE ROSTERED",
-                                unit: "%",
-                                value: props.percentageRostered,
-                            },
-                        ]}/>
-
-                        <Autocomplete
-                            placeholder="Search for a people in your organization"
-                            data={props.users.map(item => item.email)}
-                            onChange={props.onAutocompleteChange}
                         />
-
-                        <Table
-                            loading={props.loading}
-                            items={props.users}
-                            onDelete={props.onDeleteUser}
-                            onRoleChange={props.onChangeUserRole}
-                        />
-                    </Stack>
+                    )}
                 </div>
-            </Stack>
-            </Container>
+
+                <StatsGroup data={[
+                    {
+                        title: "# OF PEOPLE",
+                        value: props.users.length,
+                    },
+                    {
+                        title: "ACCOUNT CREATION",
+                        value: props.percentageOfAccountsCreated,
+                        unit: "%",
+                    },
+                    {
+                        title: "PERCENTAGE ROSTERED",
+                        unit: "%",
+                        value: props.percentageRostered,
+                    },
+                ]}/>
+
+                <div className="relative">
+                    <IconSearch size={16} stroke={2} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                        type="text"
+                        placeholder="Search for a people in your organization"
+                        onChange={(e) => props.onAutocompleteChange(e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-dark-blue-400 placeholder:text-slate-400 focus:border-sky-blue-400 focus:outline-none"
+                    />
+                </div>
+
+                <Table
+                    loading={props.loading}
+                    items={props.users}
+                    onDelete={props.onDeleteUser}
+                    onRoleChange={props.onChangeUserRole}
+                />
+            </div>
         </>
     )
 }
 
 const DropzoneButton = (props: PeopleProps & {close: () => void}) => {
-    const { classes, theme } = useStyles();
     const openRef = React.useRef<() => void>(null);
     const [loading, setLoading] = React.useState(false)
     const onDrop = React.useCallback((acceptedFiles: File[]) => {
@@ -244,48 +199,48 @@ const DropzoneButton = (props: PeopleProps & {close: () => void}) => {
     }, [])
 
     return (
-        <div className={classes.wrapper}>
+        <div className="relative mb-8">
             <Dropzone
                 loading={loading}
                 openRef={openRef}
                 onDrop={onDrop}
-                className={classes.dropzone}
                 radius="md"
+                className="border pb-12"
                 accept={[MIME_TYPES.csv]}
                 maxSize={5 * 1024 ** 2}
             >
                 <div style={{ pointerEvents: 'none' }}>
                     <Group position="center">
                         <Dropzone.Accept>
-                            <IconDownload size={50} color={theme.colors[theme.primaryColor][6]} stroke={1.5} />
+                            <IconDownload size={50} color="#1EE2AF" stroke={1.5} />
                         </Dropzone.Accept>
                         <Dropzone.Reject>
-                            <IconX size={50} color={theme.colors.red[6]} stroke={1.5} />
+                            <IconX size={50} color="#ef4444" stroke={1.5} />
                         </Dropzone.Reject>
                         <Dropzone.Idle>
-                            <IconCloudUpload
-                                size={50}
-                                color={theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black}
-                                stroke={1.5}
-                            />
+                            <IconCloudUpload size={50} color="#232A3A" stroke={1.5} />
                         </Dropzone.Idle>
                     </Group>
 
-                    <Text align="center" weight={700} size="lg" mt="xl">
+                    <p className="mt-6 text-center text-lg font-bold text-dark-blue-400">
                         <Dropzone.Accept>Drop files here</Dropzone.Accept>
                         <Dropzone.Reject>Csv file less than 5mb</Dropzone.Reject>
                         <Dropzone.Idle>Upload multiple</Dropzone.Idle>
-                    </Text>
-                    <Text align="center" size="sm" mt="xs" color="dimmed">
+                    </p>
+                    <p className="mt-2 text-center text-sm text-slate-400">
                         Drag&apos;n&apos;drop files here to upload. We can accept only <i>.csv</i> files that
                         are less than 5mb in size.
-                    </Text>
+                    </p>
                 </div>
             </Dropzone>
 
-            <Button className={classes.control} size="md" radius="xl" onClick={() => openRef.current?.()}>
+            <button
+                type="button"
+                onClick={() => openRef.current?.()}
+                className="absolute bottom-[-20px] left-1/2 w-[250px] -translate-x-1/2 rounded-full bg-dark-blue-400 px-6 py-2.5 text-xs font-bold text-white"
+            >
                 Select file
-            </Button>
+            </button>
         </div>
     );
 }

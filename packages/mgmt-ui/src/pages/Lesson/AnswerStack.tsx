@@ -1,6 +1,5 @@
-import * as React                                 from 'react';
-import {Stack as MantineStack, UnstyledButton, ScrollArea, Title, Text} from '@mantine/core';
-import { Link } from 'react-router-dom';
+import * as React from 'react';
+import {Link} from 'react-router-dom';
 
 /**
  * Item
@@ -19,39 +18,28 @@ export type StackData = {
 }
 
 /**
- * StackMethods
- */
-export type StackMethods = {}
-
-/**
  * StackProps
  */
-export type StackProps = StackData & StackMethods
+export type StackProps = StackData
 
 /**
- * Stack
+ * Stack. The whole block is one link to the student's full response, same as before.
  * @constructor
  * @param props
  */
 export function Stack(props: StackProps) {
-    if(props.items.length === 0){
+    if (props.items.length === 0) {
         return null
     }
 
-    const rows = props.items.map((row) => (
-        <MantineStack spacing={0} key={row.questionName}>
-            <Title color="dark.4" size="lg">{row.questionName}</Title>
-            <Text>{row.answer.join(",") || "No answer."}</Text>
-        </MantineStack>
-    ));
-
     return (
-        <ScrollArea.Autosize maxHeight={600}>
-            <UnstyledButton<typeof Link> component={Link} to={props.href}>
-                <MantineStack spacing={24} sx={{ padding: 20, minWidth: 700 }}>
-                    {rows}
-                </MantineStack>
-            </UnstyledButton>
-        </ScrollArea.Autosize>
+        <Link to={props.href} className="flex flex-col gap-4 no-underline">
+            {props.items.map((row) => (
+                <div key={row.questionName}>
+                    <div className="text-sm font-bold text-dark-blue-400">{row.questionName}</div>
+                    <div className="mt-1 text-sm text-slate-600">{row.answer.join(", ") || "No answer."}</div>
+                </div>
+            ))}
+        </Link>
     );
 }

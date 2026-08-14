@@ -39,13 +39,14 @@ Component.args = {};
 export const Mock: Story<BadgeProps> = Template.bind({});
 Mock.args = {
     href: "",
+    imageURL: "https://cdn.localcivics.io/v1/store/images/fai74t6pNTZYATSA4BxTUM?version=JshF8AaANZmRkhnFC45m9p",
     classes: [{
         classId: "",
         active: false,
         name: "AP History",
     }],
     students: [{
-        userId: "",
+        userId: "1",
         avatar: "",
         name: "Jane Doe",
         email: "jane.doe@localcivics.io",
@@ -56,6 +57,21 @@ Mock.args = {
         },{
             lessonName: "Example lesson 2",
             completion: 0.5,
+            href: "",
+        },{
+            lessonName: "Example lesson 3",
+            completion: 1,
+            href: "",
+        }]
+    },{
+        userId: "2",
+        avatar: "",
+        name: "John Smith",
+        email: "john.smith@localcivics.io",
+        isComplete: true,
+        lessons: [{
+            lessonName: "Example lesson",
+            completion: 1,
             href: "",
         }]
     }],

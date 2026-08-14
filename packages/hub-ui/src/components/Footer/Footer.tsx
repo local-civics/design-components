@@ -16,17 +16,30 @@ const SOCIALS: { label: string; href: string; icon: typeof IconBrandInstagram }[
 ];
 
 /**
+ * FooterProps
+ */
+export type FooterProps = {
+  /** Keeps the old centered, max-width-[64rem] layout. Default is full-width, matching
+   * DashboardShell's unconstrained content - only AuthLayout's own fallback page (whose sibling
+   * content is still centered the same way) needs to opt back into the constrained look. */
+  constrained?: boolean;
+};
+
+/**
  * A component for the page footer.
  */
-export const Footer = () => {
+export const Footer = (props: FooterProps) => {
   const linkClassName = builder("text-sm text-slate-500").append("hover:text-slate-700").build();
   const socialClassName = builder("flex h-9 w-9 items-center justify-center rounded-full text-slate-400")
     .append("hover:bg-slate-100 hover:text-slate-600")
     .build();
+  const innerClassName = props.constrained
+    ? "w-full max-w-[64rem] m-auto flex flex-col gap-6 px-4 py-8 lg:px-0"
+    : "flex flex-col gap-6 px-4 py-8";
 
   return (
     <footer className="w-full border-t border-slate-100">
-      <div className="w-full max-w-[64rem] m-auto flex flex-col gap-6 px-4 py-8 lg:px-0">
+      <div className={innerClassName}>
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="flex max-w-xs flex-col gap-2">
             <div className="flex items-center gap-2">

@@ -20,6 +20,10 @@ const Template: Story<LessonsProps> = (args) => (
             <Lessons
                 {...args}
                 lessons={args.lessons || []}
+                pathways={args.pathways || []}
+                selectedPathway={args.selectedPathway || ""}
+                onAutocompleteChange={args.onAutocompleteChange || (() => {})}
+                onPathwayChange={args.onPathwayChange || (() => {})}
             />
         </MemoryRouter>
     </div>
@@ -36,11 +40,16 @@ Component.args = {};
  */
 export const Mock: Story<LessonsProps> = Template.bind({});
 Mock.args = {
+    pathways: [
+        {pathwayId: "civic-readiness", title: "Civic Readiness"},
+        {pathwayId: "media-literacy", title: "Media Literacy"},
+    ],
     lessons: [
         {
             lessonId: "1",
             name: "Understanding Local Government",
             description: "Explore how city councils and school boards make decisions.",
+            badge: "Civic Engagement Badge",
             pathway: "Civic Readiness",
             href: "",
         },
@@ -48,6 +57,7 @@ Mock.args = {
             lessonId: "2",
             name: "Writing to Your Representative",
             description: "Draft a letter advocating for a cause you care about.",
+            badge: "Civic Engagement Badge",
             pathway: "Civic Readiness",
             href: "",
         },
@@ -55,6 +65,7 @@ Mock.args = {
             lessonId: "3",
             name: "Media Literacy Basics",
             description: "Identify bias and credibility in news sources.",
+            badge: "",
             pathway: "",
             href: "",
         },

@@ -33,19 +33,23 @@ Component.args = {
     loading: false,
     pathways: [
         {
-            badgeId: "career-pathway",
+            pathwayId: "career-pathway",
             name: "Pathlink Career Pathway",
             description: "This career exploration badge includes 11 tasks, including Student Profile, Self Assessment, Four-Year Plan, Career Research Project, Resume, Podcast Analysis, Healthcare Expo, Med Talks, Healthcare Career Fair, Career Portfolio & Presentation, and College Bootcamp.",
+            imageURL: "https://cdn.localcivics.io/v1/store/images/8vhAmnj4MS48HEDT9crNGo?version=RnfxctTo3ZjcHahfo34EAR",
+            displayTags: ["NYS SEAL", "Career Readiness"],
+            numberOfBadges: 11,
             href: "/pathways/career-pathway/overview",
         },
         {
-            badgeId: "dual-enrollment",
+            pathwayId: "dual-enrollment",
             name: "Pathlink Dual Enrollment Pathway",
             description: "A college & career readiness pathway that awards college credit for dual enrollment high school courses.",
+            numberOfBadges: 4,
             href: "/pathways/dual-enrollment/overview",
         },
         {
-            badgeId: "seal-of-biliteracy",
+            pathwayId: "seal-of-biliteracy",
             name: "Pathlink Seal of Biliteracy",
             description: "A pathway designed to highlight student skills in English and a second language other than English.",
             href: "/pathways/seal-of-biliteracy/overview",
