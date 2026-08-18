@@ -1,33 +1,15 @@
-import {IconInfoCircle, IconPlaylistAdd} from "@tabler/icons";
-import {useState}                                        from "react";
-import * as React                        from 'react';
+import {IconInfoCircle, IconPlaylistAdd, IconSearch} from "@tabler/icons";
+import {useState} from "react";
+import * as React from 'react';
 import {
-    createStyles,
-    Badge,
     Title,
-    Text,
-    Container, Stack, Grid,
     Drawer,
-    Button, TextInput, ActionIcon,
-    Tooltip, Group, LoadingOverlay, Autocomplete,
+    TextInput, ActionIcon,
+    Tooltip, Group,
 } from '@mantine/core';
-import { useForm }   from '@mantine/form';
-import {StatsGroup}  from "../../components/data/StatsGroup/StatsGroup";
+import { useForm } from '@mantine/form';
+import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
 import {Table, Item} from "./Table";
-
-const useStyles = createStyles((theme) => ({
-    title: {
-        fontSize: 34,
-        fontWeight: 900,
-        [theme.fn.smallerThan('sm')]: {
-            fontSize: 24,
-        },
-    },
-
-    description: {
-        maxWidth: 600,
-    },
-}));
 
 /**
  * ClassItem
@@ -52,7 +34,6 @@ export type ClassesProps = {
  * @constructor
  */
 export const Classes = (props: ClassesProps) => {
-    const { classes } = useStyles();
     const form = useForm({
         initialValues: {
             classId: '',
@@ -79,7 +60,7 @@ export const Classes = (props: ClassesProps) => {
                             <IconInfoCircle color="#3b82f6" size={14} />
                         </ActionIcon>
                     </Tooltip>
-            </Group>}
+                </Group>}
                 padding="xl"
                 size="xl"
             >
@@ -89,7 +70,7 @@ export const Classes = (props: ClassesProps) => {
                     setOpened(false)
                     props.onCreateClass && props.onCreateClass(values)
                 })}>
-                    <Stack>
+                    <div className="flex flex-col gap-3">
                         <TextInput
                             withAsterisk
                             label="Name"
@@ -101,61 +82,58 @@ export const Classes = (props: ClassesProps) => {
                             placeholder="A class for my first period English students"
                             {...form.getInputProps('description')}
                         />
-                    </Stack>
-                    <Button type="submit" fullWidth mt="md">
-                        Submit
-                    </Button>
+                        <button
+                            type="submit"
+                            className="mt-2 rounded-lg bg-dark-blue-400 px-4 py-2.5 text-xs font-bold text-white"
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </form>
             </Drawer>
-            <Container fluid py="xl">
-                <Stack spacing="md">
-                    <Grid>
-                        <Grid.Col sm="auto">
-                            <Badge variant="filled" size="lg">
-                                Classes
-                            </Badge>
-                            <Title order={2} className={classes.title} mt="md">
-                                Organize people into classes
-                            </Title>
 
-                            <Text color="dimmed" className={classes.description} mt="sm">
-                                Create classes, cohorts, or custom subgroups
-                            </Text>
-                        </Grid.Col>
-                        <Grid.Col sm="content">
-                            { !props.loading && <Button
-                                onClick={() => setOpened(true)}
-                                leftIcon={<IconPlaylistAdd size={14} />}>
-                                Create class
-                            </Button> }
-                        </Grid.Col>
-                    </Grid>
-
-                    <div style={{ position: 'relative' }}>
-                        <LoadingOverlay visible={props.loading} overlayBlur={2} />
-                        <Stack spacing="sm">
-                            <StatsGroup data={[
-                                {
-                                    title: "# OF CLASSES",
-                                    value: props.classes.length,
-                                },
-                            ]}/>
-
-                            <Autocomplete
-                                placeholder="Search for classes"
-                                data={props.classes.map(item => item.name)}
-                                onChange={props.onAutocompleteChange}
-                            />
-
-                            <Table
-                                loading={props.loading}
-                                items={props.classes}
-                                onDeleteClass={props.onDeleteClass}
-                            />
-                        </Stack>
+            <div className="flex flex-col gap-5 px-4 py-8">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="space-y-1.5">
+                        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Organize people into classes</h1>
+                        <p className="max-w-xl text-sm text-slate-500">Create classes, cohorts, or custom subgroups</p>
                     </div>
-                </Stack>
-            </Container>
+
+                    {!props.loading && (
+                        <button
+                            type="button"
+                            onClick={() => setOpened(true)}
+                            className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-3.5 py-2 text-xs font-bold text-dark-blue-400 shadow-[0_3px_12px_rgba(255,212,77,0.35)]"
+                        >
+                            <IconPlaylistAdd size={13} stroke={2} />
+                            Create class
+                        </button>
+                    )}
+                </div>
+
+                <StatsGroup data={[
+                    {
+                        title: "# OF CLASSES",
+                        value: props.classes.length,
+                    },
+                ]}/>
+
+                <div className="relative">
+                    <IconSearch size={16} stroke={2} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                        type="text"
+                        placeholder="Search for classes"
+                        onChange={(e) => props.onAutocompleteChange(e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-dark-blue-400 placeholder:text-slate-400 focus:border-sky-blue-400 focus:outline-none"
+                    />
+                </div>
+
+                <Table
+                    loading={props.loading}
+                    items={props.classes}
+                    onDeleteClass={props.onDeleteClass}
+                />
+            </div>
         </>
     )
 }

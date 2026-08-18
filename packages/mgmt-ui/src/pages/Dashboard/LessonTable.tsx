@@ -1,6 +1,6 @@
-import * as React                                         from 'react';
-import { Table as MantineTable, Group, Text, ScrollArea, UnstyledButton } from '@mantine/core';
-import {PlaceholderBanner}                                from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import * as React from 'react';
+import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {useSortableData} from "../../utils/useSortableData";
 
 /**
  * Item
@@ -24,7 +24,7 @@ export type TableData = {
  * TableMethods
  */
 export type TableMethods = {
-    onClick: (badge: Item) => void
+    onClick: (lesson: Item) => void
 }
 
 /**
@@ -38,7 +38,9 @@ export type TableProps = TableData & TableMethods
  * @constructor
  */
 export function Table(props: TableProps) {
-    if(props.items.length === 0){
+    const {items: sortedItems, requestSort, sortConfig} = useSortableData(props.items);
+
+    if (props.items.length === 0) {
         return <PlaceholderBanner
             title="No lessons to display"
             description="We don't have any lessons to show you just yet."
@@ -47,30 +49,33 @@ export function Table(props: TableProps) {
         />
     }
 
-    const rows = props.items.map((row) => (
-        <tr key={row.lessonId}>
-            <td>
-                <UnstyledButton onClick={() => props.onClick && props.onClick(row)}>
-                    {row.name}
-                </UnstyledButton>
-            </td>
-            <td>{row.description}</td>
-            <td>{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</td>
-        </tr>
-    ));
+    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
 
     return (
-        <ScrollArea.Autosize maxHeight={600}>
-            <MantineTable verticalSpacing="sm" sx={{ minWidth: 700 }} highlightOnHover striped>
-                <thead>
-                    <tr>
-                        <th>Lesson Name</th>
-                        <th>Description</th>
-                        <th>Completion</th>
-                    </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </MantineTable>
-        </ScrollArea.Autosize>
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="grid grid-cols-[1.5fr_2fr_0.8fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                <button onClick={() => requestSort("name")} className="flex items-center text-left hover:text-slate-700">Lesson Name{indicator("name")}</button>
+                <div>Description</div>
+                <button onClick={() => requestSort("percentageCompletion")} className="flex items-center justify-center text-center hover:text-slate-700">Completion{indicator("percentageCompletion")}</button>
+            </div>
+            {sortedItems.map((row, i) => (
+                <div
+                    key={row.lessonId}
+                    className={`grid grid-cols-[1.5fr_2fr_0.8fr] items-center gap-3 px-5 py-3.5 ${
+                        i < sortedItems.length - 1 ? "border-b border-slate-100" : ""
+                    }`}
+                >
+                    <button
+                        type="button"
+                        onClick={() => props.onClick && props.onClick(row)}
+                        className="truncate text-left text-xs font-bold text-dark-blue-400 hover:text-sky-blue-400"
+                    >
+                        {row.name}
+                    </button>
+                    <div className="truncate text-xs text-slate-500">{row.description}</div>
+                    <div className="text-center text-xs font-bold text-dark-blue-400">{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</div>
+                </div>
+            ))}
+        </div>
     );
 }
