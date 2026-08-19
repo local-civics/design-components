@@ -67,7 +67,7 @@ const STATUS_CLASSNAMES: Record<
  */
 export const BadgesList = (props: BadgesListProps) => {
   const groups = groupBadges(props.badges);
-  const [active, setActive] = React.useState<FilterLabel>("In Progress");
+  const [active, setActive] = React.useState<FilterLabel>("Available");
   const [list, setList] = React.useState(props.list);
 
   React.useEffect(() => {
