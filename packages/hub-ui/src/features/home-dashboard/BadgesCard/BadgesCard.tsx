@@ -33,7 +33,7 @@ export type BadgesCardProps = {
  */
 export const BadgesCard = (props: BadgesCardProps) => {
   const groups = groupBadges(props.badges);
-  const [active, setActive] = React.useState<FilterLabel>("In Progress");
+  const [active, setActive] = React.useState<FilterLabel>("Available");
   const [list, setList] = React.useState(props.list);
 
   React.useEffect(() => {
