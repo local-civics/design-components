@@ -1,4 +1,5 @@
 import * as React from 'react';
+import "external-svg-loader";
 
 /**
  * EmblemAccent
@@ -35,21 +36,55 @@ const ACCENT = {
 }
 
 /**
- * Emblem. Renders an entity's imageURL (its logo/badge/emblem), falling back to a tinted icon
- * tile using the same icon/accent already assigned to that entity type elsewhere (Navbar's
- * icon/accent mapping) so a missing image still visually reads as "a pathway"/"a badge." A
+ * Emblem. Renders an entity's imageURL (its logo/badge/emblem) via the same external-svg-loader
+ * mechanism the student side uses (hub-ui's BadgeEmblem), falling back to a tinted icon tile -
+ * using the same icon/accent already assigned to that entity type elsewhere (Navbar's icon/accent
+ * mapping) - if imageURL is absent, or if the icon hasn't loaded within LOAD_TIMEOUT_MS (the
+ * loader has no error signal of its own; a failed/invalid fetch is caught and silently logged,
+ * leaving the target permanently empty, so a timeout is the only way to detect that case). A
  * tinted rounded square, not a circle - rounded-full is reserved for human avatars throughout
  * this package.
  * @param props
  * @constructor
  */
+const LOAD_TIMEOUT_MS = 3000
+
 export function Emblem(props: EmblemProps) {
     const s = SIZE[props.size || "sm"]
     const a = ACCENT[props.accent]
     const Icon = props.icon
+    const [failed, setFailed] = React.useState(false)
+    const ref = React.useRef<SVGSVGElement>(null)
 
-    if (props.imageURL) {
-        return <img src={props.imageURL} alt={props.alt || ""} className={`${s.box} shrink-0 ${s.rounded} object-cover`} />
+    React.useEffect(() => {
+        setFailed(false)
+        if (!props.imageURL) {
+            return
+        }
+        const el = ref.current
+        const onLoad = () => setFailed(false)
+        el?.addEventListener("iconload", onLoad)
+        const timer = setTimeout(() => setFailed(true), LOAD_TIMEOUT_MS)
+        return () => {
+            el?.removeEventListener("iconload", onLoad)
+            clearTimeout(timer)
+        }
+    }, [props.imageURL])
+
+    if (props.imageURL && !failed) {
+        return (
+            <svg
+                ref={ref}
+                data-cache="disabled"
+                data-src={props.imageURL}
+                className={`${s.box} shrink-0 ${s.rounded} object-cover`}
+                viewBox="0 0 32 32"
+                width="32"
+                height="32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            />
+        )
     }
 
     return (
