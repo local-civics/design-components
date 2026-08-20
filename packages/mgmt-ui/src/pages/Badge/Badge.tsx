@@ -29,6 +29,7 @@ export type BadgeProps = {
     displayName: string,
     description: string
     imageURL?: string
+    weight?: number
     classes: BadgeClass[]
     lessons: LessonItem[]
     classId: string
@@ -87,6 +88,10 @@ export const Badge = (props: BadgeProps) => {
                 {
                     title: props.trial ? "LESSONS SUBMITTED" : "BADGE COMPLETION",
                     value: props.trial ? props.lessonsCompleted || 0 : numberOfBadges,
+                },
+                {
+                    title: "POINT VALUE",
+                    value: props.weight || 0,
                 },
             ]}/>
 

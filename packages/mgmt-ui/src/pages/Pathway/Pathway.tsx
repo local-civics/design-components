@@ -6,6 +6,8 @@ import {Emblem} from "../../components/media/Emblem/Emblem";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {Table as BadgeTable, Item as BadgeItem} from "./BadgeTable";
+import {CategoriesModal} from "./CategoriesModal";
+import {PathwayCategory} from "./buildCategoryTree";
 
 /**
  * PathwayUserItem
@@ -36,6 +38,7 @@ export type PathwayProps = {
     classId: string
     students: PathwayUserItem[]
     categories: { categoryId: string; name: string; maxPoints?: number }[]
+    allCategories?: PathwayCategory[]
     href: string
     trial?: boolean
     badgesCompleted?: number
@@ -58,6 +61,7 @@ const TABS = [
  */
 export const Pathway = (props: PathwayProps) => {
     const [tab, setTab] = useState("badges")
+    const [categoriesOpen, setCategoriesOpen] = useState(false)
 
     const numberOfStudents = props.students.length
     const numberOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
@@ -66,6 +70,16 @@ export const Pathway = (props: PathwayProps) => {
     // Sourced from `categories` (not Object.keys(criteria)) so this only renders once readable
     // names have arrived - criteria lands on the first data resolve, category names a tick later.
     const criteriaCategories = (props.categories || []).filter((c) => criteria[c.categoryId] !== undefined)
+
+    // The pathway's own root category (no parentCategoryId - only known via `allCategories`,
+    // since the narrower `categories` doesn't carry it) is redundant as a badge-grouping section:
+    // every badge tagged with it is also tagged with a more specific descendant category, so its
+    // group would just repeat every badge already shown elsewhere. Excluded from badge groupings
+    // only - the criteria pills below still show the root's own overall threshold.
+    const rootCategoryIds = new Set(
+        (props.allCategories || []).filter((c) => !c.parentCategoryId).map((c) => c.categoryId)
+    )
+    const badgeGroupCategories = criteriaCategories.filter((c) => !rootCategoryIds.has(c.categoryId))
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
@@ -89,14 +103,26 @@ export const Pathway = (props: PathwayProps) => {
 
                         <p className="max-w-xl text-sm text-slate-500">{props.description || "No description"}</p>
 
-                        {criteriaCategories.length > 0 && (
+                        {(criteriaCategories.length > 0 || !!props.allCategories?.length) && (
                             <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                                <span className="text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">Criteria</span>
-                                {criteriaCategories.map((c) => (
-                                    <span key={c.categoryId} className="rounded-full bg-sky-blue-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
-                                        {c.name}: {criteria[c.categoryId]}+{c.maxPoints ? ` of ${c.maxPoints}` : ""} pts
-                                    </span>
-                                ))}
+                                {criteriaCategories.length > 0 && (
+                                    <>
+                                        <span className="text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">Criteria</span>
+                                        {criteriaCategories.map((c) => (
+                                            <span key={c.categoryId} className="rounded-full bg-sky-blue-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
+                                                {c.name}: {criteria[c.categoryId]}+{c.maxPoints ? ` of ${c.maxPoints}` : ""} pts
+                                            </span>
+                                        ))}
+                                    </>
+                                )}
+                                {!!props.allCategories?.length && (
+                                    <button
+                                        onClick={() => setCategoriesOpen(true)}
+                                        className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-dark-blue-400 hover:bg-slate-50"
+                                    >
+                                        <IconCategory2 size={12} stroke={2} /> Categories
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>
@@ -147,9 +173,16 @@ export const Pathway = (props: PathwayProps) => {
                     </div>
                 )}
 
-                {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} items={props.badges} />}
+                {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} badges={props.badges} categories={badgeGroupCategories} />}
                 {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} />}
             </div>
+
+            <CategoriesModal
+                opened={categoriesOpen}
+                onClose={() => setCategoriesOpen(false)}
+                categories={props.allCategories || []}
+                criteria={criteria}
+            />
         </div>
     )
 }
