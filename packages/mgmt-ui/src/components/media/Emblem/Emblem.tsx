@@ -62,9 +62,12 @@ export function Emblem(props: EmblemProps) {
             return
         }
         const el = ref.current
-        const onLoad = () => setFailed(false)
-        el?.addEventListener("iconload", onLoad)
         const timer = setTimeout(() => setFailed(true), LOAD_TIMEOUT_MS)
+        const onLoad = () => {
+            setFailed(false)
+            clearTimeout(timer)
+        }
+        el?.addEventListener("iconload", onLoad)
         return () => {
             el?.removeEventListener("iconload", onLoad)
             clearTimeout(timer)
