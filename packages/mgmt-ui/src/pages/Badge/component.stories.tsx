@@ -40,6 +40,7 @@ export const Mock: Story<BadgeProps> = Template.bind({});
 Mock.args = {
     href: "",
     imageURL: "https://cdn.localcivics.io/v1/store/images/fai74t6pNTZYATSA4BxTUM?version=JshF8AaANZmRkhnFC45m9p",
+    weight: 2,
     classes: [{
         classId: "",
         active: false,
