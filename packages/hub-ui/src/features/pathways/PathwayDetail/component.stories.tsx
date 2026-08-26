@@ -43,6 +43,29 @@ Component.args = {
     "civic-participation": "Civic Participation",
     "seal-of-civic-readiness": "Seal Of Civic Readiness",
   },
+  allCategories: [
+    {
+      categoryId: "seal-of-civic-readiness",
+      name: "Seal Of Civic Readiness",
+      parentCategoryId: "",
+      description: "Requires at least 6 total points, including minimums in both Civic Knowledge and Civic Participation.",
+      maxPoints: 0,
+    },
+    {
+      categoryId: "civic-knowledge",
+      name: "Civic Knowledge",
+      parentCategoryId: "seal-of-civic-readiness",
+      description: "Criteria for demonstrating proficiency in Civic Knowledge.",
+      maxPoints: 0,
+    },
+    {
+      categoryId: "civic-participation",
+      name: "Civic Participation",
+      parentCategoryId: "seal-of-civic-readiness",
+      description: "Criteria for demonstrating proficiency in Civic Participation.",
+      maxPoints: 0,
+    },
+  ],
   badges: [
     {
       badgeId: "1",
