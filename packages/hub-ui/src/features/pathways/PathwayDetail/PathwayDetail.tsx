@@ -1,8 +1,10 @@
 import * as React from "react";
+import { IconCategory2 } from "@tabler/icons";
 import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
 import { Progress } from "../../../components/Progress/Progress";
 import { Pill, PillAccent } from "../../home-dashboard/Pill/Pill";
 import { PathwayCardProps } from "../types";
+import { CategoriesModal } from "./CategoriesModal";
 
 /**
  * PathwayDetailProps
@@ -61,6 +63,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
 
   const categoryIds = Object.keys(props.rawCriteria || {});
   const [catFilter, setCatFilter] = React.useState<string | null>(null);
+  const [categoriesOpen, setCategoriesOpen] = React.useState(false);
   const filteredBadges = catFilter ? badges.filter((b) => b.categories?.includes(catFilter)) : badges;
 
   return (
@@ -99,9 +102,15 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
           This pathway is comprised of {target} badge{target === 1 ? "" : "s"}. It includes required and elective
           programming.
         </div>
-        <div className="text-xs text-slate-500">
-          Progress: {completedCount} / {target} badges completed.
-        </div>
+        {!!props.allCategories?.length && (
+          <button
+            onClick={() => setCategoriesOpen(true)}
+            className="mt-2.5 flex w-fit items-center gap-2 rounded-full bg-sky-blue-400/15 px-3.5 py-2 text-xs font-bold text-dark-blue-400 hover:bg-sky-blue-400/25"
+          >
+            <IconCategory2 size={15} stroke={2} />
+            View Pathway Structure
+          </button>
+        )}
 
         {categoryIds.length > 0 && (
           <div className="mt-4 flex flex-col gap-3">
@@ -184,6 +193,14 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
           })}
         </div>
       </div>
+
+      {categoriesOpen && (
+        <CategoriesModal
+          onClose={() => setCategoriesOpen(false)}
+          categories={props.allCategories || []}
+          criteria={props.rawCriteria || {}}
+        />
+      )}
     </div>
   );
 };

@@ -11,6 +11,14 @@ export type BadgeItem = {
 
 export type PathwayCriteria = Record<string, number>;
 
+export type PathwayCategory = {
+  categoryId: string;
+  name: string;
+  description?: string;
+  parentCategoryId?: string;
+  maxPoints?: number;
+};
+
 // This is the main interface for the top-level Card
 export type PathwayCardProps = {
   imageURL?: string;
@@ -24,6 +32,7 @@ export type PathwayCardProps = {
   rawCriteria?: PathwayCriteria;
   categoryNames?: Record<string, string>;
   categoryParents?: Record<string, string | null>; // Added for transcript logic
+  allCategories?: PathwayCategory[]; // Full, unfiltered category list for the Pathway Structure popup
   points?: Record<string, number>;
   onClose?: () => void;
   onSubmit?: () => void;
