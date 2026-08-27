@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Link} from "react-router-dom";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 
 /**
@@ -43,13 +44,11 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
-
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
-                <button onClick={() => requestSort("lessonName")} className="flex-1 text-left hover:text-slate-600">Lesson Name{indicator("lessonName")}</button>
-                <button onClick={() => requestSort("percentageCompletion")} className="w-36 shrink-0 text-right hover:text-slate-600">Lesson Completion{indicator("percentageCompletion")}</button>
+            <div className="flex gap-4 px-4">
+                <SortableHeader label="Lesson Name" sortKey="lessonName" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                <SortableHeader label="Lesson Completion" sortKey="percentageCompletion" sortConfig={sortConfig} onSort={requestSort} align="right" className="w-36 shrink-0" />
             </div>
 
             {sortedItems.map((row) => (

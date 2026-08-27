@@ -185,7 +185,7 @@ const BadgeListCard = (props: BadgeProps) => {
             imageURL={props.imageURL}
             alt={props.displayName}
             level={props.level}
-            size="sm"
+            size="md"
           />
         </div>
         <div className="w-full truncate text-xs font-bold text-dark-blue-400">{props.displayName}</div>
@@ -213,7 +213,7 @@ const BadgeListRow = (props: BadgeProps) => {
           imageURL={props.imageURL}
           alt={props.displayName}
           level={props.level}
-          size="xxs"
+          size="xs"
         />
       </div>
       <div className="min-w-0 flex-1 truncate text-xs font-semibold text-dark-blue-400">{props.displayName}</div>

@@ -66,16 +66,23 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
 
   const badgesEarnedCount = completedBadges.length;
 
-  // Same status vocabulary/derivation as PathwayDetail. Kept local rather than passed as a prop
-  // since the two are independently-toggled siblings in Pathway.tsx, not parent/child.
+  // Same status vocabulary/derivation as PathwayDetail (including the criteria-aware check -
+  // see that component for the full reasoning). Kept local rather than passed as a prop since the
+  // two are independently-toggled siblings in Pathway.tsx, not parent/child.
   const target = badges.length;
   const anyStarted = badges.some((b) => b.startedAt);
-  const status: Status =
-    target > 0 && badgesEarnedCount === target
-      ? "Completed"
-      : anyStarted || badgesEarnedCount > 0
-      ? "In Progress"
-      : "Available";
+  const criteriaEntries = Object.entries(props.rawCriteria || {});
+  const hasCriteria = criteriaEntries.length > 0;
+  const criteriaMet = hasCriteria && criteriaEntries.every(
+    ([categoryId, threshold]) => (props.points?.[categoryId] || 0) >= threshold
+  );
+  const status: Status = hasCriteria
+    ? (criteriaMet ? "Completed" : anyStarted || badgesEarnedCount > 0 ? "In Progress" : "Available")
+    : (target > 0 && badgesEarnedCount === target
+        ? "Completed"
+        : anyStarted || badgesEarnedCount > 0
+        ? "In Progress"
+        : "Available");
 
   const safeRender = (val: unknown) => (typeof val === "string" || typeof val === "number" ? val : "");
 

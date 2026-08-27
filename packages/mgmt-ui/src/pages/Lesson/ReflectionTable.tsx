@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 
 /**
@@ -42,14 +43,12 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
-
     return (
         <div className="flex flex-col gap-3">
             <div className="flex gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
-                <button onClick={() => requestSort("studentName")} className="w-40 shrink-0 text-left hover:text-slate-600">Student Name{indicator("studentName")}</button>
+                <SortableHeader label="Student Name" sortKey="studentName" sortConfig={sortConfig} onSort={requestSort} className="w-40 shrink-0" />
                 <div className="flex-1">Reflection</div>
-                <button onClick={() => requestSort("rating")} className="w-20 shrink-0 text-right hover:text-slate-600">Rating{indicator("rating")}</button>
+                <SortableHeader label="Rating" sortKey="rating" sortConfig={sortConfig} onSort={requestSort} align="right" className="w-20 shrink-0" />
             </div>
 
             {sortedItems.map((row, i) => (

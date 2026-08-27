@@ -4,6 +4,8 @@ import * as React from 'react';
 import {Link} from "react-router-dom";
 import {IconCheck, IconTrash} from '@tabler/icons';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
+import {useSortableData} from "../../utils/useSortableData";
 
 /**
  * Item
@@ -53,6 +55,16 @@ const openDeleteModal = (person: Item, onDelete: (user: Item) => void) => openCo
  * @constructor
  */
 export function Table(props: TableProps) {
+    const preparedItems = React.useMemo(() => {
+        return props.items.map(item => ({
+            ...item,
+            fullName: item.givenName && item.familyName ? `${item.givenName} ${item.familyName}`.toLowerCase() : item.email.toLowerCase(),
+            roleRank: item.isAdmin ? 2 : item.isGroupAdmin ? 1 : 0,
+        }));
+    }, [props.items]);
+
+    const {items: sortedItems, requestSort, sortConfig} = useSortableData(preparedItems);
+
     if (props.loading) {
         return <div className="text-sm text-slate-400">Loading…</div>;
     }
@@ -68,14 +80,14 @@ export function Table(props: TableProps) {
 
     return (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid grid-cols-[2.2fr_1.2fr_1fr_1fr_0.6fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                <div>Name</div>
-                <div className="text-center">Role</div>
-                <div className="text-center">Account Created?</div>
-                <div className="text-center"># of Classes</div>
+            <div className="grid grid-cols-[2.2fr_1.2fr_1fr_1fr_0.6fr] items-center gap-3 border-b border-slate-100 px-5 py-3">
+                <SortableHeader label="Name" sortKey="fullName" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader label="Role" sortKey="roleRank" sortConfig={sortConfig} onSort={requestSort} align="center" />
+                <SortableHeader label="Account Created?" sortKey="hasAccount" sortConfig={sortConfig} onSort={requestSort} align="center" />
+                <SortableHeader label="# of Classes" sortKey="numberOfClasses" sortConfig={sortConfig} onSort={requestSort} align="center" />
                 <div />
             </div>
-            {props.items.map((row, i) => {
+            {sortedItems.map((row, i) => {
                 const name = row.givenName && row.familyName ? `${row.givenName} ${row.familyName}` : row.email;
                 const initials = (row.givenName?.[0] || row.email[0] || "?") + (row.familyName?.[0] || "");
                 const identity = (
@@ -97,7 +109,7 @@ export function Table(props: TableProps) {
                     <div
                         key={row.email}
                         className={`grid grid-cols-[2.2fr_1.2fr_1fr_1fr_0.6fr] items-center gap-3 px-5 py-3.5 ${
-                            i < props.items.length - 1 ? "border-b border-slate-100" : ""
+                            i < sortedItems.length - 1 ? "border-b border-slate-100" : ""
                         }`}
                     >
                         {row.href ? (

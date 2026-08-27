@@ -19,14 +19,15 @@ export type EmblemIcon = React.ComponentType<any>
 export type EmblemProps = {
     imageURL?: string
     alt?: string
-    size?: "sm" | "lg"
+    size?: "sm" | "lg" | "xl"
     icon: EmblemIcon
     accent: EmblemAccent
 }
 
 const SIZE = {
-    sm: {box: "h-11 w-11", rounded: "rounded-xl", icon: 20},
+    sm: {box: "h-14 w-14", rounded: "rounded-xl", icon: 24},
     lg: {box: "h-16 w-16", rounded: "rounded-2xl", icon: 28},
+    xl: {box: "h-28 w-28", rounded: "rounded-3xl", icon: 48},
 }
 
 const ACCENT = {
@@ -78,6 +79,8 @@ export function Emblem(props: EmblemProps) {
         return (
             <svg
                 ref={ref}
+                role="img"
+                aria-label={props.alt}
                 data-cache="disabled"
                 data-src={props.imageURL}
                 className={`${s.box} shrink-0 ${s.rounded} object-cover`}
@@ -91,8 +94,8 @@ export function Emblem(props: EmblemProps) {
     }
 
     return (
-        <div className={`flex ${s.box} shrink-0 items-center justify-center ${s.rounded} ${a.bg}`}>
-            <Icon size={s.icon} stroke={1.75} className={a.text} />
+        <div role="img" aria-label={props.alt} className={`flex ${s.box} shrink-0 items-center justify-center ${s.rounded} ${a.bg}`}>
+            <Icon size={s.icon} stroke={1.75} className={a.text} aria-hidden="true" />
         </div>
     )
 }

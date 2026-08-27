@@ -85,7 +85,7 @@ export const Pathway = (props: PathwayProps) => {
         <div className="flex flex-col gap-5 px-4 py-8">
             <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
-                    <Emblem imageURL={props.imageURL} alt={props.title} size="lg" icon={IconRoute} accent="cyan" />
+                    <Emblem imageURL={props.imageURL} alt={props.title} size="xl" icon={IconRoute} accent="cyan" />
                     <div className="space-y-1.5">
                         <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
                             <IconArrowLeft size={13} stroke={2.5} />

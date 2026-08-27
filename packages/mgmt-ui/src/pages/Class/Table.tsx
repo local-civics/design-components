@@ -3,6 +3,7 @@ import {Text} from '@mantine/core';
 import * as React from 'react';
 import {Link} from "react-router-dom";
 import {IconCheck, IconTrash} from '@tabler/icons';
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 
 /**
@@ -81,17 +82,14 @@ export function Table(props: TableProps) {
         );
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
-
     return (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            {/* Header/email text intentionally darker (slate-500) than the shared slate-400 token Pathways/Badges/Lessons/FileLocker's tables still use — scoped to this page pending design feedback, see plan. */}
-            <div className="grid grid-cols-[2.2fr_1.2fr_1fr_1.2fr_1fr_0.6fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                <button onClick={() => requestSort("fullName")} className="flex items-center text-left hover:text-slate-700">Name{indicator("fullName")}</button>
-                <button onClick={() => requestSort("isAdmin")} className="flex items-center justify-center text-center hover:text-slate-700">Role{indicator("isAdmin")}</button>
-                <button onClick={() => requestSort("badgesEarned")} className="flex items-center justify-center text-center hover:text-slate-700">Badges Earned{indicator("badgesEarned")}</button>
-                <button onClick={() => requestSort("lessonsCompleted")} className="flex items-center justify-center text-center hover:text-slate-700">Lessons Completed{indicator("lessonsCompleted")}</button>
-                <button onClick={() => requestSort("hasAccount")} className="flex items-center justify-center text-center hover:text-slate-700">Account Created?{indicator("hasAccount")}</button>
+            <div className="grid grid-cols-[2.2fr_1.2fr_1fr_1.2fr_1fr_0.6fr] items-center gap-3 border-b border-slate-100 px-5 py-3">
+                <SortableHeader label="Name" sortKey="fullName" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader label="Role" sortKey="isAdmin" sortConfig={sortConfig} onSort={requestSort} align="center" />
+                <SortableHeader label="Badges Earned" sortKey="badgesEarned" sortConfig={sortConfig} onSort={requestSort} align="center" />
+                <SortableHeader label="Lessons Completed" sortKey="lessonsCompleted" sortConfig={sortConfig} onSort={requestSort} align="center" />
+                <SortableHeader label="Account Created?" sortKey="hasAccount" sortConfig={sortConfig} onSort={requestSort} align="center" />
                 <div />
             </div>
             {sortedItems.map((row, i) => {

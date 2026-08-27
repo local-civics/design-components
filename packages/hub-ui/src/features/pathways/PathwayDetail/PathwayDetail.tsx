@@ -57,8 +57,20 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
   const target = badges.length;
   const anyStarted = badges.some((b) => b.startedAt);
 
-  const status: Status =
-    target > 0 && completedCount === target ? "Completed" : anyStarted || completedCount > 0 ? "In Progress" : "Available";
+  // When a pathway has real criteria, completion is defined by meeting every category's point
+  // threshold, not by finishing every listed badge - a pathway can have more (elective) badges
+  // than strictly required, and a badge miscategorized relative to the criteria's own categoryIds
+  // should surface as "not verifiably complete" rather than a false "Completed". Pathways with no
+  // criteria at all keep the original badge-count check, unchanged.
+  const criteriaEntries = Object.entries(props.rawCriteria || {});
+  const hasCriteria = criteriaEntries.length > 0;
+  const criteriaMet = hasCriteria && criteriaEntries.every(
+    ([categoryId, threshold]) => (props.points?.[categoryId] || 0) >= threshold
+  );
+
+  const status: Status = hasCriteria
+    ? (criteriaMet ? "Completed" : anyStarted || completedCount > 0 ? "In Progress" : "Available")
+    : (target > 0 && completedCount === target ? "Completed" : anyStarted || completedCount > 0 ? "In Progress" : "Available");
   const { border, shadow, pillAccent } = STATUS_CLASSNAMES[status];
 
   const categoryIds = Object.keys(props.rawCriteria || {});
@@ -77,7 +89,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
       <div className={`overflow-hidden rounded-2xl border bg-white ${border} ${shadow}`}>
         <div className="flex gap-4 p-5">
           <div className="shrink-0">
-            <BadgeEmblem iconURL={props.imageURL} alt={props.title} size="sm" />
+            <BadgeEmblem iconURL={props.imageURL} alt={props.title} size="lg" />
           </div>
           <div className="flex-1">
             <div className="text-lg font-extrabold text-dark-blue-400">{props.title}</div>

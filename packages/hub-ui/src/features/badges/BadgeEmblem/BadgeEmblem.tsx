@@ -31,6 +31,7 @@ export const BadgeEmblem = (props: BadgeEmblemProps) => {
         return ["h-max w-24", "w-12 h-12"];
       case "lg":
         return ["h-max w-40", "w-20 h-20"];
+      case "md":
       default:
         return ["h-max w-28", "w-14 h-14"];
     }

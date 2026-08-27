@@ -109,3 +109,15 @@ Empty.args = {
   },
   badges: (Component.args.badges || []).map((b) => ({ ...b, completedAt: undefined, startedAt: undefined })),
 };
+
+/**
+ * Reproduces the pathwayInterfaces2 bug: every badge is finished, but points never reach
+ * rawCriteria's thresholds (a real data-authoring category-id mismatch, not a rendering bug).
+ * Confirms the status pill now reads "In Progress" instead of a false "Completed".
+ */
+export const AllBadgesDoneButCriteriaUnmet: Story<PathwayCardProps> = Template.bind({});
+AllBadgesDoneButCriteriaUnmet.args = {
+  ...Component.args,
+  badges: (Component.args.badges || []).map((b) => ({ ...b, completedAt: "2026-06-10T00:00:00Z" })),
+  // points intentionally left at Component.args' original low values.
+};

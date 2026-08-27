@@ -4,6 +4,7 @@ import * as React from 'react';
 import {Link} from "react-router-dom";
 import {IconTrash} from '@tabler/icons';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 
 /**
@@ -59,14 +60,12 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
-
     return (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid grid-cols-[1.5fr_2fr_1fr_0.6fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                <button onClick={() => requestSort("name")} className="flex items-center text-left hover:text-slate-700">Class Name{indicator("name")}</button>
-                <div>Description</div>
-                <button onClick={() => requestSort("numberOfStudents")} className="flex items-center justify-center text-center hover:text-slate-700"># of Students{indicator("numberOfStudents")}</button>
+            <div className="grid grid-cols-[1.5fr_2fr_1fr_0.6fr] items-center gap-3 border-b border-slate-100 px-5 py-3">
+                <SortableHeader label="Class Name" sortKey="name" sortConfig={sortConfig} onSort={requestSort} />
+                <div className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Description</div>
+                <SortableHeader label="# of Students" sortKey="numberOfStudents" sortConfig={sortConfig} onSort={requestSort} align="center" />
                 <div />
             </div>
             {sortedItems.map((row, i) => (

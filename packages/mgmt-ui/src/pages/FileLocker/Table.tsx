@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {IconChevronRight} from "@tabler/icons";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {Stack as FileStack} from "./FileStack";
 import {useSortableData} from "../../utils/useSortableData";
 
@@ -76,13 +77,11 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴")
-
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
-                <button onClick={() => requestSort("name")} className="flex-1 text-left hover:text-slate-600">Student Name{indicator("name")}</button>
-                <button onClick={() => requestSort("submissionCount")} className="w-16 shrink-0 text-left hover:text-slate-600">Files{indicator("submissionCount")}</button>
+            <div className="flex items-center gap-4 px-4">
+                <SortableHeader label="Student Name" sortKey="name" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                <SortableHeader label="Files" sortKey="submissionCount" sortConfig={sortConfig} onSort={requestSort} className="w-16 shrink-0" />
                 {props.onReview && <div className="w-36 shrink-0" />}
                 <div className="w-4 shrink-0" />
             </div>

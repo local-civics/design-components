@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {IconChevronDown} from '@tabler/icons';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {Stack as BadgeStack, Item as BadgeItem} from "./BadgeStack";
 import {useSortableData} from "../../utils/useSortableData";
 
@@ -70,15 +71,13 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
-
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
-                <button onClick={() => requestSort("name")} className="flex-1 text-left hover:text-slate-600">Student Name{indicator("name")}</button>
-                <button onClick={() => requestSort("isComplete")} className="w-28 shrink-0 text-center hover:text-slate-600">Status{indicator("isComplete")}</button>
+            <div className="flex items-center gap-4 px-4">
+                <SortableHeader label="Student Name" sortKey="name" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                <SortableHeader label="Status" sortKey="isComplete" sortConfig={sortConfig} onSort={requestSort} align="center" className="w-28 shrink-0" />
                 {categories.map((category) => (
-                    <button key={category.categoryId} onClick={() => requestSort(category.categoryId)} className="w-24 shrink-0 text-center hover:text-slate-600">{category.name}{indicator(category.categoryId)}</button>
+                    <SortableHeader key={category.categoryId} label={category.name} sortKey={category.categoryId} sortConfig={sortConfig} onSort={requestSort} align="center" className="w-24 shrink-0" />
                 ))}
                 <div className="w-4 shrink-0" />
             </div>

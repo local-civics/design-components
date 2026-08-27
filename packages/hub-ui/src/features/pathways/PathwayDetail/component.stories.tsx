@@ -122,3 +122,18 @@ Completed.args = {
   },
   badges: (Component.args.badges || []).map((b) => ({ ...b, completedAt: "2026-06-10T00:00:00Z" })),
 };
+
+/**
+ * Reproduces the pathwayInterfaces2 bug directly: every badge is finished, but the categoryIds
+ * badges/points are actually keyed by don't match rawCriteria's keys (a real data-authoring
+ * mismatch, not a rendering bug) - so every threshold reads as unmet. Confirms the status pill
+ * now correctly shows "In Progress" instead of a false "Completed", matching what the badges/
+ * points data can actually verify, rather than a raw badge-count shortcut.
+ */
+export const AllBadgesDoneButCriteriaUnmet: Story<PathwayDetailProps> = Template.bind({});
+AllBadgesDoneButCriteriaUnmet.args = {
+  ...Component.args,
+  badges: (Component.args.badges || []).map((b) => ({ ...b, completedAt: "2026-06-10T00:00:00Z" })),
+  // points intentionally left at Component.args' original low values - every badge is "done" but
+  // none of those completions are reflected under rawCriteria's own categoryIds.
+};
