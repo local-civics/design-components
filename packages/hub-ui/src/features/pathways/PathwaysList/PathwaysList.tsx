@@ -87,7 +87,7 @@ const PathwayListCard = (props: PathwayListCardProps) => {
       <div className={`h-1 bg-gradient-to-r ${strip}`} />
       <div className="flex gap-4 p-4">
         <div className="shrink-0">
-          <BadgeEmblem iconURL={props.imageURL} alt={props.title} size="xs" />
+          <BadgeEmblem iconURL={props.imageURL} alt={props.title} size="sm" />
         </div>
         <div className="min-w-0 flex-1">
           <div className="text-sm font-bold text-dark-blue-400">{props.title}</div>

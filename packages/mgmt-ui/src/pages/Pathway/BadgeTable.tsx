@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Link} from "react-router-dom";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 
 /**
@@ -34,16 +35,22 @@ export type TableProps = {
     categories: Category[]
 }
 
+const OTHER_FILTER = "__other__";
+
 /**
- * Table. Groups badges under the pathway's criteria categories (exact-inclusion match on
- * badge.categories, not the prefix-match used elsewhere for badge->pathway matching), following
- * the same grouping pattern already shipped in hub-ui's PathwayTranscript. Badges matching none
- * of the criteria categories land in a trailing "Other badges" section rather than disappearing.
+ * Table. Badges are matched to the pathway's criteria categories via exact-inclusion on
+ * badge.categories (not the prefix-match used elsewhere for badge->pathway matching), following
+ * the same grouping pattern already shipped in hub-ui's PathwayTranscript. Rather than always
+ * stacking every category's badges into its own always-visible section - which disconnected the
+ * single sortable header row from the badges grouped below it - the same mapping now drives a row
+ * of filter pills above one continuous, sortable table. Badges matching none of the criteria
+ * categories stay reachable via the "Other" pill rather than disappearing.
  * @param props
  * @constructor
  */
 export function Table(props: TableProps) {
     const {items: sortedBadges, requestSort, sortConfig} = useSortableData(props.badges);
+    const [categoryFilter, setCategoryFilter] = React.useState("");
 
     if (props.badges.length === 0) {
         return <PlaceholderBanner
@@ -54,48 +61,71 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
     const groupedIds = new Set(props.categories.map((c) => c.categoryId));
-    const forCategory = (categoryId: string) => sortedBadges.filter((b) => b.categories?.includes(categoryId));
     const other = sortedBadges.filter((b) => !b.categories?.some((id) => groupedIds.has(id)));
 
+    const visibleBadges = !categoryFilter
+        ? sortedBadges
+        : categoryFilter === OTHER_FILTER
+            ? other
+            : sortedBadges.filter((b) => b.categories?.includes(categoryFilter));
+
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
-                <button onClick={() => requestSort("badgeName")} className="flex-1 text-left hover:text-slate-600">Badge Name{indicator("badgeName")}</button>
-                <button onClick={() => requestSort("weight")} className="w-24 shrink-0 text-right hover:text-slate-600">Point Value{indicator("weight")}</button>
-                <button onClick={() => requestSort("percentageCompletion")} className="w-36 shrink-0 text-right hover:text-slate-600">Badge Completion{indicator("percentageCompletion")}</button>
+        <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap gap-2">
+                <CategoryPill label="All" active={!categoryFilter} onClick={() => setCategoryFilter("")} />
+                {props.categories.map((category) => (
+                    <CategoryPill
+                        key={category.categoryId}
+                        label={category.name}
+                        active={categoryFilter === category.categoryId}
+                        onClick={() => setCategoryFilter(category.categoryId)}
+                    />
+                ))}
+                {other.length > 0 && (
+                    <CategoryPill label="Other" active={categoryFilter === OTHER_FILTER} onClick={() => setCategoryFilter(OTHER_FILTER)} />
+                )}
             </div>
 
-            {props.categories.map((category) => (
-                <CategorySection key={category.categoryId} name={category.name} badges={forCategory(category.categoryId)} />
-            ))}
+            <div className="flex flex-col gap-2">
+                <div className="flex gap-4 px-4">
+                    <SortableHeader label="Badge Name" sortKey="badgeName" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                    <SortableHeader label="Point Value" sortKey="weight" sortConfig={sortConfig} onSort={requestSort} align="right" className="w-24 shrink-0" />
+                    <SortableHeader label="Badge Completion" sortKey="percentageCompletion" sortConfig={sortConfig} onSort={requestSort} align="right" className="w-36 shrink-0" />
+                </div>
 
-            {other.length > 0 && <CategorySection name="Other badges" badges={other} />}
+                {visibleBadges.length === 0 && (
+                    <div className="rounded-xl border border-dashed border-slate-200 px-4 py-3 text-xs text-slate-400">
+                        {categoryFilter ? "No badges in this category yet." : "No badges yet."}
+                    </div>
+                )}
+
+                {visibleBadges.map((row) => (
+                    <Link
+                        key={row.badgeId}
+                        to={row.href}
+                        className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm hover:bg-slate-50"
+                    >
+                        <div className="min-w-0 flex-1 text-sm font-bold text-dark-blue-400">{row.badgeName}</div>
+                        <div className="w-24 shrink-0 text-right text-xs font-black text-mint-400">{row.weight} pts</div>
+                        <div className="w-36 shrink-0 text-right text-xs text-slate-500">{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</div>
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 }
 
-const CategorySection = (props: { name: string, badges: Item[] }) => (
-    <div className="flex flex-col gap-2">
-        <div className="px-1 text-sm font-extrabold tracking-tight text-dark-blue-400">{props.name}</div>
-
-        {props.badges.length === 0 && (
-            <div className="rounded-xl border border-dashed border-slate-200 px-4 py-3 text-xs text-slate-400">
-                No badges yet.
-            </div>
-        )}
-
-        {props.badges.map((row) => (
-            <Link
-                key={row.badgeId}
-                to={row.href}
-                className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm hover:bg-slate-50"
-            >
-                <div className="min-w-0 flex-1 text-sm font-bold text-dark-blue-400">{row.badgeName}</div>
-                <div className="w-24 shrink-0 text-right text-xs font-black text-mint-400">{row.weight} pts</div>
-                <div className="w-36 shrink-0 text-right text-xs text-slate-500">{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</div>
-            </Link>
-        ))}
-    </div>
+const CategoryPill = (props: { label: string, active: boolean, onClick: () => void }) => (
+    <button
+        type="button"
+        onClick={props.onClick}
+        className={`rounded-full border px-3.5 py-1.5 text-xs font-bold ${
+            props.active
+                ? "border-sky-blue-400/40 bg-sky-blue-400/20 text-dark-blue-400"
+                : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"
+        }`}
+    >
+        {props.label}
+    </button>
 )

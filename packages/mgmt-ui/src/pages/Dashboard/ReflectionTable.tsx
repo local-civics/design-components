@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 import {relativeTimeFromDates} from "../../utils/time";
 
@@ -58,15 +59,13 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
-
     return (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid grid-cols-[1fr_1fr_2fr_0.8fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                <button onClick={() => requestSort("studentName")} className="flex items-center text-left hover:text-slate-700">Student Name{indicator("studentName")}</button>
-                <button onClick={() => requestSort("lessonName")} className="flex items-center text-left hover:text-slate-700">Lesson Name{indicator("lessonName")}</button>
-                <div>Reflection</div>
-                <button onClick={() => requestSort("updatedAtDate")} className="flex items-center text-left hover:text-slate-700">Updated At{indicator("updatedAtDate")}</button>
+            <div className="grid grid-cols-[1fr_1fr_2fr_0.8fr] items-center gap-3 border-b border-slate-100 px-5 py-3">
+                <SortableHeader label="Student Name" sortKey="studentName" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader label="Lesson Name" sortKey="lessonName" sortConfig={sortConfig} onSort={requestSort} />
+                <div className="text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">Reflection</div>
+                <SortableHeader label="Updated At" sortKey="updatedAtDate" sortConfig={sortConfig} onSort={requestSort} />
             </div>
             {sortedItems.map((row, i) => (
                 <div

@@ -64,7 +64,7 @@ export const Badge = (props: BadgeProps) => {
         <div className="flex flex-col gap-5 px-4 py-8">
             <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-start gap-4">
-                    <Emblem imageURL={props.imageURL} alt={props.displayName} size="lg" icon={IconAlbum} accent="mint" />
+                    <Emblem imageURL={props.imageURL} alt={props.displayName} size="xl" icon={IconAlbum} accent="mint" />
                     <div className="space-y-1.5">
                         <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
                             <IconArrowLeft size={13} stroke={2.5} />

@@ -99,7 +99,7 @@ export const BadgeDetail = (props: BadgeDetailProps) => {
               imageURL={props.imageURL}
               alt={props.displayName}
               level={props.level}
-              size="sm"
+              size="lg"
             />
           </div>
           <div className="flex-1">

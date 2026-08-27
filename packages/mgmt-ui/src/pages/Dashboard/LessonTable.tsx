@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 
 /**
@@ -49,14 +50,12 @@ export function Table(props: TableProps) {
         />
     }
 
-    const indicator = (key: string) => sortConfig.key !== key ? "" : (sortConfig.direction === "desc" ? " ▾" : " ▴");
-
     return (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="grid grid-cols-[1.5fr_2fr_0.8fr] gap-3 border-b border-slate-100 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                <button onClick={() => requestSort("name")} className="flex items-center text-left hover:text-slate-700">Lesson Name{indicator("name")}</button>
-                <div>Description</div>
-                <button onClick={() => requestSort("percentageCompletion")} className="flex items-center justify-center text-center hover:text-slate-700">Completion{indicator("percentageCompletion")}</button>
+            <div className="grid grid-cols-[1.5fr_2fr_0.8fr] items-center gap-3 border-b border-slate-100 px-5 py-3">
+                <SortableHeader label="Lesson Name" sortKey="name" sortConfig={sortConfig} onSort={requestSort} />
+                <div className="text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">Description</div>
+                <SortableHeader label="Completion" sortKey="percentageCompletion" sortConfig={sortConfig} onSort={requestSort} align="center" />
             </div>
             {sortedItems.map((row, i) => (
                 <div
