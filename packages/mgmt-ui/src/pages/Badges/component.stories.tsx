@@ -47,6 +47,7 @@ Component.args = {
             imageURL: "https://cdn.localcivics.io/v1/store/images/fai74t6pNTZYATSA4BxTUM?version=JshF8AaANZmRkhnFC45m9p",
             pathway: "Seal of Biliteracy",
             numberOfLessons: 4,
+            weight: 3,
             href: "/badges/art101/overview",
         },
         {
@@ -55,6 +56,7 @@ Component.args = {
             description: "This can be fulfilled in ASL IV Fall.",
             pathway: "Seal of Biliteracy",
             numberOfLessons: 6,
+            weight: 4.5,
             href: "/badges/asl102/overview",
         },
         {

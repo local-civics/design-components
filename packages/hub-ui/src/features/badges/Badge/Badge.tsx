@@ -15,6 +15,11 @@ export type BadgeProps = BadgeCardProps &
     editChoices?: boolean;
     open?: boolean;
 
+    // Pathway + lesson-count + point-value metadata, shown on the badges list/grid.
+    pathwayName?: string;
+    numberOfLessons?: number;
+    weight?: number;
+
     onOpen?: () => void;
   };
 
