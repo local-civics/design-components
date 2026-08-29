@@ -20,6 +20,7 @@ export * from "./Profile";
 export * from "./Progress";
 export * from "./Search";
 export * from "../features/service-tracking";
+export * from "./SortableHeader";
 export * from "./Stopwatch"
 export * from "./Task";
 export * from "./Widget";

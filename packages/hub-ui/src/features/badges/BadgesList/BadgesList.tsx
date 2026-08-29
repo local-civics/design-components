@@ -1,9 +1,11 @@
 import * as React from "react";
-import { IconLayoutGrid, IconList } from "@tabler/icons";
+import { IconLayoutGrid, IconList, IconSearch } from "@tabler/icons";
 import { BadgeEmblem } from "../BadgeEmblem/BadgeEmblem";
 import { BadgeProps } from "../Badge/Badge";
 import { Tab } from "../../../components/Board";
+import { SortableHeader } from "../../../components/SortableHeader";
 import { Pill, PillAccent } from "../../home-dashboard/Pill/Pill";
+import { useSortableData } from "../../../utils/useSortableData";
 
 /**
  * BadgesListProps
@@ -13,7 +15,12 @@ export type BadgesListProps = {
   isLoading?: boolean;
   list?: boolean;
 
+  pathways?: { pathwayId: string; title: string }[];
+  selectedPathway?: string;
+
   onToggleLayout?: (next: boolean) => void;
+  onPathwayChange?: (pathwayId: string) => void;
+  onSearch?: (value: string) => void;
 };
 
 type FilterLabel = "In Progress" | "Completed" | "Available" | "Locked";
@@ -81,9 +88,28 @@ export const BadgesList = (props: BadgesListProps) => {
   }, [list]);
 
   const visible = groups[active];
+  const { items: sortedVisible, requestSort, sortConfig } = useSortableData(visible);
 
   return (
     <div className="flex flex-col gap-3.5">
+      <PathwayPills
+        pathways={props.pathways || []}
+        selected={props.selectedPathway || ""}
+        onChange={props.onPathwayChange || (() => {})}
+      />
+
+      {props.onSearch && (
+        <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <IconSearch size={15} stroke={1.75} className="text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search for a badge that fits your needs"
+            onChange={(e) => props.onSearch && props.onSearch(e.target.value)}
+            className="flex-1 border-none bg-transparent text-sm text-dark-blue-400 outline-none placeholder:text-slate-400"
+          />
+        </div>
+      )}
+
       <div className="flex items-center justify-between gap-3">
         <div className="text-xs font-semibold text-slate-400">
           {props.badges.length} badge{props.badges.length === 1 ? "" : "s"}
@@ -122,17 +148,53 @@ export const BadgesList = (props: BadgesListProps) => {
       {visible.length > 0 &&
         (list ? (
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-            {visible.map((badge, i) => (
+            <BadgeListRowHeader sortConfig={sortConfig} onSort={requestSort} />
+            {sortedVisible.map((badge, i) => (
               <BadgeListRow key={badge.badgeId || i} {...badge} />
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
-            {visible.map((badge, i) => (
+            {sortedVisible.map((badge, i) => (
               <BadgeListCard key={badge.badgeId || i} {...badge} />
             ))}
           </div>
         ))}
+    </div>
+  );
+};
+
+const PathwayPills = (props: {
+  pathways: { pathwayId: string; title: string }[];
+  selected: string;
+  onChange: (pathwayId: string) => void;
+}) => {
+  if (props.pathways.length === 0) {
+    return null;
+  }
+
+  const pillClass = (active: boolean) =>
+    `rounded-full border px-3.5 py-1.5 text-xs font-bold ${
+      active
+        ? "border-sky-blue-400/40 bg-sky-blue-400/20 text-dark-blue-400"
+        : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"
+    }`;
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      <button type="button" onClick={() => props.onChange("")} className={pillClass(!props.selected)}>
+        All
+      </button>
+      {props.pathways.map((p) => (
+        <button
+          key={p.pathwayId}
+          type="button"
+          onClick={() => props.onChange(p.pathwayId)}
+          className={pillClass(props.selected === p.pathwayId)}
+        >
+          {p.title}
+        </button>
+      ))}
     </div>
   );
 };
@@ -168,6 +230,12 @@ const pillStatus = (props: BadgeProps): FilterLabel => {
 const BadgeListCard = (props: BadgeProps) => {
   const { border, shadow, strip, pillAccent, pillLabel } = STATUS_CLASSNAMES[pillStatus(props)];
   const isDisabled = props.isLocked || !props.onOpen;
+  const countsLine = [
+    props.numberOfLessons ? `${props.numberOfLessons} lesson${props.numberOfLessons === 1 ? "" : "s"}` : undefined,
+    props.weight ? `${props.weight} pts` : undefined,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <div
@@ -188,12 +256,62 @@ const BadgeListCard = (props: BadgeProps) => {
             size="md"
           />
         </div>
-        <div className="w-full truncate text-xs font-bold text-dark-blue-400">{props.displayName}</div>
+        <div title={props.displayName} className="line-clamp-4 w-full text-xs font-bold text-dark-blue-400">
+          {props.displayName}
+        </div>
+        {props.pathwayName && (
+          <div title={props.pathwayName} className="line-clamp-2 w-full text-[10.5px] text-slate-400">
+            {props.pathwayName}
+          </div>
+        )}
+        {countsLine && <div className="w-full text-[10.5px] text-slate-400">{countsLine}</div>}
         <Pill label={pillLabel} accent={pillAccent} />
       </div>
     </div>
   );
 };
+
+const BadgeListRowHeader = (props: {
+  sortConfig: { key: string | number; direction: "asc" | "desc" | null };
+  onSort: (key: string) => void;
+}) => (
+  <div className="flex items-start gap-3 border-b border-slate-100 px-3.5 pb-2 pt-2.5 leading-tight">
+    <div className="w-16 shrink-0" />
+    <SortableHeader
+      label="Badge"
+      sortKey="displayName"
+      sortConfig={props.sortConfig}
+      onSort={props.onSort}
+      className="w-40 shrink-0"
+    />
+    <div className="hidden min-w-0 flex-1 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400 md:block">
+      Description
+    </div>
+    <SortableHeader
+      label="Pathway"
+      sortKey="pathwayName"
+      sortConfig={props.sortConfig}
+      onSort={props.onSort}
+      className="hidden w-32 shrink-0 md:inline-flex"
+    />
+    <SortableHeader
+      label="Lessons"
+      sortKey="numberOfLessons"
+      sortConfig={props.sortConfig}
+      onSort={props.onSort}
+      className="hidden w-20 shrink-0 sm:inline-flex"
+    />
+    <SortableHeader
+      label="Points"
+      sortKey="weight"
+      sortConfig={props.sortConfig}
+      onSort={props.onSort}
+      align="right"
+      className="hidden w-14 shrink-0 sm:inline-flex"
+    />
+    <div className="w-20 shrink-0" />
+  </div>
+);
 
 const BadgeListRow = (props: BadgeProps) => {
   const { pillAccent, pillLabel } = STATUS_CLASSNAMES[pillStatus(props)];
@@ -202,7 +320,7 @@ const BadgeListRow = (props: BadgeProps) => {
   return (
     <div
       onClick={() => !isDisabled && props.onOpen && props.onOpen()}
-      className={`flex items-center gap-3 border-b border-slate-100 px-3.5 py-2.5 last:border-b-0 ${
+      className={`flex items-start gap-3 border-b border-slate-100 px-3.5 py-2.5 last:border-b-0 ${
         isDisabled ? "" : "cursor-pointer hover:bg-slate-50"
       }`}
     >
@@ -216,8 +334,24 @@ const BadgeListRow = (props: BadgeProps) => {
           size="xs"
         />
       </div>
-      <div className="min-w-0 flex-1 truncate text-xs font-semibold text-dark-blue-400">{props.displayName}</div>
-      <Pill label={pillLabel} accent={pillAccent} />
+      <div title={props.displayName} className="line-clamp-4 w-40 shrink-0 text-xs font-semibold text-dark-blue-400">
+        {props.displayName}
+      </div>
+      <div title={props.summary} className="hidden min-w-0 flex-1 text-[11px] text-slate-400 md:line-clamp-4">
+        {props.summary || "—"}
+      </div>
+      <div className="hidden w-32 shrink-0 truncate text-[11px] text-slate-400 md:block">
+        {props.pathwayName || "—"}
+      </div>
+      <div className="hidden w-20 shrink-0 text-[11px] text-slate-400 sm:block">
+        {props.numberOfLessons ? `${props.numberOfLessons} lesson${props.numberOfLessons === 1 ? "" : "s"}` : "—"}
+      </div>
+      <div className="hidden w-14 shrink-0 text-right text-[11px] text-slate-400 sm:block">
+        {props.weight ? `${props.weight} pts` : "—"}
+      </div>
+      <div className="flex w-20 shrink-0 justify-end">
+        <Pill label={pillLabel} accent={pillAccent} />
+      </div>
     </div>
   );
 };

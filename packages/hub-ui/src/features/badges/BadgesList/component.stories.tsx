@@ -24,13 +24,22 @@ const Template: Story<BadgesListProps> = (args) => (
  */
 export const Component: Story<BadgesListProps> = Template.bind({});
 Component.args = {
+  pathways: [
+    { pathwayId: "civic-readiness", title: "Civic Readiness" },
+    { pathwayId: "digital-citizenship-pathway", title: "Digital Citizenship" },
+  ],
+  selectedPathway: "",
   badges: [
     {
       badgeId: "1",
-      displayName: "Community Leaders",
+      displayName: "Community Leaders: An Extremely Long Badge Name That Should Wrap",
       level: 2,
       finishedAt: "2026-05-12T00:00:00Z",
       startedAt: "2026-04-01T00:00:00Z",
+      summary: "Students identify a real community need, engage with local leaders and organizations, and design a civic action project that addresses that issue over the course of the semester.",
+      pathwayName: "Civic Readiness",
+      numberOfLessons: 4,
+      weight: 2,
       onOpen: () => console.log("navigate to /badges/1"),
     },
     {
@@ -39,6 +48,10 @@ Component.args = {
       level: 1,
       startedAt: "2026-06-01T00:00:00Z",
       progress: 0.6,
+      summary: "Take direct, sustained action on a civic issue you care about.",
+      pathwayName: "Civic Readiness",
+      numberOfLessons: 1,
+      weight: 1.5,
       onOpen: () => console.log("navigate to /badges/2"),
     },
     {
