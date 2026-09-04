@@ -62,6 +62,7 @@ const TABS = [
 export const Pathway = (props: PathwayProps) => {
     const [tab, setTab] = useState("badges")
     const [categoriesOpen, setCategoriesOpen] = useState(false)
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
 
     const numberOfStudents = props.students.length
     const numberOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
@@ -80,6 +81,13 @@ export const Pathway = (props: PathwayProps) => {
         (props.allCategories || []).filter((c) => !c.parentCategoryId).map((c) => c.categoryId)
     )
     const badgeGroupCategories = criteriaCategories.filter((c) => !rootCategoryIds.has(c.categoryId))
+
+    // Readable name for a Categories-popup selection that isn't itself one of badgeGroupCategories
+    // (e.g. a deeper, non-criteria node in the tree) - BadgeTable only knows the criteria-scoped
+    // list, so it can't label a pill for anything outside it on its own.
+    const selectedCategoryName = selectedCategoryId
+        ? (props.allCategories || []).find((c) => c.categoryId === selectedCategoryId)?.name
+        : undefined
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
@@ -173,7 +181,7 @@ export const Pathway = (props: PathwayProps) => {
                     </div>
                 )}
 
-                {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} badges={props.badges} categories={badgeGroupCategories} />}
+                {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} badges={props.badges} categories={badgeGroupCategories} activeCategoryId={selectedCategoryId} activeCategoryLabel={selectedCategoryName} />}
                 {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} />}
             </div>
 
@@ -182,6 +190,11 @@ export const Pathway = (props: PathwayProps) => {
                 onClose={() => setCategoriesOpen(false)}
                 categories={props.allCategories || []}
                 criteria={criteria}
+                onCategoryClick={(id) => {
+                    setSelectedCategoryId(id)
+                    setTab("badges")
+                    setCategoriesOpen(false)
+                }}
             />
         </div>
     )

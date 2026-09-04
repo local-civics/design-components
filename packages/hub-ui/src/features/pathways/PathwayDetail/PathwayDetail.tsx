@@ -77,6 +77,10 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
   const [catFilter, setCatFilter] = React.useState<string | null>(null);
   const [categoriesOpen, setCategoriesOpen] = React.useState(false);
   const filteredBadges = catFilter ? badges.filter((b) => b.categories?.includes(catFilter)) : badges;
+  // The Categories popup lets a user pick any node in the full tree, not just the criteria-level
+  // categories that normally get their own pill - when that happens, add a pill for it too, so the
+  // active filter is always visibly confirmed rather than silently applied with nothing highlighted.
+  const pillIds = catFilter && !categoryIds.includes(catFilter) ? [...categoryIds, catFilter] : categoryIds;
 
   return (
     <div className="flex max-w-2xl flex-col gap-3.5">
@@ -148,7 +152,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
           </div>
         )}
 
-        {categoryIds.length > 0 && (
+        {pillIds.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
             <div
               onClick={() => setCatFilter(null)}
@@ -158,7 +162,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
             >
               All
             </div>
-            {categoryIds.map((id) => (
+            {pillIds.map((id) => (
               <div
                 key={id}
                 onClick={() => setCatFilter(id)}
@@ -211,6 +215,10 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
           onClose={() => setCategoriesOpen(false)}
           categories={props.allCategories || []}
           criteria={props.rawCriteria || {}}
+          onCategoryClick={(id) => {
+            setCatFilter(id);
+            setCategoriesOpen(false);
+          }}
         />
       )}
     </div>

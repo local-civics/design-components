@@ -6,7 +6,9 @@ import { IconDownload, IconExternalLink } from "@tabler/icons";
  */
 export type FileListItem = {
   link: string;
+  badgeId?: string;
   badgeName: string;
+  lessonId?: string;
   lessonName: string;
   question: string;
 };
@@ -18,6 +20,8 @@ export type FileListProps = {
   items: FileListItem[];
   hideBadge?: boolean;
   hideLesson?: boolean;
+  onBadgeClick?: (badgeId: string) => void;
+  onLessonClick?: (lessonId: string) => void;
 };
 
 /**
@@ -36,7 +40,7 @@ export type FileListProps = {
  * @constructor
  */
 export const FileList = (props: FileListProps) => {
-  const { items, hideBadge, hideLesson } = props;
+  const { items, hideBadge, hideLesson, onBadgeClick, onLessonClick } = props;
   if (!items.length) {
     return null;
   }
@@ -67,10 +71,30 @@ export const FileList = (props: FileListProps) => {
           <React.Fragment key={i}>
             <div className={`${dataCell} ${rowBorder} text-xs font-semibold text-dark-blue-400`}>{row.question}</div>
             {!hideLesson && (
-              <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.lessonName}</div>
+              row.lessonId && onLessonClick ? (
+                <button
+                  type="button"
+                  onClick={() => onLessonClick(row.lessonId as string)}
+                  className={`${dataCell} ${rowBorder} truncate text-left text-[11px] font-semibold text-sky-blue-400 hover:underline`}
+                >
+                  {row.lessonName}
+                </button>
+              ) : (
+                <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.lessonName}</div>
+              )
             )}
             {!hideBadge && (
-              <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.badgeName}</div>
+              row.badgeId && onBadgeClick ? (
+                <button
+                  type="button"
+                  onClick={() => onBadgeClick(row.badgeId as string)}
+                  className={`${dataCell} ${rowBorder} truncate text-left text-[11px] font-semibold text-sky-blue-400 hover:underline`}
+                >
+                  {row.badgeName}
+                </button>
+              ) : (
+                <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.badgeName}</div>
+              )
             )}
             <div className={`${dataCell} ${rowBorder} flex shrink-0 gap-2`}>
               <a

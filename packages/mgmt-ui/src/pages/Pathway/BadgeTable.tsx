@@ -33,6 +33,8 @@ export type TableProps = {
     loading: boolean
     badges: Item[]
     categories: Category[]
+    activeCategoryId?: string
+    activeCategoryLabel?: string
 }
 
 const OTHER_FILTER = "__other__";
@@ -52,6 +54,14 @@ export function Table(props: TableProps) {
     const {items: sortedBadges, requestSort, sortConfig} = useSortableData(props.badges);
     const [categoryFilter, setCategoryFilter] = React.useState("");
 
+    // Lets a parent (the Categories popup, via Pathway.tsx) drive this table's own filter pill
+    // selection without lifting the pill state itself out of this component.
+    React.useEffect(() => {
+        if (props.activeCategoryId !== undefined) {
+            setCategoryFilter(props.activeCategoryId);
+        }
+    }, [props.activeCategoryId]);
+
     if (props.badges.length === 0) {
         return <PlaceholderBanner
             title="No badges to display"
@@ -63,6 +73,15 @@ export function Table(props: TableProps) {
 
     const groupedIds = new Set(props.categories.map((c) => c.categoryId));
     const other = sortedBadges.filter((b) => !b.categories?.some((id) => groupedIds.has(id)));
+
+    // The Categories popup can select any node in the full tree, not just the criteria-level
+    // categories that normally get their own pill - when that happens, add a pill for it too, so
+    // the active filter is always visibly confirmed rather than silently applied with nothing
+    // highlighted.
+    const extraCategory =
+        categoryFilter && categoryFilter !== OTHER_FILTER && !groupedIds.has(categoryFilter)
+            ? { categoryId: categoryFilter, name: props.activeCategoryLabel || categoryFilter }
+            : undefined;
 
     const visibleBadges = !categoryFilter
         ? sortedBadges
@@ -82,6 +101,9 @@ export function Table(props: TableProps) {
                         onClick={() => setCategoryFilter(category.categoryId)}
                     />
                 ))}
+                {extraCategory && (
+                    <CategoryPill label={extraCategory.name} active onClick={() => setCategoryFilter(extraCategory.categoryId)} />
+                )}
                 {other.length > 0 && (
                     <CategoryPill label="Other" active={categoryFilter === OTHER_FILTER} onClick={() => setCategoryFilter(OTHER_FILTER)} />
                 )}
