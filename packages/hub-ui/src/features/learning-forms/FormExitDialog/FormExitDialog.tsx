@@ -9,6 +9,7 @@ import { Modal } from "../../../components/Modal";
 export type FormExitDialogProps = {
   onYes?: () => void;
   onNo?: () => void;
+  onLeaveWithoutSaving?: () => void;
 };
 
 /**
@@ -26,9 +27,9 @@ export const FormExitDialog = (props: FormExitDialogProps) => {
 
         <div className="text-slate-600 text-center">
           <div className="font-bold text-lg">
-            <span>Are you sure you want to leave?</span>
+            <span>Leave this lesson?</span>
           </div>
-          <p className="text-sm max-w-[16rem]">Your progress will be saved.</p>
+          <p className="text-sm max-w-[16rem]">You can save your progress first, or leave without saving.</p>
         </div>
 
         <div className="my-5 grid grid-cols-2 gap-4">
@@ -38,7 +39,7 @@ export const FormExitDialog = (props: FormExitDialogProps) => {
             border="rounded"
             color="blue"
             theme="dark"
-            text="Yes"
+            text="Save & Leave"
             size="md"
             onClick={props.onYes}
           />
@@ -49,11 +50,19 @@ export const FormExitDialog = (props: FormExitDialogProps) => {
             border="rounded"
             color="secondary"
             theme="dark"
-            text="No"
+            text="Cancel"
             size="md"
             onClick={props.onNo}
           />
         </div>
+
+        <button
+          type="button"
+          onClick={props.onLeaveWithoutSaving}
+          className="text-xs font-bold text-slate-400 underline underline-offset-2 hover:text-slate-600"
+        >
+          Leave without saving
+        </button>
       </div>
     </Modal>
   );

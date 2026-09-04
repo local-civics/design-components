@@ -10,6 +10,7 @@ export type CategoriesModalProps = {
   onClose: () => void;
   categories: PathwayCategory[];
   criteria: PathwayCriteria;
+  onCategoryClick?: (categoryId: string) => void;
 };
 
 /**
@@ -34,7 +35,7 @@ export function CategoriesModal(props: CategoriesModalProps) {
         <div className="flex max-h-[65vh] flex-col gap-2 overflow-y-auto pr-1">
           {tree.length === 0 && <p className="text-sm text-slate-400">No categories to display.</p>}
           {tree.map((node) => (
-            <CategoryNode key={node.categoryId} node={node} criteria={props.criteria} depth={0} />
+            <CategoryNode key={node.categoryId} node={node} criteria={props.criteria} depth={0} onCategoryClick={props.onCategoryClick} />
           ))}
         </div>
       </div>
@@ -42,12 +43,23 @@ export function CategoriesModal(props: CategoriesModalProps) {
   );
 }
 
-const CategoryNode = (props: { node: CategoryTreeNode; criteria: PathwayCriteria; depth: number }) => {
+const CategoryNode = (props: { node: CategoryTreeNode; criteria: PathwayCriteria; depth: number; onCategoryClick?: (categoryId: string) => void }) => {
   const hasChildren = props.node.children.length > 0;
   const required = props.criteria[props.node.categoryId];
+  const clickable = !!props.onCategoryClick;
 
   return (
-    <div className={hasChildren ? "rounded-lg border border-slate-100 bg-slate-50/60 p-3" : "rounded-lg px-3 py-2 hover:bg-slate-50"}>
+    <div
+      onClick={
+        clickable
+          ? (e) => {
+              e.stopPropagation();
+              props.onCategoryClick!(props.node.categoryId);
+            }
+          : undefined
+      }
+      className={`${hasChildren ? "rounded-lg border border-slate-100 bg-slate-50/60 p-3" : "rounded-lg px-3 py-2 hover:bg-slate-50"} ${clickable ? "cursor-pointer" : ""}`}
+    >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className={props.depth === 0 ? "text-sm font-extrabold text-dark-blue-400" : "text-xs font-bold text-dark-blue-400"}>
           {props.node.name}
@@ -71,7 +83,7 @@ const CategoryNode = (props: { node: CategoryTreeNode; criteria: PathwayCriteria
       {hasChildren && (
         <div className="mt-3 flex flex-col gap-2 border-l-2 border-slate-200 pl-4">
           {props.node.children.map((child) => (
-            <CategoryNode key={child.categoryId} node={child} criteria={props.criteria} depth={props.depth + 1} />
+            <CategoryNode key={child.categoryId} node={child} criteria={props.criteria} depth={props.depth + 1} onCategoryClick={props.onCategoryClick} />
           ))}
         </div>
       )}

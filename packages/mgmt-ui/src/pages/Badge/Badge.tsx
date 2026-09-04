@@ -37,11 +37,14 @@ export type BadgeProps = {
     href: string
     trial?: boolean
     lessonsCompleted?: number
+    pathwayId?: string
+    pathwayTitle?: string
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
+    onPathwayClick?: () => void;
 }
 
 const TABS = [
@@ -70,6 +73,12 @@ export const Badge = (props: BadgeProps) => {
                             <IconArrowLeft size={13} stroke={2.5} />
                             Back
                         </div>
+                        {!!props.pathwayTitle && (
+                            <div onClick={props.onPathwayClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
+                                <IconArrowLeft size={13} stroke={2.5} />
+                                Go to Pathway
+                            </div>
+                        )}
                         <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "Badge"}</h1>
                         <p className="max-w-xl text-sm text-slate-500">{props.description || "No description"}</p>
                     </div>

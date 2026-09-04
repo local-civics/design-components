@@ -9,6 +9,7 @@ import { Modal } from "../../../components/Modal";
 export type FormSubmitDialogProps = {
   onEditLesson?: () => void;
   onBackToBadge?: () => void;
+  backToBadgeLabel?: string;
 };
 
 /**
@@ -51,7 +52,7 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
             border="rounded"
             color="blue"
             theme="dark"
-            text="Back to Badge"
+            text={props.backToBadgeLabel || "Back to Badge"}
             size="sm"
             onClick={props.onBackToBadge}
           />

@@ -50,6 +50,7 @@ export type LearningFormProps = {
   stopWatch?: React.ReactNode;
 
   onBackToBadge?: () => void;
+  backToBadgeLabel?: string;
   onEditLesson?: () => void;
   onSubmit?: (reflection: string, rating?: number) => Promise<any>;
   onSaveDraft?: (items: FormItemProps[], reflection: string, rating?: number) => Promise<any>;
@@ -157,8 +158,8 @@ export const LearningForm = (props: LearningFormProps) => {
         <div className="grid grid-cols-1 gap-y-6 px-8 py-8 text-dark-blue-400 max-w-md">
           <div
             onClick={() => {
-              if (props.preview && props.onEditLesson) {
-                props.onEditLesson();
+              if (props.preview) {
+                (props.onBackToBadge || props.onEditLesson)?.();
               } else {
                 setShowExitDialogue(true);
               }
@@ -248,6 +249,7 @@ export const LearningForm = (props: LearningFormProps) => {
             <FormExitDialog
               onYes={() => saveDraft().then(() => props.onEditLesson && props.onEditLesson())}
               onNo={() => setShowExitDialogue(false)}
+              onLeaveWithoutSaving={() => props.onEditLesson && props.onEditLesson()}
             />
           </div>
         </div>
@@ -256,7 +258,11 @@ export const LearningForm = (props: LearningFormProps) => {
       {showSubmitDialogue && (
         <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
           <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
-            <FormSubmitDialog onEditLesson={() => setShowSubmitDialogue(false)} onBackToBadge={props.onBackToBadge} />
+            <FormSubmitDialog
+              onEditLesson={() => setShowSubmitDialogue(false)}
+              onBackToBadge={props.onBackToBadge}
+              backToBadgeLabel={props.backToBadgeLabel}
+            />
           </div>
         </div>
       )}

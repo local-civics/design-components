@@ -42,6 +42,9 @@ export type FileLockerProps = {
   lessons: { lessonId: string; lessonName: string }[];
   badges: FileLockerBadge[];
   pathways: FileLockerPathway[];
+  onBadgeClick?: (badgeId: string) => void;
+  onLessonClick?: (lessonId: string) => void;
+  onPathwayClick?: (pathwayId: string) => void;
 };
 
 const TABS = [
@@ -120,15 +123,20 @@ export const FileLocker = (props: FileLockerProps) => {
 
         {!props.loading && tab === "pathways" &&
           pathwayGroups.map(({ pathway, items }) => (
-            <GroupCard key={pathway.pathwayId} title={pathway.title} description={pathway.description}>
-              <FileList items={items} />
+            <GroupCard
+              key={pathway.pathwayId}
+              title={pathway.title}
+              description={pathway.description}
+              onClick={props.onPathwayClick ? () => props.onPathwayClick!(pathway.pathwayId) : undefined}
+            >
+              <FileList items={items} onBadgeClick={props.onBadgeClick} onLessonClick={props.onLessonClick} />
             </GroupCard>
           ))}
 
         {!props.loading && tab === "badges" &&
           badgeGroups.map(({ badge, items }) => (
             <GroupCard key={badge.badgeId} title={badge.displayName} description={badgeSubtitle(items)}>
-              <FileList items={items} hideBadge />
+              <FileList items={items} hideBadge onLessonClick={props.onLessonClick} />
             </GroupCard>
           ))}
 
@@ -159,10 +167,16 @@ const lessonSubtitle = (items: SubmissionItem[]): string | undefined => {
   return parts.length ? parts.join(" · ") : undefined;
 };
 
-const GroupCard = (props: { title: string; description?: string; children: React.ReactNode }) => (
+const GroupCard = (props: { title: string; description?: string; onClick?: () => void; children: React.ReactNode }) => (
   <div className="rounded-2xl border border-slate-200 bg-white p-4">
     <div className="mb-3">
-      <div className="text-sm font-extrabold text-dark-blue-400">{props.title}</div>
+      {props.onClick ? (
+        <button type="button" onClick={props.onClick} className="text-left text-sm font-extrabold text-sky-blue-400 hover:underline">
+          {props.title}
+        </button>
+      ) : (
+        <div className="text-sm font-extrabold text-dark-blue-400">{props.title}</div>
+      )}
       {props.description && <div className="text-xs text-slate-500">{props.description}</div>}
     </div>
     {props.children}
