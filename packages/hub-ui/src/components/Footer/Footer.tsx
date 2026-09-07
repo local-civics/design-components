@@ -43,10 +43,10 @@ export const Footer = (props: FooterProps) => {
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="flex max-w-xs flex-col gap-2">
             <div className="flex items-center gap-2">
-              <img className="w-4" src="https://cdn.localcivics.io/brand/l.png" alt="Local Civics" />
+              <img className="w-8" src="https://cdn.localcivics.io/brand/l.png" alt="Local Civics" />
               <span className="text-lg font-bold text-slate-500">PathLink</span>
             </div>
-            <p className="text-xs text-slate-400">We connect students to powerful civic learning experiences.</p>
+            <p className="text-xs text-slate-400">Every path. Your best future.</p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             {LINKS.map((link) => (

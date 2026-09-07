@@ -25,7 +25,13 @@ export function CategoriesModal(props: CategoriesModalProps) {
     const tree = React.useMemo(() => buildCategoryTree(props.categories || []), [props.categories]);
 
     return (
-        <Modal opened={props.opened} onClose={props.onClose} title="Category structure" size="lg" centered>
+        <Modal
+            opened={props.opened}
+            onClose={props.onClose}
+            title={<span className="text-base font-extrabold text-dark-blue-400">Pathway Categories</span>}
+            size="lg"
+            centered
+        >
             <div className="flex max-h-[70vh] flex-col gap-2 overflow-y-auto pr-1">
                 {tree.length === 0 && <p className="text-sm text-slate-400">No categories to display.</p>}
                 {tree.map((node) => (
@@ -40,11 +46,16 @@ const CategoryNode = (props: { node: CategoryTreeNode, criteria: Record<string, 
     const hasChildren = props.node.children.length > 0;
     const required = props.criteria[props.node.categoryId];
     const clickable = !!props.onCategoryClick;
+    // Hover-only feedback (signals "clickable", not "currently selected" - the filter pill already
+    // covers that once a category is picked). Leaf nodes already had this; parent nodes previously
+    // had a static background with no hover state at all, so hovering over one gave no feedback.
+    const base = hasChildren ? "rounded-lg border border-slate-100 p-3" : "rounded-lg px-3 py-2";
+    const style = hasChildren ? "bg-slate-50/60 hover:bg-slate-100" : "hover:bg-slate-50";
 
     return (
         <div
             onClick={clickable ? (e) => { e.stopPropagation(); props.onCategoryClick!(props.node.categoryId); } : undefined}
-            className={`${hasChildren ? "rounded-lg border border-slate-100 bg-slate-50/60 p-3" : "rounded-lg px-3 py-2 hover:bg-slate-50"} ${clickable ? "cursor-pointer" : ""}`}
+            className={`${base} ${style} ${clickable ? "cursor-pointer" : ""}`}
         >
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className={props.depth === 0 ? "text-sm font-extrabold text-dark-blue-400" : "text-xs font-bold text-dark-blue-400"}>
