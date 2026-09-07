@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {Link} from "react-router-dom";
 import {IconChevronRight} from "@tabler/icons";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
+import {useSortableData} from "../../utils/useSortableData";
 
 /**
  * Item
@@ -28,6 +30,8 @@ export interface TableProps {
  * @constructor
  */
 export function Table(props: TableProps) {
+    const {items: sortedItems, requestSort, sortConfig} = useSortableData(props.items);
+
     if (props.loading) {
         return <div className="text-sm text-slate-400">Loading…</div>;
     }
@@ -42,14 +46,14 @@ export function Table(props: TableProps) {
 
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex gap-4 px-4 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
-                <div className="flex-1">Lesson</div>
-                <div className="w-40 shrink-0">Badge</div>
-                <div className="w-40 shrink-0">Pathway</div>
+            <div className="flex items-center gap-4 px-4">
+                <SortableHeader className="flex-1" label="Lesson" sortKey="name" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader className="w-40 shrink-0" label="Badge" sortKey="badge" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader className="w-40 shrink-0" label="Pathway" sortKey="pathway" sortConfig={sortConfig} onSort={requestSort} />
                 <div className="w-4 shrink-0" />
             </div>
 
-            {props.items.map((row) => (
+            {sortedItems.map((row) => (
                 <Link
                     key={row.lessonId}
                     to={row.href}

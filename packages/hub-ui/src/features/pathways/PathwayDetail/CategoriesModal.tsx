@@ -47,6 +47,11 @@ const CategoryNode = (props: { node: CategoryTreeNode; criteria: PathwayCriteria
   const hasChildren = props.node.children.length > 0;
   const required = props.criteria[props.node.categoryId];
   const clickable = !!props.onCategoryClick;
+  // Hover-only feedback (signals "clickable", not "currently selected" - the filter pill already
+  // covers that once a category is picked). Leaf nodes already had this; parent nodes previously
+  // had a static background with no hover state at all, so hovering over one gave no feedback.
+  const base = hasChildren ? "rounded-lg border border-slate-100 p-3" : "rounded-lg px-3 py-2";
+  const style = hasChildren ? "bg-slate-50/60 hover:bg-slate-100" : "hover:bg-slate-50";
 
   return (
     <div
@@ -58,7 +63,7 @@ const CategoryNode = (props: { node: CategoryTreeNode; criteria: PathwayCriteria
             }
           : undefined
       }
-      className={`${hasChildren ? "rounded-lg border border-slate-100 bg-slate-50/60 p-3" : "rounded-lg px-3 py-2 hover:bg-slate-50"} ${clickable ? "cursor-pointer" : ""}`}
+      className={`${base} ${style} ${clickable ? "cursor-pointer" : ""}`}
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className={props.depth === 0 ? "text-sm font-extrabold text-dark-blue-400" : "text-xs font-bold text-dark-blue-400"}>

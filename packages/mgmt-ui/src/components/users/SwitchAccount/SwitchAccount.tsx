@@ -64,7 +64,13 @@ export const SwitchAccount = (props: SwitchAccountProps) => {
     })
 
     return (
-        <Modal centered fullScreen title="Change account" opened={props.opened} onClose={() => props.onClose && props.onClose()}>
+        <Modal
+            centered
+            fullScreen
+            title={<span className="text-base font-extrabold text-dark-blue-400">Change account</span>}
+            opened={props.opened}
+            onClose={() => props.onClose && props.onClose()}
+        >
             <div className="relative">
                 {props.loading && (
                     <div className="flex h-[400px] items-center justify-center">
