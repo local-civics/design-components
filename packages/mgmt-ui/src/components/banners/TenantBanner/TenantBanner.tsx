@@ -75,6 +75,11 @@ export const TenantBanner = ({
           });
         } catch (err) {
           console.error("Failed to copy code", err);
+          showNotification({
+            title: "Unable to copy code.",
+            message: `Your browser blocked the copy - the community code is: ${code}`,
+            autoClose: false,
+          });
         }
       };
 
