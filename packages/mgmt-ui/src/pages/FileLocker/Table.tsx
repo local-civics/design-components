@@ -21,6 +21,10 @@ export interface SubmissionItem {
     badgeName: string
     badgeId: string
     lessonName: string
+    // Already present on every submission returned by getFileLocker() (useOrganization.ts) - just
+    // wasn't declared here before, so nothing read it. No new API call, no hub change: this data is
+    // already flowing through today, purely a type-level addition to unlock it.
+    lessonId?: string
     question: string
     // Already present on every submission returned by getFileLocker() (useOrganization.ts) - just
     // wasn't declared here before, so nothing read it. No new API call, no hub change: this data is
@@ -29,6 +33,7 @@ export interface SubmissionItem {
     // Derived client-side in FileLocker.tsx from badgeId (badge -> pathway prefix-match), not part
     // of the raw API response - attached before these items ever reach this component.
     pathwayName?: string
+    pathwayId?: string
 }
 
 /**
@@ -47,6 +52,9 @@ export type TableProps = TableData & {
     hideLesson?: boolean
     hidePathway?: boolean
     onReview?: (item: Item) => void
+    onBadgeClick?: (badgeId: string) => void
+    onLessonClick?: (lessonId: string) => void
+    onPathwayClick?: (pathwayId: string) => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -120,7 +128,15 @@ export function Table(props: TableProps) {
                         </div>
                         {isOpen && (
                             <div className="border-t border-slate-100 px-4 py-3">
-                                <FileStack items={row.submissions} hideBadge={props.hideBadge} hideLesson={props.hideLesson} hidePathway={props.hidePathway} />
+                                <FileStack
+                                    items={row.submissions}
+                                    hideBadge={props.hideBadge}
+                                    hideLesson={props.hideLesson}
+                                    hidePathway={props.hidePathway}
+                                    onBadgeClick={props.onBadgeClick}
+                                    onLessonClick={props.onLessonClick}
+                                    onPathwayClick={props.onPathwayClick}
+                                />
                             </div>
                         )}
                     </div>

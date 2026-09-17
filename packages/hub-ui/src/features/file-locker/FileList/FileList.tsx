@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconDownload, IconExternalLink } from "@tabler/icons";
+import { IconDownload } from "@tabler/icons";
 
 /**
  * FileListItem
@@ -97,15 +97,6 @@ export const FileList = (props: FileListProps) => {
               )
             )}
             <div className={`${dataCell} ${rowBorder} flex shrink-0 gap-2`}>
-              <a
-                href={row.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 rounded-md border border-slate-200 px-2.5 py-1.5 text-[11px] font-bold text-slate-600 no-underline hover:bg-slate-50"
-              >
-                <IconExternalLink size={12} stroke={2} />
-                Preview
-              </a>
               <a
                 href={row.link}
                 download

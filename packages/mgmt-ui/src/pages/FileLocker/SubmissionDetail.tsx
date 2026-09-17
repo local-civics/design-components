@@ -11,6 +11,9 @@ export type SubmissionDetailProps = {
     context?: string
     onBack: () => void
     onNav: (direction: 1 | -1) => void
+    onBadgeClick?: (badgeId: string) => void
+    onLessonClick?: (lessonId: string) => void
+    onPathwayClick?: (pathwayId: string) => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -53,7 +56,12 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="text-sm font-extrabold text-dark-blue-400">Files</div>
                 <div className="mt-2">
-                    <FileStack items={student.submissions}/>
+                    <FileStack
+                        items={student.submissions}
+                        onBadgeClick={props.onBadgeClick}
+                        onLessonClick={props.onLessonClick}
+                        onPathwayClick={props.onPathwayClick}
+                    />
                 </div>
             </div>
 

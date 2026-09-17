@@ -35,21 +35,21 @@ const STUDENTS = [
     {
         userId: "u1", avatar: "", name: "Adrian Lopez", email: "adrianlopez@localcivics.io",
         submissions: [
-            {link: "https://cdn.localcivics.io/store/1", badgeName: "Service-Learning Project", badgeId: "b1", lessonName: "Complete a Service-Learning Project", question: "Submit your essay or presentation here.", updatedAt: daysAgo(1)},
-            {link: "https://cdn.localcivics.io/store/2", badgeName: "Political Party Project", badgeId: "b2", lessonName: "Party Platform Project Submission", question: "Submit your project slides here.", updatedAt: daysAgo(3)},
+            {link: "https://cdn.localcivics.io/store/1", badgeName: "Service-Learning Project", badgeId: "b1", lessonName: "Complete a Service-Learning Project", lessonId: "l1", question: "Submit your essay or presentation here.", updatedAt: daysAgo(1)},
+            {link: "https://cdn.localcivics.io/store/2", badgeName: "Political Party Project", badgeId: "b2", lessonName: "Party Platform Project Submission", lessonId: "l2", question: "Submit your project slides here.", updatedAt: daysAgo(3)},
         ],
     },
     {
         userId: "u2", avatar: "", name: "Brenda Cole", email: "bcole@localcivics.io",
         submissions: [
-            {link: "https://cdn.localcivics.io/store/3", badgeName: "Service-Learning Project", badgeId: "b1", lessonName: "Complete a Service-Learning Project", question: "Submit your essay or presentation here.", updatedAt: daysAgo(10)},
+            {link: "https://cdn.localcivics.io/store/3", badgeName: "Service-Learning Project", badgeId: "b1", lessonName: "Complete a Service-Learning Project", lessonId: "l1", question: "Submit your essay or presentation here.", updatedAt: daysAgo(10)},
         ],
     },
     {
         userId: "u3", avatar: "", name: "Chen Wu", email: "cwu@localcivics.io",
         submissions: [
-            {link: "https://cdn.localcivics.io/store/4", badgeName: "Biliteracy Portfolio", badgeId: "b3", lessonName: "Biliteracy Portfolio Submission", question: "Submit your portfolio here.", updatedAt: daysAgo(20)},
-            {link: "https://cdn.localcivics.io/store/5", badgeName: "Biliteracy Portfolio", badgeId: "b3", lessonName: "Biliteracy Portfolio Submission", question: "Submit your reflection here.", updatedAt: daysAgo(45)},
+            {link: "https://cdn.localcivics.io/store/4", badgeName: "Biliteracy Portfolio", badgeId: "b3", lessonName: "Biliteracy Portfolio Submission", lessonId: "l3", question: "Submit your portfolio here.", updatedAt: daysAgo(20)},
+            {link: "https://cdn.localcivics.io/store/5", badgeName: "Biliteracy Portfolio", badgeId: "b3", lessonName: "Biliteracy Portfolio Submission", lessonId: "l3", question: "Submit your reflection here.", updatedAt: daysAgo(45)},
         ],
     },
     {

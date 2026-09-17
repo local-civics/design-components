@@ -1,11 +1,14 @@
 import * as React from 'react';
-import {IconDownload, IconExternalLink} from "@tabler/icons";
+import {IconDownload} from "@tabler/icons";
 
 export interface Item {
     link: string
     badgeName: string
+    badgeId?: string
     lessonName: string
+    lessonId?: string
     pathwayName?: string
+    pathwayId?: string
     question: string
 }
 
@@ -14,6 +17,9 @@ export type StackProps = {
     hideBadge?: boolean
     hideLesson?: boolean
     hidePathway?: boolean
+    onBadgeClick?: (badgeId: string) => void
+    onLessonClick?: (lessonId: string) => void
+    onPathwayClick?: (pathwayId: string) => void
 }
 
 /**
@@ -29,7 +35,7 @@ export type StackProps = {
  * the way it already does today.
  */
 export function Stack(props: StackProps) {
-    const {items, hideBadge, hideLesson, hidePathway} = props
+    const {items, hideBadge, hideLesson, hidePathway, onBadgeClick, onLessonClick, onPathwayClick} = props
     if (!items.length) return null;
 
     const columns = [
@@ -56,19 +62,34 @@ export function Stack(props: StackProps) {
                 return (
                     <React.Fragment key={i}>
                         <div className={`${dataCell} ${rowBorder} text-xs font-semibold text-dark-blue-400`}>{row.question}</div>
-                        {!hidePathway && <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.pathwayName || "—"}</div>}
-                        {!hideLesson && <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.lessonName}</div>}
-                        {!hideBadge && <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.badgeName}</div>}
+                        {!hidePathway && (
+                            row.pathwayId && onPathwayClick ? (
+                                <button type="button" onClick={() => onPathwayClick(row.pathwayId as string)} className={`${dataCell} ${rowBorder} truncate text-left text-[11px] font-semibold text-sky-blue-400 hover:underline`}>
+                                    {row.pathwayName || "—"}
+                                </button>
+                            ) : (
+                                <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.pathwayName || "—"}</div>
+                            )
+                        )}
+                        {!hideLesson && (
+                            row.lessonId && onLessonClick ? (
+                                <button type="button" onClick={() => onLessonClick(row.lessonId as string)} className={`${dataCell} ${rowBorder} truncate text-left text-[11px] font-semibold text-sky-blue-400 hover:underline`}>
+                                    {row.lessonName}
+                                </button>
+                            ) : (
+                                <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.lessonName}</div>
+                            )
+                        )}
+                        {!hideBadge && (
+                            row.badgeId && onBadgeClick ? (
+                                <button type="button" onClick={() => onBadgeClick(row.badgeId as string)} className={`${dataCell} ${rowBorder} truncate text-left text-[11px] font-semibold text-sky-blue-400 hover:underline`}>
+                                    {row.badgeName}
+                                </button>
+                            ) : (
+                                <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.badgeName}</div>
+                            )
+                        )}
                         <div className={`${dataCell} ${rowBorder} flex shrink-0 gap-2`}>
-                            <a
-                                href={row.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1 rounded-md border border-slate-200 px-2.5 py-1.5 text-[11px] font-bold text-slate-600 no-underline hover:bg-slate-50"
-                            >
-                                <IconExternalLink size={12} stroke={2}/>
-                                Preview
-                            </a>
                             <a
                                 href={row.link}
                                 download
