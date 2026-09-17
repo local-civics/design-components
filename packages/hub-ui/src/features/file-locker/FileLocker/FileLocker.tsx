@@ -1,7 +1,6 @@
 import * as React from "react";
 import { IconCalendar, IconCalendarStats, IconClipboard, IconSearch } from "@tabler/icons";
 import { FileList, FileListItem } from "../FileList/FileList";
-import { FileLockerSearchModal } from "../FileLockerSearchModal/FileLockerSearchModal";
 import { useFilteredSubmissions } from "./useFilteredSubmissions";
 
 /**
@@ -54,7 +53,26 @@ const TABS = [
   { value: "lessons", label: "By lesson" },
 ];
 
+// The search box cross-matches every tab against pathway, badge, lesson, and question text at once
+// - not just whichever field happens to be that tab's own primary grouping key - so one placeholder
+// describes all 3 tabs' behavior identically.
+const SEARCH_PLACEHOLDER = "Search by pathway, badge, lesson, or question";
+
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Cross-field match used by every tab: a submission matches if its badge, lesson, pathway, or
+// question text matches. Used both to decide whether a whole group should show at all, and to
+// narrow which submissions appear inside a group that only matches because of one of its items,
+// not its own name.
+const matchesSearch = (item: SubmissionItem, term: string): boolean => {
+  if (!term) return true;
+  return (
+    item.badgeName.toLowerCase().includes(term) ||
+    item.lessonName.toLowerCase().includes(term) ||
+    !!item.pathwayName?.toLowerCase().includes(term) ||
+    item.question.toLowerCase().includes(term)
+  );
+};
 
 /**
  * The student-facing File Locker - a self-scoped view of the current student's own uploaded
@@ -70,7 +88,8 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  */
 export const FileLocker = (props: FileLockerProps) => {
   const [tab, setTab] = React.useState("pathways");
-  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+  const searchLower = search.trim().toLowerCase();
   const filtered = useFilteredSubmissions(props.submissions);
 
   const files = props.submissions.length;
@@ -81,46 +100,45 @@ export const FileLocker = (props: FileLockerProps) => {
   const thisWeek = props.submissions.filter((s) => s.updatedAt && new Date(s.updatedAt).getTime() >= weekAgo).length;
   const thisMonth = props.submissions.filter((s) => s.updatedAt && new Date(s.updatedAt).getTime() >= startOfMonth).length;
 
+  // The single search box cross-matches every tab against pathway, badge, lesson, and question
+  // text at once. A group whose own name matches shows every one of its submissions unfiltered
+  // (today's behavior); a group that only matches because one of its submissions does shows just
+  // that narrowed subset instead; a group matching neither its own name nor any submission drops
+  // out via the existing "only render groups with at least one item" filter below - the same rule
+  // that already hides a group with zero submissions regardless of search.
   const pathwayGroups = props.pathways
-    .map((p) => ({ pathway: p, items: filtered.byPathway(p.pathwayId, props.badges) }))
+    .map((p) => {
+      const base = filtered.byPathway(p.pathwayId, props.badges);
+      const ownNameMatches = !searchLower || p.title.toLowerCase().includes(searchLower);
+      const items = ownNameMatches ? base : base.filter((it) => matchesSearch(it, searchLower));
+      return { pathway: p, items };
+    })
     .filter((g) => g.items.length > 0);
 
   const badgeGroups = props.badges
-    .map((b) => ({ badge: b, items: filtered.byBadge(b.badgeId) }))
+    .map((b) => {
+      const base = filtered.byBadge(b.badgeId);
+      const ownNameMatches = !searchLower || b.displayName.toLowerCase().includes(searchLower);
+      const items = ownNameMatches ? base : base.filter((it) => matchesSearch(it, searchLower));
+      return { badge: b, items };
+    })
     .filter((g) => g.items.length > 0);
 
   const lessonGroups = props.lessons
-    .map((l) => ({ lesson: l, items: filtered.byLesson(l.lessonId) }))
+    .map((l) => {
+      const base = filtered.byLesson(l.lessonId);
+      const ownNameMatches = !searchLower || l.lessonName.toLowerCase().includes(searchLower);
+      const items = ownNameMatches ? base : base.filter((it) => matchesSearch(it, searchLower));
+      return { lesson: l, items };
+    })
     .filter((g) => g.items.length > 0);
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
-          <p className="text-sm text-slate-500">{props.description || "Files and links you've submitted through your lessons"}</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setSearchOpen(true)}
-          className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
-        >
-          <IconSearch size={13} stroke={2} />
-          Search
-        </button>
+      <div>
+        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
+        <p className="text-sm text-slate-500">{props.description || "Files and links you've submitted through your lessons"}</p>
       </div>
-
-      {searchOpen && (
-        <FileLockerSearchModal
-          onClose={() => setSearchOpen(false)}
-          pathways={props.pathways}
-          badges={props.badges}
-          lessons={props.lessons}
-          onPathwayClick={props.onPathwayClick}
-          onBadgeClick={props.onBadgeClick}
-          onLessonClick={props.onLessonClick}
-        />
-      )}
 
       <div className="flex gap-2.5">
         <StatCell icon={IconClipboard} value={files} label="Files" accent="cyan" />
@@ -140,6 +158,17 @@ export const FileLocker = (props: FileLockerProps) => {
             {t.label}
           </button>
         ))}
+      </div>
+
+      <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <IconSearch size={15} stroke={1.75} className="text-slate-400" />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={SEARCH_PLACEHOLDER}
+          className="flex-1 border-none bg-transparent text-sm text-dark-blue-400 outline-none placeholder:text-slate-400"
+        />
       </div>
 
       <div className="flex flex-col gap-3">
@@ -180,6 +209,12 @@ export const FileLocker = (props: FileLockerProps) => {
               <FileList items={items} hideBadge hideLesson />
             </GroupCard>
           ))}
+
+        {!props.loading && files > 0 && searchLower && (
+          (tab === "pathways" && pathwayGroups.length === 0) ||
+          (tab === "badges" && badgeGroups.length === 0) ||
+          (tab === "lessons" && lessonGroups.length === 0)
+        ) && <p className="text-sm text-slate-400">No matching entries.</p>}
 
         {!props.loading && files === 0 && <p className="text-sm text-slate-400">No files to display.</p>}
       </div>

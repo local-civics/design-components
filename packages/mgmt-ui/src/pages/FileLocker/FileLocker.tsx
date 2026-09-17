@@ -4,7 +4,6 @@ import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {SubmissionDetail} from "./SubmissionDetail";
-import {FileLockerSearchModal} from "./FileLockerSearchModal";
 import {useFilteredStudents} from "./useFilteredStudents"
 
 /**
@@ -73,7 +72,26 @@ const TABS: {value: string, label: string}[] = [
     {value: "lessons", label: "By lesson"},
 ]
 
+// The search box now cross-matches every tab against student name, pathway, badge, and lesson
+// name at once - not just whichever field happens to be that tab's own primary grouping key - so
+// one placeholder describes all 4 tabs' behavior identically.
+const SEARCH_PLACEHOLDER = "Search by student, pathway, badge, or lesson"
+
 const countFiles = (students: Item[]) => students.reduce((acc, s) => acc + (s.submissions?.length || 0), 0)
+
+// Cross-field match used by every tab: a student matches if their own name matches, or if any of
+// their (already group-scoped) submissions' badge/lesson/pathway name matches. Used two ways: to
+// decide whether a whole group (pathway/badge/lesson) should show at all, and to narrow which
+// students appear inside a group that only matches because of one of its members, not its own name.
+const matchesSearch = (student: Item, term: string): boolean => {
+    if (!term) return true
+    if (student.name.toLowerCase().includes(term)) return true
+    return (student.submissions || []).some((sub) =>
+        sub.badgeName?.toLowerCase().includes(term) ||
+        sub.lessonName?.toLowerCase().includes(term) ||
+        sub.pathwayName?.toLowerCase().includes(term)
+    )
+}
 
 /**
  * A group's expand/collapse card - shared visual treatment for the pathway/badge/lesson tabs, each
@@ -109,6 +127,7 @@ const GroupCard = (props: {title: string, description?: string, count: number, o
 type GroupsProps = {
     students: Item[]
     loading: boolean
+    search: string
     onReview: (item: Item, list: Item[], context?: string) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
@@ -117,47 +136,75 @@ type GroupsProps = {
 
 /**
  * By Pathway: pathway is fixed (shown on the card), badge/lesson still vary per submission so both
- * stay visible in the nested table.
+ * stay visible in the nested table. Search cross-matches: a pathway whose own title matches shows
+ * every one of its students unfiltered (today's behavior); a pathway that only matches because one
+ * of its students/submissions does shows just that narrowed subset instead; a pathway matching
+ * neither its own name nor any member is hidden entirely once a search term is active.
  */
 const PathwayGroups = (props: GroupsProps & {pathways: NonNullable<FileLockerProps["pathways"]>, badges: NonNullable<FileLockerProps["badges"]>}) => {
     const {byPathway} = useFilteredStudents(props.students)
+    const term = props.search.trim().toLowerCase()
+    const groups = props.pathways
+        .map((p) => {
+            const base = byPathway(p.pathwayId, props.badges)
+            const ownNameMatches = !term || p.title.toLowerCase().includes(term)
+            const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
+            return {pathway: p, filtered}
+        })
+        .filter((g) => !term || g.filtered.length > 0)
+
+    if (term && groups.length === 0) {
+        return <p className="text-sm text-slate-400">No matching entries.</p>
+    }
+
     return (
         <div className="flex flex-col gap-3">
-            {props.pathways.map((p) => {
-                const filtered = byPathway(p.pathwayId, props.badges)
-                return (
-                    <GroupCard
-                        key={p.pathwayId}
-                        title={p.title}
-                        description={p.description}
-                        count={countFiles(filtered)}
-                        onTitleClick={props.onPathwayClick ? () => props.onPathwayClick!(p.pathwayId) : undefined}
-                    >
-                        <Table
-                            loading={props.loading}
-                            items={filtered}
-                            hidePathway
-                            onReview={(item) => props.onReview(item, filtered, p.title)}
-                            onBadgeClick={props.onBadgeClick}
-                            onLessonClick={props.onLessonClick}
-                        />
-                    </GroupCard>
-                )
-            })}
+            {groups.map(({pathway: p, filtered}) => (
+                <GroupCard
+                    key={p.pathwayId}
+                    title={p.title}
+                    description={p.description}
+                    count={countFiles(filtered)}
+                    onTitleClick={props.onPathwayClick ? () => props.onPathwayClick!(p.pathwayId) : undefined}
+                >
+                    <Table
+                        loading={props.loading}
+                        items={filtered}
+                        hidePathway
+                        onReview={(item) => props.onReview(item, filtered, p.title)}
+                        onBadgeClick={props.onBadgeClick}
+                        onLessonClick={props.onLessonClick}
+                    />
+                </GroupCard>
+            ))}
         </div>
     )
 }
 
 /**
  * By Badge: badge is fixed (card title) and its owning pathway is shown as a subtitle, so neither
- * needs to repeat in the nested table - only lesson still varies per submission.
+ * needs to repeat in the nested table - only lesson still varies per submission. Same cross-match/
+ * narrow/hide rule as PathwayGroups, keyed on the badge's own name instead.
  */
 const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["badges"]>, pathwayNameForBadge: Record<string, string>}) => {
     const {byBadge} = useFilteredStudents(props.students)
+    const term = props.search.trim().toLowerCase()
+    const groups = props.badges
+        .map((b) => {
+            const base = byBadge(b.badgeId)
+            const ownNameMatches = !term || b.displayName.toLowerCase().includes(term)
+            const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
+            return {badge: b, filtered}
+        })
+        .filter((g) => !term || g.filtered.length > 0)
+
+    if (term && groups.length === 0) {
+        return <p className="text-sm text-slate-400">No matching entries.</p>
+    }
+
     return (
         <div className="flex flex-col gap-3">
-            {props.badges.map((b) => {
-                const filtered = byBadge(b.badgeId)
+            {groups.map(({badge: b, filtered}) => {
                 const pathwayTitle = props.pathwayNameForBadge[b.badgeId]
                 return (
                     <GroupCard
@@ -184,14 +231,28 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
 
 /**
  * By Lesson: lesson is fixed (card title) and its owning badge + pathway are shown as a subtitle,
- * so all three are implied - only question still varies per submission.
+ * so all three are implied - only question still varies per submission. Same cross-match/narrow/
+ * hide rule as the other two, keyed on the lesson's own name.
  */
 const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"], badgeForLesson: Record<string, {displayName: string, badgeId: string}>, pathwayNameForBadge: Record<string, string>}) => {
     const {byLesson} = useFilteredStudents(props.students)
+    const term = props.search.trim().toLowerCase()
+    const groups = props.lessons
+        .map((l) => {
+            const base = byLesson(l.lessonName)
+            const ownNameMatches = !term || l.lessonName.toLowerCase().includes(term)
+            const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
+            return {lesson: l, filtered}
+        })
+        .filter((g) => !term || g.filtered.length > 0)
+
+    if (term && groups.length === 0) {
+        return <p className="text-sm text-slate-400">No matching entries.</p>
+    }
+
     return (
         <div className="flex flex-col gap-3">
-            {props.lessons.map((l) => {
-                const filtered = byLesson(l.lessonName)
+            {groups.map(({lesson: l, filtered}) => {
                 const badge = props.badgeForLesson[l.lessonId]
                 const pathwayTitle = badge ? props.pathwayNameForBadge[badge.badgeId] : undefined
                 const description = badge
@@ -221,7 +282,8 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
 export const FileLocker = (props: FileLockerProps) => {
     const [tab, setTab] = React.useState("students")
     const [reviewing, setReviewing] = React.useState<Reviewing | null>(null)
-    const [searchOpen, setSearchOpen] = React.useState(false)
+    const [search, setSearch] = React.useState("")
+    const searchLower = search.trim().toLowerCase()
 
     const numberOfFiles = countFiles(props.students)
 
@@ -298,6 +360,19 @@ export const FileLocker = (props: FileLockerProps) => {
         }, null)
     }, [props.pathways, props.badges, byPathway])
 
+    // The single search box cross-matches every tab against student name, pathway, badge, and
+    // lesson name at once. On "By student" this directly narrows the roster (matchesSearch checks
+    // the student's own name plus every field on their submissions). The 3 grouped tabs need a
+    // richer rule than a simple filter - handled inside PathwayGroups/BadgeGroups/LessonGroups
+    // themselves, which is why they receive the full, unfiltered catalog plus the raw search term
+    // rather than a pre-filtered array (each group's own name can independently match even when a
+    // pre-filter on the catalog wouldn't have caught it, and a group matching only via one member
+    // needs its nested table narrowed too, not just a yes/no on the catalog item).
+    const searchedStudents = React.useMemo(
+        () => searchLower ? enrichedStudents.filter((s) => matchesSearch(s, searchLower)) : enrichedStudents,
+        [enrichedStudents, searchLower]
+    )
+
     const onReview = (item: Item, list: Item[], context?: string) => setReviewing({student: item, list, context})
     const onNav = (dir: 1 | -1) => {
         if (!reviewing) return
@@ -330,33 +405,8 @@ export const FileLocker = (props: FileLockerProps) => {
                     <h1 className="mt-1.5 text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
                     <p className="mt-1 text-sm text-slate-500">{props.description || "No description"}</p>
                 </div>
-                {!props.trial && (
-                    <div className="flex shrink-0 items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setSearchOpen(true)}
-                            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
-                        >
-                            <IconSearch size={13} stroke={2}/>
-                            Search
-                        </button>
-                        <SplitButton href={props.href} onCopyLinkClick={props.onCopyLinkClick} onExportDataClick={props.onExportDataClick}/>
-                    </div>
-                )}
+                {!props.trial && <SplitButton href={props.href} onCopyLinkClick={props.onCopyLinkClick} onExportDataClick={props.onExportDataClick}/>}
             </div>
-
-            {!props.trial && (
-                <FileLockerSearchModal
-                    opened={searchOpen}
-                    onClose={() => setSearchOpen(false)}
-                    pathways={props.pathways || []}
-                    badges={props.badges || []}
-                    lessons={props.lessons}
-                    onPathwayClick={props.onPathwayClick}
-                    onBadgeClick={props.onBadgeClick}
-                    onLessonClick={props.onLessonClick}
-                />
-            )}
 
             <StatsGroup data={props.trial ? [
                 {title: "LESSONS SUBMITTED", value: props.lessonsCompleted || 0},
@@ -397,11 +447,24 @@ export const FileLocker = (props: FileLockerProps) => {
                 </div>
             )}
 
+            {!props.trial && (
+                <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                    <IconSearch size={15} stroke={1.75} className="text-slate-400"/>
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder={SEARCH_PLACEHOLDER}
+                        className="flex-1 border-none bg-transparent text-sm text-dark-blue-400 outline-none placeholder:text-slate-400"
+                    />
+                </div>
+            )}
+
             {!props.trial && tab === "students" && (
                 <Table
                     loading={props.loading}
-                    items={enrichedStudents}
-                    onReview={(item) => onReview(item, enrichedStudents)}
+                    items={searchedStudents}
+                    onReview={(item) => onReview(item, searchedStudents)}
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
@@ -411,6 +474,7 @@ export const FileLocker = (props: FileLockerProps) => {
                 <PathwayGroups
                     students={enrichedStudents}
                     loading={props.loading}
+                    search={search}
                     pathways={props.pathways || []}
                     badges={props.badges || []}
                     onReview={onReview}
@@ -423,6 +487,7 @@ export const FileLocker = (props: FileLockerProps) => {
                 <BadgeGroups
                     students={enrichedStudents}
                     loading={props.loading}
+                    search={search}
                     badges={props.badges || []}
                     pathwayNameForBadge={pathwayNameForBadge}
                     onReview={onReview}
@@ -435,6 +500,7 @@ export const FileLocker = (props: FileLockerProps) => {
                 <LessonGroups
                     students={enrichedStudents}
                     loading={props.loading}
+                    search={search}
                     lessons={props.lessons}
                     badgeForLesson={badgeForLesson}
                     pathwayNameForBadge={pathwayNameForBadge}

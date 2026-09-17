@@ -25,15 +25,16 @@ export type FileListProps = {
 };
 
 /**
- * The per-file list shown inside each of FileLocker's grouped sections. Which columns render
- * depends on which level of the Badge -> Lesson -> Question hierarchy the calling group has
- * already fixed (shown once at the group's own header instead - which is also where the
- * pathway, the one level above Badge, always surfaces here, since every call site groups by
- * pathway/badge/lesson and none renders an ungrouped flat list that would need a Pathway column
- * of its own). Header and every row are direct children of one shared grid (not one grid per
- * row) so column tracks are computed once across all content - a per-row grid would let each
- * row's auto-sized action column resolve to a different width than the empty header cell above
- * it, drifting the columns out of alignment. Preview/Download both point at the same existing
+ * The per-file list shown inside each of FileLocker's grouped sections. Which columns render, and
+ * in what order, follows the real Badge -> Lesson -> Question hierarchy left to right (pathway,
+ * the one level above Badge, always surfaces at the group's own header instead - every call site
+ * groups by pathway/badge/lesson and none renders an ungrouped flat list that would need a Pathway
+ * column of its own). Whichever level the calling group has already fixed simply drops out of the
+ * sequence, it never reorders what's left - so Question, the leaf, always sits immediately before
+ * the action column, not first. Header and every row are direct children of one shared grid (not
+ * one grid per row) so column tracks are computed once across all content - a per-row grid would
+ * let each row's auto-sized action column resolve to a different width than the empty header cell
+ * above it, drifting the columns out of alignment. Preview/Download both point at the same existing
  * `link` - there's no separate filename/size data available (the link is an opaque storage key,
  * not a real filename), so `question` doubles as the file's label.
  * @param props
@@ -46,9 +47,9 @@ export const FileList = (props: FileListProps) => {
   }
 
   const columns = [
-    "minmax(0,2fr)",
-    !hideLesson && "minmax(0,1.3fr)",
     !hideBadge && "minmax(0,1.3fr)",
+    !hideLesson && "minmax(0,1.3fr)",
+    "minmax(0,2fr)",
     "auto",
   ]
     .filter(Boolean)
@@ -60,29 +61,15 @@ export const FileList = (props: FileListProps) => {
 
   return (
     <div className="grid items-center gap-x-3" style={{ gridTemplateColumns: columns }}>
-      <div className={headerCell}>Question</div>
-      {!hideLesson && <div className={headerCell}>Lesson</div>}
       {!hideBadge && <div className={headerCell}>Badge</div>}
+      {!hideLesson && <div className={headerCell}>Lesson</div>}
+      <div className={headerCell}>Question</div>
       <div className={headerCell} />
 
       {items.map((row, i) => {
         const rowBorder = i > 0 ? "border-t border-slate-100" : "";
         return (
           <React.Fragment key={i}>
-            <div className={`${dataCell} ${rowBorder} text-xs font-semibold text-dark-blue-400`}>{row.question}</div>
-            {!hideLesson && (
-              row.lessonId && onLessonClick ? (
-                <button
-                  type="button"
-                  onClick={() => onLessonClick(row.lessonId as string)}
-                  className={`${dataCell} ${rowBorder} truncate text-left text-[11px] font-semibold text-sky-blue-400 hover:underline`}
-                >
-                  {row.lessonName}
-                </button>
-              ) : (
-                <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.lessonName}</div>
-              )
-            )}
             {!hideBadge && (
               row.badgeId && onBadgeClick ? (
                 <button
@@ -96,6 +83,20 @@ export const FileList = (props: FileListProps) => {
                 <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.badgeName}</div>
               )
             )}
+            {!hideLesson && (
+              row.lessonId && onLessonClick ? (
+                <button
+                  type="button"
+                  onClick={() => onLessonClick(row.lessonId as string)}
+                  className={`${dataCell} ${rowBorder} truncate text-left text-[11px] font-semibold text-sky-blue-400 hover:underline`}
+                >
+                  {row.lessonName}
+                </button>
+              ) : (
+                <div className={`${dataCell} ${rowBorder} truncate text-[11px] text-slate-500`}>{row.lessonName}</div>
+              )
+            )}
+            <div className={`${dataCell} ${rowBorder} text-xs font-semibold text-dark-blue-400`}>{row.question}</div>
             <div className={`${dataCell} ${rowBorder} flex shrink-0 gap-2`}>
               <a
                 href={row.link}
