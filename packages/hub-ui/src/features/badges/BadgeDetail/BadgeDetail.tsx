@@ -83,7 +83,7 @@ export const BadgeDetail = (props: BadgeDetailProps) => {
   const showSubmit = !props.finishedAt && criteria.length > 0;
 
   return (
-    <div className="flex max-w-2xl flex-col gap-3.5">
+    <div className="flex w-full flex-col gap-3.5">
       {props.onPathwayClick && (
         <div onClick={props.onPathwayClick} className="w-max cursor-pointer text-xs font-bold text-sky-blue-400">
           ← Go to Pathway
@@ -108,7 +108,7 @@ export const BadgeDetail = (props: BadgeDetailProps) => {
               <span className="font-semibold">Level {(props.level || 0) + 1}.</span>
               {!!xp && <span className="ml-1.5 font-bold text-mint-400">{xp} XP</span>}
             </div>
-            {!!props.summary && <div className="mt-2 text-xs text-slate-500">{props.summary}</div>}
+            {!!props.summary && <div className="mt-2 max-w-prose text-xs text-slate-500">{props.summary}</div>}
             <div className="mt-2.5">
               <Pill label={status} accent={pillAccent} />
             </div>
@@ -119,7 +119,7 @@ export const BadgeDetail = (props: BadgeDetailProps) => {
       {criteriaNames.length > 0 && (
         <div className={`rounded-2xl border bg-white p-5 ${border} ${shadow}`}>
           <div className="text-sm font-bold text-dark-blue-400">Badge Criteria</div>
-          <div className="mt-1.5 text-xs text-slate-500">Complete 1 of each: {criteriaNames.join(", ")}</div>
+          <div className="mt-1.5 max-w-prose text-xs text-slate-500">Complete 1 of each: {criteriaNames.join(", ")}</div>
 
           <div className="mt-4 flex flex-col">
             {criteria.map((c, i) => {

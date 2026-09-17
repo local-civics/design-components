@@ -7,6 +7,13 @@ export type BadgeItem = {
   weight: number;
   iconURL?: string;
   onClick?: () => void;
+  // Lesson-level progress, cross-referenced against this student's own submitted lesson answers
+  // (not just the badge's own possibly-unset startedAt flag) - see hub's usePathway() for the
+  // derivation, scoped to a single caller's own accountFQDN/userId throughout.
+  lessonIds?: string[];
+  inProgress?: boolean;
+  submittedLessons?: number;
+  totalLessons?: number;
 };
 
 export type PathwayCriteria = Record<string, number>;

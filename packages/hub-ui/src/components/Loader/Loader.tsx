@@ -7,13 +7,32 @@ import { builder } from "../../utils/classname/classname";
 export type LoaderProps = {
   isLoading?: boolean;
   children: React.ReactNode;
+  /** Spinner width/height in px. Defaults to 35 (the original, small size) when omitted. */
+  size?: number;
+  /** Tailwind stroke color class for the spinner. Defaults to "stroke-sky-300" (the original, low-contrast color) when omitted. */
+  strokeClassName?: string;
+  /**
+   * Optional contextual text rendered beneath the spinner (e.g. "Loading dashboard activity...").
+   * Omitting it preserves the original bare-spinner layout exactly; passing it switches to a
+   * centered column with a min-height floor, so the spinner+text pair reliably centers within the
+   * content pane instead of drifting toward whatever height the (still-loading, mostly empty)
+   * content happens to compute to.
+   */
+  label?: string;
 };
 
 /**
  * A component for content that is not ready to be displayed.
  */
 export const Loader = (props: LoaderProps) => {
-  const loaderClassName = builder("flex absolute top-0 left-0 h-full w-full m-auto transition ease-in-out duration-500")
+  const size = props.size ?? 35;
+  const strokeClassName = props.strokeClassName ?? "stroke-sky-300";
+
+  const loaderClassName = builder(
+    props.label
+      ? "flex absolute top-0 left-0 h-full min-h-[50vh] w-full flex-col items-center justify-center gap-3 transition ease-in-out duration-500"
+      : "flex absolute top-0 left-0 h-full w-full m-auto transition ease-in-out duration-500"
+  )
     .if(!!props.isLoading, "visible opacity-full")
     .else("invisible opacity-0")
     .build();
@@ -31,9 +50,9 @@ export const Loader = (props: LoaderProps) => {
         {/*<!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->*/}
         <div className={loaderClassName}>
           <svg
-            className="m-auto stroke-sky-300"
-            width="35"
-            height="35"
+            className={`m-auto ${strokeClassName}`}
+            width={size}
+            height={size}
             viewBox="0 0 45 45"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -102,6 +121,7 @@ export const Loader = (props: LoaderProps) => {
               </circle>
             </g>
           </svg>
+          {props.label && <p className="text-sm text-slate-400">{props.label}</p>}
         </div>
         <div className={contentClassName}>{props.children}</div>
       </div>

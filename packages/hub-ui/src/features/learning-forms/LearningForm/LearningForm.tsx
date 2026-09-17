@@ -77,12 +77,21 @@ export const LearningForm = (props: LearningFormProps) => {
   const timeSpent = props?.timeSpent || 0
   const saveVisibility = isDraft ? "opacity-100 visible" : "opacity-0 invisible";
   const answers: FormItemProps[] = [];
-  const saveDraft = async () => {
+  const saveDraft = async (): Promise<boolean> => {
     if (!isDraft && elapsedTime <= timeSpent) {
-      return;
+      return true;
+    }
+    if (!props.onSaveDraft) {
+      return true;
     }
 
-    return props.onSaveDraft && props.onSaveDraft(answers, reflection, rating).then((e) => !e && setIsDraft(false));
+    return props.onSaveDraft(answers, reflection, rating).then((err) => {
+      const saved = !err;
+      if (saved) {
+        setIsDraft(false);
+      }
+      return saved;
+    });
   };
 
   let answeredAllRequired = true;
@@ -247,7 +256,15 @@ export const LearningForm = (props: LearningFormProps) => {
         <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
           <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
             <FormExitDialog
-              onYes={() => saveDraft().then(() => props.onEditLesson && props.onEditLesson())}
+              onYes={() =>
+                saveDraft().then((saved) => {
+                  if (saved) {
+                    props.onEditLesson && props.onEditLesson();
+                  } else {
+                    setShowExitDialogue(false);
+                  }
+                })
+              }
               onNo={() => setShowExitDialogue(false)}
               onLeaveWithoutSaving={() => props.onEditLesson && props.onEditLesson()}
             />

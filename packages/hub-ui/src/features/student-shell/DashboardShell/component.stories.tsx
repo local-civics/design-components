@@ -41,3 +41,15 @@ const Template: Story<DashboardShellProps> = (args) => (
  */
 export const Component: Story<DashboardShellProps> = Template.bind({});
 Component.args = {};
+
+/**
+ * The bigger, higher-contrast spinner + contextual text treatment given to slow-loading pages
+ * (educator File Locker / Dashboard) via the loading* props.
+ */
+export const LoadingWithLabel: Story<DashboardShellProps> = Template.bind({});
+LoadingWithLabel.args = {
+  isLoading: true,
+  loadingLabel: "Hold on, we're loading your dashboard.",
+  loadingSize: 56,
+  loadingStrokeClassName: "stroke-dark-blue-400",
+};

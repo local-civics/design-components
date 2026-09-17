@@ -9,6 +9,7 @@ import {
 } from '@mantine/core';
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
 import * as papa from 'papaparse'
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
 import {Table, Item} from "./Table";
@@ -169,7 +170,15 @@ const DropzoneButton = (props: ClassProps & {close: () => void}) => {
                 complete: function(results: ParseResult<MemberItem>) {
                     const data = results.data
                         .filter(v => /^\S+@\S+$/.test(v.email) && props.members.filter(u => u.email === v.email).length === 0)
-                    data.length > 0 && props.onCreateMembers && props.onCreateMembers(data)
+                    if (data.length > 0) {
+                        props.onCreateMembers && props.onCreateMembers(data)
+                    } else {
+                        showNotification({
+                            title: 'No new members found.',
+                            message: "Every row in that file was either invalid or already on this class's roster.",
+                            autoClose: 5000,
+                        })
+                    }
                     setLoading(false)
                     props.close()
                 }
