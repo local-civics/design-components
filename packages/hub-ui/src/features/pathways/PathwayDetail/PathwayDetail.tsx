@@ -83,7 +83,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
   const pillIds = catFilter && !categoryIds.includes(catFilter) ? [...categoryIds, catFilter] : categoryIds;
 
   return (
-    <div className="flex max-w-2xl flex-col gap-3.5">
+    <div className="flex w-full flex-col gap-3.5">
       {props.onBack && (
         <div onClick={props.onBack} className="w-max cursor-pointer text-xs font-bold text-sky-blue-400">
           ← Back to My Pathways
@@ -104,7 +104,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
                 ))}
               </div>
             )}
-            {!!props.description && <div className="mt-2 text-xs text-slate-500">{props.description}</div>}
+            {!!props.description && <div className="mt-2 max-w-prose text-xs text-slate-500">{props.description}</div>}
             <div className="mt-2.5">
               <Pill label={status} accent={pillAccent} />
             </div>
@@ -114,7 +114,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
 
       <div className={`rounded-2xl border bg-white p-5 ${border} ${shadow}`}>
         <div className="text-sm font-bold text-dark-blue-400">Pathway Badges & Criteria</div>
-        <div className="mt-1.5 text-xs text-slate-500">
+        <div className="mt-1.5 max-w-prose text-xs text-slate-500">
           This pathway is comprised of {target} badge{target === 1 ? "" : "s"}. It includes required and elective
           programming.
         </div>

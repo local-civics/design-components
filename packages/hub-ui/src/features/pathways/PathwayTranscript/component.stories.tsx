@@ -21,7 +21,8 @@ const Template: Story<PathwayCardProps> = (args) => (
 );
 
 /**
- * In progress: mixed categories, mixed badge states, only completed activity renders
+ * In progress: mixed categories, mixed badge states - both Completed Activity and In Progress
+ * sections render.
  */
 export const Component: Story<PathwayCardProps> = Template.bind({});
 Component.args = {
@@ -78,6 +79,9 @@ Component.args = {
       weight: 1,
       categories: ["civic-participation"],
       startedAt: "2026-06-01T00:00:00Z",
+      inProgress: true,
+      submittedLessons: 1,
+      totalLessons: 3,
     },
   ],
 };
@@ -107,7 +111,14 @@ Empty.args = {
     "civic-participation": 0,
     "seal-of-civic-readiness": 0,
   },
-  badges: (Component.args.badges || []).map((b) => ({ ...b, completedAt: undefined, startedAt: undefined })),
+  badges: (Component.args.badges || []).map((b) => ({
+    ...b,
+    completedAt: undefined,
+    startedAt: undefined,
+    inProgress: undefined,
+    submittedLessons: undefined,
+    totalLessons: undefined,
+  })),
 };
 
 /**

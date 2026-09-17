@@ -18,9 +18,9 @@ const STATUS_PILL_ACCENT: Record<Status, PillAccent> = {
  * shown on `PathwayDetail`, condensed into a record-style layout. Toggled alongside
  * `PathwayDetail` from `Pathway.tsx`, not a routed page of its own.
  *
- * In-progress badge activity is intentionally omitted: that classification depends on
- * `startedAt`, which isn't reliably populated without lesson-level data yet. Only completed
- * activity is shown until that's sorted out.
+ * In-progress badges are cross-referenced against this student's own submitted lesson answers
+ * (`badge.inProgress`/`submittedLessons`/`totalLessons`, computed in hub's `usePathway()`) rather
+ * than the badge's own possibly-unset `startedAt` flag alone.
  * @param props
  * @constructor
  */
@@ -52,6 +52,14 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
 
   const badges = props.badges || [];
   const completedBadges = badges.filter((b) => !!b.completedAt);
+  const inProgressBadges = badges.filter((b) => !b.completedAt && b.inProgress);
+
+  const formatDate = (value?: string | null) => {
+    if (!value) return "";
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  };
 
   const rootIds = Object.keys(props.categoryParents || {}).filter((id) => !props.categoryParents?.[id]);
   const level2Ids = Object.keys(props.categoryParents || {}).filter((id) => {
@@ -86,14 +94,21 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
 
   const safeRender = (val: unknown) => (typeof val === "string" || typeof val === "number" ? val : "");
 
-  const renderBadgePool = (badgePool: BadgeItem[]) => {
+  const renderBadgePool = (
+    badgePool: BadgeItem[],
+    title: string,
+    pillClassName: string,
+    metaClassName: string,
+    renderMeta: (b: BadgeItem) => React.ReactNode,
+    renderDate: (b: BadgeItem) => string
+  ) => {
     if (badgePool.length === 0) return null;
 
     return (
       <div className="space-y-8">
         <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-          <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Completed Activity</h2>
-          <span className="rounded-full bg-mint-400/15 px-2 py-0.5 text-[10px] font-bold text-mint-400">
+          <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">{title}</h2>
+          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${pillClassName}`}>
             {badgePool.length}
           </span>
         </div>
@@ -109,20 +124,26 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
                 {props.categoryNames?.[l2Id] || l2Id}
               </h3>
               <div className={layout === "grid" ? "grid grid-cols-3 gap-3" : "space-y-2"}>
-                {groupBadges.map((b) => (
-                  <div
-                    key={b.badgeId}
-                    className={`rounded-xl border border-slate-200 bg-white p-4 shadow-sm ${
-                      layout === "grid" ? "flex flex-col items-center gap-2 text-center" : "flex items-center justify-between"
-                    }`}
-                  >
-                    <div className={`flex items-center gap-3 ${layout === "grid" ? "flex-col" : ""}`}>
-                      <BadgeEmblem size="sm" iconURL={b.iconURL} />
-                      <p className="text-xs font-bold text-dark-blue-400">{b.displayName}</p>
+                {groupBadges.map((b) => {
+                  const date = renderDate(b);
+                  return (
+                    <div
+                      key={b.badgeId}
+                      className={`rounded-xl border border-slate-200 bg-white p-4 shadow-sm ${
+                        layout === "grid" ? "flex flex-col items-center gap-2 text-center" : "flex items-center justify-between"
+                      }`}
+                    >
+                      <div className={`flex items-center gap-3 ${layout === "grid" ? "flex-col" : ""}`}>
+                        <BadgeEmblem size="sm" iconURL={b.iconURL} />
+                        <div>
+                          <p className="text-xs font-bold text-dark-blue-400">{b.displayName}</p>
+                          {!!date && <p className="mt-0.5 text-[10px] text-slate-400">{date}</p>}
+                        </div>
+                      </div>
+                      <span className={`text-xs font-black ${metaClassName}`}>{renderMeta(b)}</span>
                     </div>
-                    <span className="text-xs font-black text-mint-400">{b.weight} pts</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
@@ -215,8 +236,25 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
           </div>
         </div>
 
-        {renderBadgePool(completedBadges)}
-        {completedBadges.length === 0 && <p className="text-sm text-slate-400">No completed activity yet.</p>}
+        {renderBadgePool(
+          completedBadges,
+          "Completed Activity",
+          "bg-mint-400/15 text-mint-400",
+          "text-mint-400",
+          (b) => `${b.weight} pts`,
+          (b) => (b.completedAt ? `Completed ${formatDate(b.completedAt)}` : "")
+        )}
+        {renderBadgePool(
+          inProgressBadges,
+          "In Progress",
+          "bg-sky-blue-400/15 text-sky-blue-400",
+          "text-sky-blue-400",
+          (b) => `${b.submittedLessons ?? 0} of ${b.totalLessons ?? 0} lessons`,
+          (b) => (b.startedAt ? `Started ${formatDate(b.startedAt)}` : "")
+        )}
+        {completedBadges.length === 0 && inProgressBadges.length === 0 && (
+          <p className="text-sm text-slate-400">No activity yet.</p>
+        )}
       </section>
     </div>
   );
