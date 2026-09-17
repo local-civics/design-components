@@ -1,6 +1,7 @@
 import * as React from "react";
-import { IconCalendar, IconCalendarStats, IconClipboard } from "@tabler/icons";
+import { IconCalendar, IconCalendarStats, IconClipboard, IconSearch } from "@tabler/icons";
 import { FileList, FileListItem } from "../FileList/FileList";
+import { FileLockerSearchModal } from "../FileLockerSearchModal/FileLockerSearchModal";
 import { useFilteredSubmissions } from "./useFilteredSubmissions";
 
 /**
@@ -69,6 +70,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  */
 export const FileLocker = (props: FileLockerProps) => {
   const [tab, setTab] = React.useState("pathways");
+  const [searchOpen, setSearchOpen] = React.useState(false);
   const filtered = useFilteredSubmissions(props.submissions);
 
   const files = props.submissions.length;
@@ -93,10 +95,32 @@ export const FileLocker = (props: FileLockerProps) => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
-        <p className="text-sm text-slate-500">{props.description || "Files and links you've submitted through your lessons"}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
+          <p className="text-sm text-slate-500">{props.description || "Files and links you've submitted through your lessons"}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
+        >
+          <IconSearch size={13} stroke={2} />
+          Search
+        </button>
       </div>
+
+      {searchOpen && (
+        <FileLockerSearchModal
+          onClose={() => setSearchOpen(false)}
+          pathways={props.pathways}
+          badges={props.badges}
+          lessons={props.lessons}
+          onPathwayClick={props.onPathwayClick}
+          onBadgeClick={props.onBadgeClick}
+          onLessonClick={props.onLessonClick}
+        />
+      )}
 
       <div className="flex gap-2.5">
         <StatCell icon={IconClipboard} value={files} label="Files" accent="cyan" />
@@ -135,14 +159,24 @@ export const FileLocker = (props: FileLockerProps) => {
 
         {!props.loading && tab === "badges" &&
           badgeGroups.map(({ badge, items }) => (
-            <GroupCard key={badge.badgeId} title={badge.displayName} description={badgeSubtitle(items)}>
+            <GroupCard
+              key={badge.badgeId}
+              title={badge.displayName}
+              description={badgeSubtitle(items)}
+              onClick={props.onBadgeClick ? () => props.onBadgeClick!(badge.badgeId) : undefined}
+            >
               <FileList items={items} hideBadge onLessonClick={props.onLessonClick} />
             </GroupCard>
           ))}
 
         {!props.loading && tab === "lessons" &&
           lessonGroups.map(({ lesson, items }) => (
-            <GroupCard key={lesson.lessonId} title={lesson.lessonName} description={lessonSubtitle(items)}>
+            <GroupCard
+              key={lesson.lessonId}
+              title={lesson.lessonName}
+              description={lessonSubtitle(items)}
+              onClick={props.onLessonClick ? () => props.onLessonClick!(lesson.lessonId) : undefined}
+            >
               <FileList items={items} hideBadge hideLesson />
             </GroupCard>
           ))}
