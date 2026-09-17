@@ -37,6 +37,16 @@ export const Loader = (props: LoaderProps) => {
     .else("invisible opacity-0")
     .build();
 
+  // The bare spinner (no label) relies on `m-auto` to center itself as the overlay's only child
+  // in its default flex-row layout - harmless there since there's nothing else to push around.
+  // Once a label is present the overlay switches to flex-col with two children, and `margin: auto`
+  // on the svg's own top/bottom (the main axis in a column) would greedily consume all free
+  // vertical space around itself, shoving the label down to the bottom of whatever tall box the
+  // overlay ends up being (very noticeable against real, mostly-empty loading-state page content,
+  // not just a short Storybook mock) - so the label variant centers via the parent's own
+  // `items-center justify-center` instead and drops the svg's own auto margins entirely.
+  const svgClassName = props.label ? strokeClassName : `m-auto ${strokeClassName}`;
+
   const contentClassName = builder("w-full transition ease-in-out duration-500")
     .if(!!props.isLoading, "invisible opacity-0")
     .else("visible opacity-full")
@@ -50,7 +60,7 @@ export const Loader = (props: LoaderProps) => {
         {/*<!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->*/}
         <div className={loaderClassName}>
           <svg
-            className={`m-auto ${strokeClassName}`}
+            className={svgClassName}
             width={size}
             height={size}
             viewBox="0 0 45 45"

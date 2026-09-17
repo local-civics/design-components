@@ -12,3 +12,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Browsers strip background-color/background-image from printed output by default (to save ink)
+ * unless a page opts back in - without this, every bg-*-colored element (progress bar fills and
+ * tracks, status pills, badge accent tiles) prints as blank/invisible instead of matching what's
+ * on screen. Applied to every element, not just known offenders, since any future bg-* usage
+ * would hit the exact same silent-strip behavior otherwise. */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}

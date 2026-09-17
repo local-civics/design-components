@@ -31,7 +31,17 @@ const Template: Story<DashboardShellProps> = (args) => (
       }
       topBar={<DashboardTopBar eyebrow="Student Portal" title="My Profile" onNotifications={() => {}} />}
     >
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">Page content goes here.</div>
+      {/* Deliberately tall (~1600px), matching a real data-heavy page's empty/loading-state
+          chrome (stat tiles, table headers, etc still rendering with zero data) - a short mock
+          here previously hid a real bug where the loading spinner + label pair drifted apart on
+          tall pages instead of staying adjacent (see Loader.tsx's svgClassName comment). */}
+      <div className="flex flex-col gap-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="h-48 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            Page content goes here.
+          </div>
+        ))}
+      </div>
     </DashboardShell>
   </MemoryRouter>
 );
