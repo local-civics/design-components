@@ -1,7 +1,7 @@
-import {IconArrowLeft} from "@tabler/icons";
 import {useState} from "react";
 import * as React      from "react";
 import {StatsGroup}                                                       from "../../components/data/StatsGroup/StatsGroup";
+import {PageHeader}                                                       from "../../components/navigation/PageHeader/PageHeader";
 import {Table as BadgeTable, Item as BadgeItem}                           from "./BadgeTable"
 import {Table as AnswerTable, Item as AnswerItem} from "./AnswerTable"
 import {Table as ReflectionTable, Item as ReflectionItem} from "./ReflectionTable"
@@ -41,14 +41,11 @@ export const Student = (props: StudentProps) => {
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
-            <div className="space-y-1.5">
-                <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                    <IconArrowLeft size={13} stroke={2.5} />
-                    Back
-                </div>
-                <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.name || "Student"}</h1>
-                {props.impactStatement && <p className="max-w-xl text-sm text-slate-500">{props.impactStatement}</p>}
-            </div>
+            <PageHeader
+                onBackClick={props.onBackClick}
+                title={props.name || "Student"}
+                description={props.impactStatement}
+            />
 
             <StatsGroup data={[
                 {

@@ -24,3 +24,20 @@ Component.args = {
   title: "My Profile",
   onNotifications: () => {},
 };
+
+/**
+ * Exercises the breadcrumb + role-context subtitle added for the navigation-topology round -
+ * both render in the left-hand block, distinct from the right-hand `children` action slot.
+ */
+export const WithBreadcrumbAndSubtitle: Story<DashboardTopBarProps> = Template.bind({});
+WithBreadcrumbAndSubtitle.args = {
+  eyebrow: "Educator Portal",
+  subtitle: "You're viewing this as an educator.",
+  breadcrumb: [
+    { label: "Pathways", onClick: () => console.log("navigate to /pathways") },
+    { label: "Civic Readiness", onClick: () => console.log("navigate to pathway overview") },
+    { label: "NYS Seal Badge" },
+  ],
+  title: "NYS Seal Badge",
+  onNotifications: () => {},
+};
