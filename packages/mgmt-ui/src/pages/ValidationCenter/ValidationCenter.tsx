@@ -70,7 +70,7 @@ export const ValidationCenter = (props: ValidationCenterProps) => {
         <div className="flex w-full flex-col gap-5 px-4 py-8">
             <div>
                 <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Validation Center</h1>
-                <p className="mt-1 text-sm text-slate-500">Directly credit students for a badge, superseding lesson and criteria requirements.</p>
+                <p className="mt-1 text-sm text-slate-500">Directly credit students for a badge</p>
             </div>
 
             <div className="flex flex-wrap gap-3">

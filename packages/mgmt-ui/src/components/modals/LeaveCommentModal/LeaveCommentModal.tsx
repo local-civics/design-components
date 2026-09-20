@@ -4,7 +4,7 @@ import { Modal, Checkbox } from "@mantine/core";
 /**
  * LeaveCommentStudentOption
  */
-export type LeaveCommentStudentOption = { userId: string, name: string }
+export type LeaveCommentStudentOption = { userId: string, name: string, email?: string }
 
 /**
  * LeaveCommentBadgeOption
@@ -121,7 +121,9 @@ export function LeaveCommentModal(props: LeaveCommentModalProps) {
                         <label className="mb-1 block text-xs font-bold text-slate-500">Student</label>
                         <select value={userId} onChange={(e) => setUserId(e.target.value)} className={inputClass}>
                             <option value="">Select a student</option>
-                            {props.students.map((s) => <option key={s.userId} value={s.userId}>{s.name}</option>)}
+                            {props.students.map((s) => (
+                                <option key={s.userId} value={s.userId}>{s.email ? `${s.name} (${s.email})` : s.name}</option>
+                            ))}
                         </select>
                     </div>
                 )}
