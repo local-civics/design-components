@@ -1,4 +1,4 @@
-import {IconArrowLeft, IconCloudUpload, IconDownload, IconLink, IconPlus, IconX} from "@tabler/icons";
+import {IconCloudUpload, IconDownload, IconLink, IconPlus, IconX} from "@tabler/icons";
 import {ParseResult} from "papaparse";
 import {useState} from "react";
 import * as React from 'react';
@@ -12,6 +12,7 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import * as papa from 'papaparse'
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
+import {PageHeader} from "../../components/navigation/PageHeader/PageHeader";
 import {Table, Item} from "./Table";
 
 /**
@@ -62,17 +63,11 @@ export const Class = (props: ClassProps) => {
             </Drawer>
 
             <div className="flex flex-col gap-5 px-4 py-8">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="space-y-1.5">
-                        <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                            <IconArrowLeft size={13} stroke={2.5} />
-                            Back
-                        </div>
-                        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "Class"}</h1>
-                        <p className="text-sm text-slate-500">{props.description || "No description"}</p>
-                    </div>
-
-                    {!props.loading && (
+                <PageHeader
+                    onBackClick={props.onBackClick}
+                    title={props.displayName || "Class"}
+                    description={props.description}
+                    actions={!props.loading && (
                         <div className="flex gap-2">
                             <button
                                 type="button"
@@ -100,7 +95,7 @@ export const Class = (props: ClassProps) => {
                             </button>
                         </div>
                     )}
-                </div>
+                />
 
                 <StatsGroup data={[
                     {

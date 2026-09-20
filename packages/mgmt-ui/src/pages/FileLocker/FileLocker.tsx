@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {IconChevronDown, IconChevronLeft, IconSearch} from "@tabler/icons";
+import {IconChevronDown, IconSearch} from "@tabler/icons";
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
+import {PageHeader} from "../../components/navigation/PageHeader/PageHeader";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {SubmissionDetail} from "./SubmissionDetail";
@@ -396,17 +397,12 @@ export const FileLocker = (props: FileLockerProps) => {
 
     return (
         <div className="flex w-full flex-col gap-5 px-4 py-8">
-            <div className="flex items-start justify-between gap-4">
-                <div>
-                    <button onClick={props.onBackClick} className="flex items-center gap-1 text-xs font-bold text-sky-blue-400 hover:underline">
-                        <IconChevronLeft size={13} stroke={2.5}/>
-                        Back
-                    </button>
-                    <h1 className="mt-1.5 text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
-                    <p className="mt-1 text-sm text-slate-500">{props.description || "No description"}</p>
-                </div>
-                {!props.trial && <SplitButton href={props.href} onCopyLinkClick={props.onCopyLinkClick} onExportDataClick={props.onExportDataClick}/>}
-            </div>
+            <PageHeader
+                onBackClick={props.onBackClick}
+                title={props.displayName || "File Locker"}
+                description={props.description}
+                actions={!props.trial && <SplitButton href={props.href} onCopyLinkClick={props.onCopyLinkClick} onExportDataClick={props.onExportDataClick}/>}
+            />
 
             <StatsGroup data={props.trial ? [
                 {title: "LESSONS SUBMITTED", value: props.lessonsCompleted || 0},

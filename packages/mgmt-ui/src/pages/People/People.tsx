@@ -1,4 +1,4 @@
-import {IconArrowLeft, IconCloudUpload, IconX, IconDownload, IconSearch} from "@tabler/icons";
+import {IconCloudUpload, IconX, IconDownload, IconSearch} from "@tabler/icons";
 import {ParseResult} from "papaparse";
 import {useState} from "react";
 import * as React from 'react';
@@ -13,6 +13,7 @@ import { useForm }              from '@mantine/form';
 import { showNotification }     from '@mantine/notifications';
 import * as papa                from 'papaparse'
 import {StatsGroup}             from "../../components/data/StatsGroup/StatsGroup";
+import {PageHeader}             from "../../components/navigation/PageHeader/PageHeader";
 import {SplitButton}            from "./SplitButton";
 import {Table, Item}            from "./Table";
 
@@ -118,24 +119,18 @@ export const People = (props: PeopleProps) => {
             </Drawer>
 
             <div className="flex flex-col gap-5 px-4 py-8">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="space-y-1.5">
-                        <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                            <IconArrowLeft size={13} stroke={2.5} />
-                            Back
-                        </div>
-                        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">People</h1>
-                        <p className="max-w-xl text-sm text-slate-500">Manage members of your organization</p>
-                    </div>
-
-                    {!props.loading && (
+                <PageHeader
+                    onBackClick={props.onBackClick}
+                    title="People"
+                    description="Manage members of your organization"
+                    actions={!props.loading && (
                         <SplitButton
                             withOrganizationLink={props.withOrganizationLink}
                             onAddUsersClick={() => setOpened(true)}
                             onCopyOrganizationLinkClick={props.onCopyLinkClick}
                         />
                     )}
-                </div>
+                />
 
                 <StatsGroup data={[
                     {

@@ -1,8 +1,8 @@
-import {IconAlbum, IconArrowLeft, IconCategory2} from "@tabler/icons";
+import {IconAlbum, IconCategory2} from "@tabler/icons";
 import {useState} from "react";
 import * as React from 'react';
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
-import {Emblem} from "../../components/media/Emblem/Emblem";
+import {PageHeader, PageHeaderBreadcrumbSegment} from "../../components/navigation/PageHeader/PageHeader";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {Table as LessonTable, Item as LessonItem} from "./LessonTable"
@@ -39,6 +39,7 @@ export type BadgeProps = {
     lessonsCompleted?: number
     pathwayId?: string
     pathwayTitle?: string
+    breadcrumb?: PageHeaderBreadcrumbSegment[]
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -65,33 +66,24 @@ export const Badge = (props: BadgeProps) => {
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-start gap-4">
-                    <Emblem imageURL={props.imageURL} alt={props.displayName} size="xl" icon={IconAlbum} accent="mint" />
-                    <div className="space-y-1.5">
-                        <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                            <IconArrowLeft size={13} stroke={2.5} />
-                            Back
-                        </div>
-                        {!!props.pathwayTitle && (
-                            <div onClick={props.onPathwayClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                                <IconArrowLeft size={13} stroke={2.5} />
-                                Go to Pathway
-                            </div>
-                        )}
-                        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "Badge"}</h1>
-                        <p className="max-w-xl text-sm text-slate-500">{props.description || "No description"}</p>
-                    </div>
-                </div>
-
-                {!props.trial && (
+            <PageHeader
+                icon={IconAlbum}
+                iconAccent="mint"
+                imageURL={props.imageURL}
+                onBackClick={props.onBackClick}
+                onSecondaryClick={props.onPathwayClick}
+                secondaryLabel={props.pathwayTitle ? "Go to Pathway" : undefined}
+                breadcrumb={props.breadcrumb}
+                title={props.displayName || "Badge"}
+                description={props.description}
+                actions={!props.trial && (
                     <SplitButton
                         href={props.href}
                         onCopyLinkClick={props.onCopyLinkClick}
                         onExportDataClick={props.onExportDataClick}
                     />
                 )}
-            </div>
+            />
 
             <StatsGroup data={[
                 {

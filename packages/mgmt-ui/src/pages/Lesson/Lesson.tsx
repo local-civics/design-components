@@ -1,7 +1,8 @@
-import {IconArrowLeft, IconCategory2} from "@tabler/icons";
+import {IconCategory2} from "@tabler/icons";
 import {useState} from "react";
 import * as React from 'react';
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
+import {PageHeader, PageHeaderBreadcrumbSegment} from "../../components/navigation/PageHeader/PageHeader";
 import {compact} from "../../utils/numbers";
 import {Item as ReflectionItem, Table as ReflectionTable} from "./ReflectionTable";
 import {SplitButton} from "./SplitButton";
@@ -38,6 +39,7 @@ export type LessonProps = {
     trial?: boolean
     lessonsCompleted?: number
     contributors?: {name: string}[]
+    breadcrumb?: PageHeaderBreadcrumbSegment[]
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -72,23 +74,20 @@ export const Lesson = (props: LessonProps) => {
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="space-y-1.5">
-                    <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                        <IconArrowLeft size={13} stroke={2.5} />
-                        Back
-                    </div>
-                    <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "Lesson"}</h1>
-                    <p className="max-w-xl text-sm text-slate-500">{props.description || "No description"}</p>
-                </div>
-
-                <SplitButton
-                    href={props.href}
-                    noExport={props.trial}
-                    onCopyLinkClick={props.onCopyLinkClick}
-                    onExportDataClick={props.onExportDataClick}
-                />
-            </div>
+            <PageHeader
+                onBackClick={props.onBackClick}
+                breadcrumb={props.breadcrumb}
+                title={props.displayName || "Lesson"}
+                description={props.description}
+                actions={
+                    <SplitButton
+                        href={props.href}
+                        noExport={props.trial}
+                        onCopyLinkClick={props.onCopyLinkClick}
+                        onExportDataClick={props.onExportDataClick}
+                    />
+                }
+            />
 
             <StatsGroup data={[
                 {
