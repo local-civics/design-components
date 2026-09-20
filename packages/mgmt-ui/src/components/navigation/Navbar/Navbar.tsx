@@ -4,10 +4,12 @@ import {
     IconBuilding,
     IconCategory2,
     IconClipboard,
+    IconClipboardCheck,
     IconGauge,
     IconHome2,
     IconLambda,
     IconLogout,
+    IconMessageCircle,
     IconRoute,
     IconSwitchHorizontal,
     IconVideo,
@@ -41,6 +43,8 @@ const data: { label: string; icon: TablerIcon; accent: LinksGroupAccent; links?:
     { label: 'Badges', icon: IconAlbum, accent: "mint" },
     { label: 'Lessons', icon: IconLambda, accent: "gold" },
     { label: 'File Locker', icon: IconClipboard, accent: "cyan" },
+    { label: 'Comments', icon: IconMessageCircle, accent: "mint" },
+    { label: 'Validation', icon: IconClipboardCheck, accent: "gold" },
     { label: 'Organization', icon: IconBuilding, accent: "gold", links: [{ label: 'Overview' }, { label: 'People' }] },
 ]
 

@@ -5,6 +5,7 @@ import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {SubmissionDetail} from "./SubmissionDetail";
 import {useFilteredStudents} from "./useFilteredStudents"
+import {LeaveCommentModal, LeaveCommentPayload} from "../../components/modals/LeaveCommentModal/LeaveCommentModal";
 
 /**
  * FileLockerUserItem
@@ -57,6 +58,11 @@ export type FileLockerProps = {
     onBadgeClick?: (badgeId: string) => void;
     onLessonClick?: (lessonId: string) => void;
     onPathwayClick?: (pathwayId: string) => void;
+    // Renders a "Comment" button beside every "Review Submission" button. Clicking it opens
+    // FileLocker's own LeaveCommentModal, prepopulated for the clicked student and the badge/lesson
+    // their (already tab/group-scoped) submissions belong to - onComment only fires once the
+    // teacher actually submits that modal, with the assembled payload; the caller owns the API call.
+    onComment?: (comment: LeaveCommentPayload) => void;
 }
 
 type Reviewing = {
@@ -129,6 +135,7 @@ type GroupsProps = {
     loading: boolean
     search: string
     onReview: (item: Item, list: Item[], context?: string) => void
+    onComment?: (item: Item) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
@@ -172,6 +179,7 @@ const PathwayGroups = (props: GroupsProps & {pathways: NonNullable<FileLockerPro
                         items={filtered}
                         hidePathway
                         onReview={(item) => props.onReview(item, filtered, p.title)}
+                        onComment={props.onComment}
                         onBadgeClick={props.onBadgeClick}
                         onLessonClick={props.onLessonClick}
                     />
@@ -220,6 +228,7 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
                             hideBadge
                             hidePathway
                             onReview={(item) => props.onReview(item, filtered, b.displayName)}
+                            onComment={props.onComment}
                             onLessonClick={props.onLessonClick}
                         />
                     </GroupCard>
@@ -266,7 +275,7 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
                         count={countFiles(filtered)}
                         onTitleClick={props.onLessonClick ? () => props.onLessonClick!(l.lessonId) : undefined}
                     >
-                        <Table loading={props.loading} items={filtered} hideBadge hideLesson hidePathway onReview={(item) => props.onReview(item, filtered, l.lessonName)}/>
+                        <Table loading={props.loading} items={filtered} hideBadge hideLesson hidePathway onReview={(item) => props.onReview(item, filtered, l.lessonName)} onComment={props.onComment}/>
                     </GroupCard>
                 )
             })}
@@ -373,7 +382,21 @@ export const FileLocker = (props: FileLockerProps) => {
         [enrichedStudents, searchLower]
     )
 
+    const [commenting, setCommenting] = React.useState<{userId: string, badgeId?: string, lessonId?: string} | null>(null)
+
     const onReview = (item: Item, list: Item[], context?: string) => setReviewing({student: item, list, context})
+    // Whichever tab/group rendered the clicked row has already narrowed its submissions down to the
+    // relevant badge/lesson (see useFilteredStudents' byBadge/byLesson) - or, on "By student", left
+    // every submission in place, in which case the first one is a reasonable default and the modal's
+    // own target selector still lets the teacher change it.
+    const onCommentClick = (item: Item) => {
+        const sub = item.submissions?.[0]
+        setCommenting({userId: item.userId, badgeId: sub?.badgeId, lessonId: sub?.lessonId})
+    }
+    const onCommentSubmit = (comment: LeaveCommentPayload) => {
+        props.onComment?.(comment)
+        setCommenting(null)
+    }
     const onNav = (dir: 1 | -1) => {
         if (!reviewing) return
         const idx = reviewing.list.findIndex((s) => s.userId === reviewing.student.userId)
@@ -465,6 +488,7 @@ export const FileLocker = (props: FileLockerProps) => {
                     loading={props.loading}
                     items={searchedStudents}
                     onReview={(item) => onReview(item, searchedStudents)}
+                    onComment={onCommentClick}
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
@@ -478,6 +502,7 @@ export const FileLocker = (props: FileLockerProps) => {
                     pathways={props.pathways || []}
                     badges={props.badges || []}
                     onReview={onReview}
+                    onComment={onCommentClick}
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
@@ -491,6 +516,7 @@ export const FileLocker = (props: FileLockerProps) => {
                     badges={props.badges || []}
                     pathwayNameForBadge={pathwayNameForBadge}
                     onReview={onReview}
+                    onComment={onCommentClick}
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
@@ -505,11 +531,25 @@ export const FileLocker = (props: FileLockerProps) => {
                     badgeForLesson={badgeForLesson}
                     pathwayNameForBadge={pathwayNameForBadge}
                     onReview={onReview}
+                    onComment={onCommentClick}
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
                 />
             )}
+
+            <LeaveCommentModal
+                opened={!!commenting}
+                onClose={() => setCommenting(null)}
+                onSubmit={onCommentSubmit}
+                hideStudentPicker
+                students={[]}
+                badges={props.badges?.map((b) => ({badgeId: b.badgeId, displayName: b.displayName})) || []}
+                lessons={props.lessons.map((l) => ({lessonId: l.lessonId, displayName: l.lessonName}))}
+                initialUserId={commenting?.userId}
+                initialBadgeId={commenting?.badgeId}
+                initialLessonId={commenting?.lessonId}
+            />
         </div>
     )
 }

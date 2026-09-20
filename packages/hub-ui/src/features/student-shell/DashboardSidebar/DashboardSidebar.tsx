@@ -77,8 +77,10 @@ const TABS: SidebarTab[] = [
   { name: "pathways", label: "Pathways", icon: IconRoute, accent: "mint" },
   { name: "badges", label: "Badges", icon: IconAlbum, accent: "gold" },
   { name: "file-locker", label: "File Locker", icon: IconClipboard, accent: "cyan" },
+  // Sits above Portfolio (moved up from last) - Portfolio itself is untouched here, still rendered
+  // disabled until its own `links.portfolio` entry lands separately.
+  { name: "comments", label: "Comments", icon: IconMessageCircle, accent: "mint" },
   { name: "portfolio", label: "Portfolio", icon: IconBriefcase, accent: "gold" },
-  { name: "comments", label: "Comments", icon: IconMessageCircle, accent: "cyan" },
 ];
 
 /**
