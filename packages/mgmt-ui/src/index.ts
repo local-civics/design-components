@@ -22,3 +22,5 @@ export * from './shells/App/App';
 export * from './pages/Pathways/Pathways';
 export * from './pages/Pathway/Pathway';
 export * from './pages/FileLocker/FileLocker';
+export * from './pages/CommentCenter/CommentCenter';
+export * from './pages/ValidationCenter/ValidationCenter';

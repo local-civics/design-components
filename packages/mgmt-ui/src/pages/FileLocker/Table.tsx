@@ -52,6 +52,12 @@ export type TableProps = TableData & {
     hideLesson?: boolean
     hidePathway?: boolean
     onReview?: (item: Item) => void
+    // Opens the Leave Comment modal (see LeaveCommentModal) prepopulated for this student and the
+    // badge/lesson their submissions here belong to. Whichever tab/group rendered this Table has
+    // already narrowed `item.submissions` down to the relevant badge/lesson (see
+    // useFilteredStudents' byBadge/byLesson), so the caller can read the badge/lesson straight off
+    // the clicked item - no extra context parameter needed here.
+    onComment?: (item: Item) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
@@ -76,6 +82,9 @@ export function Table(props: TableProps) {
 
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
 
+    const showActions = !!props.onReview || !!props.onComment
+    const actionsWidthClass = props.onReview && props.onComment ? "w-64" : "w-36"
+
     if (props.items.length === 0) {
         return <PlaceholderBanner
             title="No files to display"
@@ -90,7 +99,7 @@ export function Table(props: TableProps) {
             <div className="flex items-center gap-4 px-4">
                 <SortableHeader label="Student Name" sortKey="name" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
                 <SortableHeader label="Files" sortKey="submissionCount" sortConfig={sortConfig} onSort={requestSort} className="w-16 shrink-0" />
-                {props.onReview && <div className="w-36 shrink-0" />}
+                {showActions && <div className={`${actionsWidthClass} shrink-0`} />}
                 <div className="w-4 shrink-0" />
             </div>
 
@@ -114,14 +123,24 @@ export function Table(props: TableProps) {
                                 </div>
                             </div>
                             <div className="w-16 shrink-0 text-sm font-bold text-dark-blue-400">{row.submissions.length}</div>
-                            {props.onReview && (
-                                <div className="w-36 shrink-0">
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); props.onReview!(row) }}
-                                        className="rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400"
-                                    >
-                                        Review Submission
-                                    </button>
+                            {showActions && (
+                                <div className={`flex ${actionsWidthClass} shrink-0 gap-2`}>
+                                    {props.onReview && (
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); props.onReview!(row) }}
+                                            className="rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400"
+                                        >
+                                            Review Submission
+                                        </button>
+                                    )}
+                                    {props.onComment && (
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); props.onComment!(row) }}
+                                            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400 hover:bg-slate-50"
+                                        >
+                                            Comment
+                                        </button>
+                                    )}
                                 </div>
                             )}
                             <IconChevronRight size={16} stroke={2} className={`w-4 shrink-0 text-slate-300 transition-transform ${isOpen ? "rotate-90" : ""}`} />
