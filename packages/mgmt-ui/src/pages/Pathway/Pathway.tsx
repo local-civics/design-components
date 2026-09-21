@@ -69,9 +69,25 @@ export const Pathway = (props: PathwayProps) => {
     const numberOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
 
     const criteria = props.criteria || {}
+    // Depth in the category tree (root = 0), so the criteria pills read top-of-hierarchy-first
+    // rather than in whatever order the categories endpoint happened to return them.
+    const parentById = new Map((props.allCategories || []).map((c) => [c.categoryId, c.parentCategoryId]))
+    const depthOf = (id: string): number => {
+        let depth = 0
+        let current = id
+        const seen = new Set<string>()
+        while (parentById.get(current) && !seen.has(current)) {
+            seen.add(current)
+            current = parentById.get(current)!
+            depth++
+        }
+        return depth
+    }
     // Sourced from `categories` (not Object.keys(criteria)) so this only renders once readable
     // names have arrived - criteria lands on the first data resolve, category names a tick later.
-    const criteriaCategories = (props.categories || []).filter((c) => criteria[c.categoryId] !== undefined)
+    const criteriaCategories = (props.categories || [])
+        .filter((c) => criteria[c.categoryId] !== undefined)
+        .sort((a, b) => depthOf(a.categoryId) - depthOf(b.categoryId))
 
     // The pathway's own root category (no parentCategoryId - only known via `allCategories`,
     // since the narrower `categories` doesn't carry it) is redundant as a badge-grouping section:
