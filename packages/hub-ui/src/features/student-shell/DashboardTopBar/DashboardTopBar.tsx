@@ -37,8 +37,11 @@ export const DashboardTopBar = (props: DashboardTopBarProps) => {
   return (
     <div className="flex shrink-0 items-center justify-between gap-4 border-b border-sky-blue-400/20 bg-white px-5 py-3.5 shadow-[0_2px_10px_rgba(59,208,242,0.08)]">
       <div>
+        {props.eyebrow && (
+          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">{props.eyebrow}</p>
+        )}
         {!!props.breadcrumb?.length && (
-          <nav className="mb-0.5 flex flex-wrap items-center gap-1 text-[11px] font-semibold text-slate-400">
+          <nav className="mb-0.5 mt-0.5 flex flex-wrap items-center gap-1 text-[11px] font-semibold text-slate-400">
             {props.breadcrumb!.map((seg, i) => (
               <React.Fragment key={i}>
                 {i > 0 && <span className="text-slate-300">›</span>}
@@ -52,9 +55,6 @@ export const DashboardTopBar = (props: DashboardTopBarProps) => {
               </React.Fragment>
             ))}
           </nav>
-        )}
-        {props.eyebrow && (
-          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">{props.eyebrow}</p>
         )}
         <h1 className="text-lg font-extrabold text-dark-blue-400">{props.title}</h1>
         {props.subtitle && <p className="text-xs font-medium text-slate-400">{props.subtitle}</p>}
