@@ -38,14 +38,12 @@ export type BadgeProps = {
     trial?: boolean
     lessonsCompleted?: number
     pathwayId?: string
-    pathwayTitle?: string
     breadcrumb?: PageHeaderBreadcrumbSegment[]
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
-    onPathwayClick?: () => void;
 }
 
 const TABS = [
@@ -71,8 +69,6 @@ export const Badge = (props: BadgeProps) => {
                 iconAccent="mint"
                 imageURL={props.imageURL}
                 onBackClick={props.onBackClick}
-                onSecondaryClick={props.onPathwayClick}
-                secondaryLabel={props.pathwayTitle ? "Go to Pathway" : undefined}
                 breadcrumb={props.breadcrumb}
                 title={props.displayName || "Badge"}
                 description={props.description}

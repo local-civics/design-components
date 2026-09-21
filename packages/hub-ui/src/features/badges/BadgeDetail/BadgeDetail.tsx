@@ -29,7 +29,6 @@ export type BadgeDetailProps = {
   canSubmit?: boolean;
   finishedAt?: string;
 
-  onPathwayClick?: () => void;
   onSubmit?: () => void;
 };
 
@@ -84,12 +83,6 @@ export const BadgeDetail = (props: BadgeDetailProps) => {
 
   return (
     <div className="flex w-full flex-col gap-3.5">
-      {props.onPathwayClick && (
-        <div onClick={props.onPathwayClick} className="w-max cursor-pointer text-xs font-bold text-sky-blue-400">
-          ← Go to Pathway
-        </div>
-      )}
-
       <div className={`overflow-hidden rounded-2xl border bg-white ${border} ${shadow}`}>
         <div className="flex gap-4 p-5">
           <div className="shrink-0">

@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<BadgeDetailProps> = (args) => (
   <div style={{ width: 640 }}>
-    <BadgeDetail {...args} onPathwayClick={() => console.log("navigate to /pathways/:id")} />
+    <BadgeDetail {...args} />
   </div>
 );
 
