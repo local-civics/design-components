@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconCalendar, IconCalendarStats, IconClipboard, IconSearch } from "@tabler/icons";
+import { IconCalendar, IconCalendarStats, IconClipboard, IconRefresh, IconSearch } from "@tabler/icons";
 import { FileList, FileListItem } from "../FileList/FileList";
 import { useFilteredSubmissions } from "./useFilteredSubmissions";
 
@@ -45,6 +45,21 @@ export type FileLockerProps = {
   onBadgeClick?: (badgeId: string) => void;
   onLessonClick?: (lessonId: string) => void;
   onPathwayClick?: (pathwayId: string) => void;
+  // "Updated H:MM:SS" - already formatted by the caller. Omitted entirely (no label, no refresh
+  // button) until the first fetch has landed.
+  fetchedAtLabel?: string;
+  // Whether a manually-triggered refresh is currently in flight - spins the refresh icon.
+  refreshing?: boolean;
+  // A lightweight, non-destructive way to force a fresh fetch without losing tab/search state.
+  onRefresh?: () => void;
+  // Optionally-controlled active tab (one of TABS' own values below) - lets a caller deep-link
+  // straight into a specific tab via the URL, and have Back/Forward naturally restore it. Falls
+  // back to local state when omitted, so every existing standalone/Storybook usage is unaffected.
+  tab?: string;
+  onTabChange?: (tab: string) => void;
+  // Which single pathway/badge/lesson (matching whichever tab is active) should start expanded.
+  // Consumed once per distinct value, not re-applied on every render.
+  focusId?: string;
 };
 
 const TABS = [
@@ -87,7 +102,14 @@ const matchesSearch = (item: SubmissionItem, term: string): boolean => {
  * @constructor
  */
 export const FileLocker = (props: FileLockerProps) => {
-  const [tab, setTab] = React.useState("pathways");
+  const [internalTab, setInternalTab] = React.useState(props.tab || "pathways");
+  // Optionally-controlled: a caller (My File Locker, reading a ?tab= query param) can drive this
+  // directly; every other/Storybook usage falls back to local state, unaffected.
+  const tab = props.tab ?? internalTab;
+  const setTab = (next: string) => {
+    setInternalTab(next);
+    props.onTabChange?.(next);
+  };
   const [search, setSearch] = React.useState("");
   const searchLower = search.trim().toLowerCase();
   const filtered = useFilteredSubmissions(props.submissions);
@@ -133,11 +155,40 @@ export const FileLocker = (props: FileLockerProps) => {
     })
     .filter((g) => g.items.length > 0);
 
+  // Deep-link support: scrolls the matching pathway/badge/lesson group into view once per distinct
+  // focusId - every group here is already always-expanded (no collapse state to seed, unlike the
+  // educator File Locker), so a scroll+highlight is the right equivalent of "auto-open."
+  const focusedRef = React.useRef<HTMLDivElement>(null);
+  const consumedFocusId = React.useRef<string | undefined>(undefined);
+  React.useEffect(() => {
+    if (!props.focusId) return;
+    if (consumedFocusId.current === props.focusId) return;
+    if (!focusedRef.current) return;
+    consumedFocusId.current = props.focusId;
+    focusedRef.current.scrollIntoView({behavior: "smooth", block: "center"});
+  });
+
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
-        <p className="text-sm text-slate-500">{props.description || "Files and links you've submitted through your lessons"}</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
+          <p className="text-sm text-slate-500">{props.description || "Files and links you've submitted through your lessons"}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {props.fetchedAtLabel && <span className="text-[10px] font-semibold text-slate-400">{props.fetchedAtLabel}</span>}
+          {props.onRefresh && (
+            <button
+              type="button"
+              onClick={props.onRefresh}
+              disabled={props.refreshing}
+              title="Refresh"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 hover:bg-slate-50 hover:text-dark-blue-400 disabled:opacity-50"
+            >
+              <IconRefresh size={15} stroke={2} className={props.refreshing ? "animate-spin" : ""} />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex gap-2.5">
@@ -178,6 +229,8 @@ export const FileLocker = (props: FileLockerProps) => {
           pathwayGroups.map(({ pathway, items }) => (
             <GroupCard
               key={pathway.pathwayId}
+              ref={pathway.pathwayId === props.focusId ? focusedRef : undefined}
+              focused={pathway.pathwayId === props.focusId}
               title={pathway.title}
               description={pathway.description}
               onClick={props.onPathwayClick ? () => props.onPathwayClick!(pathway.pathwayId) : undefined}
@@ -190,6 +243,8 @@ export const FileLocker = (props: FileLockerProps) => {
           badgeGroups.map(({ badge, items }) => (
             <GroupCard
               key={badge.badgeId}
+              ref={badge.badgeId === props.focusId ? focusedRef : undefined}
+              focused={badge.badgeId === props.focusId}
               title={badge.displayName}
               description={badgeSubtitle(items)}
               onClick={props.onBadgeClick ? () => props.onBadgeClick!(badge.badgeId) : undefined}
@@ -202,6 +257,8 @@ export const FileLocker = (props: FileLockerProps) => {
           lessonGroups.map(({ lesson, items }) => (
             <GroupCard
               key={lesson.lessonId}
+              ref={lesson.lessonId === props.focusId ? focusedRef : undefined}
+              focused={lesson.lessonId === props.focusId}
               title={lesson.lessonName}
               description={lessonSubtitle(items)}
               onClick={props.onLessonClick ? () => props.onLessonClick!(lesson.lessonId) : undefined}
@@ -236,8 +293,8 @@ const lessonSubtitle = (items: SubmissionItem[]): string | undefined => {
   return parts.length ? parts.join(" · ") : undefined;
 };
 
-const GroupCard = (props: { title: string; description?: string; onClick?: () => void; children: React.ReactNode }) => (
-  <div className="rounded-2xl border border-slate-200 bg-white p-4">
+const GroupCard = React.forwardRef<HTMLDivElement, { title: string; description?: string; onClick?: () => void; focused?: boolean; children: React.ReactNode }>((props, ref) => (
+  <div ref={ref} className={`rounded-2xl border bg-white p-4 ${props.focused ? "border-sky-blue-400 ring-2 ring-sky-blue-400/30" : "border-slate-200"}`}>
     <div className="mb-3">
       {props.onClick ? (
         <button type="button" onClick={props.onClick} className="text-left text-sm font-extrabold text-sky-blue-400 hover:underline">
@@ -250,7 +307,7 @@ const GroupCard = (props: { title: string; description?: string; onClick?: () =>
     </div>
     {props.children}
   </div>
-);
+));
 
 type StatAccent = "cyan" | "mint" | "gold";
 

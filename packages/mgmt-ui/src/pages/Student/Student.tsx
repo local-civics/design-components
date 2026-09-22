@@ -22,6 +22,10 @@ export type StudentProps = {
     reflections: ReflectionItem[],
 
     onBackClick: () => void
+    // "View Files" - jumps straight to File Locker's "By student" tab, opened directly on this
+    // student's full submission view (the quick, comprehensive-view use case this page exists
+    // for). Omitted entirely when the caller doesn't supply it.
+    onFileLockerClick?: () => void
 }
 type LessonItem = {
     lessonId: string
@@ -43,6 +47,8 @@ export const Student = (props: StudentProps) => {
         <div className="flex flex-col gap-5 px-4 py-8">
             <PageHeader
                 onBackClick={props.onBackClick}
+                onSecondaryClick={props.onFileLockerClick}
+                secondaryLabel="View Files"
                 title={props.name || "Student"}
                 description={props.impactStatement}
             />

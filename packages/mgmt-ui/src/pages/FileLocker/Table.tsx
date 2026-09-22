@@ -61,6 +61,10 @@ export type TableProps = TableData & {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
+    // Jumps to this student's own profile page. Only rendered when the caller supplies it - kept
+    // optional since this table is reused for "By student" specifically (the one context where a
+    // student-level link makes sense) but the type is shared, not duplicated, for every tab.
+    onStudentClick?: (userId: string) => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -118,7 +122,17 @@ export function Table(props: TableProps) {
                                         {initials(row.name)}
                                     </div>}
                                 <div className="min-w-0">
-                                    <div className="truncate text-sm font-bold text-dark-blue-400">{row.name}</div>
+                                    {props.onStudentClick ? (
+                                        <button
+                                            type="button"
+                                            onClick={(e) => { e.stopPropagation(); props.onStudentClick!(row.userId) }}
+                                            className="truncate text-sm font-bold text-sky-blue-400 hover:underline"
+                                        >
+                                            {row.name}
+                                        </button>
+                                    ) : (
+                                        <div className="truncate text-sm font-bold text-dark-blue-400">{row.name}</div>
+                                    )}
                                     <div className="truncate text-xs text-slate-400">{row.email}</div>
                                 </div>
                             </div>
