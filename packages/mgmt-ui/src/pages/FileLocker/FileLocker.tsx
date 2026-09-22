@@ -93,6 +93,11 @@ type Reviewing = {
     student: Item
     list: Item[]
     context?: string
+    // Which badge/lesson (if any) this review session is fixed to - set only when opened from
+    // BadgeGroups/LessonGroups, mirroring Table.tsx's own hideBadge/hideLesson-driven rule, so a
+    // per-entry Comment button inside SubmissionDetail pre-fills the same target the whole view is
+    // already scoped to instead of guessing.
+    commentContext?: {badgeId?: string, lessonId?: string}
 }
 
 const TABS: {value: string, label: string}[] = [
@@ -154,12 +159,14 @@ const GroupCard = (props: {title: string, description?: string, count: number, o
     )
 }
 
+type CommentContext = {badgeId?: string, lessonId?: string}
+
 type GroupsProps = {
     students: Item[]
     loading: boolean
     search: string
-    onReview: (item: Item, list: Item[], context?: string) => void
-    onComment?: (item: Item) => void
+    onReview: (item: Item, list: Item[], context?: string, commentContext?: CommentContext) => void
+    onComment?: (item: Item, context?: CommentContext) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
@@ -256,7 +263,7 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
                             items={filtered}
                             hideBadge
                             hidePathway
-                            onReview={(item) => props.onReview(item, filtered, b.displayName)}
+                            onReview={(item) => props.onReview(item, filtered, b.displayName, {badgeId: b.badgeId})}
                             onComment={props.onComment}
                             onLessonClick={props.onLessonClick}
                         />
@@ -305,7 +312,7 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
                         onTitleClick={props.onLessonClick ? () => props.onLessonClick!(l.lessonId) : undefined}
                         defaultOpen={l.lessonId === props.focusId}
                     >
-                        <Table loading={props.loading} items={filtered} hideBadge hideLesson hidePathway onReview={(item) => props.onReview(item, filtered, l.lessonName)} onComment={props.onComment}/>
+                        <Table loading={props.loading} items={filtered} hideBadge hideLesson hidePathway onReview={(item) => props.onReview(item, filtered, l.lessonName, {lessonId: l.lessonId})} onComment={props.onComment}/>
                     </GroupCard>
                 )
             })}
@@ -424,14 +431,14 @@ export const FileLocker = (props: FileLockerProps) => {
 
     const [commenting, setCommenting] = React.useState<{userId: string, badgeId?: string, lessonId?: string} | null>(null)
 
-    const onReview = (item: Item, list: Item[], context?: string) => setReviewing({student: item, list, context})
-    // Whichever tab/group rendered the clicked row has already narrowed its submissions down to the
-    // relevant badge/lesson (see useFilteredStudents' byBadge/byLesson) - or, on "By student", left
-    // every submission in place, in which case the first one is a reasonable default and the modal's
-    // own target selector still lets the teacher change it.
-    const onCommentClick = (item: Item) => {
-        const sub = item.submissions?.[0]
-        setCommenting({userId: item.userId, badgeId: sub?.badgeId, lessonId: sub?.lessonId})
+    const onReview = (item: Item, list: Item[], context?: string, commentContext?: CommentContext) =>
+        setReviewing({student: item, list, context, commentContext})
+    // context is already computed by whichever tab/group rendered the clicked row (see Table.tsx's
+    // commentContextFor - hideLesson/hideBadge tell us this whole table is already fixed to one
+    // specific lesson/badge, or, on "By student"/"By pathway", that it isn't) - nothing left to
+    // guess here.
+    const onCommentClick = (item: Item, context?: CommentContext) => {
+        setCommenting({userId: item.userId, badgeId: context?.badgeId, lessonId: context?.lessonId})
     }
     const onCommentSubmit = (comment: LeaveCommentPayload) => {
         props.onComment?.(comment)
@@ -459,8 +466,13 @@ export const FileLocker = (props: FileLockerProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tab, props.focusId, searchedStudents])
 
-    if (reviewing) {
-        return <SubmissionDetail
+    // LeaveCommentModal is rendered once, below, outside this branch - it needs to stay mounted
+    // regardless of whether SubmissionDetail or the tabbed view is showing, since a comment can be
+    // triggered from either one (see onComment wiring on SubmissionDetail above). Returning early
+    // here (as this used to) would unmount it the moment `reviewing` becomes truthy, which is
+    // exactly why SubmissionDetail's own Comment button silently did nothing before this fix.
+    const mainContent = reviewing ? (
+        <SubmissionDetail
             student={reviewing.student}
             context={reviewing.context}
             onBack={() => setReviewing(null)}
@@ -468,10 +480,9 @@ export const FileLocker = (props: FileLockerProps) => {
             onBadgeClick={props.onBadgeClick}
             onLessonClick={props.onLessonClick}
             onPathwayClick={props.onPathwayClick}
+            onComment={() => onCommentClick(reviewing.student, reviewing.commentContext)}
         />
-    }
-
-    return (
+    ) : (
         <div className="flex w-full flex-col gap-5 px-4 py-8">
             <PageHeader
                 onBackClick={props.onBackClick}
@@ -609,6 +620,12 @@ export const FileLocker = (props: FileLockerProps) => {
                 />
             )}
 
+        </div>
+    )
+
+    return (
+        <>
+            {mainContent}
             <LeaveCommentModal
                 opened={!!commenting}
                 onClose={() => setCommenting(null)}
@@ -621,6 +638,6 @@ export const FileLocker = (props: FileLockerProps) => {
                 initialBadgeId={commenting?.badgeId}
                 initialLessonId={commenting?.lessonId}
             />
-        </div>
+        </>
     )
 }

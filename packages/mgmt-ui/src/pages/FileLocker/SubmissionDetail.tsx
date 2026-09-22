@@ -14,6 +14,11 @@ export type SubmissionDetailProps = {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
+    // Comment on this student, scoped to whatever badge/lesson this whole review session was opened
+    // with (the caller already knows that context - see FileLocker.tsx's Reviewing.commentContext).
+    // Fires the same regardless of which specific file entry was clicked, since every entry here
+    // shares that one review session's context.
+    onComment?: () => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -61,6 +66,7 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
                         onBadgeClick={props.onBadgeClick}
                         onLessonClick={props.onLessonClick}
                         onPathwayClick={props.onPathwayClick}
+                        onComment={props.onComment ? () => props.onComment!() : undefined}
                     />
                 </div>
             </div>

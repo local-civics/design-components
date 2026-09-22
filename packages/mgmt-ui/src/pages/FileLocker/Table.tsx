@@ -14,6 +14,11 @@ export interface Item {
     name: string
     email: string
     submissions: SubmissionItem[]
+    // True only when this student has a real account in the organization's own sphere directory
+    // (see useOrganization.ts's getStudents()) - a roster member resolved only via lake (no sphere
+    // account) has this false. Drives whether the student's name links to their profile page at
+    // all, since that page has nothing to show for someone who was never a real platform user.
+    hasAccount?: boolean
 }
 
 export interface SubmissionItem {
@@ -52,12 +57,12 @@ export type TableProps = TableData & {
     hideLesson?: boolean
     hidePathway?: boolean
     onReview?: (item: Item) => void
-    // Opens the Leave Comment modal (see LeaveCommentModal) prepopulated for this student and the
-    // badge/lesson their submissions here belong to. Whichever tab/group rendered this Table has
-    // already narrowed `item.submissions` down to the relevant badge/lesson (see
-    // useFilteredStudents' byBadge/byLesson), so the caller can read the badge/lesson straight off
-    // the clicked item - no extra context parameter needed here.
-    onComment?: (item: Item) => void
+    // Opens the Leave Comment modal (see LeaveCommentModal). The context argument pre-fills the
+    // target: whichever of hideLesson/hideBadge is true tells us this whole table is already fixed
+    // to one specific lesson or badge (a tab/group already narrowed it), so that's what gets
+    // pre-filled; when neither is set (the flat "By student" tab, or "By pathway", which spans more
+    // than one badge/lesson) the comment opens general, with nothing guessed.
+    onComment?: (item: Item, context?: {badgeId?: string, lessonId?: string}) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
@@ -68,6 +73,15 @@ export type TableProps = TableData & {
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
+
+// Shared by the row-level Comment button and each individual file's own Comment button (threaded
+// into the nested FileStack below) - same rule, just fed either the row's first submission or the
+// exact submission that was clicked.
+const commentContextFor = (hideLesson: boolean | undefined, hideBadge: boolean | undefined, sub?: {badgeId?: string, lessonId?: string}) => {
+    if (hideLesson) return {lessonId: sub?.lessonId}
+    if (hideBadge) return {badgeId: sub?.badgeId}
+    return {}
+}
 
 /**
  * Table
@@ -122,7 +136,7 @@ export function Table(props: TableProps) {
                                         {initials(row.name)}
                                     </div>}
                                 <div className="min-w-0">
-                                    {props.onStudentClick ? (
+                                    {props.onStudentClick && row.hasAccount ? (
                                         <button
                                             type="button"
                                             onClick={(e) => { e.stopPropagation(); props.onStudentClick!(row.userId) }}
@@ -131,7 +145,17 @@ export function Table(props: TableProps) {
                                             {row.name}
                                         </button>
                                     ) : (
-                                        <div className="truncate text-sm font-bold text-dark-blue-400">{row.name}</div>
+                                        <div className="flex min-w-0 items-center gap-1.5">
+                                            <div className="truncate text-sm font-bold text-dark-blue-400">{row.name}</div>
+                                            {props.onStudentClick && (
+                                                <span
+                                                    title="This person hasn't created an account in your organization yet"
+                                                    className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500"
+                                                >
+                                                    No account
+                                                </span>
+                                            )}
+                                        </div>
                                     )}
                                     <div className="truncate text-xs text-slate-400">{row.email}</div>
                                 </div>
@@ -142,14 +166,17 @@ export function Table(props: TableProps) {
                                     {props.onReview && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); props.onReview!(row) }}
-                                            className="rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400"
+                                            className="rounded-lg border border-sky-blue-400/40 bg-sky-blue-400/10 px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400 hover:bg-sky-blue-400/20"
                                         >
-                                            Review Submission
+                                            View Submissions
                                         </button>
                                     )}
                                     {props.onComment && (
                                         <button
-                                            onClick={(e) => { e.stopPropagation(); props.onComment!(row) }}
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                props.onComment!(row, commentContextFor(props.hideLesson, props.hideBadge, row.submissions[0]))
+                                            }}
                                             className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400 hover:bg-slate-50"
                                         >
                                             Comment
@@ -169,6 +196,7 @@ export function Table(props: TableProps) {
                                     onBadgeClick={props.onBadgeClick}
                                     onLessonClick={props.onLessonClick}
                                     onPathwayClick={props.onPathwayClick}
+                                    onComment={props.onComment ? (sub) => props.onComment!(row, commentContextFor(props.hideLesson, props.hideBadge, sub)) : undefined}
                                 />
                             </div>
                         )}
