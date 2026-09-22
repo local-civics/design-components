@@ -74,13 +74,23 @@ export type TableProps = TableData & {
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
 
-// Shared by the row-level Comment button and each individual file's own Comment button (threaded
-// into the nested FileStack below) - same rule, just fed either the row's first submission or the
-// exact submission that was clicked.
+// Governs the row-level (collapsed student row) Comment button only - general unless the whole
+// table is already fixed to one badge/lesson by its tab (By Badge/By Lesson), since a collapsed
+// row can span several submissions with no single obvious target otherwise.
 const commentContextFor = (hideLesson: boolean | undefined, hideBadge: boolean | undefined, sub?: {badgeId?: string, lessonId?: string}) => {
     if (hideLesson) return {lessonId: sub?.lessonId}
     if (hideBadge) return {badgeId: sub?.badgeId}
     return {}
+}
+
+// Governs each individual file's own Comment button (nested FileStack rows, both here and in
+// SubmissionDetail) - unlike the row-level button above, an individual file always has one
+// specific badge/lesson behind it, so it never falls back to general: badge is the default target
+// (By Badge, By Student, By Pathway all resolve here) and lesson only wins when the whole session
+// is already fixed to one lesson (By Lesson).
+export const fileCommentContextFor = (hideLesson: boolean | undefined, sub?: {badgeId?: string, lessonId?: string}) => {
+    if (hideLesson) return {lessonId: sub?.lessonId}
+    return {badgeId: sub?.badgeId}
 }
 
 /**
@@ -196,7 +206,7 @@ export function Table(props: TableProps) {
                                     onBadgeClick={props.onBadgeClick}
                                     onLessonClick={props.onLessonClick}
                                     onPathwayClick={props.onPathwayClick}
-                                    onComment={props.onComment ? (sub) => props.onComment!(row, commentContextFor(props.hideLesson, props.hideBadge, sub)) : undefined}
+                                    onComment={props.onComment ? (sub) => props.onComment!(row, fileCommentContextFor(props.hideLesson, sub)) : undefined}
                                 />
                             </div>
                         )}

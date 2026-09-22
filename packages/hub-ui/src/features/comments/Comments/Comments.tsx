@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconCheck, IconMessageCircle } from "@tabler/icons";
+import { IconArrowRight, IconCheck, IconMessageCircle } from "@tabler/icons";
 
 /**
  * CommentsItem
@@ -78,30 +78,33 @@ const CommentCard = (props: {
   const target = comment.badgeId
     ? {
         label: comment.badgeName || "Badge",
+        kind: "badge" as const,
         onClick: props.onBadgeClick ? () => props.onBadgeClick!(comment.badgeId as string) : undefined,
       }
     : comment.lessonId
     ? {
         label: comment.lessonName || "Lesson",
+        kind: "lesson" as const,
         onClick: props.onLessonClick ? () => props.onLessonClick!(comment.lessonId as string) : undefined,
       }
-    : { label: "General", onClick: undefined };
+    : { label: "General", kind: "general" as const, onClick: undefined };
+
+  const needsAttention = comment.requireValidation && !comment.resolvedAt
+
+  // The specific next step depends on what this comment is actually about - a validation-required
+  // comment on a badge means that badge was unsubmitted and needs real work (resubmitting), not just
+  // a look; anything else is just "go take a look," a lower-stakes, lower-emphasis prompt.
+  const actionLabel = needsAttention && target.kind === "badge"
+    ? "Resubmit this badge"
+    : target.kind === "badge" ? "View this badge"
+    : target.kind === "lesson" ? "View this lesson"
+    : undefined
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+    <div className={`rounded-2xl border bg-white p-4 ${needsAttention ? "border-gold-400/40" : "border-slate-200"}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          {target.onClick ? (
-            <button
-              type="button"
-              onClick={target.onClick}
-              className="text-left text-xs font-extrabold text-sky-blue-400 hover:underline"
-            >
-              {target.label}
-            </button>
-          ) : (
-            <div className="text-xs font-extrabold text-dark-blue-400">{target.label}</div>
-          )}
+          <div className="text-xs font-extrabold text-dark-blue-400">{target.label}</div>
           {comment.authorName && <div className="mt-0.5 text-[11px] text-slate-400">from {comment.authorName}</div>}
         </div>
         {comment.requireValidation &&
@@ -117,6 +120,18 @@ const CommentCard = (props: {
           ))}
       </div>
       <p className="mt-2.5 text-xs text-slate-600">{comment.commentText}</p>
+      {actionLabel && target.onClick && (
+        <button
+          type="button"
+          onClick={target.onClick}
+          className={`mt-3 flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-extrabold ${
+            needsAttention ? "bg-gold-400/15 text-dark-blue-400 hover:bg-gold-400/25" : "border border-slate-200 text-dark-blue-400 hover:bg-slate-50"
+          }`}
+        >
+          {actionLabel}
+          <IconArrowRight size={12} stroke={2.5} />
+        </button>
+      )}
     </div>
   );
 };

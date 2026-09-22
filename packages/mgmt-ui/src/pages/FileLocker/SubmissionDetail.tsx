@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IconChevronLeft, IconChevronRight} from "@tabler/icons";
-import {Item} from "./Table";
+import {Item, fileCommentContextFor} from "./Table";
 import {Stack as FileStack} from "./FileStack";
 
 /**
@@ -14,11 +14,14 @@ export type SubmissionDetailProps = {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
-    // Comment on this student, scoped to whatever badge/lesson this whole review session was opened
-    // with (the caller already knows that context - see FileLocker.tsx's Reviewing.commentContext).
-    // Fires the same regardless of which specific file entry was clicked, since every entry here
-    // shares that one review session's context.
-    onComment?: () => void
+    // True only when this whole review session was opened from By Lesson (already fixed to one
+    // lesson) - see fileCommentContextFor. Every other entry point (By Student, By Pathway, By
+    // Badge) resolves each file's own badgeId instead, so this is the one case worth naming.
+    hideLesson?: boolean
+    // Comment on a specific file within this student's submissions - each entry resolves its own
+    // badge (or lesson, if hideLesson) via fileCommentContextFor, not one shared context for the
+    // whole page, since a student/pathway review session can span more than one badge.
+    onComment?: (context?: {badgeId?: string, lessonId?: string}) => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -66,7 +69,7 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
                         onBadgeClick={props.onBadgeClick}
                         onLessonClick={props.onLessonClick}
                         onPathwayClick={props.onPathwayClick}
-                        onComment={props.onComment ? () => props.onComment!() : undefined}
+                        onComment={props.onComment ? (sub) => props.onComment!(fileCommentContextFor(props.hideLesson, sub)) : undefined}
                     />
                 </div>
             </div>

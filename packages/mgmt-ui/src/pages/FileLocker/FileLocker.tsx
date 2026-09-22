@@ -2,6 +2,8 @@ import * as React from 'react';
 import {IconChevronDown, IconRefresh, IconSearch} from "@tabler/icons";
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
 import {PageHeader} from "../../components/navigation/PageHeader/PageHeader";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
+import {useSortableData} from "../../utils/useSortableData";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {SubmissionDetail} from "./SubmissionDetail";
@@ -237,9 +239,11 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
             const base = byBadge(b.badgeId)
             const ownNameMatches = !term || b.displayName.toLowerCase().includes(term)
             const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
-            return {badge: b, filtered}
+            return {badge: b, filtered, name: b.displayName, fileCount: countFiles(filtered)}
         })
         .filter((g) => !term || g.filtered.length > 0)
+
+    const {items: sortedGroups, requestSort, sortConfig} = useSortableData(groups)
 
     if (term && groups.length === 0) {
         return <p className="text-sm text-slate-400">No matching entries.</p>
@@ -247,7 +251,11 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
 
     return (
         <div className="flex flex-col gap-3">
-            {groups.map(({badge: b, filtered}) => {
+            <div className="flex items-center gap-4 px-4">
+                <SortableHeader label="Badge" sortKey="name" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                <SortableHeader label="Files" sortKey="fileCount" sortConfig={sortConfig} onSort={requestSort} className="w-16 shrink-0" />
+            </div>
+            {sortedGroups.map(({badge: b, filtered}) => {
                 const pathwayTitle = props.pathwayNameForBadge[b.badgeId]
                 return (
                     <GroupCard
@@ -287,9 +295,11 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
             const base = byLesson(l.lessonName)
             const ownNameMatches = !term || l.lessonName.toLowerCase().includes(term)
             const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
-            return {lesson: l, filtered}
+            return {lesson: l, filtered, name: l.lessonName, fileCount: countFiles(filtered)}
         })
         .filter((g) => !term || g.filtered.length > 0)
+
+    const {items: sortedGroups, requestSort, sortConfig} = useSortableData(groups)
 
     if (term && groups.length === 0) {
         return <p className="text-sm text-slate-400">No matching entries.</p>
@@ -297,7 +307,11 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
 
     return (
         <div className="flex flex-col gap-3">
-            {groups.map(({lesson: l, filtered}) => {
+            <div className="flex items-center gap-4 px-4">
+                <SortableHeader label="Lesson" sortKey="name" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                <SortableHeader label="Files" sortKey="fileCount" sortConfig={sortConfig} onSort={requestSort} className="w-16 shrink-0" />
+            </div>
+            {sortedGroups.map(({lesson: l, filtered}) => {
                 const badge = props.badgeForLesson[l.lessonId]
                 const pathwayTitle = badge ? props.pathwayNameForBadge[badge.badgeId] : undefined
                 const description = badge
@@ -475,12 +489,13 @@ export const FileLocker = (props: FileLockerProps) => {
         <SubmissionDetail
             student={reviewing.student}
             context={reviewing.context}
+            hideLesson={!!reviewing.commentContext?.lessonId}
             onBack={() => setReviewing(null)}
             onNav={onNav}
             onBadgeClick={props.onBadgeClick}
             onLessonClick={props.onLessonClick}
             onPathwayClick={props.onPathwayClick}
-            onComment={() => onCommentClick(reviewing.student, reviewing.commentContext)}
+            onComment={(context) => onCommentClick(reviewing.student, context)}
         />
     ) : (
         <div className="flex w-full flex-col gap-5 px-4 py-8">
