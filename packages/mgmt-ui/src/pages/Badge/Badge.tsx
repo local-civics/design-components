@@ -44,6 +44,10 @@ export type BadgeProps = {
     onClassChange: (classId: string) => void;
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
+    // "View Files" - jumps straight to File Locker pre-filtered to this badge (an educator's most
+    // likely reason to be looking at this page's roster in the first place: checking who has and
+    // hasn't submitted files for it). Omitted entirely when the caller doesn't supply it.
+    onFileLockerClick?: () => void;
 }
 
 const TABS = [
@@ -70,6 +74,8 @@ export const Badge = (props: BadgeProps) => {
                 imageURL={props.imageURL}
                 onBackClick={props.onBackClick}
                 breadcrumb={props.breadcrumb}
+                onSecondaryClick={props.onFileLockerClick}
+                secondaryLabel="View Files"
                 title={props.displayName || "Badge"}
                 description={props.description}
                 actions={!props.trial && (
