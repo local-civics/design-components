@@ -40,6 +40,8 @@ export type LessonProps = {
     lessonsCompleted?: number
     contributors?: {name: string}[]
     breadcrumb?: PageHeaderBreadcrumbSegment[]
+    // Forwarded into the "By student" tab's Table -> AnswerStack - see Pathway.tsx's identical field.
+    linkState?: any
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -143,7 +145,7 @@ export const Lesson = (props: LessonProps) => {
 
                 {tab === "question" && <QuestionStack loading={props.loading} items={props.questions} />}
                 {tab === "reflections" && <ReflectionTable loading={props.loading} items={props.reflections} />}
-                {tab === "students" && <Table loading={props.loading} items={props.students} />}
+                {tab === "students" && <Table loading={props.loading} items={props.students} linkState={props.linkState} />}
             </div>
         </div>
     )

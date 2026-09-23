@@ -43,6 +43,10 @@ export type PathwayProps = {
     trial?: boolean
     badgesCompleted?: number
     breadcrumb?: PageHeaderBreadcrumbSegment[]
+    // Forwarded into the "By student" tab's Table -> BadgeStack, so a badge preview reached from
+    // this page's own roster can return here precisely (see hub's navigationTrail.ts). The caller
+    // computes this once (typically `{state: {trail: pushTrail(...)}}`), not per-row.
+    linkState?: any
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -186,7 +190,7 @@ export const Pathway = (props: PathwayProps) => {
                 )}
 
                 {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} badges={props.badges} categories={badgeGroupCategories} activeCategoryId={selectedCategoryId} activeCategoryLabel={selectedCategoryName} />}
-                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} />}
+                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} linkState={props.linkState} />}
             </div>
 
             <CategoriesModal

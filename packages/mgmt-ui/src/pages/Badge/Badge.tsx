@@ -39,6 +39,8 @@ export type BadgeProps = {
     lessonsCompleted?: number
     pathwayId?: string
     breadcrumb?: PageHeaderBreadcrumbSegment[]
+    // Forwarded into the "By student" tab's Table -> LessonStack - see Pathway.tsx's identical field.
+    linkState?: any
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -128,7 +130,7 @@ export const Badge = (props: BadgeProps) => {
                 )}
 
                 {(!!props.trial || tab === "lessons") && <LessonTable loading={props.loading} items={props.lessons} />}
-                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} />}
+                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} linkState={props.linkState} />}
             </div>
         </div>
     )

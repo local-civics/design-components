@@ -25,6 +25,8 @@ export interface Item {
 export interface TableProps {
     loading: boolean
     items: Item[];
+    // Forwarded to every row's nested AnswerStack - see Pathway/BadgeStack.tsx's `state` field.
+    linkState?: any
 }
 
 /**
@@ -89,7 +91,7 @@ export function Table(props: TableProps) {
                         </div>
                         {isOpen && (
                             <div className="border-t border-slate-100 px-4 py-3">
-                                <AnswerStack href={row.href} items={row.answers}/>
+                                <AnswerStack href={row.href} items={row.answers} state={props.linkState}/>
                             </div>
                         )}
                     </div>
