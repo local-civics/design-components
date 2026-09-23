@@ -65,6 +65,17 @@ Mock.args = {
                 questionName: "A chart example question",
                 answer: ["A. An example response"],
             }]
+        },
+        {
+            // Exercises AnswerStack's zero-answers fallback - a real case (e.g. a student who's
+            // done other work on the lesson but hasn't touched any question-format item yet),
+            // confirming the row still expands to a real, worded link instead of nothing.
+            userId: "peter-pop-mock",
+            avatar: "",
+            href: "",
+            name: "Peter Pop",
+            email: "peter.pop@localcivics.io",
+            answers: []
         }
     ],
     questions: [
