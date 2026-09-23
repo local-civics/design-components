@@ -6,6 +6,15 @@ import * as React from "react";
 export type SubmissionReviewHeaderProps = {
   name?: string;
   email?: string;
+  // Jumps to the aggregate "all students" view for whatever this preview is scoped to (a badge or
+  // lesson overview) - the one explicit way back out of a single-student drill-down, since neither
+  // the breadcrumb (which only goes up through Pathway/Badge, never sideways to the aggregate view)
+  // nor the shell's own Back button covers this. Only rendered when both this and overviewLabel are
+  // supplied, so a caller with nothing sensible to link to (there isn't always an overview route for
+  // every context this header could end up in) simply doesn't show it rather than showing a dead
+  // or mislabeled link.
+  onViewOverview?: () => void;
+  overviewLabel?: string;
 };
 
 const initialsFor = (name?: string, email?: string): string => {
@@ -44,6 +53,15 @@ export const SubmissionReviewHeader = (props: SubmissionReviewHeaderProps) => {
         <div className="truncate text-sm font-extrabold text-dark-blue-400">{props.name || props.email}</div>
         {showEmailLine && <div className="truncate text-xs text-slate-400">{props.email}</div>}
       </div>
+      {props.onViewOverview && props.overviewLabel && (
+        <button
+          type="button"
+          onClick={props.onViewOverview}
+          className="shrink-0 text-xs font-bold text-dark-blue-400 hover:underline"
+        >
+          {props.overviewLabel} →
+        </button>
+      )}
       <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500">
         Preview
       </span>

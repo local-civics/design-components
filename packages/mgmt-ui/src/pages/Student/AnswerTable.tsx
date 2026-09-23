@@ -9,6 +9,12 @@ export interface Item {
     lessonId: string
     lessonName: string
     badgeName?: string
+    // Joined by getStudent() - undefined when this lesson's badge (if any) doesn't belong to a
+    // pathway. Not sortable/groupable by pathway here - this table is already grouped by lesson,
+    // and pathway filtering happens one level up in Student.tsx before items ever reach this
+    // component.
+    pathwayId?: string
+    pathwayName?: string
     questionName: string
     answer: string[]
     href: string
@@ -31,6 +37,7 @@ type LessonGroup = {
     lessonId: string
     lessonName: string
     badgeName?: string
+    pathwayName?: string
     href: string
     items: Item[]
 }
@@ -56,7 +63,7 @@ export function Table(props: TableProps) {
     props.items.forEach((row) => {
         let group = groupByLessonId[row.lessonId];
         if (!group) {
-            group = {lessonId: row.lessonId, lessonName: row.lessonName, badgeName: row.badgeName, href: row.href, items: []};
+            group = {lessonId: row.lessonId, lessonName: row.lessonName, badgeName: row.badgeName, pathwayName: row.pathwayName, href: row.href, items: []};
             groupByLessonId[row.lessonId] = group;
             groups.push(group);
         }
@@ -65,11 +72,13 @@ export function Table(props: TableProps) {
 
     return (
         <div className="flex flex-col gap-3">
-            {groups.map((group) => (
+            {groups.map((group) => {
+                const subtitleParts = [group.badgeName, group.pathwayName ? `${group.pathwayName} pathway` : undefined].filter(Boolean)
+                return (
                 <div key={group.lessonId} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                     <div className="border-b border-slate-100 px-5 py-4">
                         <Link to={group.href} className="text-sm font-bold text-dark-blue-400 no-underline hover:underline">{group.lessonName}</Link>
-                        {group.badgeName && <div className="mt-1 text-xs text-slate-500">{group.badgeName}</div>}
+                        {subtitleParts.length > 0 && <div className="mt-1 text-xs text-slate-500">{subtitleParts.join(" · ")}</div>}
                     </div>
                     {group.items.map((row, i) => (
                         <div
@@ -81,7 +90,8 @@ export function Table(props: TableProps) {
                         </div>
                     ))}
                 </div>
-            ))}
+                )
+            })}
         </div>
     );
 }
