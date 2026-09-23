@@ -40,6 +40,8 @@ export type Category = {
  */
 export type TableProps = TableData & {
     categories?: Category[]
+    // Forwarded to every row's nested BadgeStack - see Pathway/BadgeStack.tsx's `state` field.
+    linkState?: any
 }
 
 /**
@@ -118,7 +120,7 @@ export function Table(props: TableProps) {
                         </div>
                         {isOpen && (
                             <div className="border-t border-slate-100 px-4 py-3">
-                                <BadgeStack items={row.badges}/>
+                                <BadgeStack items={row.badges} state={props.linkState}/>
                             </div>
                         )}
                     </div>

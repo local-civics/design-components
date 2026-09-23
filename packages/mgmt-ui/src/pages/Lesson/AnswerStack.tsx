@@ -15,6 +15,9 @@ export interface Item {
 export type StackData = {
     href: string
     items: Item[]
+    // Carried through to the block's own <Link state={...}> - see Pathway/BadgeStack.tsx's
+    // identical field for the full rationale.
+    state?: any
 }
 
 /**
@@ -33,7 +36,7 @@ export function Stack(props: StackProps) {
     }
 
     return (
-        <Link to={props.href} className="flex flex-col gap-4 no-underline">
+        <Link to={props.href} state={props.state} className="flex flex-col gap-4 no-underline">
             {props.items.map((row) => (
                 <div key={row.questionName}>
                     <div className="text-sm font-bold text-dark-blue-400">{row.questionName}</div>
