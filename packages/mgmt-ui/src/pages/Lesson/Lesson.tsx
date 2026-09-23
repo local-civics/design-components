@@ -4,7 +4,6 @@ import * as React from 'react';
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
 import {PageHeader, PageHeaderBreadcrumbSegment} from "../../components/navigation/PageHeader/PageHeader";
 import {compact} from "../../utils/numbers";
-import {Item as ReflectionItem, Table as ReflectionTable} from "./ReflectionTable";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {Stack as QuestionStack, Item as QuestionItem} from "./QuestionStack";
@@ -34,7 +33,6 @@ export type LessonProps = {
     classId: string
     classes: LessonClass[]
     students: LessonUserItem[]
-    reflections: ReflectionItem[],
     questions: QuestionItem[],
     trial?: boolean
     lessonsCompleted?: number
@@ -65,13 +63,13 @@ export const Lesson = (props: LessonProps) => {
     const visibleContributors = contributors.slice(0, 5)
     const remainingContributors = contributors.slice(5).length
 
-    const tabs = props.trial ? [
+    // Trial and non-trial modes always showed the same 2 tabs here - "By reflection" was the only
+    // one ever dropped for trial, and it no longer exists at all (reflection/rating now render
+    // inline on each student's own row, see Table.tsx/AnswerStack.tsx), so there's nothing left to
+    // vary by mode.
+    const tabs = [
         {label: "By question", value: "question"},
         {label: "By student", value: "students"},
-    ] : [
-        {label: "By question", value: "question"},
-        {label: "By student", value: "students"},
-        {label: "By reflection", value: "reflections"},
     ]
 
     return (
@@ -144,7 +142,6 @@ export const Lesson = (props: LessonProps) => {
                 </div>
 
                 {tab === "question" && <QuestionStack loading={props.loading} items={props.questions} />}
-                {tab === "reflections" && <ReflectionTable loading={props.loading} items={props.reflections} />}
                 {tab === "students" && <Table loading={props.loading} items={props.students} linkState={props.linkState} />}
             </div>
         </div>

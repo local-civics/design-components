@@ -45,11 +45,21 @@ Component.args = {};
 export const Mock: Story<StudentProps> = Template.bind({});
 Mock.args = {
     badges: [{
-        badgeId: "",
+        badgeId: "unit-1",
         badgeName: "Unit 1 Badge",
         isComplete: true,
+        pathwayId: "civic-readiness",
+        pathwayName: "Civic Readiness",
     },{
-        badgeId: "",
+        badgeId: "digital-citizen",
+        badgeName: "Digital Citizenship Badge",
+        isComplete: true,
+        pathwayId: "digital-citizenship",
+        pathwayName: "Digital Citizenship",
+    },{
+        // Exercises the "Other" pill and the pathway-pill row's overall gate - a badge with no
+        // matching pathway, alongside two that do.
+        badgeId: "unit-2",
         badgeName: "Unit 2 Badge",
         isComplete: false,
     }],
@@ -58,6 +68,8 @@ Mock.args = {
             lessonId: "lesson-1",
             lessonName: "An example lesson",
             badgeName: "Unit 1 Badge",
+            pathwayId: "civic-readiness",
+            pathwayName: "Civic Readiness",
             questionName: "An example question",
             answer: ["My example answer"],
             href: "",
@@ -66,8 +78,18 @@ Mock.args = {
             lessonId: "lesson-1",
             lessonName: "An example lesson",
             badgeName: "Unit 1 Badge",
+            pathwayId: "civic-readiness",
+            pathwayName: "Civic Readiness",
             questionName: "A second question in the same lesson",
             answer: ["Another example answer"],
+            href: "",
+        },
+        {
+            // A lesson with no badge/pathway match - exercises "Other" on the My Answers tab too.
+            lessonId: "lesson-2",
+            lessonName: "An unbadged lesson",
+            questionName: "A standalone question",
+            answer: ["A standalone answer"],
             href: "",
         }
     ],
@@ -76,6 +98,8 @@ Mock.args = {
             lessonId: "lesson-1",
             lessonName: "An example lesson",
             badgeName: "Unit 1 Badge",
+            pathwayId: "civic-readiness",
+            pathwayName: "Civic Readiness",
             reflection: "An example reflection",
             rating: 2,
             href: "",

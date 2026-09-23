@@ -72,6 +72,18 @@ InProgress.args = {
 };
 
 /**
+ * Educator reviewing a student's in-progress badge - same data as InProgress, but with `preview`
+ * set: Submit is hidden (it's the student's own act, not the reviewer's), while each criterion's
+ * own Start/Continue/Review button stays fully active, since those navigate to that same student's
+ * other lesson previews.
+ */
+export const PreviewMode: Story<BadgeDetailProps> = Template.bind({});
+PreviewMode.args = {
+  ...InProgress.args,
+  preview: true,
+};
+
+/**
  * Completed badge: no Submit button, both criteria show Review
  */
 export const Completed: Story<BadgeDetailProps> = Template.bind({});

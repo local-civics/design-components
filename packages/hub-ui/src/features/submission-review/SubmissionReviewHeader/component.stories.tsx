@@ -38,3 +38,11 @@ LongName.args = {
   name: "Alexandria Montgomery-Featherstonehaugh",
   email: "alexandria.montgomery.featherstonehaugh@localcivics.io",
 };
+
+export const WithOverviewLink: Story<SubmissionReviewHeaderProps> = Template.bind({});
+WithOverviewLink.args = {
+  name: "Akinola Akintayo",
+  email: "aapathwaystudent@localcivics.io",
+  onViewOverview: () => console.log("navigate to lesson overview"),
+  overviewLabel: "View Lesson Overview",
+};

@@ -14,6 +14,11 @@ export interface Item {
     name: string
     email: string
     answers: AnswerItem[]
+    // Joined onto this row by getLessonActivity() - see AnswerStack.tsx for how these render
+    // alongside the question answers in this row's own expansion (this table has no separate
+    // "By reflection" sibling to show them in anymore).
+    reflection?: string
+    rating?: number
     isStarted?: boolean
     isComplete?: boolean
     href: string
@@ -91,7 +96,7 @@ export function Table(props: TableProps) {
                         </div>
                         {isOpen && (
                             <div className="border-t border-slate-100 px-4 py-3">
-                                <AnswerStack href={row.href} items={row.answers} state={props.linkState}/>
+                                <AnswerStack href={row.href} items={row.answers} reflection={row.reflection} rating={row.rating} state={props.linkState}/>
                             </div>
                         )}
                     </div>
