@@ -7,6 +7,7 @@ import {useSortableData} from "../../utils/useSortableData";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {SubmissionDetail} from "./SubmissionDetail";
+import {AccountPendingModal} from "./AccountPendingModal";
 import {useFilteredStudents} from "./useFilteredStudents"
 import {LeaveCommentModal, LeaveCommentPayload} from "../../components/modals/LeaveCommentModal/LeaveCommentModal";
 
@@ -63,6 +64,21 @@ export type FileLockerProps = {
     onPathwayClick?: (pathwayId: string) => void;
     // Jumps from a "By student" row to that student's own profile page.
     onStudentClick?: (userId: string) => void;
+    // Requests the "No account yet" pop-up for a specific account-less roster entry - the caller
+    // owns the actual credits fetch (see accountPendingModal below for the result).
+    onOpenAccountPending?: (userId: string) => void;
+    // Drives the "No account yet" pop-up itself - undefined/absent means closed. Split from
+    // onOpenAccountPending the same way onComment is split from LeaveCommentModal: this component
+    // only renders whatever state the caller hands it, the caller owns the async fetch behind it.
+    accountPendingModal?: {
+        opened: boolean
+        loading?: boolean
+        name?: string
+        email?: string
+        credits?: string[]
+        onClose: () => void
+        onViewProfile?: () => void
+    };
     // Renders a "Comment" button beside every "Review Submission" button. Clicking it opens
     // FileLocker's own LeaveCommentModal, prepopulated for the clicked student and the badge/lesson
     // their (already tab/group-scoped) submissions belong to - onComment only fires once the
@@ -586,6 +602,7 @@ export const FileLocker = (props: FileLockerProps) => {
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
                     onStudentClick={props.onStudentClick}
+                    onOpenAccountPending={props.onOpenAccountPending ? (item) => props.onOpenAccountPending!(item.userId) : undefined}
                 />
             )}
             {!props.trial && tab === "pathways" && (
@@ -653,6 +670,17 @@ export const FileLocker = (props: FileLockerProps) => {
                 initialBadgeId={commenting?.badgeId}
                 initialLessonId={commenting?.lessonId}
             />
+            {props.accountPendingModal && (
+                <AccountPendingModal
+                    opened={props.accountPendingModal.opened}
+                    onClose={props.accountPendingModal.onClose}
+                    loading={props.accountPendingModal.loading}
+                    name={props.accountPendingModal.name}
+                    email={props.accountPendingModal.email}
+                    credits={props.accountPendingModal.credits}
+                    onViewProfile={props.accountPendingModal.onViewProfile}
+                />
+            )}
         </>
     )
 }

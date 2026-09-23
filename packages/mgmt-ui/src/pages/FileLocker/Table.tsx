@@ -70,6 +70,10 @@ export type TableProps = TableData & {
     // optional since this table is reused for "By student" specifically (the one context where a
     // student-level link makes sense) but the type is shared, not duplicated, for every tab.
     onStudentClick?: (userId: string) => void
+    // Opens FileLocker's own local "No account yet" pop-up for a roster entry with no real account -
+    // same optionality/reasoning as onStudentClick, since the two are mutually exclusive per row
+    // (a row is either a real account you can jump to, or an account-less one you can check locally).
+    onOpenAccountPending?: (item: Item) => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -158,12 +162,23 @@ export function Table(props: TableProps) {
                                         <div className="flex min-w-0 items-center gap-1.5">
                                             <div className="truncate text-sm font-bold text-dark-blue-400">{row.name}</div>
                                             {props.onStudentClick && (
-                                                <span
-                                                    title="This person hasn't created an account in your organization yet"
-                                                    className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500"
-                                                >
-                                                    No account
-                                                </span>
+                                                props.onOpenAccountPending ? (
+                                                    <button
+                                                        type="button"
+                                                        title="This person hasn't created an account in your organization yet - click to see details"
+                                                        onClick={(e) => { e.stopPropagation(); props.onOpenAccountPending!(row) }}
+                                                        className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500 hover:bg-slate-200"
+                                                    >
+                                                        No account
+                                                    </button>
+                                                ) : (
+                                                    <span
+                                                        title="This person hasn't created an account in your organization yet"
+                                                        className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500"
+                                                    >
+                                                        No account
+                                                    </span>
+                                                )
                                             )}
                                         </div>
                                     )}
