@@ -109,3 +109,41 @@ Trial.args = {
     trial: true,
     lessonsCompleted: 12,
 };
+
+/**
+ * The "No account yet" pop-up, open on the "By student" tab's account-less row (Brenda Cole).
+ * Static (opened: true) rather than exercising the click-to-open interaction, since that's already
+ * covered structurally by the prop types - this is specifically to verify the pop-up's own content
+ * and layout render correctly.
+ */
+export const AccountPendingOpen: Story<FileLockerProps> = Template.bind({});
+AccountPendingOpen.args = {
+    tab: "students",
+    onStudentClick: (userId: string) => console.log("navigate to student profile", userId),
+    onOpenAccountPending: (userId: string) => console.log("open account-pending pop-up for", userId),
+    accountPendingModal: {
+        opened: true,
+        loading: false,
+        name: "Brenda Cole",
+        email: "bcole@localcivics.io",
+        credits: ["Service-Learning Project", "Political Party Project"],
+        onClose: () => console.log("close pop-up"),
+        onViewProfile: () => console.log("navigate to full profile"),
+    },
+};
+
+/**
+ * Same pop-up mid-fetch (name/email already known from the roster row, credits still loading).
+ */
+export const AccountPendingLoading: Story<FileLockerProps> = Template.bind({});
+AccountPendingLoading.args = {
+    tab: "students",
+    accountPendingModal: {
+        opened: true,
+        loading: true,
+        name: "Brenda Cole",
+        email: "bcole@localcivics.io",
+        onClose: () => console.log("close pop-up"),
+        onViewProfile: () => console.log("navigate to full profile"),
+    },
+};
