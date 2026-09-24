@@ -31,6 +31,11 @@ export type CommentCenterItem = {
     requireValidation: boolean
     resolvedAt?: string
     createdAt: string
+    // True for a comment this session just added optimistically, before a real page reload has
+    // confirmed its actual server-assigned id - study's add_comment handler returns no body on
+    // success, so there's no real commentId to resolve against yet. Matches
+    // SubmissionCommentPanel's identical field/rationale.
+    isLocal?: boolean
 }
 
 /**
@@ -175,6 +180,8 @@ export const CommentCenter = (props: CommentCenterProps) => {
                                             <span className="text-[11px] text-slate-400">—</span>
                                         ) : item.resolvedAt ? (
                                             <IconCheck size={16} stroke={3} className="text-mint-400" />
+                                        ) : item.isLocal ? (
+                                            <span className="text-[11px] text-slate-400">Pending</span>
                                         ) : (
                                             <button
                                                 onClick={() => props.onResolve(item.commentId)}

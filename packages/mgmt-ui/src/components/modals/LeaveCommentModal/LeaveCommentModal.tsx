@@ -131,16 +131,33 @@ export function LeaveCommentModal(props: LeaveCommentModalProps) {
                 <div>
                     <label className="mb-1 block text-xs font-bold text-slate-500">Leave this comment on</label>
                     <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">
-                        {TARGETS.map((t) => (
-                            <button
-                                key={t.value}
-                                type="button"
-                                onClick={() => setTarget(t.value)}
-                                className={`rounded-lg px-4 py-2 text-xs font-bold ${target === t.value ? "bg-sky-blue-400/20 text-dark-blue-400" : "text-slate-400 hover:text-slate-600"}`}
-                            >
-                                {t.label}
-                            </button>
-                        ))}
+                        {TARGETS.map((t) => {
+                            // Disabled (not hidden) when the caller has scoped this modal to a
+                            // context with no possible option for that target - e.g. a lesson with
+                            // no owning badge, or a badge whose own lessons list is empty. A caller
+                            // passing the org's full catalogs (Comment Center, File Locker) is
+                            // unaffected either way - a real org always has at least one badge/
+                            // lesson, so this only ever activates for a deliberately narrow list.
+                            const disabled = (t.value === "badge" && props.badges.length === 0)
+                                || (t.value === "lesson" && props.lessons.length === 0)
+                            return (
+                                <button
+                                    key={t.value}
+                                    type="button"
+                                    disabled={disabled}
+                                    onClick={() => setTarget(t.value)}
+                                    className={`rounded-lg px-4 py-2 text-xs font-bold ${
+                                        target === t.value
+                                            ? "bg-sky-blue-400/20 text-dark-blue-400"
+                                            : disabled
+                                            ? "cursor-not-allowed text-slate-200"
+                                            : "text-slate-400 hover:text-slate-600"
+                                    }`}
+                                >
+                                    {t.label}
+                                </button>
+                            )
+                        })}
                     </div>
                 </div>
 
