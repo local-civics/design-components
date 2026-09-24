@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconAlbum, IconCategory2, IconClipboard, IconGauge, IconRoute} from '@tabler/icons';
+import {IconAlbum, IconCategory2, IconClipboard, IconClipboardCheck, IconMessageCircle, IconRoute} from '@tabler/icons';
 import {showNotification} from '@mantine/notifications';
 import {CardGradient} from "../../components/cards/CardGradient";
 
@@ -13,12 +13,13 @@ export type HomeProps = {
     impactStatement: string
     organization: {name: string, description: string, image: string, website: string, accessCode: string}
 
-    onDashboardClick: () => void;
     onClassesClick: () => void;
     onPathwaysClick: () => void;
     onBadgesClick: () => void;
     onLessonsClick: () => void;
     onFileLockerClick: () => void;
+    onCommentsClick: () => void;
+    onValidationClick: () => void;
 
 }
 
@@ -77,13 +78,6 @@ export const Home = (props: HomeProps) => {
 
         <div className="flex flex-col gap-3">
             <CardGradient
-                title="Dashboard"
-                description="Track your students’ pathway progress"
-                accent="mint"
-                icon={<IconGauge size={18} stroke={1.75}/>}
-                onClick={props.onDashboardClick}
-            />
-            <CardGradient
                 title="Classes"
                 description="Create classes, cohorts, or custom subgroups"
                 accent="gold"
@@ -110,6 +104,24 @@ export const Home = (props: HomeProps) => {
                 accent="cyan"
                 icon={<IconClipboard size={18} stroke={1.75}/>}
                 onClick={props.onFileLockerClick}
+            />
+            {/* Icon + accent both reused verbatim from the sidebar's own Comments/Validation
+                entries (Navbar.tsx's `data` array) - same convention every other tile here already
+                follows (Classes/Pathways/Badges/File Locker each match their sidebar counterpart
+                exactly), just not yet applied to these two when they were added. */}
+            <CardGradient
+                title="Comments"
+                description="Leave and resolve comments on student submissions"
+                accent="mint"
+                icon={<IconMessageCircle size={18} stroke={1.75}/>}
+                onClick={props.onCommentsClick}
+            />
+            <CardGradient
+                title="Validation"
+                description="Credit badges in bulk once students have met the requirements"
+                accent="gold"
+                icon={<IconClipboardCheck size={18} stroke={1.75}/>}
+                onClick={props.onValidationClick}
             />
         </div>
     </div>
