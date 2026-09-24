@@ -5,7 +5,6 @@ export * from './components/users/SwitchAccount/SwitchAccount';
 export * from './hooks/notifications'
 export * from './pages/Badge/Badge'
 export * from './pages/Badges/Badges'
-export * from './pages/Dashboard/Dashboard'
 export * from './pages/Class/Class'
 export * from './pages/Classes/Classes'
 export * from './pages/Student/Student'
