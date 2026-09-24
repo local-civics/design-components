@@ -39,6 +39,21 @@ export type CommentCenterItem = {
 }
 
 /**
+ * CommentCenterStudentClickContext - carries what the clicked row already knows (which badge/
+ * lesson it concerns, and every other recipient sharing this same tab group) so the caller can
+ * route directly and seed a grading queue without having to re-derive either from the flat
+ * `comments` list after the fact.
+ */
+export type CommentCenterStudentClickContext = {
+    badgeId?: string
+    lessonId?: string
+    // Every recipient in the same group as the clicked row (By badge/By lesson: every student
+    // with a comment on that same item; By student: just the one) - deduplicated, in the same
+    // newest-first order `comments` already arrives in.
+    groupUserIds: string[]
+}
+
+/**
  * CommentCenterProps
  */
 export type CommentCenterProps = {
@@ -52,6 +67,10 @@ export type CommentCenterProps = {
     onClassChange: (classId: string) => void
     onResolve: (commentId: string) => void
     onLeaveComment: (comment: LeaveCommentPayload) => void
+    // Jumps to the recipient's own badge/lesson preview (or their bare profile, for a "General"
+    // comment with neither) - only rendered when supplied, matching FileLocker/Table.tsx's own
+    // onStudentClick optionality.
+    onStudentClick?: (userId: string, context: CommentCenterStudentClickContext) => void
 }
 
 type Tab = "students" | "badges" | "lessons"
@@ -163,9 +182,23 @@ export const CommentCenter = (props: CommentCenterProps) => {
                                     key={item.commentId}
                                     className={`grid grid-cols-[1.3fr_1.3fr_2fr_1fr_1fr] items-center gap-3 px-5 py-3.5 ${i < group.items.length - 1 ? "border-b border-slate-100" : ""}`}
                                 >
-                                    <div className="truncate text-xs font-bold text-dark-blue-400">
-                                        {tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName}
-                                    </div>
+                                    {props.onStudentClick ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => props.onStudentClick!(item.recipientId, {
+                                                badgeId: item.badgeId,
+                                                lessonId: item.lessonId,
+                                                groupUserIds: Array.from(new Set(group.items.map((gi) => gi.recipientId))),
+                                            })}
+                                            className="truncate text-left text-xs font-bold text-sky-blue-400 hover:underline"
+                                        >
+                                            {tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName}
+                                        </button>
+                                    ) : (
+                                        <div className="truncate text-xs font-bold text-dark-blue-400">
+                                            {tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName}
+                                        </div>
+                                    )}
                                     <div className="truncate text-[11px] text-slate-500">{item.authorName || "—"}</div>
                                     <div className="text-xs text-slate-600">{item.commentText}</div>
                                     <div className="flex justify-center">

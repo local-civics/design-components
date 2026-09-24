@@ -49,6 +49,9 @@ Mock.args = {
             href: "",
             name: "Jane Doe",
             email: "jane.doe@localcivics.io",
+            // Exercises the "Submitted" status filter.
+            isComplete: true,
+            isStarted: true,
             reflection: "This lesson helped me understand how local government actually works.",
             rating: 4,
             answers: [{
@@ -72,11 +75,15 @@ Mock.args = {
             href: "",
             name: "Peter Pop",
             email: "peter.pop@localcivics.io",
+            // Exercises the "Active" status filter (started, not yet complete).
+            isStarted: true,
+            isComplete: false,
             answers: []
         },
         {
             // Exercises the "reflection only, no question answers" render path - a student who
-            // reflected on the lesson without ever touching a question-format item.
+            // reflected on the lesson without ever touching a question-format item. Left with
+            // neither isStarted nor isComplete set, exercising the "Inactive" status filter.
             userId: "jamal-rivera-mock",
             avatar: "",
             href: "",
