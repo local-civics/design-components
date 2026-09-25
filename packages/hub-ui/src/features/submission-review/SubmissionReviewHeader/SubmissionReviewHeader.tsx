@@ -6,6 +6,18 @@ import * as React from "react";
 export type SubmissionReviewHeaderProps = {
   name?: string;
   email?: string;
+  // Makes the whole identity block (avatar + name + email) a single click target to that student's
+  // own cross-class profile page - distinct from onSecondaryAction/onViewOverview below, which both
+  // jump to *this specific badge/lesson's* own context, not the student's broader record. Optional
+  // since not every caller resolves a profile route the same way.
+  onViewProfile?: () => void;
+  // A real "go back" affordance, for pages that have no other way out - e.g. StudentBadge, whose
+  // content component only ever renders forward links (Go to Pathway, View Badge Overview, Start).
+  // Rendered first among the action slots (leftmost), with a leading arrow rather than the trailing
+  // one onSecondaryAction/onViewOverview use, since it signals the opposite direction. Same "only
+  // render when both are supplied" gating as every other slot here.
+  onBack?: () => void;
+  backLabel?: string;
   // Jumps to the aggregate "all students" view for whatever this preview is scoped to (a badge or
   // lesson overview) - the one explicit way back out of a single-student drill-down, since neither
   // the breadcrumb (which only goes up through Pathway/Badge, never sideways to the aggregate view)
@@ -51,15 +63,40 @@ export const SubmissionReviewHeader = (props: SubmissionReviewHeaderProps) => {
 
   const showEmailLine = !!props.name && !!props.email && props.name !== props.email;
 
+  const avatar = (
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-blue-400/15 text-sm font-bold text-sky-blue-400">
+      {initialsFor(props.name, props.email)}
+    </div>
+  );
+
   return (
     <div className="mb-4 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-blue-400/15 text-sm font-bold text-sky-blue-400">
-        {initialsFor(props.name, props.email)}
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="truncate text-sm font-extrabold text-dark-blue-400">{props.name || props.email}</div>
-        {showEmailLine && <div className="truncate text-xs text-slate-400">{props.email}</div>}
-      </div>
+      {props.onViewProfile ? (
+        <button type="button" onClick={props.onViewProfile} className="group flex min-w-0 flex-1 items-center gap-3 text-left">
+          {avatar}
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-extrabold text-dark-blue-400 group-hover:underline">{props.name || props.email}</div>
+            {showEmailLine && <div className="truncate text-xs text-slate-400">{props.email}</div>}
+          </div>
+        </button>
+      ) : (
+        <>
+          {avatar}
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-extrabold text-dark-blue-400">{props.name || props.email}</div>
+            {showEmailLine && <div className="truncate text-xs text-slate-400">{props.email}</div>}
+          </div>
+        </>
+      )}
+      {props.onBack && props.backLabel && (
+        <button
+          type="button"
+          onClick={props.onBack}
+          className="shrink-0 text-xs font-bold text-dark-blue-400 hover:underline"
+        >
+          ← {props.backLabel}
+        </button>
+      )}
       {props.onSecondaryAction && props.secondaryActionLabel && (
         <button
           type="button"

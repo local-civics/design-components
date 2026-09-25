@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconCheck} from "@tabler/icons";
+import {IconAlbum, IconCheck, IconLambda} from "@tabler/icons";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {
     LeaveCommentModal,
@@ -71,6 +71,11 @@ export type CommentCenterProps = {
     // comment with neither) - only rendered when supplied, matching FileLocker/Table.tsx's own
     // onStudentClick optionality.
     onStudentClick?: (userId: string, context: CommentCenterStudentClickContext) => void
+    // Jump to that badge's/lesson's own org-wide Overview page - distinct from onStudentClick, which
+    // always lands on one specific student's preview. Fired from the "By badge"/"By lesson" tabs'
+    // own group titles, matching FileLocker/FileLocker.tsx's identical naming/optionality.
+    onBadgeClick?: (badgeId: string) => void
+    onLessonClick?: (lessonId: string) => void
 }
 
 type Tab = "students" | "badges" | "lessons"
@@ -172,33 +177,75 @@ export const CommentCenter = (props: CommentCenterProps) => {
                         <div className="text-center">Status</div>
                     </div>
 
-                    {groups.map((group) => (
+                    {groups.map((group) => {
+                        const groupUserIds = Array.from(new Set(group.items.map((gi) => gi.recipientId)))
+                        // Which recipient/routing this group's own title jumps to depends on the tab -
+                        // student rows go through onStudentClick (a bare profile, no badge/lesson
+                        // scope of its own); badge/lesson rows go to that item's own aggregate
+                        // Overview page instead, via the 2 dedicated callbacks below.
+                        const onTitleClick = tab === "students"
+                            ? (props.onStudentClick ? () => props.onStudentClick!(group.key, {badgeId: undefined, lessonId: undefined, groupUserIds}) : undefined)
+                            : tab === "badges"
+                            ? (props.onBadgeClick ? () => props.onBadgeClick!(group.key) : undefined)
+                            : (props.onLessonClick ? () => props.onLessonClick!(group.key) : undefined)
+
+                        return (
                         <div key={group.key} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                            <div className="border-b border-slate-100 bg-slate-50/60 px-5 py-2.5 text-xs font-extrabold text-dark-blue-400">
-                                {group.title}
+                            <div className="flex items-center gap-2.5 border-b border-slate-100 bg-slate-50/60 px-5 py-2.5">
+                                {tab === "students" ? (
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-[10px] font-bold text-dark-blue-400">
+                                        {(group.title[0] || "?").toUpperCase()}
+                                    </div>
+                                ) : tab === "badges" ? (
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-mint-400/15">
+                                        <IconAlbum size={15} stroke={2} className="text-mint-400" />
+                                    </div>
+                                ) : (
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gold-400/15">
+                                        <IconLambda size={15} stroke={2} className="text-gold-400" />
+                                    </div>
+                                )}
+                                {onTitleClick ? (
+                                    <button type="button" onClick={onTitleClick} className="text-left text-xs font-extrabold text-sky-blue-400 hover:underline">
+                                        {group.title}
+                                    </button>
+                                ) : (
+                                    <div className="text-xs font-extrabold text-dark-blue-400">{group.title}</div>
+                                )}
                             </div>
-                            {group.items.map((item, i) => (
+                            {group.items.map((item, i) => {
+                                const materialName = tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName
+                                const materialType = tab === "students" ? (item.badgeId ? "Badge" : item.lessonId ? "Lesson" : undefined) : undefined
+                                return (
                                 <div
                                     key={item.commentId}
-                                    className={`grid grid-cols-[1.3fr_1.3fr_2fr_1fr_1fr] items-center gap-3 px-5 py-3.5 ${i < group.items.length - 1 ? "border-b border-slate-100" : ""}`}
+                                    className={`grid grid-cols-[1.3fr_1.3fr_2fr_1fr_1fr] items-start gap-3 px-5 py-3.5 ${i < group.items.length - 1 ? "border-b border-slate-100" : ""}`}
                                 >
-                                    {props.onStudentClick ? (
-                                        <button
-                                            type="button"
-                                            onClick={() => props.onStudentClick!(item.recipientId, {
-                                                badgeId: item.badgeId,
-                                                lessonId: item.lessonId,
-                                                groupUserIds: Array.from(new Set(group.items.map((gi) => gi.recipientId))),
-                                            })}
-                                            className="truncate text-left text-xs font-bold text-sky-blue-400 hover:underline"
-                                        >
-                                            {tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName}
-                                        </button>
-                                    ) : (
-                                        <div className="truncate text-xs font-bold text-dark-blue-400">
-                                            {tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName}
-                                        </div>
-                                    )}
+                                    <div className="min-w-0">
+                                        {props.onStudentClick ? (
+                                            <button
+                                                type="button"
+                                                title={materialName}
+                                                onClick={() => props.onStudentClick!(item.recipientId, {
+                                                    badgeId: item.badgeId,
+                                                    lessonId: item.lessonId,
+                                                    groupUserIds,
+                                                })}
+                                                className="line-clamp-2 text-left text-xs font-bold text-sky-blue-400 hover:underline"
+                                            >
+                                                {materialName}
+                                            </button>
+                                        ) : (
+                                            <div title={materialName} className="line-clamp-2 text-xs font-bold text-dark-blue-400">
+                                                {materialName}
+                                            </div>
+                                        )}
+                                        {materialType && (
+                                            <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold text-dark-blue-400 ${materialType === "Badge" ? "bg-mint-400/15" : "bg-gold-400/15"}`}>
+                                                {materialType}
+                                            </span>
+                                        )}
+                                    </div>
                                     <div className="truncate text-[11px] text-slate-500">{item.authorName || "—"}</div>
                                     <div className="text-xs text-slate-600">{item.commentText}</div>
                                     <div className="flex justify-center">
@@ -225,9 +272,9 @@ export const CommentCenter = (props: CommentCenterProps) => {
                                         )}
                                     </div>
                                 </div>
-                            ))}
+                            )})}
                         </div>
-                    ))}
+                    )})}
                 </div>
             )}
 
