@@ -15,7 +15,10 @@ export type SubmissionComment = {
     commentText: string
     requireValidation: boolean
     resolvedAt?: string
-    authorName?: string
+    // Named to match CommentCenter.tsx/hub-ui's Comments.tsx, both independently renamed from
+    // authorName to commenterName - aligned here too so the whole comment feature uses one field
+    // name regardless of which component/hub call site produced the record.
+    commenterName?: string
     createdAt: string
     // True for a comment this panel just added optimistically, before a real page reload has
     // confirmed its actual server-assigned id - study's add_comment handler returns no body on
@@ -125,7 +128,7 @@ export function SubmissionCommentPanel(props: SubmissionCommentPanelProps) {
                     return (
                         <div key={c.commentId} className="rounded-lg border border-slate-100 bg-slate-50 p-3.5">
                             <div className="flex items-start justify-between gap-3">
-                                <div className="text-xs font-bold text-dark-blue-400">{c.authorName || "Educator"}</div>
+                                <div className="text-xs font-bold text-dark-blue-400">{c.commenterName || "Educator"}</div>
                                 <div className="text-[10.5px] text-slate-400">{formatDate(c.createdAt)}</div>
                             </div>
                             <p className="mt-1.5 text-sm text-slate-600">{c.commentText}</p>
