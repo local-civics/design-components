@@ -51,6 +51,8 @@ export type PathwayProps = {
     // this page's own roster can return here precisely (see hub's navigationTrail.ts). The caller
     // computes this once (typically `{state: {trail: pushTrail(...)}}`), not per-row.
     linkState?: any
+    // Jumps to a student's own cross-class profile from the "By student" tab - see Pathway/Table.tsx.
+    onStudentClick?: (userId: string) => void
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -195,7 +197,7 @@ export const Pathway = (props: PathwayProps) => {
                 )}
 
                 {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} badges={props.badges} categories={badgeGroupCategories} activeCategoryId={selectedCategoryId} activeCategoryLabel={selectedCategoryName} />}
-                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} linkState={props.linkState} />}
+                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} linkState={props.linkState} onStudentClick={props.onStudentClick} />}
             </div>
 
             <CategoriesModal
