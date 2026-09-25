@@ -31,8 +31,9 @@ const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean
 
 /**
  * The per-student review view opened from FileLocker's "Review Submission" buttons. Built from data
- * already available on the student/submissions shape - no status pill, no comment thread (neither
- * has any backing data in the API today).
+ * already available on the student/submissions shape - no status pill or comment thread shown here
+ * (neither has any backing data in the API today), but each file row does get the same per-file
+ * Comment button as the main table (see onComment).
  * @param props
  * @constructor
  */

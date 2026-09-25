@@ -5,7 +5,7 @@ import {PageHeader} from "../../components/navigation/PageHeader/PageHeader";
 import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 import {SplitButton} from "./SplitButton";
-import {Table, Item} from "./Table";
+import {Table, Item, SubmissionItem} from "./Table";
 import {SubmissionDetail} from "./SubmissionDetail";
 import {AccountPendingModal} from "./AccountPendingModal";
 import {useFilteredStudents} from "./useFilteredStudents"
@@ -79,10 +79,11 @@ export type FileLockerProps = {
         onClose: () => void
         onViewProfile?: () => void
     };
-    // Renders a "Comment" button beside every "Review Submission" button. Clicking it opens
-    // FileLocker's own LeaveCommentModal, prepopulated for the clicked student and the badge/lesson
-    // their (already tab/group-scoped) submissions belong to - onComment only fires once the
-    // teacher actually submits that modal, with the assembled payload; the caller owns the API call.
+    // Renders a "Comment" button beside every file row (in both the table's row-expansion and the
+    // Review Submission view). Clicking it opens FileLocker's own LeaveCommentModal, prepopulated
+    // for the clicked student and that exact row's lesson (falling back to its badge, if the row
+    // has no lesson) - onComment only fires once the teacher actually submits that modal, with the
+    // assembled payload; the caller owns the API call.
     onComment?: (comment: LeaveCommentPayload) => void;
     // "Updated H:MM:SS" - already formatted by the caller (matching the same pattern used on My
     // Badges/My Pathways/My File Locker), rendered next to the refresh control. Omitted entirely
@@ -464,8 +465,8 @@ export const FileLocker = (props: FileLockerProps) => {
     const onReview = (item: Item, list: Item[], context?: string, commentContext?: CommentContext) =>
         setReviewing({student: item, list, context, commentContext})
     // context is already computed by whichever tab/group rendered the clicked row (see Table.tsx's
-    // commentContextFor - hideLesson/hideBadge tell us this whole table is already fixed to one
-    // specific lesson/badge, or, on "By student"/"By pathway", that it isn't) - nothing left to
+    // fileCommentContextFor - hideLesson tells us this whole table is already fixed to one specific
+    // lesson, or that each file should resolve its own lesson/badge instead) - nothing left to
     // guess here.
     const onCommentClick = (item: Item, context?: CommentContext) => {
         setCommenting({userId: item.userId, badgeId: context?.badgeId, lessonId: context?.lessonId})

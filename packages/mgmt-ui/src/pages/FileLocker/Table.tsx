@@ -26,17 +26,9 @@ export interface SubmissionItem {
     badgeName: string
     badgeId: string
     lessonName: string
-    // Already present on every submission returned by getFileLocker() (useOrganization.ts) - just
-    // wasn't declared here before, so nothing read it. No new API call, no hub change: this data is
-    // already flowing through today, purely a type-level addition to unlock it.
     lessonId?: string
     question: string
-    // Already present on every submission returned by getFileLocker() (useOrganization.ts) - just
-    // wasn't declared here before, so nothing read it. No new API call, no hub change: this data is
-    // already flowing through today, purely a type-level addition to unlock it.
     updatedAt?: string
-    // Derived client-side in FileLocker.tsx from badgeId (badge -> pathway prefix-match), not part
-    // of the raw API response - attached before these items ever reach this component.
     pathwayName?: string
     pathwayId?: string
 }
@@ -61,7 +53,9 @@ export type TableProps = TableData & {
     // target: whichever of hideLesson/hideBadge is true tells us this whole table is already fixed
     // to one specific lesson or badge (a tab/group already narrowed it), so that's what gets
     // pre-filled; when neither is set (the flat "By student" tab, or "By pathway", which spans more
-    // than one badge/lesson) the comment opens general, with nothing guessed.
+    // than one badge/lesson) each file resolves its own target instead (see fileCommentContextFor) -
+    // nothing is guessed at the row level, since the per-row "Comment" button now lives inside each
+    // expanded student's FileStack, not on the collapsed row itself.
     onComment?: (item: Item, context?: {badgeId?: string, lessonId?: string}) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
@@ -78,22 +72,14 @@ export type TableProps = TableData & {
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
 
-// Governs the row-level (collapsed student row) Comment button only - general unless the whole
-// table is already fixed to one badge/lesson by its tab (By Badge/By Lesson), since a collapsed
-// row can span several submissions with no single obvious target otherwise.
-const commentContextFor = (hideLesson: boolean | undefined, hideBadge: boolean | undefined, sub?: {badgeId?: string, lessonId?: string}) => {
-    if (hideLesson) return {lessonId: sub?.lessonId}
-    if (hideBadge) return {badgeId: sub?.badgeId}
-    return {}
-}
-
 // Governs each individual file's own Comment button (nested FileStack rows, both here and in
-// SubmissionDetail) - unlike the row-level button above, an individual file always has one
-// specific badge/lesson behind it, so it never falls back to general: badge is the default target
-// (By Badge, By Student, By Pathway all resolve here) and lesson only wins when the whole session
-// is already fixed to one lesson (By Lesson).
+// SubmissionDetail). Every File Locker submission is fundamentally about one lesson (only
+// sometimes also credited toward a badge) - see LeaveCommentModal's own lesson-preferred
+// prepopulation - so this defaults to the row's lessonId whenever it has one. hideLesson (the
+// whole table is already fixed to a single lesson, i.e. By Lesson) is really the same rule taken
+// to its limit; badgeId is only a fallback for a submission with no lessonId at all.
 export const fileCommentContextFor = (hideLesson: boolean | undefined, sub?: {badgeId?: string, lessonId?: string}) => {
-    if (hideLesson) return {lessonId: sub?.lessonId}
+    if (hideLesson || sub?.lessonId) return {lessonId: sub?.lessonId}
     return {badgeId: sub?.badgeId}
 }
 
@@ -114,8 +100,10 @@ export function Table(props: TableProps) {
 
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
 
-    const showActions = !!props.onReview || !!props.onComment
-    const actionsWidthClass = props.onReview && props.onComment ? "w-64" : "w-36"
+    // Comment now lives per-file (inside each expanded FileStack), not at the student-row level -
+    // this action column is Review Submission only.
+    const showActions = !!props.onReview
+    const actionsWidthClass = "w-36"
 
     if (props.items.length === 0) {
         return <PlaceholderBanner
@@ -194,17 +182,6 @@ export function Table(props: TableProps) {
                                             className="rounded-lg border border-sky-blue-400/40 bg-sky-blue-400/10 px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400 hover:bg-sky-blue-400/20"
                                         >
                                             View Submissions
-                                        </button>
-                                    )}
-                                    {props.onComment && (
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                props.onComment!(row, commentContextFor(props.hideLesson, props.hideBadge, row.submissions[0]))
-                                            }}
-                                            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400 hover:bg-slate-50"
-                                        >
-                                            Comment
                                         </button>
                                     )}
                                 </div>

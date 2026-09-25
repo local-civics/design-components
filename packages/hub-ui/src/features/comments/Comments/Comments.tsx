@@ -6,7 +6,10 @@ import { IconArrowRight, IconCheck, IconMessageCircle } from "@tabler/icons";
  */
 export type CommentsItem = {
   commentId: string;
-  authorName?: string;
+  // Denormalized snapshot of the commenter's display name, captured by study at the moment the
+  // comment was made (see study's Comment.CommenterName) - not looked up client-side, since a
+  // student can't otherwise resolve another user's identity from just their id.
+  commenterName?: string;
   badgeId?: string;
   badgeName?: string;
   lessonId?: string;
@@ -14,6 +17,11 @@ export type CommentsItem = {
   commentText: string;
   requireValidation: boolean;
   resolvedAt?: string;
+  // True once the comment itself has been resolved but the badge/lesson it's tied to is still
+  // unsubmitted - i.e. addComment's validation cascade pulled credit for it and nothing has been
+  // resubmitted since. Computed by the hub hook (useOrganization.ts's getMyComments), not derived
+  // here, since it needs this student's own badge/lesson activity data to know.
+  needsSubmission?: boolean;
   createdAt: string;
 };
 
@@ -69,6 +77,12 @@ export const Comments = (props: CommentsProps) => {
   );
 };
 
+const formatDate = (iso: string) => {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+};
+
 const CommentCard = (props: {
   comment: CommentsItem;
   onBadgeClick?: (badgeId: string) => void;
@@ -105,17 +119,25 @@ const CommentCard = (props: {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-xs font-extrabold text-dark-blue-400">{target.label}</div>
-          {comment.authorName && <div className="mt-0.5 text-[11px] text-slate-400">from {comment.authorName}</div>}
+          <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-slate-400">
+            {comment.commenterName && <span>Commenter: {comment.commenterName}</span>}
+            {comment.commenterName && comment.createdAt && <span>·</span>}
+            {comment.createdAt && <span>{formatDate(comment.createdAt)}</span>}
+          </div>
         </div>
         {comment.requireValidation &&
-          (comment.resolvedAt ? (
+          (!comment.resolvedAt ? (
+            <span className="shrink-0 rounded-full bg-gold-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
+              Needs attention
+            </span>
+          ) : comment.needsSubmission ? (
+            <span className="shrink-0 rounded-full bg-sky-blue-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
+              Needs submission
+            </span>
+          ) : (
             <span className="flex shrink-0 items-center gap-1 rounded-full bg-mint-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
               <IconCheck size={11} stroke={3} className="text-mint-400" />
               Resolved
-            </span>
-          ) : (
-            <span className="shrink-0 rounded-full bg-gold-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
-              Needs attention
             </span>
           ))}
       </div>
