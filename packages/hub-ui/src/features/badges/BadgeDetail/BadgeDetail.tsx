@@ -28,8 +28,14 @@ export type BadgeDetailProps = {
   choices?: BadgeActivityProps[];
   canSubmit?: boolean;
   finishedAt?: string;
+  // True for an educator reviewing a student's badge (never the student's own self-view flow,
+  // which never sets this) - hides the Submit action, since submitting is the student's own act,
+  // not something a reviewer should trigger on their behalf. Each criterion row's own Start/
+  // Continue/Review button stays fully active either way - those already navigate to that same
+  // student's other lesson previews (see hooks/badge.tsx's withLessons), which is exactly the
+  // cross-lesson navigation a reviewer needs, not an action to gate.
+  preview?: boolean;
 
-  onPathwayClick?: () => void;
   onSubmit?: () => void;
 };
 
@@ -80,16 +86,10 @@ export const BadgeDetail = (props: BadgeDetailProps) => {
 
   const status: Status = props.finishedAt ? "Completed" : anyStarted || xp > 0 ? "In Progress" : "Available";
   const { border, shadow, pillAccent } = STATUS_CLASSNAMES[status];
-  const showSubmit = !props.finishedAt && criteria.length > 0;
+  const showSubmit = !props.preview && !props.finishedAt && criteria.length > 0;
 
   return (
     <div className="flex w-full flex-col gap-3.5">
-      {props.onPathwayClick && (
-        <div onClick={props.onPathwayClick} className="w-max cursor-pointer text-xs font-bold text-sky-blue-400">
-          ← Go to Pathway
-        </div>
-      )}
-
       <div className={`overflow-hidden rounded-2xl border bg-white ${border} ${shadow}`}>
         <div className="flex gap-4 p-5">
           <div className="shrink-0">

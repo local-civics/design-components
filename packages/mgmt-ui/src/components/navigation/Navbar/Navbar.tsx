@@ -5,7 +5,6 @@ import {
     IconCategory2,
     IconClipboard,
     IconClipboardCheck,
-    IconGauge,
     IconHome2,
     IconLambda,
     IconLogout,
@@ -37,7 +36,6 @@ export interface NavbarProps {
 
 const data: { label: string; icon: TablerIcon; accent: LinksGroupAccent; links?: { label: string }[] }[] = [
     { label: 'Home', icon: IconHome2, accent: "cyan" },
-    { label: 'Dashboard', icon: IconGauge, accent: "mint" },
     { label: 'Classes', icon: IconCategory2, accent: "gold" },
     { label: 'Pathways', icon: IconRoute, accent: "cyan" },
     { label: 'Badges', icon: IconAlbum, accent: "mint" },

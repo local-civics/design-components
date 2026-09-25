@@ -33,27 +33,30 @@ const LESSONS = [
 
 const STUDENTS = [
     {
-        userId: "u1", avatar: "", name: "Adrian Lopez", email: "adrianlopez@localcivics.io",
+        userId: "u1", avatar: "", name: "Adrian Lopez", email: "adrianlopez@localcivics.io", hasAccount: true,
         submissions: [
             {link: "https://cdn.localcivics.io/store/1", badgeName: "Service-Learning Project", badgeId: "b1", lessonName: "Complete a Service-Learning Project", lessonId: "l1", question: "Submit your essay or presentation here.", updatedAt: daysAgo(1)},
             {link: "https://cdn.localcivics.io/store/2", badgeName: "Political Party Project", badgeId: "b2", lessonName: "Party Platform Project Submission", lessonId: "l2", question: "Submit your project slides here.", updatedAt: daysAgo(3)},
         ],
     },
     {
-        userId: "u2", avatar: "", name: "Brenda Cole", email: "bcole@localcivics.io",
+        // Deliberately hasAccount: false - a roster member resolved only via lake, with no sphere
+        // account (see useOrganization.ts's getStudents()). Demonstrates the "No account" indicator
+        // in place of a clickable profile link.
+        userId: "u2", avatar: "", name: "Brenda Cole", email: "bcole@localcivics.io", hasAccount: false,
         submissions: [
             {link: "https://cdn.localcivics.io/store/3", badgeName: "Service-Learning Project", badgeId: "b1", lessonName: "Complete a Service-Learning Project", lessonId: "l1", question: "Submit your essay or presentation here.", updatedAt: daysAgo(10)},
         ],
     },
     {
-        userId: "u3", avatar: "", name: "Chen Wu", email: "cwu@localcivics.io",
+        userId: "u3", avatar: "", name: "Chen Wu", email: "cwu@localcivics.io", hasAccount: true,
         submissions: [
             {link: "https://cdn.localcivics.io/store/4", badgeName: "Biliteracy Portfolio", badgeId: "b3", lessonName: "Biliteracy Portfolio Submission", lessonId: "l3", question: "Submit your portfolio here.", updatedAt: daysAgo(20)},
             {link: "https://cdn.localcivics.io/store/5", badgeName: "Biliteracy Portfolio", badgeId: "b3", lessonName: "Biliteracy Portfolio Submission", lessonId: "l3", question: "Submit your reflection here.", updatedAt: daysAgo(45)},
         ],
     },
     {
-        userId: "u4", avatar: "", name: "Dana Reyes", email: "dreyes@localcivics.io",
+        userId: "u4", avatar: "", name: "Dana Reyes", email: "dreyes@localcivics.io", hasAccount: true,
         submissions: [],
     },
 ]
@@ -88,7 +91,15 @@ const Template: Story<FileLockerProps> = (args) => (
  * Component stories
  */
 export const Component: Story<FileLockerProps> = Template.bind({});
-Component.args = {};
+Component.args = {
+    onStudentClick: (userId: string) => console.log("navigate to student profile", userId),
+    onComment: (comment: any) => console.log("leave comment", comment),
+    onBadgeClick: (badgeId: string) => console.log("navigate to badge", badgeId),
+    onLessonClick: (lessonId: string) => console.log("navigate to lesson", lessonId),
+    onPathwayClick: (pathwayId: string) => console.log("navigate to pathway", pathwayId),
+    fetchedAtLabel: "Updated 2:34:17 PM",
+    onRefresh: () => console.log("refresh"),
+};
 
 /**
  * Trial-account variant - single stat, no class selector/tabs/export.
@@ -97,4 +108,42 @@ export const Trial: Story<FileLockerProps> = Template.bind({});
 Trial.args = {
     trial: true,
     lessonsCompleted: 12,
+};
+
+/**
+ * The "No account yet" pop-up, open on the "By student" tab's account-less row (Brenda Cole).
+ * Static (opened: true) rather than exercising the click-to-open interaction, since that's already
+ * covered structurally by the prop types - this is specifically to verify the pop-up's own content
+ * and layout render correctly.
+ */
+export const AccountPendingOpen: Story<FileLockerProps> = Template.bind({});
+AccountPendingOpen.args = {
+    tab: "students",
+    onStudentClick: (userId: string) => console.log("navigate to student profile", userId),
+    onOpenAccountPending: (userId: string) => console.log("open account-pending pop-up for", userId),
+    accountPendingModal: {
+        opened: true,
+        loading: false,
+        name: "Brenda Cole",
+        email: "bcole@localcivics.io",
+        credits: ["Service-Learning Project", "Political Party Project"],
+        onClose: () => console.log("close pop-up"),
+        onViewProfile: () => console.log("navigate to full profile"),
+    },
+};
+
+/**
+ * Same pop-up mid-fetch (name/email already known from the roster row, credits still loading).
+ */
+export const AccountPendingLoading: Story<FileLockerProps> = Template.bind({});
+AccountPendingLoading.args = {
+    tab: "students",
+    accountPendingModal: {
+        opened: true,
+        loading: true,
+        name: "Brenda Cole",
+        email: "bcole@localcivics.io",
+        onClose: () => console.log("close pop-up"),
+        onViewProfile: () => console.log("navigate to full profile"),
+    },
 };

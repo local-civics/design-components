@@ -5,7 +5,6 @@ export * from './components/users/SwitchAccount/SwitchAccount';
 export * from './hooks/notifications'
 export * from './pages/Badge/Badge'
 export * from './pages/Badges/Badges'
-export * from './pages/Dashboard/Dashboard'
 export * from './pages/Class/Class'
 export * from './pages/Classes/Classes'
 export * from './pages/Student/Student'
@@ -24,3 +23,4 @@ export * from './pages/Pathway/Pathway';
 export * from './pages/FileLocker/FileLocker';
 export * from './pages/CommentCenter/CommentCenter';
 export * from './pages/ValidationCenter/ValidationCenter';
+export * from './components/comments/SubmissionCommentPanel/SubmissionCommentPanel';

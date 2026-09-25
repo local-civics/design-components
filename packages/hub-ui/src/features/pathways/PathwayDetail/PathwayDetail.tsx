@@ -73,7 +73,31 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
     : (target > 0 && completedCount === target ? "Completed" : anyStarted || completedCount > 0 ? "In Progress" : "Available");
   const { border, shadow, pillAccent } = STATUS_CLASSNAMES[status];
 
-  const categoryIds = Object.keys(props.rawCriteria || {});
+  // A pathway's root category (no parentCategoryId) sits in `rawCriteria` alongside every other
+  // level, but since every badge in the pathway is comprehensively tagged with the root too, an
+  // "All" pill and a pill for the root category would always filter to the identical badge set -
+  // dropping the root from the pill row removes that redundancy (mirrors the same fix already
+  // applied to mgmt-ui's Pathway BadgeTable grouping).
+  const rootCategoryIds = new Set(
+    (props.allCategories || []).filter((c) => !c.parentCategoryId).map((c) => c.categoryId)
+  );
+  // Depth in the category tree (root = 0), so both the pill row and the progress-bar list below it
+  // read top-of-hierarchy-first rather than in whatever order the criteria map happened to arrive in.
+  const parentById = new Map((props.allCategories || []).map((c) => [c.categoryId, c.parentCategoryId]));
+  const depthOf = (id: string): number => {
+    let depth = 0;
+    let current = id;
+    const seen = new Set<string>();
+    while (parentById.get(current) && !seen.has(current)) {
+      seen.add(current);
+      current = parentById.get(current)!;
+      depth++;
+    }
+    return depth;
+  };
+  const categoryIds = Object.keys(props.rawCriteria || {})
+    .filter((id) => !rootCategoryIds.has(id))
+    .sort((a, b) => depthOf(a) - depthOf(b));
   const [catFilter, setCatFilter] = React.useState<string | null>(null);
   const [categoriesOpen, setCategoriesOpen] = React.useState(false);
   const filteredBadges = catFilter ? badges.filter((b) => b.categories?.includes(catFilter)) : badges;
@@ -86,7 +110,7 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
     <div className="flex w-full flex-col gap-3.5">
       {props.onBack && (
         <div onClick={props.onBack} className="w-max cursor-pointer text-xs font-bold text-sky-blue-400">
-          ← Back to My Pathways
+          ← Back
         </div>
       )}
 

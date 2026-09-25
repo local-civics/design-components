@@ -21,7 +21,6 @@ const Template: Story<LessonProps> = (args) => (
                 {...args}
                 classes={args.classes || []}
                 students={args.students || []}
-                reflections={args.reflections || []}
                 questions={args.questions || []}
             />
         </MemoryRouter>
@@ -40,21 +39,21 @@ Component.args = {};
 export const Mock: Story<LessonProps> = Template.bind({});
 Mock.args = {
     href: "",
-    reflections: [
-        {
-            studentName: "Jane Doe",
-            reflection: "An example reflection",
-            rating: 2,
-        }
-    ],
     contributors: [{name: "Jane Doe"}, {name: "Peter Pop"}, {name: "Felona Moldova"}, {name: "Eric Bell"}, {name: "Jamie"}, {name: "Jo"}],
     students: [
         {
-            userId: "",
+            // Exercises the "answers + reflection" render path - the richest, most common real
+            // case now that reflection/rating join onto this same row.
+            userId: "jane-doe-mock",
             avatar: "",
             href: "",
             name: "Jane Doe",
             email: "jane.doe@localcivics.io",
+            // Exercises the "Submitted" status filter.
+            isComplete: true,
+            isStarted: true,
+            reflection: "This lesson helped me understand how local government actually works.",
+            rating: 4,
             answers: [{
                 questionName: "An example question",
                 answer: ["An example response"],
@@ -65,6 +64,34 @@ Mock.args = {
                 questionName: "A chart example question",
                 answer: ["A. An example response"],
             }]
+        },
+        {
+            // Exercises AnswerStack's truly-empty fallback (no answers, no reflection) - a real
+            // case (e.g. a student who's done other work on the lesson but hasn't touched any
+            // question-format item or the reflection prompt yet), confirming the row still expands
+            // to a real, worded link instead of nothing.
+            userId: "peter-pop-mock",
+            avatar: "",
+            href: "",
+            name: "Peter Pop",
+            email: "peter.pop@localcivics.io",
+            // Exercises the "Active" status filter (started, not yet complete).
+            isStarted: true,
+            isComplete: false,
+            answers: []
+        },
+        {
+            // Exercises the "reflection only, no question answers" render path - a student who
+            // reflected on the lesson without ever touching a question-format item. Left with
+            // neither isStarted nor isComplete set, exercising the "Inactive" status filter.
+            userId: "jamal-rivera-mock",
+            avatar: "",
+            href: "",
+            name: "Jamal Rivera",
+            email: "jamal.rivera@localcivics.io",
+            reflection: "I liked working with my group on this one.",
+            rating: 5,
+            answers: []
         }
     ],
     questions: [

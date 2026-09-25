@@ -6,3 +6,4 @@ export * from "./home-dashboard";
 export * from "./student-shell";
 export * from "./file-locker";
 export * from "./comments";
+export * from "./submission-review";

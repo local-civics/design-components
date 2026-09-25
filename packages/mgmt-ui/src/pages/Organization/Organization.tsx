@@ -1,6 +1,6 @@
-import {IconArrowLeft} from "@tabler/icons";
 import * as React from 'react';
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
+import {PageHeader} from "../../components/navigation/PageHeader/PageHeader";
 import {AccessCode} from "./AccessCode";
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -32,14 +32,11 @@ export type OrganizationProps = {
 export const Organization = (props: OrganizationProps) => {
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
-            <div className="space-y-1.5">
-                <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                    <IconArrowLeft size={13} stroke={2.5} />
-                    Back
-                </div>
-                <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "Overview"}</h1>
-                <p className="max-w-xl text-sm text-slate-500">{props.description || "No description"}</p>
-            </div>
+            <PageHeader
+                onBackClick={props.onBackClick}
+                title={props.displayName || "Overview"}
+                description={props.description}
+            />
 
             <AccessCode value={props.accessCode} onCopyCode={props.onCopyAccessCode} peopleLink={props.peopleLink} />
 

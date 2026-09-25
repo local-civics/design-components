@@ -1,8 +1,8 @@
-import {IconArrowLeft, IconCategory2, IconRoute} from "@tabler/icons";
+import {IconCategory2, IconRoute} from "@tabler/icons";
 import {useState} from "react";
 import * as React from 'react';
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
-import {Emblem} from "../../components/media/Emblem/Emblem";
+import {PageHeader, PageHeaderBreadcrumbSegment} from "../../components/navigation/PageHeader/PageHeader";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {Table as BadgeTable, Item as BadgeItem} from "./BadgeTable";
@@ -28,6 +28,10 @@ export type PathwayClass = {
  */
 export type PathwayProps = {
     loading: boolean
+    // Distinct from `loading` - that flips false once title/description resolve, well before the
+    // students/badges/criteria fan-out this page's own export reads has finished. Gates the Export
+    // button specifically, not the page's own loading overlay.
+    exportDisabled?: boolean
     title: string,
     description: string
     imageURL?: string
@@ -42,6 +46,13 @@ export type PathwayProps = {
     href: string
     trial?: boolean
     badgesCompleted?: number
+    breadcrumb?: PageHeaderBreadcrumbSegment[]
+    // Forwarded into the "By student" tab's Table -> BadgeStack, so a badge preview reached from
+    // this page's own roster can return here precisely (see hub's navigationTrail.ts). The caller
+    // computes this once (typically `{state: {trail: pushTrail(...)}}`), not per-row.
+    linkState?: any
+    // Jumps to a student's own cross-class profile from the "By student" tab - see Pathway/Table.tsx.
+    onStudentClick?: (userId: string) => void
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -68,9 +79,25 @@ export const Pathway = (props: PathwayProps) => {
     const numberOfBadgesEarned = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
 
     const criteria = props.criteria || {}
+    // Depth in the category tree (root = 0), so the criteria pills read top-of-hierarchy-first
+    // rather than in whatever order the categories endpoint happened to return them.
+    const parentById = new Map((props.allCategories || []).map((c) => [c.categoryId, c.parentCategoryId]))
+    const depthOf = (id: string): number => {
+        let depth = 0
+        let current = id
+        const seen = new Set<string>()
+        while (parentById.get(current) && !seen.has(current)) {
+            seen.add(current)
+            current = parentById.get(current)!
+            depth++
+        }
+        return depth
+    }
     // Sourced from `categories` (not Object.keys(criteria)) so this only renders once readable
     // names have arrived - criteria lands on the first data resolve, category names a tick later.
-    const criteriaCategories = (props.categories || []).filter((c) => criteria[c.categoryId] !== undefined)
+    const criteriaCategories = (props.categories || [])
+        .filter((c) => criteria[c.categoryId] !== undefined)
+        .sort((a, b) => depthOf(a.categoryId) - depthOf(b.categoryId))
 
     // The pathway's own root category (no parentCategoryId - only known via `allCategories`,
     // since the narrower `categories` doesn't carry it) is redundant as a badge-grouping section:
@@ -91,59 +118,47 @@ export const Pathway = (props: PathwayProps) => {
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-start gap-4">
-                    <Emblem imageURL={props.imageURL} alt={props.title} size="xl" icon={IconRoute} accent="cyan" />
-                    <div className="space-y-1.5">
-                        <div onClick={props.onBackClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
-                            <IconArrowLeft size={13} stroke={2.5} />
-                            Back
-                        </div>
-                        <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.title || "Pathway"}</h1>
-
-                        {!!props.displayTags?.length && (
-                            <div className="flex flex-wrap gap-1.5">
-                                {props.displayTags.map((tag) => (
-                                    <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500">{tag}</span>
-                                ))}
-                            </div>
-                        )}
-
-                        <p className="max-w-xl text-sm text-slate-500">{props.description || "No description"}</p>
-
-                        {(criteriaCategories.length > 0 || !!props.allCategories?.length) && (
-                            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                                {criteriaCategories.length > 0 && (
-                                    <>
-                                        <span className="text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">Criteria</span>
-                                        {criteriaCategories.map((c) => (
-                                            <span key={c.categoryId} className="rounded-full bg-sky-blue-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
-                                                {c.name}: {criteria[c.categoryId]}+{c.maxPoints ? ` of ${c.maxPoints}` : ""} pts
-                                            </span>
-                                        ))}
-                                    </>
-                                )}
-                                {!!props.allCategories?.length && (
-                                    <button
-                                        onClick={() => setCategoriesOpen(true)}
-                                        className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-dark-blue-400 hover:bg-slate-50"
-                                    >
-                                        <IconCategory2 size={12} stroke={2} /> Categories
-                                    </button>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {!props.trial && (
+            <PageHeader
+                icon={IconRoute}
+                iconAccent="cyan"
+                imageURL={props.imageURL}
+                onBackClick={props.onBackClick}
+                breadcrumb={props.breadcrumb}
+                title={props.title || "Pathway"}
+                tags={props.displayTags}
+                description={props.description}
+                actions={!props.trial && (
                     <SplitButton
                         href={props.href}
+                        exportDisabled={props.exportDisabled}
                         onCopyLinkClick={props.onCopyLinkClick}
                         onExportDataClick={props.onExportDataClick}
                     />
                 )}
-            </div>
+            >
+                {(criteriaCategories.length > 0 || !!props.allCategories?.length) && (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                        {criteriaCategories.length > 0 && (
+                            <>
+                                <span className="text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">Criteria</span>
+                                {criteriaCategories.map((c) => (
+                                    <span key={c.categoryId} className="rounded-full bg-sky-blue-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
+                                        {c.name}: {criteria[c.categoryId]}+{c.maxPoints ? ` of ${c.maxPoints}` : ""} pts
+                                    </span>
+                                ))}
+                            </>
+                        )}
+                        {!!props.allCategories?.length && (
+                            <button
+                                onClick={() => setCategoriesOpen(true)}
+                                className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-dark-blue-400 hover:bg-slate-50"
+                            >
+                                <IconCategory2 size={12} stroke={2} /> Categories
+                            </button>
+                        )}
+                    </div>
+                )}
+            </PageHeader>
 
             <StatsGroup data={[
                 {
@@ -182,7 +197,7 @@ export const Pathway = (props: PathwayProps) => {
                 )}
 
                 {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} badges={props.badges} categories={badgeGroupCategories} activeCategoryId={selectedCategoryId} activeCategoryLabel={selectedCategoryName} />}
-                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} />}
+                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} linkState={props.linkState} onStudentClick={props.onStudentClick} />}
             </div>
 
             <CategoriesModal

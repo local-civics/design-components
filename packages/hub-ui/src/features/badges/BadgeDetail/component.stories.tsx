@@ -15,7 +15,7 @@ export default {
  */
 const Template: Story<BadgeDetailProps> = (args) => (
   <div style={{ width: 640 }}>
-    <BadgeDetail {...args} onPathwayClick={() => console.log("navigate to /pathways/:id")} />
+    <BadgeDetail {...args} />
   </div>
 );
 
@@ -69,6 +69,18 @@ InProgress.args = {
       onClick: () => console.log("navigate to /lessons/2"),
     },
   ],
+};
+
+/**
+ * Educator reviewing a student's in-progress badge - same data as InProgress, but with `preview`
+ * set: Submit is hidden (it's the student's own act, not the reviewer's), while each criterion's
+ * own Start/Continue/Review button stays fully active, since those navigate to that same student's
+ * other lesson previews.
+ */
+export const PreviewMode: Story<BadgeDetailProps> = Template.bind({});
+PreviewMode.args = {
+  ...InProgress.args,
+  preview: true,
 };
 
 /**
