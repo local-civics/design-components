@@ -13,7 +13,11 @@ export type CommentItem = {
   commentText: string;
   requireValidation: boolean;
   resolvedAt?: string;
-  authorName?: string;
+  // Unused by this card's own rendering (always "Your educator" on the student side, redundant to
+  // repeat) - kept on the type and named commenterName, not authorName, only so it stays honest
+  // against the real shape hub's useMyComments() passes in (matches CommentCenter.tsx/hub-ui's
+  // Comments.tsx/SubmissionCommentPanel, all independently aligned to the same field name).
+  commenterName?: string;
   createdAt: string;
   badgeId?: string;
   badgeName?: string;
