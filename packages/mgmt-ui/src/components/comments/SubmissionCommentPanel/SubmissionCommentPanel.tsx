@@ -30,14 +30,19 @@ export type SubmissionComment = {
  */
 export type SubmissionCommentPanelProps = {
     comments: SubmissionComment[]
-    onResolve: (commentId: string) => void
-    onLeaveComment: (payload: LeaveCommentPayload) => void
-    userId: string
+    // Both write actions are optional - omitting either drops that action from the panel rather
+    // than rendering a control with nowhere to send its result. A caller with neither (e.g. a
+    // student's own read-only view of comments left on their own badge/lesson - no leave/resolve
+    // capability belongs to that audience, only an educator's) gets a plain, presentational thread.
+    onResolve?: (commentId: string) => void
+    onLeaveComment?: (payload: LeaveCommentPayload) => void
+    userId?: string
     // Already scoped by the caller to "what's actually possible from this page" - e.g. a badge
     // page passes just its own badgeId plus that badge's own lessons, not the org's full catalog.
-    // This component and the modal it wraps have no opinion on how narrow that list is.
-    badges: LeaveCommentBadgeOption[]
-    lessons: LeaveCommentLessonOption[]
+    // This component and the modal it wraps have no opinion on how narrow that list is. Unused
+    // (and safe to omit) when onLeaveComment is omitted too.
+    badges?: LeaveCommentBadgeOption[]
+    lessons?: LeaveCommentLessonOption[]
     initialBadgeId?: string
     initialLessonId?: string
     // Only meaningful on a badge page - omitted entirely (no action rendered) on a lesson page,
@@ -46,6 +51,11 @@ export type SubmissionCommentPanelProps = {
     // True once this badge is already credited - swaps the action for a plain confirmation
     // instead of a clickable button that would just re-credit an already-complete badge.
     badgeValidated?: boolean
+    // The initial comments fetch hasn't resolved yet - shows a neutral loading line instead of
+    // "No comments yet.", which would otherwise flash incorrectly for a split second on every
+    // visit. Omitted by every existing caller (StudentBadge.tsx/StudentLesson.tsx), which already
+    // wait for their own page-level data before this panel ever mounts.
+    loading?: boolean
 }
 
 const formatDate = (value?: string) => {
@@ -91,21 +101,26 @@ export function SubmissionCommentPanel(props: SubmissionCommentPanelProps) {
                             Credited
                         </span>
                     )}
-                    <button
-                        type="button"
-                        onClick={() => setCommenting(true)}
-                        className="rounded-lg bg-dark-blue-400 px-3.5 py-2 text-xs font-bold text-white"
-                    >
-                        Leave a Comment
-                    </button>
+                    {props.onLeaveComment && (
+                        <button
+                            type="button"
+                            onClick={() => setCommenting(true)}
+                            className="rounded-lg bg-dark-blue-400 px-3.5 py-2 text-xs font-bold text-white"
+                        >
+                            Leave a Comment
+                        </button>
+                    )}
                 </div>
             </div>
 
             <div className="mt-4 flex flex-col gap-3">
-                {props.comments.length === 0 && (
+                {props.loading && (
+                    <p className="text-sm text-slate-400">Loading comments…</p>
+                )}
+                {!props.loading && props.comments.length === 0 && (
                     <p className="text-sm text-slate-400">No comments yet.</p>
                 )}
-                {props.comments.map((c) => {
+                {!props.loading && props.comments.map((c) => {
                     const resolved = !!c.resolvedAt
                     return (
                         <div key={c.commentId} className="rounded-lg border border-slate-100 bg-slate-50 p-3.5">
@@ -119,10 +134,10 @@ export function SubmissionCommentPanel(props: SubmissionCommentPanelProps) {
                                     <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${resolved ? "bg-mint-100 text-dark-blue-400" : "bg-gold-100 text-dark-blue-400"}`}>
                                         {resolved ? "Resolved" : "Needs Validation"}
                                     </span>
-                                    {!resolved && !c.isLocal && (
+                                    {!resolved && !c.isLocal && props.onResolve && (
                                         <button
                                             type="button"
-                                            onClick={() => props.onResolve(c.commentId)}
+                                            onClick={() => props.onResolve!(c.commentId)}
                                             className="text-xs font-bold text-sky-blue-400 hover:underline"
                                         >
                                             Mark Resolved
@@ -135,18 +150,20 @@ export function SubmissionCommentPanel(props: SubmissionCommentPanelProps) {
                 })}
             </div>
 
-            <LeaveCommentModal
-                opened={commenting}
-                onClose={() => setCommenting(false)}
-                onSubmit={(payload) => { props.onLeaveComment(payload); setCommenting(false) }}
-                hideStudentPicker
-                students={[]}
-                initialUserId={props.userId}
-                initialBadgeId={props.initialBadgeId}
-                initialLessonId={props.initialLessonId}
-                badges={props.badges}
-                lessons={props.lessons}
-            />
+            {props.onLeaveComment && (
+                <LeaveCommentModal
+                    opened={commenting}
+                    onClose={() => setCommenting(false)}
+                    onSubmit={(payload) => { props.onLeaveComment!(payload); setCommenting(false) }}
+                    hideStudentPicker
+                    students={[]}
+                    initialUserId={props.userId || ""}
+                    initialBadgeId={props.initialBadgeId}
+                    initialLessonId={props.initialLessonId}
+                    badges={props.badges || []}
+                    lessons={props.lessons || []}
+                />
+            )}
         </div>
     )
 }

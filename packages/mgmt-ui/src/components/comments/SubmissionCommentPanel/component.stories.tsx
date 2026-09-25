@@ -95,3 +95,42 @@ LessonPageNoBadge.args = {
   badges: [],
   lessons: [{lessonId: "lesson-3", displayName: "Standalone Civics Lesson"}],
 };
+
+/**
+ * Read-only shape - a plain student's own view of comments left on their own badge/lesson
+ * (Badge.tsx/Lesson.tsx). No onLeaveComment/onResolve/onValidateBadge/userId/badges/lessons at
+ * all, matching exactly what those two pages pass. Note: Storybook's actions addon auto-mocks any
+ * on*-shaped prop regardless of whether a story's own args set it, so this story alone can't prove
+ * the "Leave a Comment"/"Mark Resolved" controls are actually absent - that's confirmed by direct
+ * source review (both are gated on `props.onLeaveComment`/`props.onResolve` being truthy, which
+ * neither this story's args nor the two real callers ever set) rather than by what renders here.
+ */
+export const ReadOnly: Story<SubmissionCommentPanelProps> = Template.bind({});
+ReadOnly.args = {
+  comments: [
+    {
+      commentId: "c1",
+      commentText: "Great start - make sure to address the second criterion before resubmitting.",
+      requireValidation: true,
+      authorName: "Your educator",
+      createdAt: "2026-09-20T14:00:00Z",
+    },
+    {
+      commentId: "c2",
+      commentText: "Nice work on the reflection.",
+      requireValidation: false,
+      authorName: "Your educator",
+      createdAt: "2026-09-18T09:15:00Z",
+    },
+  ],
+};
+
+/**
+ * The initial fetch hasn't resolved yet - shows "Loading comments…" instead of flashing
+ * "No comments yet." for a split second.
+ */
+export const Loading: Story<SubmissionCommentPanelProps> = Template.bind({});
+Loading.args = {
+  comments: [],
+  loading: true,
+};
