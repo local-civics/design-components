@@ -35,6 +35,10 @@ export type LessonStudentStatusFilter = "all" | "submitted" | "active" | "inacti
  */
 export type LessonProps = {
     loading: boolean
+    // Distinct from `loading` - that flips false once displayName/description resolve, well before
+    // the students/questions fan-out this page's own export reads has finished. Gates the Export
+    // button specifically, not the page's own loading overlay.
+    exportDisabled?: boolean
     displayName: string
     description: string
     href: string
@@ -122,6 +126,7 @@ export const Lesson = (props: LessonProps) => {
                     <SplitButton
                         href={props.href}
                         noExport={props.trial}
+                        exportDisabled={props.exportDisabled}
                         onCopyLinkClick={props.onCopyLinkClick}
                         onExportDataClick={props.onExportDataClick}
                     />
