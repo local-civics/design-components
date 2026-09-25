@@ -26,6 +26,12 @@ export type SubmissionComment = {
     // "Mark Resolved" action is hidden for these until then, rather than risk silently no-op'ing
     // a resolve call against an id the backend has never seen.
     isLocal?: boolean
+    // True once the comment itself has been resolved but the badge/lesson it's tied to is still
+    // unsubmitted - i.e. addComment's validation cascade pulled credit for it and nothing has been
+    // resubmitted since (see hub-ui's Comments.tsx / useOrganization.ts's getMyComments(), where
+    // this is computed). Distinct from "not yet resolved" and "resolved, nothing left to do" -
+    // without it, a badge a student still needs to redo would read as plain "Resolved" here.
+    needsSubmission?: boolean
 }
 
 /**
@@ -134,8 +140,15 @@ export function SubmissionCommentPanel(props: SubmissionCommentPanelProps) {
                             <p className="mt-1.5 text-sm text-slate-600">{c.commentText}</p>
                             {c.requireValidation && (
                                 <div className="mt-2.5 flex items-center gap-2">
-                                    <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${resolved ? "bg-mint-100 text-dark-blue-400" : "bg-gold-100 text-dark-blue-400"}`}>
-                                        {resolved ? "Resolved" : "Needs Validation"}
+                                    {/* sky-blue-400/15 (not a -100 shade, unlike its two siblings) - this package has
+                                        no sky-blue-100 token defined, and it's the same tint hub-ui's Comments.tsx
+                                        already uses for this identical third state. */}
+                                    <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${
+                                        !resolved ? "bg-gold-100 text-dark-blue-400"
+                                        : c.needsSubmission ? "bg-sky-blue-400/15 text-dark-blue-400"
+                                        : "bg-mint-100 text-dark-blue-400"
+                                    }`}>
+                                        {!resolved ? "Needs Validation" : c.needsSubmission ? "Needs Submission" : "Resolved"}
                                     </span>
                                     {!resolved && !c.isLocal && props.onResolve && (
                                         <button

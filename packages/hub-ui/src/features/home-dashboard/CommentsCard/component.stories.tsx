@@ -20,8 +20,10 @@ const Template: Story<CommentsCardProps> = (args) => (
 );
 
 /**
- * A mix of resolved, needing-validation, and plain comments, spanning both badges and lessons -
- * exercises all 3 stat cells, both type pills, and the recent-comment sort order.
+ * A mix of resolved, needing-validation, needing-resubmission, and plain comments, spanning both
+ * badges and lessons - exercises all 3 stat cells (including "Needs Attention" correctly counting
+ * the needsSubmission one alongside the not-yet-resolved one), all 3 pill states, both type pills,
+ * and the recent-comment sort order.
  */
 export const Component: Story<CommentsCardProps> = Template.bind({});
 Component.args = {
@@ -53,6 +55,17 @@ Component.args = {
       createdAt: "2026-09-10T09:00:00Z",
       badgeId: "badge-2",
       badgeName: "Community Service Reflection",
+    },
+    {
+      commentId: "c4",
+      commentText: "Resolved this, but the badge itself got unsubmitted and still needs redoing.",
+      requireValidation: true,
+      resolvedAt: "2026-09-17T10:00:00Z",
+      needsSubmission: true,
+      commenterName: "Your educator",
+      createdAt: "2026-09-16T08:00:00Z",
+      badgeId: "badge-1",
+      badgeName: "Civic Leadership Badge",
     },
   ],
 };
