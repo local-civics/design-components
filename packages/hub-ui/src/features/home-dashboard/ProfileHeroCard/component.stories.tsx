@@ -32,8 +32,5 @@ Component.args = {
     "I would like to encourage students in my school to take on more leadership roles and create more authentic community experiences.",
   placeName: "Amsterdam, NY",
   communityName: "NVPS AMS I",
-  level: 6,
-  xp: 1500,
-  nextXP: 2500,
   onEdit: () => {},
 };

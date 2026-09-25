@@ -2,8 +2,6 @@ import * as React from "react";
 import { Icon } from "../../../components/Icon";
 import { Button } from "../../../components/Button";
 import { Loader } from "../../../components/Loader";
-import { compact } from "../../../utils/numbers";
-import { Pill } from "../Pill/Pill";
 
 /**
  * ProfileHeroCardProps
@@ -18,25 +16,21 @@ export type ProfileHeroCardProps = {
   impactStatement?: string;
   placeName?: string;
   communityName?: string;
-  level?: number;
-  xp?: number;
-  nextXP?: number;
 
   onEdit?: () => void;
 };
 
 /**
- * The student dashboard's profile summary: avatar/name/meta (formerly `ProfileWidget`), bio and
- * place/community (formerly `AboutWidget`), and level/XP progress (formerly `ImpactWidget`)
- * consolidated into a single card, matching Mockup I's layout and color treatment.
+ * The student dashboard's profile summary: avatar/name/meta (formerly `ProfileWidget`) and bio and
+ * place/community (formerly `AboutWidget`) consolidated into a single card, matching Mockup I's
+ * layout and color treatment. The level/XP gamification section (formerly `ImpactWidget`) that used
+ * to also live here was removed at Colin's direction as vestigial - not part of the PRD, never
+ * validated as something students found meaningful.
  * @param props
  * @constructor
  */
 export const ProfileHeroCard = (props: ProfileHeroCardProps) => {
   const hasContent = props.givenName || props.familyName;
-  const xp = props.xp || 0;
-  const nextXP = props.nextXP || 0;
-  const pct = nextXP ? Math.min(100, Math.round((xp / nextXP) * 100)) : 0;
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-sky-blue-400/20 bg-white shadow-[0_4px_24px_rgba(59,208,242,0.10)]">
@@ -82,10 +76,6 @@ export const ProfileHeroCard = (props: ProfileHeroCardProps) => {
                     )}
                   </div>
 
-                  <div className="mt-2 flex gap-2">
-                    {!!props.level && <Pill label={`Level ${props.level}`} accent="gold" />}
-                    {!!props.xp && <Pill label={`${compact(props.xp)} XP`} accent="cyan" />}
-                  </div>
                 </div>
 
                 {props.onEdit && (
@@ -101,25 +91,6 @@ export const ProfileHeroCard = (props: ProfileHeroCardProps) => {
               </div>
 
               {props.impactStatement && <p className="text-sm text-slate-500">{props.impactStatement}</p>}
-
-              <div className="border-t border-sky-blue-400/15 pt-4">
-                <p className="mb-1.5 text-xs text-slate-400">Impact Score</p>
-                <div className="h-2.5 w-full overflow-hidden rounded-full bg-sky-blue-400/10">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-sky-blue-400 to-mint-400 shadow-[0_0_8px_rgba(30,226,175,0.6)]"
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-                <div className="mt-1.5 flex items-baseline gap-1">
-                  <span className="text-xl font-extrabold text-dark-blue-400">{compact(xp)}</span>
-                  <span className="text-sm font-semibold text-slate-500">XP</span>
-                  {!!nextXP && (
-                    <span className="ml-auto text-xs text-slate-400">
-                      {compact(Math.max(nextXP - xp, 0))} to next level
-                    </span>
-                  )}
-                </div>
-              </div>
             </div>
           )}
         </Loader>
