@@ -14,6 +14,9 @@ export type SubmissionDetailProps = {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
+    // Jumps from this student's identity block to their own full profile page - the same gap this
+    // session already closed on StudentBadge/StudentLesson/Pathway Overview's "By student" tab.
+    onStudentClick?: () => void
     // True only when this whole review session was opened from By Lesson (already fixed to one
     // lesson) - see fileCommentContextFor. Every other entry point (By Student, By Pathway, By
     // Badge) resolves each file's own badgeId instead, so this is the one case worth naming.
@@ -45,17 +48,35 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
             </div>
 
             <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                {student.avatar
-                    ? <img src={student.avatar} className="h-12 w-12 shrink-0 rounded-full object-cover" alt=""/>
-                    : <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-400 to-dark-blue-400 text-sm font-bold text-white">
-                        {initials(student.name)}
-                    </div>}
-                <div className="min-w-0 flex-1">
-                    <div className="text-lg font-extrabold text-dark-blue-400">{student.name}</div>
-                    <div className="mt-0.5 text-xs text-slate-400">
-                        {student.email}{props.context ? ` · ${props.context}` : ""}
-                    </div>
-                </div>
+                {props.onStudentClick ? (
+                    <button type="button" onClick={props.onStudentClick} className="group flex min-w-0 flex-1 items-center gap-4 text-left">
+                        {student.avatar
+                            ? <img src={student.avatar} className="h-12 w-12 shrink-0 rounded-full object-cover" alt=""/>
+                            : <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-400 to-dark-blue-400 text-sm font-bold text-white">
+                                {initials(student.name)}
+                            </div>}
+                        <div className="min-w-0 flex-1">
+                            <div className="text-lg font-extrabold text-dark-blue-400 group-hover:underline">{student.name}</div>
+                            <div className="mt-0.5 text-xs text-slate-400">
+                                {student.email}{props.context ? ` · ${props.context}` : ""}
+                            </div>
+                        </div>
+                    </button>
+                ) : (
+                    <>
+                        {student.avatar
+                            ? <img src={student.avatar} className="h-12 w-12 shrink-0 rounded-full object-cover" alt=""/>
+                            : <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-400 to-dark-blue-400 text-sm font-bold text-white">
+                                {initials(student.name)}
+                            </div>}
+                        <div className="min-w-0 flex-1">
+                            <div className="text-lg font-extrabold text-dark-blue-400">{student.name}</div>
+                            <div className="mt-0.5 text-xs text-slate-400">
+                                {student.email}{props.context ? ` · ${props.context}` : ""}
+                            </div>
+                        </div>
+                    </>
+                )}
                 <div className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-500">
                     {student.submissions.length} file{student.submissions.length === 1 ? "" : "s"}
                 </div>
