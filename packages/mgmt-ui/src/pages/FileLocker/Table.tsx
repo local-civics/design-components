@@ -21,17 +21,9 @@ export interface SubmissionItem {
     badgeName: string
     badgeId: string
     lessonName: string
-    // Already present on every submission returned by getFileLocker() (useOrganization.ts) - just
-    // wasn't declared here before, so nothing read it. No new API call, no hub change: this data is
-    // already flowing through today, purely a type-level addition to unlock it.
     lessonId?: string
     question: string
-    // Already present on every submission returned by getFileLocker() (useOrganization.ts) - just
-    // wasn't declared here before, so nothing read it. No new API call, no hub change: this data is
-    // already flowing through today, purely a type-level addition to unlock it.
     updatedAt?: string
-    // Derived client-side in FileLocker.tsx from badgeId (badge -> pathway prefix-match), not part
-    // of the raw API response - attached before these items ever reach this component.
     pathwayName?: string
     pathwayId?: string
 }
@@ -52,12 +44,11 @@ export type TableProps = TableData & {
     hideLesson?: boolean
     hidePathway?: boolean
     onReview?: (item: Item) => void
-    // Opens the Leave Comment modal (see LeaveCommentModal) prepopulated for this student and the
-    // badge/lesson their submissions here belong to. Whichever tab/group rendered this Table has
-    // already narrowed `item.submissions` down to the relevant badge/lesson (see
-    // useFilteredStudents' byBadge/byLesson), so the caller can read the badge/lesson straight off
-    // the clicked item - no extra context parameter needed here.
-    onComment?: (item: Item) => void
+    // Opens the Leave Comment modal (see LeaveCommentModal) prepopulated for the specific submission
+    // row clicked - lives per-file (rendered inside each expanded student's FileStack) rather than
+    // at the student level, so the comment is scoped to the exact lesson/badge that file is for
+    // instead of guessing at one. Table just threads this down along with the row's own userId.
+    onComment?: (userId: string, submission: SubmissionItem) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
@@ -82,8 +73,10 @@ export function Table(props: TableProps) {
 
     const { items: sortedItems, requestSort, sortConfig } = useSortableData(preparedItems);
 
-    const showActions = !!props.onReview || !!props.onComment
-    const actionsWidthClass = props.onReview && props.onComment ? "w-64" : "w-36"
+    // Comment now lives per-file (inside each expanded FileStack), not at the student-row level -
+    // this action column is Review Submission only.
+    const showActions = !!props.onReview
+    const actionsWidthClass = "w-36"
 
     if (props.items.length === 0) {
         return <PlaceholderBanner
@@ -133,14 +126,6 @@ export function Table(props: TableProps) {
                                             Review Submission
                                         </button>
                                     )}
-                                    {props.onComment && (
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); props.onComment!(row) }}
-                                            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400 hover:bg-slate-50"
-                                        >
-                                            Comment
-                                        </button>
-                                    )}
                                 </div>
                             )}
                             <IconChevronRight size={16} stroke={2} className={`w-4 shrink-0 text-slate-300 transition-transform ${isOpen ? "rotate-90" : ""}`} />
@@ -155,6 +140,10 @@ export function Table(props: TableProps) {
                                     onBadgeClick={props.onBadgeClick}
                                     onLessonClick={props.onLessonClick}
                                     onPathwayClick={props.onPathwayClick}
+                                    // FileStack hands back the exact same row object it was given (row.submissions,
+                                    // typed as SubmissionItem[] here) unmodified - the cast just recovers that type
+                                    // across FileStack's own looser local Item shape.
+                                    onComment={props.onComment ? (sub) => props.onComment!(row.userId, sub as SubmissionItem) : undefined}
                                 />
                             </div>
                         )}

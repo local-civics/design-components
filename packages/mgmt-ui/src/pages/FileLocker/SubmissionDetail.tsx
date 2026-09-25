@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IconChevronLeft, IconChevronRight} from "@tabler/icons";
-import {Item} from "./Table";
+import {Item, SubmissionItem} from "./Table";
 import {Stack as FileStack} from "./FileStack";
 
 /**
@@ -14,14 +14,16 @@ export type SubmissionDetailProps = {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
+    onComment?: (userId: string, submission: SubmissionItem) => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
 
 /**
  * The per-student review view opened from FileLocker's "Review Submission" buttons. Built from data
- * already available on the student/submissions shape - no status pill, no comment thread (neither
- * has any backing data in the API today).
+ * already available on the student/submissions shape - no status pill or comment thread shown here
+ * (neither has any backing data in the API today), but each file row does get the same per-file
+ * Comment button as the main table (see onComment).
  * @param props
  * @constructor
  */
@@ -61,6 +63,10 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
                         onBadgeClick={props.onBadgeClick}
                         onLessonClick={props.onLessonClick}
                         onPathwayClick={props.onPathwayClick}
+                        // FileStack hands back the exact same row object it was given (student.submissions,
+                        // typed as SubmissionItem[] here) unmodified - the cast just recovers that type across
+                        // FileStack's own looser local Item shape.
+                        onComment={props.onComment ? (sub) => props.onComment!(student.userId, sub as SubmissionItem) : undefined}
                     />
                 </div>
             </div>

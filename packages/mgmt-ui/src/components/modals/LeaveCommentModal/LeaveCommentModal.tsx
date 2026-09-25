@@ -4,7 +4,7 @@ import { Modal, Checkbox } from "@mantine/core";
 /**
  * LeaveCommentStudentOption
  */
-export type LeaveCommentStudentOption = { userId: string, name: string, email?: string }
+export type LeaveCommentStudentOption = { userId: string, name: string }
 
 /**
  * LeaveCommentBadgeOption
@@ -61,10 +61,13 @@ const inputClass = "w-full rounded-xl border border-slate-200 bg-white px-3.5 py
  * LeaveCommentModal. Shared by the Comment Center's "Leave a comment" action and the File Locker's
  * per-row "Comment" button (see FileLocker.tsx) - opened from File Locker it arrives prepopulated
  * with the student and badge/lesson a specific file belongs to; opened from the Comment Center it
- * starts blank. A comment that requires validation must be tied to a badge (mirrors study's
- * NewComment validation), so the checkbox only appears once a badge target is selected. Only calls
- * onSubmit with the assembled payload - the caller owns the actual API call, closing the modal, and
- * any refresh, exactly like every other page in this package.
+ * starts blank. Since every File Locker row is a lesson (only sometimes also credited toward a
+ * badge), prepopulation prefers Lesson over Badge when a row carries both ids - Badge stays
+ * available as an explicit choice, just not the default. A comment that requires validation must be
+ * tied to a badge or a lesson (mirrors study's NewComment validation), so the checkbox only appears
+ * once a badge or lesson target is selected. Only calls onSubmit with the assembled payload - the
+ * caller owns the actual API call, closing the modal, and any refresh, exactly like every other page
+ * in this package.
  * @param props
  * @constructor
  */
@@ -84,7 +87,9 @@ export function LeaveCommentModal(props: LeaveCommentModalProps) {
         setUserId(props.initialUserId || "")
         setBadgeId(props.initialBadgeId || "")
         setLessonId(props.initialLessonId || "")
-        setTarget(props.initialBadgeId ? "badge" : props.initialLessonId ? "lesson" : "none")
+        // Lesson preferred over badge: every File Locker row is a lesson, only sometimes also
+        // credited toward a badge, so a row carrying both ids defaults to the Lesson tab.
+        setTarget(props.initialLessonId ? "lesson" : props.initialBadgeId ? "badge" : "none")
         setCommentText("")
         setRequireValidation(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,7 +106,7 @@ export function LeaveCommentModal(props: LeaveCommentModalProps) {
         props.onSubmit({
             userId,
             commentText: commentText.trim(),
-            requireValidation: target === "badge" && requireValidation,
+            requireValidation: (target === "badge" || target === "lesson") && requireValidation,
             badgeId: target === "badge" ? badgeId : undefined,
             lessonId: target === "lesson" ? lessonId : undefined,
         })
@@ -121,9 +126,7 @@ export function LeaveCommentModal(props: LeaveCommentModalProps) {
                         <label className="mb-1 block text-xs font-bold text-slate-500">Student</label>
                         <select value={userId} onChange={(e) => setUserId(e.target.value)} className={inputClass}>
                             <option value="">Select a student</option>
-                            {props.students.map((s) => (
-                                <option key={s.userId} value={s.userId}>{s.email ? `${s.name} (${s.email})` : s.name}</option>
-                            ))}
+                            {props.students.map((s) => <option key={s.userId} value={s.userId}>{s.name}</option>)}
                         </select>
                     </div>
                 )}
@@ -175,11 +178,11 @@ export function LeaveCommentModal(props: LeaveCommentModalProps) {
                     />
                 </div>
 
-                {target === "badge" && !!badgeId && (
+                {((target === "badge" && !!badgeId) || (target === "lesson" && !!lessonId)) && (
                     <Checkbox
                         checked={requireValidation}
                         onChange={(e) => setRequireValidation(e.currentTarget.checked)}
-                        label="Requires validation - unsubmits this badge until the comment is resolved"
+                        label={`Requires validation - unsubmits this ${target} until the comment is resolved`}
                     />
                 )}
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconDownload} from "@tabler/icons";
+import {IconDownload, IconMessageCircle2} from "@tabler/icons";
 
 export interface Item {
     link: string
@@ -20,6 +20,7 @@ export type StackProps = {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
+    onComment?: (row: Item) => void
 }
 
 /**
@@ -36,7 +37,7 @@ export type StackProps = {
  * the way it already does today.
  */
 export function Stack(props: StackProps) {
-    const {items, hideBadge, hideLesson, hidePathway, onBadgeClick, onLessonClick, onPathwayClick} = props
+    const {items, hideBadge, hideLesson, hidePathway, onBadgeClick, onLessonClick, onPathwayClick, onComment} = props
     if (!items.length) return null;
 
     // Columns follow the real Pathway -> Badge -> Lesson -> Question hierarchy, left to right,
@@ -95,6 +96,16 @@ export function Stack(props: StackProps) {
                         )}
                         <div className={`${dataCell} ${rowBorder} text-xs font-semibold text-dark-blue-400`}>{row.question}</div>
                         <div className={`${dataCell} ${rowBorder} flex shrink-0 gap-2`}>
+                            {onComment && (
+                                <button
+                                    type="button"
+                                    onClick={() => onComment(row)}
+                                    className="flex items-center gap-1 rounded-md border border-slate-200 px-2.5 py-1.5 text-[11px] font-bold text-slate-600 hover:bg-slate-50"
+                                >
+                                    <IconMessageCircle2 size={12} stroke={2}/>
+                                    Comment
+                                </button>
+                            )}
                             <a
                                 href={row.link}
                                 download

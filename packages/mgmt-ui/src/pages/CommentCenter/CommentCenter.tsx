@@ -22,7 +22,7 @@ export type CommentCenterItem = {
     recipientId: string
     recipientName: string
     authorId: string
-    authorName?: string
+    commenterName?: string
     badgeId?: string
     badgeName?: string
     lessonId?: string
@@ -58,6 +58,12 @@ const TABS: {value: Tab, label: string}[] = [
 ]
 
 type Group = {key: string, title: string, items: CommentCenterItem[]}
+
+const formatDate = (iso: string) => {
+    const d = new Date(iso)
+    if (isNaN(d.getTime())) return "—"
+    return d.toLocaleDateString(undefined, {month: "short", day: "numeric", year: "numeric"})
+}
 
 // Preserves first-seen order (not alphabetical) so the most recently-active student/badge/lesson
 // tends to surface first, since `comments` already arrives newest-first (see study's
@@ -140,10 +146,11 @@ export const CommentCenter = (props: CommentCenterProps) => {
                 />
             ) : (
                 <div className="flex flex-col gap-4">
-                    <div className="grid grid-cols-[1.3fr_1.3fr_2fr_1fr_1fr] items-center gap-3 px-5 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
+                    <div className="grid grid-cols-[1.2fr_1fr_1.8fr_1fr_0.8fr_0.8fr] items-center gap-3 px-5 text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400">
                         <div>{tab === "students" ? "Badge / Lesson" : "Student"}</div>
-                        <div>Left By</div>
+                        <div>Commenter</div>
                         <div>Comment</div>
+                        <div>Left On</div>
                         <div className="text-center">Flag</div>
                         <div className="text-center">Status</div>
                     </div>
@@ -156,13 +163,14 @@ export const CommentCenter = (props: CommentCenterProps) => {
                             {group.items.map((item, i) => (
                                 <div
                                     key={item.commentId}
-                                    className={`grid grid-cols-[1.3fr_1.3fr_2fr_1fr_1fr] items-center gap-3 px-5 py-3.5 ${i < group.items.length - 1 ? "border-b border-slate-100" : ""}`}
+                                    className={`grid grid-cols-[1.2fr_1fr_1.8fr_1fr_0.8fr_0.8fr] items-center gap-3 px-5 py-3.5 ${i < group.items.length - 1 ? "border-b border-slate-100" : ""}`}
                                 >
                                     <div className="truncate text-xs font-bold text-dark-blue-400">
                                         {tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName}
                                     </div>
-                                    <div className="truncate text-[11px] text-slate-500">{item.authorName || "—"}</div>
+                                    <div className="truncate text-[11px] text-slate-500">{item.commenterName || "—"}</div>
                                     <div className="text-xs text-slate-600">{item.commentText}</div>
+                                    <div className="truncate text-[11px] text-slate-400">{formatDate(item.createdAt)}</div>
                                     <div className="flex justify-center">
                                         {item.requireValidation && (
                                             <span className="rounded-full bg-gold-400/15 px-2 py-0.5 text-[10px] font-bold text-dark-blue-400">
