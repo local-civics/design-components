@@ -1,9 +1,13 @@
 import * as React from 'react';
-import {IconChevronDown, IconChevronLeft, IconSearch} from "@tabler/icons";
+import {IconChevronDown, IconRefresh, IconSearch} from "@tabler/icons";
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
+import {PageHeader} from "../../components/navigation/PageHeader/PageHeader";
+import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
+import {useSortableData} from "../../utils/useSortableData";
 import {SplitButton} from "./SplitButton";
 import {Table, Item, SubmissionItem} from "./Table";
 import {SubmissionDetail} from "./SubmissionDetail";
+import {AccountPendingModal} from "./AccountPendingModal";
 import {useFilteredStudents} from "./useFilteredStudents"
 import {LeaveCommentModal, LeaveCommentPayload} from "../../components/modals/LeaveCommentModal/LeaveCommentModal";
 
@@ -58,18 +62,61 @@ export type FileLockerProps = {
     onBadgeClick?: (badgeId: string) => void;
     onLessonClick?: (lessonId: string) => void;
     onPathwayClick?: (pathwayId: string) => void;
+    // Jumps from a "By student" row to that student's own profile page.
+    onStudentClick?: (userId: string) => void;
+    // Requests the "No account yet" pop-up for a specific account-less roster entry - the caller
+    // owns the actual credits fetch (see accountPendingModal below for the result).
+    onOpenAccountPending?: (userId: string) => void;
+    // Drives the "No account yet" pop-up itself - undefined/absent means closed. Split from
+    // onOpenAccountPending the same way onComment is split from LeaveCommentModal: this component
+    // only renders whatever state the caller hands it, the caller owns the async fetch behind it.
+    accountPendingModal?: {
+        opened: boolean
+        loading?: boolean
+        name?: string
+        email?: string
+        credits?: string[]
+        onClose: () => void
+        onViewProfile?: () => void
+    };
     // Renders a "Comment" button beside every file row (in both the table's row-expansion and the
     // Review Submission view). Clicking it opens FileLocker's own LeaveCommentModal, prepopulated
     // for the clicked student and that exact row's lesson (falling back to its badge, if the row
     // has no lesson) - onComment only fires once the teacher actually submits that modal, with the
     // assembled payload; the caller owns the API call.
     onComment?: (comment: LeaveCommentPayload) => void;
+    // "Updated H:MM:SS" - already formatted by the caller (matching the same pattern used on My
+    // Badges/My Pathways/My File Locker), rendered next to the refresh control. Omitted entirely
+    // (no label, no refresh button) until the first fetch has landed.
+    fetchedAtLabel?: string;
+    // Whether a manually-triggered refresh is currently in flight - spins the refresh icon.
+    refreshing?: boolean;
+    // A lightweight, non-destructive way to force a fresh fetch without losing tab/search state or
+    // reloading the whole app - only rendered when the caller supplies it.
+    onRefresh?: () => void;
+    // Optionally-controlled active tab (one of TABS' own values below) - lets a caller deep-link
+    // straight into a specific tab (e.g. from a Badge page's "View Files" link) via the URL, and
+    // have Back/Forward naturally restore it. Falls back to local state when omitted, so every
+    // existing standalone/Storybook usage is unaffected.
+    tab?: string;
+    onTabChange?: (tab: string) => void;
+    // Which specific entity within the active tab to focus on mount - a badge/lesson/pathway id
+    // when tab is "badges"/"lessons"/"pathways" (auto-expands that one group card), or a userId
+    // when tab is "students" (auto-opens the full SubmissionDetail view for that student, the
+    // direct answer to "give me a quick, comprehensive view of one student's files"). Consumed
+    // once per distinct value, not re-applied on every render.
+    focusId?: string;
 }
 
 type Reviewing = {
     student: Item
     list: Item[]
     context?: string
+    // Which badge/lesson (if any) this review session is fixed to - set only when opened from
+    // BadgeGroups/LessonGroups, mirroring Table.tsx's own hideBadge/hideLesson-driven rule, so a
+    // per-entry Comment button inside SubmissionDetail pre-fills the same target the whole view is
+    // already scoped to instead of guessing.
+    commentContext?: {badgeId?: string, lessonId?: string}
 }
 
 const TABS: {value: string, label: string}[] = [
@@ -104,8 +151,8 @@ const matchesSearch = (student: Item, term: string): boolean => {
  * A group's expand/collapse card - shared visual treatment for the pathway/badge/lesson tabs, each
  * of which is a list of these wrapping a filtered Table of students.
  */
-const GroupCard = (props: {title: string, description?: string, count: number, onTitleClick?: () => void, children: React.ReactNode}) => {
-    const [open, setOpen] = React.useState(false)
+const GroupCard = (props: {title: string, description?: string, count: number, onTitleClick?: () => void, defaultOpen?: boolean, children: React.ReactNode}) => {
+    const [open, setOpen] = React.useState(!!props.defaultOpen)
     return (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div onClick={() => setOpen(!open)} className="flex cursor-pointer items-center gap-3.5 p-4">
@@ -131,15 +178,20 @@ const GroupCard = (props: {title: string, description?: string, count: number, o
     )
 }
 
+type CommentContext = {badgeId?: string, lessonId?: string}
+
 type GroupsProps = {
     students: Item[]
     loading: boolean
     search: string
-    onReview: (item: Item, list: Item[], context?: string) => void
-    onComment?: (userId: string, submission: SubmissionItem) => void
+    onReview: (item: Item, list: Item[], context?: string, commentContext?: CommentContext) => void
+    onComment?: (item: Item, context?: CommentContext) => void
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
+    // Which single group (by pathwayId/badgeId/lessonId) should start expanded - see FileLocker's
+    // own `focusId` prop.
+    focusId?: string
 }
 
 /**
@@ -174,6 +226,7 @@ const PathwayGroups = (props: GroupsProps & {pathways: NonNullable<FileLockerPro
                     description={p.description}
                     count={countFiles(filtered)}
                     onTitleClick={props.onPathwayClick ? () => props.onPathwayClick!(p.pathwayId) : undefined}
+                    defaultOpen={p.pathwayId === props.focusId}
                 >
                     <Table
                         loading={props.loading}
@@ -203,9 +256,11 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
             const base = byBadge(b.badgeId)
             const ownNameMatches = !term || b.displayName.toLowerCase().includes(term)
             const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
-            return {badge: b, filtered}
+            return {badge: b, filtered, name: b.displayName, fileCount: countFiles(filtered)}
         })
         .filter((g) => !term || g.filtered.length > 0)
+
+    const {items: sortedGroups, requestSort, sortConfig} = useSortableData(groups)
 
     if (term && groups.length === 0) {
         return <p className="text-sm text-slate-400">No matching entries.</p>
@@ -213,7 +268,11 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
 
     return (
         <div className="flex flex-col gap-3">
-            {groups.map(({badge: b, filtered}) => {
+            <div className="flex items-center gap-4 px-4">
+                <SortableHeader label="Badge" sortKey="name" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                <SortableHeader label="Files" sortKey="fileCount" sortConfig={sortConfig} onSort={requestSort} className="w-16 shrink-0" />
+            </div>
+            {sortedGroups.map(({badge: b, filtered}) => {
                 const pathwayTitle = props.pathwayNameForBadge[b.badgeId]
                 return (
                     <GroupCard
@@ -222,13 +281,14 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
                         description={pathwayTitle ? `${pathwayTitle} pathway` : undefined}
                         count={countFiles(filtered)}
                         onTitleClick={props.onBadgeClick ? () => props.onBadgeClick!(b.badgeId) : undefined}
+                        defaultOpen={b.badgeId === props.focusId}
                     >
                         <Table
                             loading={props.loading}
                             items={filtered}
                             hideBadge
                             hidePathway
-                            onReview={(item) => props.onReview(item, filtered, b.displayName)}
+                            onReview={(item) => props.onReview(item, filtered, b.displayName, {badgeId: b.badgeId})}
                             onComment={props.onComment}
                             onLessonClick={props.onLessonClick}
                         />
@@ -252,9 +312,11 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
             const base = byLesson(l.lessonName)
             const ownNameMatches = !term || l.lessonName.toLowerCase().includes(term)
             const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
-            return {lesson: l, filtered}
+            return {lesson: l, filtered, name: l.lessonName, fileCount: countFiles(filtered)}
         })
         .filter((g) => !term || g.filtered.length > 0)
+
+    const {items: sortedGroups, requestSort, sortConfig} = useSortableData(groups)
 
     if (term && groups.length === 0) {
         return <p className="text-sm text-slate-400">No matching entries.</p>
@@ -262,7 +324,11 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
 
     return (
         <div className="flex flex-col gap-3">
-            {groups.map(({lesson: l, filtered}) => {
+            <div className="flex items-center gap-4 px-4">
+                <SortableHeader label="Lesson" sortKey="name" sortConfig={sortConfig} onSort={requestSort} className="flex-1" />
+                <SortableHeader label="Files" sortKey="fileCount" sortConfig={sortConfig} onSort={requestSort} className="w-16 shrink-0" />
+            </div>
+            {sortedGroups.map(({lesson: l, filtered}) => {
                 const badge = props.badgeForLesson[l.lessonId]
                 const pathwayTitle = badge ? props.pathwayNameForBadge[badge.badgeId] : undefined
                 const description = badge
@@ -275,8 +341,9 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
                         description={description}
                         count={countFiles(filtered)}
                         onTitleClick={props.onLessonClick ? () => props.onLessonClick!(l.lessonId) : undefined}
+                        defaultOpen={l.lessonId === props.focusId}
                     >
-                        <Table loading={props.loading} items={filtered} hideBadge hideLesson hidePathway onReview={(item) => props.onReview(item, filtered, l.lessonName)} onComment={props.onComment}/>
+                        <Table loading={props.loading} items={filtered} hideBadge hideLesson hidePathway onReview={(item) => props.onReview(item, filtered, l.lessonName, {lessonId: l.lessonId})} onComment={props.onComment}/>
                     </GroupCard>
                 )
             })}
@@ -290,10 +357,20 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
  * @constructor
  */
 export const FileLocker = (props: FileLockerProps) => {
-    const [tab, setTab] = React.useState("students")
+    const [internalTab, setInternalTab] = React.useState(props.tab || "students")
+    // Optionally-controlled: a caller (hub, reading a ?tab= query param) can drive this directly;
+    // every other/Storybook usage falls back to local state, unaffected.
+    const tab = props.tab ?? internalTab
+    const setTab = (next: string) => {
+        setInternalTab(next)
+        props.onTabChange?.(next)
+    }
     const [reviewing, setReviewing] = React.useState<Reviewing | null>(null)
     const [search, setSearch] = React.useState("")
     const searchLower = search.trim().toLowerCase()
+    // Guards focusId auto-open (SubmissionDetail) so it only fires once per distinct value, not on
+    // every re-render, and so closing it manually doesn't immediately reopen it.
+    const consumedFocusId = React.useRef<string | undefined>(undefined)
 
     const numberOfFiles = countFiles(props.students)
 
@@ -385,14 +462,14 @@ export const FileLocker = (props: FileLockerProps) => {
 
     const [commenting, setCommenting] = React.useState<{userId: string, badgeId?: string, lessonId?: string} | null>(null)
 
-    const onReview = (item: Item, list: Item[], context?: string) => setReviewing({student: item, list, context})
-    // The comment button now lives on the specific file row that was clicked (see Table.tsx /
-    // SubmissionDetail.tsx's onComment), so there's no more guessing at "the first submission" -
-    // this row's own lessonId/badgeId are exactly what the comment should be scoped to. The modal
-    // defaults to Lesson mode whenever a lessonId is present (see LeaveCommentModal's target
-    // ternary), which is normally the case here since each row is one lesson's submitted file.
-    const onCommentClick = (userId: string, submission: SubmissionItem) => {
-        setCommenting({userId, badgeId: submission.badgeId, lessonId: submission.lessonId})
+    const onReview = (item: Item, list: Item[], context?: string, commentContext?: CommentContext) =>
+        setReviewing({student: item, list, context, commentContext})
+    // context is already computed by whichever tab/group rendered the clicked row (see Table.tsx's
+    // fileCommentContextFor - hideLesson tells us this whole table is already fixed to one specific
+    // lesson, or that each file should resolve its own lesson/badge instead) - nothing left to
+    // guess here.
+    const onCommentClick = (item: Item, context?: CommentContext) => {
+        setCommenting({userId: item.userId, badgeId: context?.badgeId, lessonId: context?.lessonId})
     }
     const onCommentSubmit = (comment: LeaveCommentPayload) => {
         props.onComment?.(comment)
@@ -406,32 +483,64 @@ export const FileLocker = (props: FileLockerProps) => {
         setReviewing({...reviewing, student: next})
     }
 
-    if (reviewing) {
-        return <SubmissionDetail
+    // Deep-link support: tab==="students" + focusId===a userId opens that student's full
+    // SubmissionDetail view directly, the direct answer to "quick, comprehensive view of one
+    // student's files" (e.g. a "View Files" link from that student's own profile page).
+    React.useEffect(() => {
+        if (tab !== "students") return
+        if (!props.focusId) return
+        if (consumedFocusId.current === props.focusId) return
+        const match = searchedStudents.find((s) => s.userId === props.focusId)
+        if (!match) return
+        consumedFocusId.current = props.focusId
+        onReview(match, searchedStudents)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tab, props.focusId, searchedStudents])
+
+    // LeaveCommentModal is rendered once, below, outside this branch - it needs to stay mounted
+    // regardless of whether SubmissionDetail or the tabbed view is showing, since a comment can be
+    // triggered from either one (see onComment wiring on SubmissionDetail above). Returning early
+    // here (as this used to) would unmount it the moment `reviewing` becomes truthy, which is
+    // exactly why SubmissionDetail's own Comment button silently did nothing before this fix.
+    const mainContent = reviewing ? (
+        <SubmissionDetail
             student={reviewing.student}
             context={reviewing.context}
+            hideLesson={!!reviewing.commentContext?.lessonId}
             onBack={() => setReviewing(null)}
             onNav={onNav}
             onBadgeClick={props.onBadgeClick}
             onLessonClick={props.onLessonClick}
             onPathwayClick={props.onPathwayClick}
-            onComment={onCommentClick}
+            onStudentClick={props.onStudentClick ? () => props.onStudentClick!(reviewing.student.userId) : undefined}
+            onComment={(context) => onCommentClick(reviewing.student, context)}
         />
-    }
-
-    return (
+    ) : (
         <div className="flex w-full flex-col gap-5 px-4 py-8">
-            <div className="flex items-start justify-between gap-4">
-                <div>
-                    <button onClick={props.onBackClick} className="flex items-center gap-1 text-xs font-bold text-sky-blue-400 hover:underline">
-                        <IconChevronLeft size={13} stroke={2.5}/>
-                        Back
-                    </button>
-                    <h1 className="mt-1.5 text-2xl font-extrabold tracking-tight text-dark-blue-400">{props.displayName || "File Locker"}</h1>
-                    <p className="mt-1 text-sm text-slate-500">{props.description || "No description"}</p>
-                </div>
-                {!props.trial && <SplitButton href={props.href} onCopyLinkClick={props.onCopyLinkClick} onExportDataClick={props.onExportDataClick}/>}
-            </div>
+            <PageHeader
+                onBackClick={props.onBackClick}
+                title={props.displayName || "File Locker"}
+                description={props.description}
+                actions={!props.trial && (
+                    <div className="flex items-center gap-3">
+                        {props.fetchedAtLabel && (
+                            <span className="text-[10px] font-semibold text-slate-400">{props.fetchedAtLabel}</span>
+                        )}
+                        {props.onRefresh && (
+                            <button
+                                type="button"
+                                onClick={props.onRefresh}
+                                disabled={props.refreshing}
+                                title="Refresh"
+                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 hover:bg-slate-50 hover:text-dark-blue-400 disabled:opacity-50"
+                            >
+                                <IconRefresh size={15} stroke={2} className={props.refreshing ? "animate-spin" : ""}/>
+                            </button>
+                        )}
+                        <SplitButton href={props.href} onCopyLinkClick={props.onCopyLinkClick} onExportDataClick={props.onExportDataClick}/>
+                    </div>
+                )}
+            />
 
             <StatsGroup data={props.trial ? [
                 {title: "LESSONS SUBMITTED", value: props.lessonsCompleted || 0},
@@ -494,6 +603,8 @@ export const FileLocker = (props: FileLockerProps) => {
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
+                    onStudentClick={props.onStudentClick}
+                    onOpenAccountPending={props.onOpenAccountPending ? (item) => props.onOpenAccountPending!(item.userId) : undefined}
                 />
             )}
             {!props.trial && tab === "pathways" && (
@@ -508,6 +619,7 @@ export const FileLocker = (props: FileLockerProps) => {
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
+                    focusId={props.focusId}
                 />
             )}
             {!props.trial && tab === "badges" && (
@@ -522,6 +634,7 @@ export const FileLocker = (props: FileLockerProps) => {
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
+                    focusId={props.focusId}
                 />
             )}
             {!props.trial && tab === "lessons" && (
@@ -537,9 +650,16 @@ export const FileLocker = (props: FileLockerProps) => {
                     onBadgeClick={props.onBadgeClick}
                     onLessonClick={props.onLessonClick}
                     onPathwayClick={props.onPathwayClick}
+                    focusId={props.focusId}
                 />
             )}
 
+        </div>
+    )
+
+    return (
+        <>
+            {mainContent}
             <LeaveCommentModal
                 opened={!!commenting}
                 onClose={() => setCommenting(null)}
@@ -552,6 +672,17 @@ export const FileLocker = (props: FileLockerProps) => {
                 initialBadgeId={commenting?.badgeId}
                 initialLessonId={commenting?.lessonId}
             />
-        </div>
+            {props.accountPendingModal && (
+                <AccountPendingModal
+                    opened={props.accountPendingModal.opened}
+                    onClose={props.accountPendingModal.onClose}
+                    loading={props.accountPendingModal.loading}
+                    name={props.accountPendingModal.name}
+                    email={props.accountPendingModal.email}
+                    credits={props.accountPendingModal.credits}
+                    onViewProfile={props.accountPendingModal.onViewProfile}
+                />
+            )}
+        </>
     )
 }

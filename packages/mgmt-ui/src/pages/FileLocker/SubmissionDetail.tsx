@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IconChevronLeft, IconChevronRight} from "@tabler/icons";
-import {Item, SubmissionItem} from "./Table";
+import {Item, fileCommentContextFor} from "./Table";
 import {Stack as FileStack} from "./FileStack";
 
 /**
@@ -14,7 +14,17 @@ export type SubmissionDetailProps = {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
-    onComment?: (userId: string, submission: SubmissionItem) => void
+    // Jumps from this student's identity block to their own full profile page - the same gap this
+    // session already closed on StudentBadge/StudentLesson/Pathway Overview's "By student" tab.
+    onStudentClick?: () => void
+    // True only when this whole review session was opened from By Lesson (already fixed to one
+    // lesson) - see fileCommentContextFor. Every other entry point (By Student, By Pathway, By
+    // Badge) resolves each file's own badgeId instead, so this is the one case worth naming.
+    hideLesson?: boolean
+    // Comment on a specific file within this student's submissions - each entry resolves its own
+    // badge (or lesson, if hideLesson) via fileCommentContextFor, not one shared context for the
+    // whole page, since a student/pathway review session can span more than one badge.
+    onComment?: (context?: {badgeId?: string, lessonId?: string}) => void
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -39,17 +49,35 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
             </div>
 
             <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                {student.avatar
-                    ? <img src={student.avatar} className="h-12 w-12 shrink-0 rounded-full object-cover" alt=""/>
-                    : <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-400 to-dark-blue-400 text-sm font-bold text-white">
-                        {initials(student.name)}
-                    </div>}
-                <div className="min-w-0 flex-1">
-                    <div className="text-lg font-extrabold text-dark-blue-400">{student.name}</div>
-                    <div className="mt-0.5 text-xs text-slate-400">
-                        {student.email}{props.context ? ` · ${props.context}` : ""}
-                    </div>
-                </div>
+                {props.onStudentClick ? (
+                    <button type="button" onClick={props.onStudentClick} className="group flex min-w-0 flex-1 items-center gap-4 text-left">
+                        {student.avatar
+                            ? <img src={student.avatar} className="h-12 w-12 shrink-0 rounded-full object-cover" alt=""/>
+                            : <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-400 to-dark-blue-400 text-sm font-bold text-white">
+                                {initials(student.name)}
+                            </div>}
+                        <div className="min-w-0 flex-1">
+                            <div className="text-lg font-extrabold text-dark-blue-400 group-hover:underline">{student.name}</div>
+                            <div className="mt-0.5 text-xs text-slate-400">
+                                {student.email}{props.context ? ` · ${props.context}` : ""}
+                            </div>
+                        </div>
+                    </button>
+                ) : (
+                    <>
+                        {student.avatar
+                            ? <img src={student.avatar} className="h-12 w-12 shrink-0 rounded-full object-cover" alt=""/>
+                            : <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-400 to-dark-blue-400 text-sm font-bold text-white">
+                                {initials(student.name)}
+                            </div>}
+                        <div className="min-w-0 flex-1">
+                            <div className="text-lg font-extrabold text-dark-blue-400">{student.name}</div>
+                            <div className="mt-0.5 text-xs text-slate-400">
+                                {student.email}{props.context ? ` · ${props.context}` : ""}
+                            </div>
+                        </div>
+                    </>
+                )}
                 <div className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-500">
                     {student.submissions.length} file{student.submissions.length === 1 ? "" : "s"}
                 </div>
@@ -63,10 +91,7 @@ export function SubmissionDetail(props: SubmissionDetailProps) {
                         onBadgeClick={props.onBadgeClick}
                         onLessonClick={props.onLessonClick}
                         onPathwayClick={props.onPathwayClick}
-                        // FileStack hands back the exact same row object it was given (student.submissions,
-                        // typed as SubmissionItem[] here) unmodified - the cast just recovers that type across
-                        // FileStack's own looser local Item shape.
-                        onComment={props.onComment ? (sub) => props.onComment!(student.userId, sub as SubmissionItem) : undefined}
+                        onComment={props.onComment ? (sub) => props.onComment!(fileCommentContextFor(props.hideLesson, sub)) : undefined}
                     />
                 </div>
             </div>

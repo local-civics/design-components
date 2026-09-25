@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconDownload, IconMessageCircle2} from "@tabler/icons";
+import {IconDownload, IconMessageCircle} from "@tabler/icons";
 
 export interface Item {
     link: string
@@ -20,7 +20,10 @@ export type StackProps = {
     onBadgeClick?: (badgeId: string) => void
     onLessonClick?: (lessonId: string) => void
     onPathwayClick?: (pathwayId: string) => void
-    onComment?: (row: Item) => void
+    // Comment scoped to this exact entry - the caller decides what "scoped" means (Table.tsx reads
+    // hideBadge/hideLesson to pre-fill the specific badge/lesson; SubmissionDetail uses whatever
+    // fixed context it was opened with), FileStack itself just reports which row was clicked.
+    onComment?: (item: Item) => void
 }
 
 /**
@@ -102,7 +105,7 @@ export function Stack(props: StackProps) {
                                     onClick={() => onComment(row)}
                                     className="flex items-center gap-1 rounded-md border border-slate-200 px-2.5 py-1.5 text-[11px] font-bold text-slate-600 hover:bg-slate-50"
                                 >
-                                    <IconMessageCircle2 size={12} stroke={2}/>
+                                    <IconMessageCircle size={12} stroke={2}/>
                                     Comment
                                 </button>
                             )}
