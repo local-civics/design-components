@@ -15,6 +15,13 @@ export type SubmissionReviewHeaderProps = {
   // or mislabeled link.
   onViewOverview?: () => void;
   overviewLabel?: string;
+  // A second, generic secondary action slot alongside onViewOverview - e.g. StudentLesson's "View
+  // Student Badge" (jumping to the lesson's owning badge, distinct from both the shell's own
+  // smartBack Back button and the aggregate onViewOverview link). Kept generic rather than
+  // lesson/badge-specific since this header is shared by both StudentBadge and StudentLesson, and
+  // only one of them currently needs it. Same "only render when both are supplied" gating.
+  onSecondaryAction?: () => void;
+  secondaryActionLabel?: string;
 };
 
 const initialsFor = (name?: string, email?: string): string => {
@@ -53,6 +60,15 @@ export const SubmissionReviewHeader = (props: SubmissionReviewHeaderProps) => {
         <div className="truncate text-sm font-extrabold text-dark-blue-400">{props.name || props.email}</div>
         {showEmailLine && <div className="truncate text-xs text-slate-400">{props.email}</div>}
       </div>
+      {props.onSecondaryAction && props.secondaryActionLabel && (
+        <button
+          type="button"
+          onClick={props.onSecondaryAction}
+          className="shrink-0 text-xs font-bold text-dark-blue-400 hover:underline"
+        >
+          {props.secondaryActionLabel} →
+        </button>
+      )}
       {props.onViewOverview && props.overviewLabel && (
         <button
           type="button"
