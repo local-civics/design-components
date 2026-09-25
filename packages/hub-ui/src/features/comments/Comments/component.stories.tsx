@@ -28,7 +28,7 @@ Component.args = {
   comments: [
     {
       commentId: "c1",
-      authorName: "Your educator",
+      commenterName: "Your educator",
       badgeId: "b1",
       badgeName: "Service-Learning Project",
       requireValidation: true,
@@ -37,7 +37,7 @@ Component.args = {
     },
     {
       commentId: "c2",
-      authorName: "Your educator",
+      commenterName: "Your educator",
       badgeId: "b2",
       badgeName: "Political Party Project",
       requireValidation: true,
@@ -47,7 +47,7 @@ Component.args = {
     },
     {
       commentId: "c3",
-      authorName: "Your educator",
+      commenterName: "Your educator",
       lessonId: "l1",
       lessonName: "Complete a Service-Learning Project",
       requireValidation: false,
@@ -56,7 +56,7 @@ Component.args = {
     },
     {
       commentId: "c4",
-      authorName: "Your educator",
+      commenterName: "Your educator",
       requireValidation: false,
       commentText: "Keep up the good work this semester.",
       createdAt: new Date().toISOString(),
