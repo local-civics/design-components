@@ -36,8 +36,10 @@ Empty.args = {
 };
 
 /**
- * A resolved comment, an unresolved one requiring validation, and a just-added (isLocal) one -
- * confirms the "Mark Resolved" action correctly disappears only for the local one.
+ * A resolved comment, an unresolved one requiring validation, a resolved-but-needs-resubmission
+ * one, and a just-added (isLocal) one - confirms the "Mark Resolved" action correctly disappears
+ * for both the local one and the already-resolved ones, and that "Needs Submission" is visually
+ * distinct from a plain "Resolved".
  */
 export const Mock: Story<SubmissionCommentPanelProps> = Template.bind({});
 Mock.args = {
@@ -63,6 +65,15 @@ Mock.args = {
       resolvedAt: "2026-09-14T15:00:00Z",
       commenterName: "Ms. Rivera",
       createdAt: "2026-09-13T11:00:00Z",
+    },
+    {
+      commentId: "c4",
+      commentText: "Resolved this, but the badge itself got unsubmitted and still needs redoing.",
+      requireValidation: true,
+      resolvedAt: "2026-09-16T10:00:00Z",
+      needsSubmission: true,
+      commenterName: "Mr. Alvarez",
+      createdAt: "2026-09-15T08:00:00Z",
     },
     {
       commentId: "local-1",

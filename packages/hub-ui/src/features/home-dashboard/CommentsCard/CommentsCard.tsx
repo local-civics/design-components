@@ -23,6 +23,13 @@ export type CommentItem = {
   badgeName?: string;
   lessonId?: string;
   lessonName?: string;
+  // True once the comment itself has been resolved but the badge/lesson it's tied to is still
+  // unsubmitted - i.e. addComment's validation cascade pulled credit for it and nothing has been
+  // resubmitted since (see hub-ui's Comments.tsx / useOrganization.ts's getMyComments(), where
+  // this is computed). Folded into the "Needs Attention" stat below rather than given its own
+  // stat cell - both represent "the student still has something to do here," and a 4th cell would
+  // widen this card's own grid for a distinction the per-row pill already makes clearly.
+  needsSubmission?: boolean;
 };
 
 /**
@@ -58,8 +65,12 @@ const formatDate = (value?: string) => {
 export const CommentsCard = (props: CommentsCardProps) => {
   const comments = props.comments || [];
   const total = comments.length;
-  const needsAttention = comments.filter((c) => c.requireValidation && !c.resolvedAt).length;
-  const resolved = comments.filter((c) => !!c.resolvedAt).length;
+  // "Needs attention" covers both not-yet-resolved comments and resolved-but-needsSubmission ones -
+  // in both cases the student still has something outstanding, just at a different stage. Kept as
+  // one bucket (not a 4th stat cell) to match this card's existing 3-column layout; the per-row
+  // pill below still distinguishes the two explicitly.
+  const needsAttention = comments.filter((c) => c.requireValidation && (!c.resolvedAt || c.needsSubmission)).length;
+  const resolved = comments.filter((c) => !!c.resolvedAt && !c.needsSubmission).length;
   const recent = [...comments]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, RECENT_COUNT);
@@ -165,10 +176,12 @@ const CommentRow = (props: {
       {c.requireValidation && (
         <span
           className={`mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-            resolved ? "bg-mint-100 text-dark-blue-400" : "bg-gold-100 text-dark-blue-400"
+            !resolved ? "bg-gold-100 text-dark-blue-400"
+            : c.needsSubmission ? "bg-sky-blue-400/15 text-dark-blue-400"
+            : "bg-mint-100 text-dark-blue-400"
           }`}
         >
-          {resolved ? "Resolved" : "Needs Validation"}
+          {!resolved ? "Needs Validation" : c.needsSubmission ? "Needs Submission" : "Resolved"}
         </span>
       )}
     </div>
