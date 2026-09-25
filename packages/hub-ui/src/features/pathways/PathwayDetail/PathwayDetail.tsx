@@ -77,7 +77,8 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
   // level, but since every badge in the pathway is comprehensively tagged with the root too, an
   // "All" pill and a pill for the root category would always filter to the identical badge set -
   // dropping the root from the pill row removes that redundancy (mirrors the same fix already
-  // applied to mgmt-ui's Pathway BadgeTable grouping).
+  // applied to mgmt-ui's Pathway BadgeTable grouping). The root is excluded from the pills ONLY -
+  // its progress bar (the pathway's overall point total) stays, matching PathwayTranscript.
   const rootCategoryIds = new Set(
     (props.allCategories || []).filter((c) => !c.parentCategoryId).map((c) => c.categoryId)
   );
@@ -95,9 +96,10 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
     }
     return depth;
   };
-  const categoryIds = Object.keys(props.rawCriteria || {})
-    .filter((id) => !rootCategoryIds.has(id))
-    .sort((a, b) => depthOf(a) - depthOf(b));
+  // Every criteria category, root first - drives the progress bars.
+  const barCategoryIds = Object.keys(props.rawCriteria || {}).sort((a, b) => depthOf(a) - depthOf(b));
+  // Same list minus the root - drives the filter pills (see rootCategoryIds above).
+  const categoryIds = barCategoryIds.filter((id) => !rootCategoryIds.has(id));
   const [catFilter, setCatFilter] = React.useState<string | null>(null);
   const [categoriesOpen, setCategoriesOpen] = React.useState(false);
   const filteredBadges = catFilter ? badges.filter((b) => b.categories?.includes(catFilter)) : badges;
@@ -152,9 +154,9 @@ export const PathwayDetail = (props: PathwayDetailProps) => {
           </button>
         )}
 
-        {categoryIds.length > 0 && (
+        {barCategoryIds.length > 0 && (
           <div className="mt-4 flex flex-col gap-3">
-            {categoryIds.map((id, i) => {
+            {barCategoryIds.map((id, i) => {
               const accent = ACCENT_ORDER[i % ACCENT_ORDER.length];
               const label = props.categoryNames?.[id] || id;
               const max = props.rawCriteria?.[id] || 0;
