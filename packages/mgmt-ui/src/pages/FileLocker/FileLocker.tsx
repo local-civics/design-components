@@ -511,6 +511,7 @@ export const FileLocker = (props: FileLockerProps) => {
             onBadgeClick={props.onBadgeClick}
             onLessonClick={props.onLessonClick}
             onPathwayClick={props.onPathwayClick}
+            onStudentClick={props.onStudentClick ? () => props.onStudentClick!(reviewing.student.userId) : undefined}
             onComment={(context) => onCommentClick(reviewing.student, context)}
         />
     ) : (
