@@ -26,6 +26,10 @@ export type BadgeClass = {
  */
 export type BadgeProps = {
     loading: boolean
+    // Distinct from `loading` - that flips false once displayName/description resolve, well before
+    // the students/lessons fan-out this page's own export reads has finished. Gates the Export
+    // button specifically, not the page's own loading overlay.
+    exportDisabled?: boolean
     displayName: string,
     description: string
     imageURL?: string
@@ -83,6 +87,7 @@ export const Badge = (props: BadgeProps) => {
                 actions={!props.trial && (
                     <SplitButton
                         href={props.href}
+                        exportDisabled={props.exportDisabled}
                         onCopyLinkClick={props.onCopyLinkClick}
                         onExportDataClick={props.onExportDataClick}
                     />

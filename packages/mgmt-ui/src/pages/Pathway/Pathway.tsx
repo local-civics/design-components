@@ -28,6 +28,10 @@ export type PathwayClass = {
  */
 export type PathwayProps = {
     loading: boolean
+    // Distinct from `loading` - that flips false once title/description resolve, well before the
+    // students/badges/criteria fan-out this page's own export reads has finished. Gates the Export
+    // button specifically, not the page's own loading overlay.
+    exportDisabled?: boolean
     title: string,
     description: string
     imageURL?: string
@@ -124,6 +128,7 @@ export const Pathway = (props: PathwayProps) => {
                 actions={!props.trial && (
                     <SplitButton
                         href={props.href}
+                        exportDisabled={props.exportDisabled}
                         onCopyLinkClick={props.onCopyLinkClick}
                         onExportDataClick={props.onExportDataClick}
                     />
