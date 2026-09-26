@@ -21,8 +21,8 @@ const Template: Story<CommentsCardProps> = (args) => (
 
 /**
  * A mix of resolved, needing-validation, needing-resubmission, and plain comments, spanning both
- * badges and lessons - exercises all 3 stat cells (including "Needs Attention" correctly counting
- * the needsSubmission one alongside the not-yet-resolved one), all 3 pill states, both type pills,
+ * badges and lessons - exercises all 3 stat cells (Needs validation / Needs submission / Resolved),
+ * all 3 pill states, both type pills,
  * and the recent-comment sort order.
  */
 export const Component: Story<CommentsCardProps> = Template.bind({});

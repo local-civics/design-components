@@ -221,8 +221,11 @@ export const CommentCenter = (props: CommentCenterProps) => {
                                 )}
                             </div>
                             {group.items.map((item, i) => {
-                                const materialName = tab === "students" ? (item.badgeName || item.lessonName || "General") : item.recipientName
-                                const materialType = tab === "students" ? (item.badgeId ? "Badge" : item.lessonId ? "Lesson" : undefined) : undefined
+                                // Lesson first: a validation-required lesson comment also names its
+                                // badge (so study can pull that badge's credit), but it's still a
+                                // comment about the lesson.
+                                const materialName = tab === "students" ? (item.lessonName || item.badgeName || "General") : item.recipientName
+                                const materialType = tab === "students" ? (item.lessonId ? "Lesson" : item.badgeId ? "Badge" : undefined) : undefined
                                 return (
                                 <div
                                     key={item.commentId}
@@ -258,8 +261,8 @@ export const CommentCenter = (props: CommentCenterProps) => {
                                     <div className="truncate text-[11px] text-slate-400">{formatDate(item.createdAt)}</div>
                                     <div className="flex justify-center">
                                         {item.requireValidation && (
-                                            <span className="rounded-full bg-gold-400/15 px-2 py-0.5 text-[10px] font-bold text-dark-blue-400">
-                                                Requires validation
+                                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold text-dark-blue-400 ${item.resolvedAt ? "bg-mint-400/15" : "bg-gold-400/15"}`}>
+                                                {item.resolvedAt ? "Resolved" : "Needs validation"}
                                             </span>
                                         )}
                                     </div>
