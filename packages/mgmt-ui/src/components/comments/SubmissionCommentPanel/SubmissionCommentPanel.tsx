@@ -32,6 +32,10 @@ export type SubmissionComment = {
     // this is computed). Distinct from "not yet resolved" and "resolved, nothing left to do" -
     // without it, a badge a student still needs to redo would read as plain "Resolved" here.
     needsSubmission?: boolean
+    // Optional context line for a comment that isn't about this page's own item - e.g. a lesson
+    // comment shown on its badge's page ("Lesson: Social Studies Courses"). Omitted for the page's
+    // own comments.
+    targetLabel?: string
 }
 
 /**
@@ -137,6 +141,9 @@ export function SubmissionCommentPanel(props: SubmissionCommentPanelProps) {
                                 <div className="text-xs font-bold text-dark-blue-400">{c.commenterName || "Educator"}</div>
                                 <div className="text-[10.5px] text-slate-400">{formatDate(c.createdAt)}</div>
                             </div>
+                            {c.targetLabel && (
+                                <div className="mt-1 text-[11px] font-bold text-slate-400">{c.targetLabel}</div>
+                            )}
                             <p className="mt-1.5 text-sm text-slate-600">{c.commentText}</p>
                             {c.requireValidation && (
                                 <div className="mt-2.5 flex items-center gap-2">
@@ -148,7 +155,7 @@ export function SubmissionCommentPanel(props: SubmissionCommentPanelProps) {
                                         : c.needsSubmission ? "bg-sky-blue-400/15 text-dark-blue-400"
                                         : "bg-mint-100 text-dark-blue-400"
                                     }`}>
-                                        {!resolved ? "Needs Validation" : c.needsSubmission ? "Needs Submission" : "Resolved"}
+                                        {!resolved ? "Needs validation" : c.needsSubmission ? "Needs submission" : "Resolved"}
                                     </span>
                                     {!resolved && !c.isLocal && props.onResolve && (
                                         <button

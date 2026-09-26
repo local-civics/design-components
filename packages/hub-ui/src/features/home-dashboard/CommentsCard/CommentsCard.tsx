@@ -25,10 +25,8 @@ export type CommentItem = {
   lessonName?: string;
   // True once the comment itself has been resolved but the badge/lesson it's tied to is still
   // unsubmitted - i.e. addComment's validation cascade pulled credit for it and nothing has been
-  // resubmitted since (see hub-ui's Comments.tsx / useOrganization.ts's getMyComments(), where
-  // this is computed). Folded into the "Needs Attention" stat below rather than given its own
-  // stat cell - both represent "the student still has something to do here," and a 4th cell would
-  // widen this card's own grid for a distinction the per-row pill already makes clearly.
+  // resubmitted since (computed in hub's hooks/comments.ts via utils/commentStatus.ts). Counted in
+  // its own "Needs submission" stat below.
   needsSubmission?: boolean;
 };
 
@@ -55,8 +53,8 @@ const formatDate = (value?: string) => {
 /**
  * My Profile's "Comments" summary card - a presentational sibling to PathwaysCard/BadgesCard.
  * Gives a student a passive, at-a-glance view of what's been said about their own badges/lessons
- * without having to visit the standalone /comments page first: 3 status-dimension stats (Total /
- * Needs Attention / Resolved), then the most recent comments themselves, each with a hyperlink
+ * without having to visit the standalone /comments page first: 3 status stats (Needs validation /
+ * Needs submission / Resolved), then the most recent comments themselves, each with a hyperlink
  * straight to the badge/lesson it concerns. "View All" is the same destination the sidebar's own
  * Comments tab already points at - this card is a summary of that page, not a replacement for it.
  * @param props
@@ -64,13 +62,13 @@ const formatDate = (value?: string) => {
  */
 export const CommentsCard = (props: CommentsCardProps) => {
   const comments = props.comments || [];
-  const total = comments.length;
-  // "Needs attention" covers both not-yet-resolved comments and resolved-but-needsSubmission ones -
-  // in both cases the student still has something outstanding, just at a different stage. Kept as
-  // one bucket (not a 4th stat cell) to match this card's existing 3-column layout; the per-row
-  // pill below still distinguishes the two explicitly.
-  const needsAttention = comments.filter((c) => c.requireValidation && (!c.resolvedAt || c.needsSubmission)).length;
+  // The same three states, with the same labels, as every other comment surface: "Needs
+  // validation" (not yet resolved), "Needs submission" (resolved, but the work it named is still
+  // unsubmitted), "Resolved". The header pill counts the first two - everything still open.
+  const needsValidation = comments.filter((c) => c.requireValidation && !c.resolvedAt).length;
+  const needsSubmission = comments.filter((c) => c.requireValidation && !!c.resolvedAt && c.needsSubmission).length;
   const resolved = comments.filter((c) => !!c.resolvedAt && !c.needsSubmission).length;
+  const open = needsValidation + needsSubmission;
   const recent = [...comments]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, RECENT_COUNT);
@@ -84,7 +82,7 @@ export const CommentsCard = (props: CommentsCardProps) => {
             <IconMessageCircle size={18} stroke={2} className="text-mint-400" />
           </div>
           <div className="text-sm font-bold text-dark-blue-400">Comments</div>
-          {needsAttention > 0 && <Pill label={`${needsAttention} need attention`} accent="gold" />}
+          {open > 0 && <Pill label={`${open} open`} accent="gold" />}
         </div>
         {props.onViewAll && (
           <button
@@ -98,8 +96,8 @@ export const CommentsCard = (props: CommentsCardProps) => {
       </div>
 
       <div className="grid grid-cols-3 gap-2 border-b border-slate-100 px-4 py-3">
-        <StatCell label="Total" value={total} />
-        <StatCell label="Needs Attention" value={needsAttention} />
+        <StatCell label="Needs validation" value={needsValidation} />
+        <StatCell label="Needs submission" value={needsSubmission} />
         <StatCell label="Resolved" value={resolved} />
       </div>
 
@@ -138,11 +136,13 @@ const CommentRow = (props: {
 }) => {
   const c = props.comment;
   const resolved = !!c.resolvedAt;
-  const materialLabel = c.badgeName || c.lessonName;
-  const onClick = c.badgeId && props.onBadgeClick
-    ? () => props.onBadgeClick!(c.badgeId as string)
-    : c.lessonId && props.onLessonClick
+  // Lesson first: a validation-required lesson comment also names its badge (so study can pull that
+  // badge's credit), but it's still a comment about the lesson.
+  const materialLabel = c.lessonName || c.badgeName;
+  const onClick = c.lessonId && props.onLessonClick
     ? () => props.onLessonClick!(c.lessonId as string)
+    : c.badgeId && props.onBadgeClick
+    ? () => props.onBadgeClick!(c.badgeId as string)
     : undefined;
 
   return (
@@ -163,10 +163,10 @@ const CommentRow = (props: {
           {(c.badgeId || c.lessonId) && (
             <span
               className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-                c.badgeId ? "bg-mint-400/15 text-dark-blue-400" : "bg-gold-400/15 text-dark-blue-400"
+                c.lessonId ? "bg-gold-400/15 text-dark-blue-400" : "bg-mint-400/15 text-dark-blue-400"
               }`}
             >
-              {c.badgeId ? "Badge" : "Lesson"}
+              {c.lessonId ? "Lesson" : "Badge"}
             </span>
           )}
         </div>
@@ -181,7 +181,7 @@ const CommentRow = (props: {
             : "bg-mint-100 text-dark-blue-400"
           }`}
         >
-          {!resolved ? "Needs Validation" : c.needsSubmission ? "Needs Submission" : "Resolved"}
+          {!resolved ? "Needs validation" : c.needsSubmission ? "Needs submission" : "Resolved"}
         </span>
       )}
     </div>

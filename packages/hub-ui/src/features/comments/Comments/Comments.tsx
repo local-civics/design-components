@@ -89,17 +89,19 @@ const CommentCard = (props: {
   onLessonClick?: (lessonId: string) => void;
 }) => {
   const { comment } = props;
-  const target = comment.badgeId
-    ? {
-        label: comment.badgeName || "Badge",
-        kind: "badge" as const,
-        onClick: props.onBadgeClick ? () => props.onBadgeClick!(comment.badgeId as string) : undefined,
-      }
-    : comment.lessonId
+  // Lesson first: a validation-required lesson comment also names its badge (so study can pull that
+  // badge's credit), but it's still a comment about the lesson.
+  const target = comment.lessonId
     ? {
         label: comment.lessonName || "Lesson",
         kind: "lesson" as const,
         onClick: props.onLessonClick ? () => props.onLessonClick!(comment.lessonId as string) : undefined,
+      }
+    : comment.badgeId
+    ? {
+        label: comment.badgeName || "Badge",
+        kind: "badge" as const,
+        onClick: props.onBadgeClick ? () => props.onBadgeClick!(comment.badgeId as string) : undefined,
       }
     : { label: "General", kind: "general" as const, onClick: undefined };
 
@@ -128,7 +130,7 @@ const CommentCard = (props: {
         {comment.requireValidation &&
           (!comment.resolvedAt ? (
             <span className="shrink-0 rounded-full bg-gold-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
-              Needs attention
+              Needs validation
             </span>
           ) : comment.needsSubmission ? (
             <span className="shrink-0 rounded-full bg-sky-blue-400/15 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">

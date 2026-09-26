@@ -76,6 +76,14 @@ Mock.args = {
       createdAt: "2026-09-15T08:00:00Z",
     },
     {
+      commentId: "c5",
+      commentText: "A lesson comment shown on its badge's page - marked with the lesson it's about.",
+      requireValidation: true,
+      commenterName: "Ms. Rivera",
+      createdAt: "2026-09-17T09:00:00Z",
+      targetLabel: "Lesson: Local Government 101",
+    },
+    {
       commentId: "local-1",
       commentText: "Just left this - no real commentId yet, so Mark Resolved should be hidden.",
       requireValidation: true,
