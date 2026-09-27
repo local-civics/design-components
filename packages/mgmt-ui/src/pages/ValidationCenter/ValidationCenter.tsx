@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {IconCheck} from "@tabler/icons";
-import {Checkbox} from "@mantine/core";
+import {Checkbox, Text} from "@mantine/core";
+import {openConfirmModal} from "@mantine/modals";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 
 /**
@@ -30,10 +31,10 @@ export type ValidationCenterProps = {
     students: ValidationCenterStudent[]
     onClassChange: (classId: string) => void
     onBadgeChange: (badgeId: string) => void
-    // Validates credit for every currently-checked student against the currently selected badge.
-    // The caller owns the actual API call and, per spec, reloads the page afterward to reflect the
-    // new state - this component only ever hands back the selected student ids.
-    onSubmit: (userIds: string[]) => void
+    // Validates credit for every currently-checked student against the currently selected badge,
+    // after the educator confirms. The caller owns the API call and refreshes the roster itself.
+    // Resolve to true on success to clear the checked boxes; false (or a void return) leaves them.
+    onSubmit: (userIds: string[]) => void | Promise<boolean | void>
 }
 
 const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
@@ -57,8 +58,36 @@ export const ValidationCenter = (props: ValidationCenterProps) => {
     }, [props.classId, props.badgeId])
 
     const toggle = (userId: string, checked: boolean) => setSelected((prev) => ({...prev, [userId]: checked}))
-    const selectedIds = Object.keys(selected).filter((userId) => selected[userId])
     const eligible = props.students.filter((s) => !s.hasCredit)
+    // Only students who can still receive credit count as selected - a checked student who has
+    // since been credited (e.g. after the roster refreshes) drops out instead of being re-sent,
+    // which the backend would otherwise skip without saying so.
+    const eligibleIds = new Set(eligible.map((s) => s.userId))
+    const selectedIds = Object.keys(selected).filter((userId) => selected[userId] && eligibleIds.has(userId))
+    const badgeName = props.badges.find((b) => b.badgeId === props.badgeId)?.displayName || "this badge"
+
+    // Crediting bypasses lesson/criteria requirements and open comments, and can't be undone from
+    // here, so it gets an explicit confirmation step like the other destructive actions.
+    const onConfirmSubmit = () => {
+        const userIds = selectedIds
+        const count = userIds.length
+        openConfirmModal({
+            title: `Credit ${count} student${count === 1 ? "" : "s"} for "${badgeName}"?`,
+            centered: true,
+            children: (
+                <Text size="sm">
+                    They'll get credit for this badge even if they haven't finished its lessons or have
+                    open comments on it. Credit can't be removed once it's given.
+                </Text>
+            ),
+            labels: { confirm: 'Give Credit', cancel: "Cancel" },
+            onConfirm: () => {
+                Promise.resolve(props.onSubmit(userIds))
+                    .then((ok) => { if (ok === true) setSelected({}) })
+                    .catch(() => {})
+            },
+        })
+    }
 
     const onSelectAll = (checked: boolean) => {
         const next: Record<string, boolean> = {}
@@ -147,7 +176,7 @@ export const ValidationCenter = (props: ValidationCenterProps) => {
             {props.badgeId && props.students.length > 0 && (
                 <div className="flex justify-end">
                     <button
-                        onClick={() => props.onSubmit(selectedIds)}
+                        onClick={onConfirmSubmit}
                         disabled={selectedIds.length === 0}
                         className="rounded-lg bg-dark-blue-400 px-5 py-2.5 text-xs font-bold text-white disabled:opacity-40"
                     >
