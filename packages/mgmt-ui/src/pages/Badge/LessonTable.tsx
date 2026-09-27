@@ -25,7 +25,11 @@ export type TableData = {
 /**
  * TableProps
  */
-export type TableProps = TableData
+export type TableProps = TableData & {
+    // True while the per-student activity fetch is still running - percentageCompletion reads 0
+    // until then, so the column shows a pulse instead of a misleading "0%".
+    completionLoading?: boolean
+}
 
 /**
  * Table
@@ -58,7 +62,11 @@ export function Table(props: TableProps) {
                     className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm hover:bg-slate-50"
                 >
                     <div className="min-w-0 flex-1 text-sm font-bold text-dark-blue-400">{row.lessonName}</div>
-                    <div className="w-36 shrink-0 text-right text-xs text-slate-500">{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</div>
+                    <div className="w-36 shrink-0 text-right text-xs text-slate-500">
+                        {props.completionLoading
+                            ? <span className="inline-block h-3 w-8 animate-pulse rounded bg-slate-200 align-middle"><span className="sr-only">Loading</span></span>
+                            : `${Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%`}
+                    </div>
                 </Link>
             ))}
         </div>

@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 interface StatsGroupProps {
-    data: { title: string; value: number, unit?: string}[];
+    // `loading` swaps the number for a pulse bar - for a stat whose value comes from a later fetch
+    // than the page itself, so it doesn't read as a real "0" in the meantime.
+    data: { title: string; value: number, unit?: string, loading?: boolean}[];
     footer?: React.ReactNode
 }
 
@@ -31,8 +33,16 @@ export const StatsGroup = ({ data, footer }: StatsGroupProps) => {
         return (
             <div key={stat.title}>
                 <div className="text-3xl font-black text-white">
-                    {safeValue.toLocaleString()}
-                    {stat.unit}
+                    {stat.loading ? (
+                        <span className="inline-block h-8 w-14 animate-pulse rounded bg-white/20 align-middle">
+                            <span className="sr-only">Loading</span>
+                        </span>
+                    ) : (
+                        <>
+                            {safeValue.toLocaleString()}
+                            {stat.unit}
+                        </>
+                    )}
                 </div>
                 <div className="mt-1.5 text-[11px] font-bold uppercase tracking-wide text-white/70">{stat.title}</div>
             </div>

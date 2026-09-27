@@ -24,3 +24,4 @@ export * from './pages/FileLocker/FileLocker';
 export * from './pages/CommentCenter/CommentCenter';
 export * from './pages/ValidationCenter/ValidationCenter';
 export * from './components/comments/SubmissionCommentPanel/SubmissionCommentPanel';
+export * from './components/data/StudentStatusFilter/StudentStatusFilter';

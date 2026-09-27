@@ -2,6 +2,7 @@ import * as React from 'react';
 import {IconChevronDown} from '@tabler/icons';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
+import {StudentNameCell} from "../../components/data/StudentNameCell/StudentNameCell";
 import {Stack as LessonStack, Item as LessonItem} from "./LessonStack";
 import {useSortableData} from "../../utils/useSortableData";
 
@@ -14,6 +15,9 @@ export interface Item {
     name: string
     email: string
     isComplete?: boolean
+    // True once any of this badge's lessons has answers or has been finished. When supplied, the
+    // status pill has three states (Complete / In progress / Not started) instead of two.
+    isStarted?: boolean
     lessons: LessonItem[]
 }
 
@@ -31,6 +35,8 @@ export type TableData = {
 export type TableProps = TableData & {
     // Forwarded to every row's nested LessonStack - see Pathway/BadgeStack.tsx's `state` field.
     linkState?: any
+    // Jumps to this student's own profile - see Pathway/Table.tsx's identical field.
+    onStudentClick?: (userId: string) => void
 }
 
 /**
@@ -44,7 +50,7 @@ export function Table(props: TableProps) {
     const preparedItems = React.useMemo(() => {
         return props.items.map(item => ({
             ...item,
-            status: item.isComplete ? 1 : 0,
+            status: item.isComplete ? 2 : (item.isStarted ? 1 : 0),
         }));
     }, [props.items]);
 
@@ -69,28 +75,18 @@ export function Table(props: TableProps) {
 
             {sortedItems.map((row) => {
                 const isOpen = !!expanded[row.userId]
-                const initials = (row.name?.[0] || row.email[0] || "?").toUpperCase()
                 return (
                     <div key={row.userId} className="rounded-xl border border-slate-200 bg-white shadow-sm">
                         <div
                             onClick={() => setExpanded({...expanded, [row.userId]: !isOpen})}
                             className="flex cursor-pointer items-center gap-4 p-4"
                         >
-                            <div className="flex min-w-0 flex-1 items-center gap-3">
-                                {row.avatar
-                                    ? <img src={row.avatar} className="h-9 w-9 shrink-0 rounded-full object-cover" alt="" />
-                                    : <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-xs font-bold text-dark-blue-400">{initials}</div>
-                                }
-                                <div className="min-w-0">
-                                    <div className="truncate text-sm font-bold text-dark-blue-400">{row.name}</div>
-                                    <div className="truncate text-xs text-slate-400">{row.email}</div>
-                                </div>
-                            </div>
+                            <StudentNameCell userId={row.userId} name={row.name} email={row.email} avatar={row.avatar} onStudentClick={props.onStudentClick} />
                             <div className="w-28 shrink-0 text-center">
-                                {row.isComplete
-                                    ? <span className="rounded-full bg-mint-100 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">Complete</span>
-                                    : <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500">Incomplete</span>
-                                }
+                                {row.isComplete && <span className="rounded-full bg-mint-100 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">Complete</span>}
+                                {!row.isComplete && row.isStarted === undefined && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500">Incomplete</span>}
+                                {!row.isComplete && row.isStarted === false && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500">Not started</span>}
+                                {!row.isComplete && row.isStarted === true && <span className="rounded-full bg-gold-100 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">In progress</span>}
                             </div>
                             <IconChevronDown size={15} stroke={2.3} className={`shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}/>
                         </div>

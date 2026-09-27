@@ -2,6 +2,7 @@ import {IconAlbum, IconCategory2} from "@tabler/icons";
 import {useState} from "react";
 import * as React from 'react';
 import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
+import {StudentStatusFilter, StudentStatusFilterBar, matchesStudentStatus} from "../../components/data/StudentStatusFilter/StudentStatusFilter";
 import {PageHeader, PageHeaderBreadcrumbSegment} from "../../components/navigation/PageHeader/PageHeader";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
@@ -11,6 +12,11 @@ import {Table as LessonTable, Item as LessonItem} from "./LessonTable"
  * BadgeUserItem
  */
 export type BadgeUserItem = Item
+
+/**
+ * BadgeStudentStatusFilter - an alias of the shared StudentStatusFilter, matching Lesson's.
+ */
+export type BadgeStudentStatusFilter = StudentStatusFilter
 
 /**
  * BadgeClass
@@ -30,6 +36,9 @@ export type BadgeProps = {
     // the students/lessons fan-out this page's own export reads has finished. Gates the Export
     // button specifically, not the page's own loading overlay.
     exportDisabled?: boolean
+    // True while that same second fetch runs - drives the pulse placeholders on the completion stat
+    // and the lesson completion column, and the "By student" table's "Loading…" banner.
+    activityLoading?: boolean
     displayName: string,
     description: string
     imageURL?: string
@@ -45,6 +54,12 @@ export type BadgeProps = {
     breadcrumb?: PageHeaderBreadcrumbSegment[]
     // Forwarded into the "By student" tab's Table -> LessonStack - see Pathway.tsx's identical field.
     linkState?: any
+    // Controlled, like Lesson's: the caller also uses this value to narrow the Prev/Next grading
+    // queue for the "By student" rows. Defaults to "all" when omitted.
+    statusFilter?: BadgeStudentStatusFilter
+    onStatusFilterChange?: (filter: BadgeStudentStatusFilter) => void
+    // Jumps to a student's own profile from the "By student" tab - see Pathway.tsx's identical field.
+    onStudentClick?: (userId: string) => void
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -68,9 +83,18 @@ const TABS = [
  */
 export const Badge = (props: BadgeProps) => {
     const [tab, setTab] = useState("lessons")
+    const [search, setSearch] = useState("")
+    const statusFilter = props.statusFilter || "all"
+    const activityLoading = !!props.activityLoading
 
     const numberOfStudents = props.students.length
     const numberOfBadges = numberOfStudents > 0 ? props.students.filter(u => u.isComplete).length : 0
+    // The completion stat above always counts the full roster; only the table below is narrowed.
+    // Search is local (a "find this student" convenience) and doesn't shrink the grading queue.
+    const searchLower = search.trim().toLowerCase()
+    const visibleStudents = props.students.filter((s) =>
+        matchesStudentStatus(s, statusFilter) && (!searchLower || (s.name || "").toLowerCase().includes(searchLower))
+    )
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
@@ -98,6 +122,7 @@ export const Badge = (props: BadgeProps) => {
                 {
                     title: props.trial ? "LESSONS SUBMITTED" : "BADGE COMPLETION",
                     value: props.trial ? props.lessonsCompleted || 0 : numberOfBadges,
+                    loading: activityLoading,
                 },
                 {
                     title: "POINT VALUE",
@@ -134,8 +159,22 @@ export const Badge = (props: BadgeProps) => {
                     </div>
                 )}
 
-                {(!!props.trial || tab === "lessons") && <LessonTable loading={props.loading} items={props.lessons} />}
-                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} linkState={props.linkState} />}
+                {(!!props.trial || tab === "lessons") && <LessonTable loading={props.loading} completionLoading={activityLoading} items={props.lessons} />}
+                {(!props.trial && tab === "students") && (
+                    <div className="flex flex-col gap-3">
+                        <StudentStatusFilterBar
+                            statusFilter={statusFilter}
+                            onStatusFilterChange={props.onStatusFilterChange}
+                            search={search}
+                            onSearchChange={setSearch}
+                        />
+                        {props.students.length > 0 && visibleStudents.length === 0 ? (
+                            <p className="px-4 text-sm text-slate-400">No students match this filter.</p>
+                        ) : (
+                            <Table loading={props.loading || activityLoading} items={visibleStudents} linkState={props.linkState} onStudentClick={props.onStudentClick} />
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     )
