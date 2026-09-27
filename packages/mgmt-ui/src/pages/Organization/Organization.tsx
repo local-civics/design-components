@@ -3,10 +3,6 @@ import {StatsGroup} from "../../components/data/StatsGroup/StatsGroup";
 import {PageHeader} from "../../components/navigation/PageHeader/PageHeader";
 import {AccessCode} from "./AccessCode";
 
-const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
-
 /**
  * OrganizationProps
  */
@@ -50,7 +46,9 @@ export const Organization = (props: OrganizationProps) => {
                     value: props.numberOfEducators || 0,
                 },
                 {
-                    title: `ACTIVE USERS (${monthNames[(new Date()).getMonth()]})`,
+                    // Share of members active in the last 30 days (a rolling window, so it doesn't
+                    // drop to ~0 on the 1st of every month).
+                    title: "ACTIVE USERS (30 DAYS)",
                     value: props.percentageOfAccountsActive,
                     unit: "%",
                 },
