@@ -18,9 +18,10 @@ const Template: Story<CommentsProps> = (args) => (
 
 /**
  * Covers every state a real comment can be in: an unresolved requires-validation comment on a
- * badge (the gold "Resubmit this badge" CTA - the highest-stakes case, since the badge itself was
- * unsubmitted), the same kind of comment already resolved, a lesson-scoped comment (no validation
- * concept), and a plain general comment (no target, no action).
+ * badge (gold border + "Needs validation" pill, but only a plain "View" button - study blocks
+ * resubmitting until the comment is resolved), resolved ones whose badge/lesson still needs
+ * resubmitting (the gold "Resubmit" CTA), one that's fully resolved, a plain lesson comment, and a
+ * general comment (no target, no action).
  */
 export const Component: Story<CommentsProps> = Template.bind({});
 Component.args = {
@@ -43,6 +44,30 @@ Component.args = {
       requireValidation: true,
       resolvedAt: new Date().toISOString(),
       commentText: "Thanks for the update - this is resolved now.",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      commentId: "c2b",
+      commenterName: "Your educator",
+      badgeId: "b3",
+      badgeName: "Community Leaders",
+      requireValidation: true,
+      resolvedAt: new Date().toISOString(),
+      needsSubmission: true,
+      commentText: "Resolved - resubmit the badge once you've added your interview notes.",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      commentId: "c2c",
+      commenterName: "Your educator",
+      badgeId: "b3",
+      badgeName: "Community Leaders",
+      lessonId: "l2",
+      lessonName: "Interviewing a Local Leader",
+      requireValidation: true,
+      resolvedAt: new Date().toISOString(),
+      needsSubmission: true,
+      commentText: "Resolved - resubmit this lesson with your updated answers.",
       createdAt: new Date().toISOString(),
     },
     {

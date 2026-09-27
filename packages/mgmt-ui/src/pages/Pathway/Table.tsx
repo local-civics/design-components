@@ -2,6 +2,7 @@ import * as React from 'react';
 import {IconChevronDown} from '@tabler/icons';
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
+import {StudentNameCell} from "../../components/data/StudentNameCell/StudentNameCell";
 import {Stack as BadgeStack, Item as BadgeItem} from "./BadgeStack";
 import {useSortableData} from "../../utils/useSortableData";
 
@@ -90,40 +91,13 @@ export function Table(props: TableProps) {
 
             {sortedItems.map((row) => {
                 const isOpen = !!expanded[row.userId]
-                const initials = (row.name?.[0] || row.email[0] || "?").toUpperCase()
                 return (
                     <div key={row.userId} className="rounded-xl border border-slate-200 bg-white shadow-sm">
                         <div
                             onClick={() => setExpanded({...expanded, [row.userId]: !isOpen})}
                             className="flex cursor-pointer items-center gap-4 p-4"
                         >
-                            {props.onStudentClick ? (
-                                <button
-                                    type="button"
-                                    onClick={(e) => { e.stopPropagation(); props.onStudentClick!(row.userId) }}
-                                    className="group flex min-w-0 flex-1 items-center gap-3 text-left"
-                                >
-                                    {row.avatar
-                                        ? <img src={row.avatar} className="h-9 w-9 shrink-0 rounded-full object-cover" alt="" />
-                                        : <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-xs font-bold text-dark-blue-400">{initials}</div>
-                                    }
-                                    <div className="min-w-0">
-                                        <div className="truncate text-sm font-bold text-sky-blue-400 group-hover:underline">{row.name}</div>
-                                        <div className="truncate text-xs text-slate-400">{row.email}</div>
-                                    </div>
-                                </button>
-                            ) : (
-                                <div className="flex min-w-0 flex-1 items-center gap-3">
-                                    {row.avatar
-                                        ? <img src={row.avatar} className="h-9 w-9 shrink-0 rounded-full object-cover" alt="" />
-                                        : <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-xs font-bold text-dark-blue-400">{initials}</div>
-                                    }
-                                    <div className="min-w-0">
-                                        <div className="truncate text-sm font-bold text-dark-blue-400">{row.name}</div>
-                                        <div className="truncate text-xs text-slate-400">{row.email}</div>
-                                    </div>
-                                </div>
-                            )}
+                            <StudentNameCell userId={row.userId} name={row.name} email={row.email} avatar={row.avatar} onStudentClick={props.onStudentClick} />
                             <div className="w-28 shrink-0 text-center">
                                 {row.isComplete
                                     ? <span className="rounded-full bg-mint-100 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">Complete</span>

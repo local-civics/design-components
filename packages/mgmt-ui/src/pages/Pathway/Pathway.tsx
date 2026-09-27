@@ -32,6 +32,9 @@ export type PathwayProps = {
     // students/badges/criteria fan-out this page's own export reads has finished. Gates the Export
     // button specifically, not the page's own loading overlay.
     exportDisabled?: boolean
+    // True while that same second fetch runs - drives the pulse placeholders on the completion stat,
+    // the badge completion column and the "By student" table, instead of showing 0 / "No students".
+    activityLoading?: boolean
     title: string,
     description: string
     imageURL?: string
@@ -164,6 +167,8 @@ export const Pathway = (props: PathwayProps) => {
                 {
                     title: props.trial ? "BADGES SUBMITTED" : "PATHWAY COMPLETION",
                     value: props.trial ? 0 : numberOfBadgesEarned,
+                    // The trial value is a fixed 0, not fetched, so there's nothing to wait for.
+                    loading: !props.trial && !!props.activityLoading,
                 },
             ]}/>
 
@@ -196,8 +201,8 @@ export const Pathway = (props: PathwayProps) => {
                     </div>
                 )}
 
-                {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} badges={props.badges} categories={badgeGroupCategories} activeCategoryId={selectedCategoryId} activeCategoryLabel={selectedCategoryName} />}
-                {(!props.trial && tab === "students") && <Table loading={props.loading} items={props.students} categories={props.categories} linkState={props.linkState} onStudentClick={props.onStudentClick} />}
+                {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} completionLoading={props.activityLoading} badges={props.badges} categories={badgeGroupCategories} activeCategoryId={selectedCategoryId} activeCategoryLabel={selectedCategoryName} />}
+                {(!props.trial && tab === "students") && <Table loading={props.loading || !!props.activityLoading} items={props.students} categories={props.categories} linkState={props.linkState} onStudentClick={props.onStudentClick} />}
             </div>
 
             <CategoriesModal

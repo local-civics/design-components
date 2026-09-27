@@ -207,11 +207,7 @@ export const LearningForm = (props: LearningFormProps) => {
         })}
 
         <FormItem
-          displayName={
-            <>
-              <p>Optional: What is one takeaway from this lesson?</p>
-            </>
-          }
+          displayName="Optional: What is one takeaway from this lesson?"
           description=""
           format="question"
           questionType="text"

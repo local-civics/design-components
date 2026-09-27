@@ -51,6 +51,7 @@ Mock.args = {
         avatar: "",
         name: "Jane Doe",
         email: "jane.doe@localcivics.io",
+        isStarted: true,
         lessons: [{
             lessonName: "Example lesson",
             completion: 0,
@@ -70,9 +71,21 @@ Mock.args = {
         name: "John Smith",
         email: "john.smith@localcivics.io",
         isComplete: true,
+        isStarted: true,
         lessons: [{
             lessonName: "Example lesson",
             completion: 1,
+            href: "",
+        }]
+    },{
+        userId: "3",
+        avatar: "",
+        name: "Peter Pop",
+        email: "peter.pop@localcivics.io",
+        isStarted: false,
+        lessons: [{
+            lessonName: "Example lesson",
+            completion: 0,
             href: "",
         }]
     }],

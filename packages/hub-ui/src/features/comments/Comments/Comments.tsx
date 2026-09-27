@@ -106,14 +106,16 @@ const CommentCard = (props: {
     : { label: "General", kind: "general" as const, onClick: undefined };
 
   const needsAttention = comment.requireValidation && !comment.resolvedAt
+  // Resubmitting only makes sense once the comment is resolved - study blocks submission while any
+  // validation-required comment on the badge is still open - and only while the badge/lesson is
+  // still unsubmitted, which is exactly what needsSubmission means. An open comment gets the plain
+  // "View" prompt; its gold border and "Needs validation" pill already flag it.
+  const canResubmit = !!comment.needsSubmission
 
-  // The specific next step depends on what this comment is actually about - a validation-required
-  // comment on a badge means that badge was unsubmitted and needs real work (resubmitting), not just
-  // a look; anything else is just "go take a look," a lower-stakes, lower-emphasis prompt.
-  const actionLabel = needsAttention && target.kind === "badge"
-    ? "Resubmit this badge"
-    : target.kind === "badge" ? "View this badge"
-    : target.kind === "lesson" ? "View this lesson"
+  const actionLabel = target.kind === "badge"
+    ? (canResubmit ? "Resubmit this badge" : "View this badge")
+    : target.kind === "lesson"
+    ? (canResubmit ? "Resubmit this lesson" : "View this lesson")
     : undefined
 
   return (
@@ -149,7 +151,7 @@ const CommentCard = (props: {
           type="button"
           onClick={target.onClick}
           className={`mt-3 flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-extrabold ${
-            needsAttention ? "bg-gold-400/15 text-dark-blue-400 hover:bg-gold-400/25" : "border border-slate-200 text-dark-blue-400 hover:bg-slate-50"
+            canResubmit ? "bg-gold-400/15 text-dark-blue-400 hover:bg-gold-400/25" : "border border-slate-200 text-dark-blue-400 hover:bg-slate-50"
           }`}
         >
           {actionLabel}

@@ -35,6 +35,9 @@ export type TableProps = {
     categories: Category[]
     activeCategoryId?: string
     activeCategoryLabel?: string
+    // True while the per-student activity fetch is still running - percentageCompletion reads 0
+    // until then, so the column shows a pulse instead of a misleading "0%".
+    completionLoading?: boolean
 }
 
 const OTHER_FILTER = "__other__";
@@ -130,7 +133,11 @@ export function Table(props: TableProps) {
                     >
                         <div className="min-w-0 flex-1 text-sm font-bold text-dark-blue-400">{row.badgeName}</div>
                         <div className="w-24 shrink-0 text-right text-xs font-black text-mint-400">{row.weight} pts</div>
-                        <div className="w-36 shrink-0 text-right text-xs text-slate-500">{Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%</div>
+                        <div className="w-36 shrink-0 text-right text-xs text-slate-500">
+                            {props.completionLoading
+                                ? <span className="inline-block h-3 w-8 animate-pulse rounded bg-slate-200 align-middle"><span className="sr-only">Loading</span></span>
+                                : `${Math.round((row.percentageCompletion + Number.EPSILON) * 100)}%`}
+                        </div>
                     </Link>
                 ))}
             </div>
