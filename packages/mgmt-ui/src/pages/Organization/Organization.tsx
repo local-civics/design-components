@@ -12,6 +12,9 @@ export type OrganizationProps = {
     description: string
     numberOfStudents: number
     numberOfEducators: number
+    // Shown as its own stat when provided, so students + educators + admins adds up to the People
+    // page's total. Optional so an older caller that doesn't pass it still renders the other stats.
+    numberOfAdmins?: number
     percentageOfAccountsActive: number
     accessCode: string
     peopleLink: string
@@ -45,6 +48,10 @@ export const Organization = (props: OrganizationProps) => {
                     title: "# OF EDUCATORS",
                     value: props.numberOfEducators || 0,
                 },
+                ...(props.numberOfAdmins !== undefined ? [{
+                    title: "# OF ADMINS",
+                    value: props.numberOfAdmins || 0,
+                }] : []),
                 {
                     // Share of members active in the last 30 days (a rolling window, so it doesn't
                     // drop to ~0 on the 1st of every month).

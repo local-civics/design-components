@@ -36,3 +36,11 @@ const Template: Story<OrganizationProps> = (args) => (
  */
 export const Component: Story<OrganizationProps> = Template.bind({});
 Component.args = {};
+
+/**
+ * With the admin count passed, so the stats add up to the People page's total.
+ */
+export const WithAdmins: Story<OrganizationProps> = Template.bind({});
+WithAdmins.args = {
+    numberOfAdmins: 2,
+};
