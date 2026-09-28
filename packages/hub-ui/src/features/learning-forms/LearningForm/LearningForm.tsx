@@ -48,6 +48,9 @@ export type LearningFormProps = {
   elapsedTime?: number;
   stopWatchStarted?: boolean;
   stopWatch?: React.ReactNode;
+  // The lesson was already submitted. Opening it again shouldn't count as unsaved work: Back leaves
+  // without the "save your progress?" dialog and nothing is saved unless an answer actually changes.
+  submitted?: boolean;
 
   onBackToBadge?: () => void;
   backToBadgeLabel?: string;
@@ -76,9 +79,12 @@ export const LearningForm = (props: LearningFormProps) => {
   const elapsedTime = props?.elapsedTime || 0
   const timeSpent = props?.timeSpent || 0
   const saveVisibility = isDraft ? "opacity-100 visible" : "opacity-0 invisible";
+  // Nothing to save: no edits since loading, and either the lesson is already submitted or no new
+  // time has been recorded.
+  const unchanged = !isDraft && (!!props.submitted || elapsedTime <= timeSpent);
   const answers: FormItemProps[] = [];
   const saveDraft = async (): Promise<boolean> => {
-    if (!isDraft && elapsedTime <= timeSpent) {
+    if (unchanged) {
       return true;
     }
     if (!props.onSaveDraft) {
@@ -151,6 +157,9 @@ export const LearningForm = (props: LearningFormProps) => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canSubmit) {
+      return;
+    }
     if (props.onSubmit) {
       props.onSubmit(reflection, rating).then((err) => {
         if (!err) {
@@ -169,6 +178,8 @@ export const LearningForm = (props: LearningFormProps) => {
             onClick={() => {
               if (props.preview) {
                 (props.onBackToBadge || props.onEditLesson)?.();
+              } else if (unchanged) {
+                props.onEditLesson && props.onEditLesson();
               } else {
                 setShowExitDialogue(true);
               }
@@ -225,13 +236,15 @@ export const LearningForm = (props: LearningFormProps) => {
         </FormItem>
 
         {!props.preview && (
-          <div className="w-max m-auto">
+          <div className="m-auto flex w-max flex-col items-center gap-2">
             <button
               type="submit"
-              className="rounded-xl bg-dark-blue-400 px-7 py-2.5 text-xs font-bold text-white hover:bg-dark-blue-400/90"
+              disabled={!canSubmit}
+              className="rounded-xl bg-dark-blue-400 px-7 py-2.5 text-xs font-bold text-white hover:bg-dark-blue-400/90 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-dark-blue-400"
             >
               Submit
             </button>
+            {!canSubmit && <p className="text-xs text-slate-400">Answer every required question to submit.</p>}
           </div>
         )}
       </form>

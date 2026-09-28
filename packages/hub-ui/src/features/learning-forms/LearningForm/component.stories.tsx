@@ -571,3 +571,11 @@ PublicSpeakingForm.args = { ...publicSpeakingForm };
  */
 export const CommunityMappingOfSelf: Story<LearningFormProps> = Template.bind({});
 CommunityMappingOfSelf.args = { ...communityMappingOfSelfForm };
+
+/**
+ * An already-submitted lesson opened again: Back leaves straight away (no "save your progress?"
+ * dialog) because nothing has changed. Submit stays disabled until every required question is
+ * answered.
+ */
+export const Submitted: Story<LearningFormProps> = Template.bind({});
+Submitted.args = { ...publicSpeakingForm, submitted: true, onEditLesson: () => console.log("left the lesson") };

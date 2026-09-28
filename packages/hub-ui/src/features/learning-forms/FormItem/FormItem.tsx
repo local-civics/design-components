@@ -23,7 +23,9 @@ export type FormItemProps = {
   minText?: number;
   children?: React.ReactNode;
 
-  onResponseChange?: (responses?: string[], file?: Blob) => void;
+  // May return a promise (the lesson page's does, while a file uploads); the file question waits on
+  // it to know when an upload has finished or failed.
+  onResponseChange?: (responses?: string[], file?: Blob) => void | Promise<unknown>;
   onTextBlur?: () => void;
 };
 
@@ -293,31 +295,30 @@ const DropDownQuestion = (props: FormItemProps) => {
   );
 };
 
+// Files uploaded through this question are stored by relay under this path; anything else in the
+// answer is a link the student pasted.
+const isPlatformUpload = (value: string) => /\/\/cdn\.localcivics\.io\/v1\/store\//i.test(value);
+
 const FileUploadQuestion = (props: FormItemProps) => {
   const responses = props.responses || [];
   const response = responses.length > 0 ? responses[0] : "";
   const [imageURL, setImageURL] = React.useState(response);
+  const [uploading, setUploading] = React.useState(false);
+  // An uploaded file shows as a "File uploaded - View" row rather than its storage URL in the box.
+  const uploaded = !uploading && isPlatformUpload(imageURL);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onResponseChange) {
       props.onResponseChange([e.target.value]);
     }
   };
   const onImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let reader = new FileReader();
     const target = e.target as HTMLInputElement;
-    const file: File = (target.files as FileList)[0];
-    reader.onloadend = () => {
-      if (typeof reader.result === "string") {
-        setImageURL(reader.result);
-        if (props.onResponseChange) {
-          props.onResponseChange(undefined, file);
-        }
-      }
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
+    const file: File | undefined = (target.files as FileList)[0];
+    if (!file || !props.onResponseChange) {
+      return;
     }
+    setUploading(true);
+    Promise.resolve(props.onResponseChange(undefined, file)).finally(() => setUploading(false));
   };
 
   React.useEffect(() => {
@@ -344,15 +345,26 @@ const FileUploadQuestion = (props: FormItemProps) => {
         </label>
       </div>
 
+      {uploading && <p className="text-sm text-slate-400">Uploading…</p>}
+      {uploaded && (
+        <div className="flex items-center gap-2 text-sm text-slate-600">
+          <span>File uploaded</span>
+          <span className="text-slate-300">·</span>
+          <a href={imageURL} target="_blank" rel="noopener noreferrer" className="font-bold text-sky-blue-400 hover:underline">
+            View
+          </a>
+        </div>
+      )}
+
       <div className="-ml-2">
         <input
           type="url"
           disabled={props.disabled}
           name={displayNameString(props.displayName)}
-          required={props.required}
+          required={props.required && !uploaded}
           onChange={onChange}
-          value={imageURL}
-          placeholder="Paste a url or select a file above"
+          value={uploaded ? "" : imageURL}
+          placeholder={uploaded ? "Or paste a link to replace it" : "Paste a url or select a file above"}
           className="w-full mt-1 block px-3 py-2 bg-white text-slate-500 focus:text-slate-600 border border-slate-300 rounded-sm text-sm shadow-sm placeholder-slate-400
           focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
           disabled:bg-slate-50 disabled:text-gray-600 disabled:border-slate-200 disabled:shadow-none"
