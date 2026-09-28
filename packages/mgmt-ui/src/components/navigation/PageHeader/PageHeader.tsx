@@ -36,11 +36,12 @@ export type PageHeaderProps = {
     children?: React.ReactNode
 }
 
+// A real button, so keyboard and screen-reader users can reach Back and the secondary link.
 const NavLink = (props: { onClick: () => void; label: string }) => (
-    <div onClick={props.onClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
+    <button type="button" onClick={props.onClick} className="flex w-max cursor-pointer items-center gap-1 text-xs font-bold text-sky-blue-400">
         <IconArrowLeft size={13} stroke={2.5} />
         {props.label}
-    </div>
+    </button>
 )
 
 /**
