@@ -7,6 +7,7 @@ import {PageHeader, PageHeaderBreadcrumbSegment} from "../../components/navigati
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {Table as LessonTable, Item as LessonItem} from "./LessonTable"
+import {classOptionLabels} from "../../utils/classOptions";
 
 /**
  * BadgeUserItem
@@ -25,6 +26,9 @@ export type BadgeClass = {
     classId: string
     name: string
     active: boolean
+    // Used to tell apart classes that share a name in the class dropdown.
+    description?: string
+    numberOfStudents?: number
 }
 
 /**
@@ -82,6 +86,7 @@ const TABS = [
  * @constructor
  */
 export const Badge = (props: BadgeProps) => {
+    const classLabels = classOptionLabels(props.classes || [])
     const [tab, setTab] = useState("lessons")
     const [search, setSearch] = useState("")
     const statusFilter = props.statusFilter || "all"
@@ -139,7 +144,7 @@ export const Badge = (props: BadgeProps) => {
                         className="w-full appearance-none rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm text-dark-blue-400 focus:border-sky-blue-400 focus:outline-none"
                     >
                         <option value="">All classes</option>
-                        {props.classes.map((c) => <option key={c.classId} value={c.classId}>{c.name}</option>)}
+                        {props.classes.map((c) => <option key={c.classId} value={c.classId}>{classLabels[c.classId] || c.name}</option>)}
                     </select>
                 </div>
             )}

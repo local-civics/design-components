@@ -118,3 +118,31 @@ Mock.args = {
         },
     ]
 };
+
+/**
+ * A lesson with no multiple-choice questions (most are file uploads): the page opens on "By
+ * student" instead of an empty "By question" chart tab. The second student left a rating but no
+ * reflection, which now shows as its own "Rating" row.
+ */
+export const NoMultipleChoice: Story<LessonProps> = Template.bind({});
+NoMultipleChoice.args = {
+    ...Mock.args,
+    questions: (Mock.args.questions || []).filter((q: any) => !q.chart),
+    students: [
+        ...(Mock.args.students || []).slice(0, 1),
+        {
+            userId: "rating-only-mock",
+            avatar: "",
+            href: "",
+            name: "Akinola Akintayo",
+            email: "akinola@localcivics.io",
+            isComplete: true,
+            isStarted: true,
+            rating: 4,
+            answers: [{
+                questionName: "An example question",
+                answer: ["https://cdn.localcivics.io/v1/store/answers/example"],
+            }],
+        },
+    ],
+};

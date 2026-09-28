@@ -3,11 +3,12 @@ import {IconCheck} from "@tabler/icons";
 import {Checkbox, Text} from "@mantine/core";
 import {openConfirmModal} from "@mantine/modals";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
+import {classOptionLabels} from "../../utils/classOptions";
 
 /**
  * ValidationCenterClass
  */
-export type ValidationCenterClass = { classId: string, name: string, active: boolean }
+export type ValidationCenterClass = { classId: string, name: string, active: boolean, description?: string, numberOfStudents?: number }
 
 /**
  * ValidationCenterBadge
@@ -49,6 +50,7 @@ const initials = (name: string) => name.split(" ").map(w => w[0]).filter(Boolean
  * @constructor
  */
 export const ValidationCenter = (props: ValidationCenterProps) => {
+    const classLabels = classOptionLabels(props.classes || [])
     const [selected, setSelected] = React.useState<Record<string, boolean>>({})
 
     // Clear selections whenever the visible roster changes (a different class or badge) so a stale
@@ -109,7 +111,7 @@ export const ValidationCenter = (props: ValidationCenterProps) => {
                     className="w-64 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-dark-blue-400 focus:border-sky-blue-400 focus:outline-none"
                 >
                     <option value="">Select a class</option>
-                    {props.classes.map((c) => <option key={c.classId} value={c.classId}>{c.name}</option>)}
+                    {props.classes.map((c) => <option key={c.classId} value={c.classId}>{classLabels[c.classId] || c.name}</option>)}
                 </select>
 
                 <select

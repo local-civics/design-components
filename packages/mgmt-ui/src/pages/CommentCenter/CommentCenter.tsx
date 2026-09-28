@@ -8,11 +8,12 @@ import {
     LeaveCommentPayload,
     LeaveCommentStudentOption,
 } from "../../components/modals/LeaveCommentModal/LeaveCommentModal";
+import {classOptionLabels} from "../../utils/classOptions";
 
 /**
  * CommentCenterClass
  */
-export type CommentCenterClass = { classId: string, name: string, active: boolean }
+export type CommentCenterClass = { classId: string, name: string, active: boolean, description?: string, numberOfStudents?: number }
 
 /**
  * CommentCenterItem
@@ -121,6 +122,7 @@ const groupBy = (items: CommentCenterItem[], keyOf: (i: CommentCenterItem) => st
  * @constructor
  */
 export const CommentCenter = (props: CommentCenterProps) => {
+    const classLabels = classOptionLabels(props.classes || [])
     const [tab, setTab] = React.useState<Tab>("students")
     const [leavingComment, setLeavingComment] = React.useState(false)
 
@@ -150,8 +152,8 @@ export const CommentCenter = (props: CommentCenterProps) => {
                 onChange={(e) => props.onClassChange(e.target.value)}
                 className="w-64 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-dark-blue-400 focus:border-sky-blue-400 focus:outline-none"
             >
-                <option value="">Select a class</option>
-                {props.classes.map((c) => <option key={c.classId} value={c.classId}>{c.name}</option>)}
+                <option value="">All classes</option>
+                {props.classes.map((c) => <option key={c.classId} value={c.classId}>{classLabels[c.classId] || c.name}</option>)}
             </select>
 
             <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">

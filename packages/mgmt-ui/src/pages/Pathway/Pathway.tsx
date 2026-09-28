@@ -8,6 +8,7 @@ import {Table, Item} from "./Table";
 import {Table as BadgeTable, Item as BadgeItem} from "./BadgeTable";
 import {CategoriesModal} from "./CategoriesModal";
 import {PathwayCategory} from "./buildCategoryTree";
+import {classOptionLabels} from "../../utils/classOptions";
 
 /**
  * PathwayUserItem
@@ -21,6 +22,9 @@ export type PathwayClass = {
     classId: string
     name: string
     active: boolean
+    // Used to tell apart classes that share a name in the class dropdown.
+    description?: string
+    numberOfStudents?: number
 }
 
 /**
@@ -74,6 +78,7 @@ const TABS = [
  * @constructor
  */
 export const Pathway = (props: PathwayProps) => {
+    const classLabels = classOptionLabels(props.classes || [])
     const [tab, setTab] = useState("badges")
     const [categoriesOpen, setCategoriesOpen] = useState(false)
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
@@ -181,7 +186,7 @@ export const Pathway = (props: PathwayProps) => {
                         className="w-full appearance-none rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm text-dark-blue-400 focus:border-sky-blue-400 focus:outline-none"
                     >
                         <option value="">All classes</option>
-                        {props.classes.map((c) => <option key={c.classId} value={c.classId}>{c.name}</option>)}
+                        {props.classes.map((c) => <option key={c.classId} value={c.classId}>{classLabels[c.classId] || c.name}</option>)}
                     </select>
                 </div>
             )}

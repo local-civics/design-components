@@ -57,7 +57,7 @@ export function Stack(props: StackProps) {
                         <AnswerValue answer={row.answer} emptyText="No answer." className="mt-1 text-sm text-slate-600" />
                     </div>
                 ))
-            ) : !hasReflection ? (
+            ) : !hasReflection && !props.rating ? (
                 <div className="text-sm font-bold text-dark-blue-400">No question responses recorded yet.</div>
             ) : null}
 
@@ -72,6 +72,17 @@ export function Stack(props: StackProps) {
                         )}
                     </div>
                     <div className="mt-1 text-sm text-slate-600">{props.reflection}</div>
+                </div>
+            )}
+
+            {/* A rating can be left without a reflection; it used to show only inside the
+                reflection block. */}
+            {!hasReflection && !!props.rating && (
+                <div className="flex items-center justify-between gap-3">
+                    <div className="text-sm font-bold text-dark-blue-400">Rating</div>
+                    <div className="shrink-0 rounded-full bg-gold-100 px-2.5 py-1 text-[10px] font-bold text-dark-blue-400">
+                        {props.rating}
+                    </div>
                 </div>
             )}
 

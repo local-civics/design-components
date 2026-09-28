@@ -53,3 +53,19 @@ Mock.args = {
     { userId: "jamal-rivera", name: "Jamal Rivera", hasCredit: false },
   ],
 };
+
+/**
+ * Two classes named "Test Class" (as in the real Test Organization): the dropdown adds the
+ * description, or the student count when there's no useful description, so they can be told apart.
+ */
+export const DuplicateClassNames: Story<ValidationCenterProps> = Template.bind({});
+DuplicateClassNames.args = {
+  ...Mock.args,
+  classes: [
+    { classId: "dup-1", name: "Test Class", description: "A PathLink Demo", numberOfStudents: 6, active: true },
+    { classId: "dup-2", name: "Test Class", description: "", numberOfStudents: 6, active: false },
+    { classId: "dup-3", name: "Grade 10", description: "Grade 10", numberOfStudents: 24, active: false },
+    { classId: "dup-4", name: "Grade 10", numberOfStudents: 1, active: false },
+    ...classes,
+  ],
+};
