@@ -71,13 +71,14 @@ const DropDownInput = (props: FormInputProps) => {
       className={`appearance-none focus:outline-none mt-1 block w-full bg-white text-slate-500 ${writeClass} rounded-sm text-sm placeholder-slate-400`}
       required={props.required}
       name={props.headline}
+      value={props.value || ""}
       onChange={onChange}
     >
       <option value="">{props.readonly && !props.value ? "N/A" : "Select one"}</option>
 
       {options.map((option) => {
         return (
-          <option key={option} selected={props.value === option} value={option}>
+          <option key={option} value={option}>
             {option}
           </option>
         );
