@@ -78,6 +78,8 @@ Mock.args = {
             questions: [
                 {questionName: "An example question", answer: ["My example answer"]},
                 {questionName: "A second question in the same lesson", answer: ["Another example answer"]},
+                // Exercises AnswerValue: an uploaded file renders as a Download button.
+                {questionName: "Upload your project file", answer: ["https://cdn.localcivics.io/v1/store/organizations/example/users/example/2oUT5srnypfmNxzPn2KHFz?version=example"]},
             ],
             reflection: "An example reflection",
             rating: 2,
