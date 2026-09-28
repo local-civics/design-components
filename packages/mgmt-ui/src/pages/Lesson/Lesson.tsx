@@ -8,6 +8,7 @@ import {compact} from "../../utils/numbers";
 import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {Stack as QuestionStack, Item as QuestionItem} from "./QuestionStack";
+import {classOptionLabels} from "../../utils/classOptions";
 
 /**
  * LessonUserItem
@@ -21,6 +22,9 @@ export type LessonClass = {
     classId: string
     name: string
     active: boolean
+    // Used to tell apart classes that share a name in the class dropdown.
+    description?: string
+    numberOfStudents?: number
 }
 
 /**
@@ -75,7 +79,13 @@ const initialsFor = (name: string) => name.split(/[ -]/).map((n) => n.charAt(0))
  * @constructor
  */
 export const Lesson = (props: LessonProps) => {
-    const [tab, setTab] = useState("question")
+    const classLabels = classOptionLabels(props.classes || [])
+    // null until the educator picks a tab. Until then, open on "By question" only when there's a
+    // multiple-choice chart to show; most lessons are file uploads, where that tab is just an
+    // empty placeholder. Deriving it on each render (rather than seeding state once) follows the
+    // questions when they arrive after the first render.
+    const [pickedTab, setTab] = useState<string | null>(null)
+    const tab = pickedTab ?? ((props.questions || []).some((q) => q.chart) ? "question" : "students")
     const [search, setSearch] = useState("")
     const statusFilter = props.statusFilter || "all"
 
@@ -160,7 +170,7 @@ export const Lesson = (props: LessonProps) => {
                         className="w-full appearance-none rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm text-dark-blue-400 focus:border-sky-blue-400 focus:outline-none"
                     >
                         <option value="">All classes</option>
-                        {props.classes.map((c) => <option key={c.classId} value={c.classId}>{c.name}</option>)}
+                        {props.classes.map((c) => <option key={c.classId} value={c.classId}>{classLabels[c.classId] || c.name}</option>)}
                     </select>
                 </div>
             )}

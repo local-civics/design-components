@@ -23,12 +23,15 @@ const BADGES = [
     {badgeId: "b1", displayName: "Service-Learning Project", categories: ["p1:core"], lessonIds: ["l1"]},
     {badgeId: "b2", displayName: "Political Party Project", categories: ["p1:core"], lessonIds: ["l2"]},
     {badgeId: "b3", displayName: "Biliteracy Portfolio", categories: ["p2:core"], lessonIds: ["l3"]},
+    // Nobody has uploaded to this one, so it shouldn't appear in the By badge / By lesson tabs.
+    {badgeId: "b4", displayName: "Community Mapping", categories: ["p1:core"], lessonIds: ["l4"]},
 ]
 
 const LESSONS = [
     {lessonId: "l1", lessonName: "Complete a Service-Learning Project"},
     {lessonId: "l2", lessonName: "Party Platform Project Submission"},
     {lessonId: "l3", lessonName: "Biliteracy Portfolio Submission"},
+    {lessonId: "l4", lessonName: "Community Mapping Reflection"},
 ]
 
 const STUDENTS = [

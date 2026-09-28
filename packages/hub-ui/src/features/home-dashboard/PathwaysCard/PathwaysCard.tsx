@@ -4,6 +4,7 @@ import { BadgeEmblem } from "../../badges/BadgeEmblem/BadgeEmblem";
 import { Progress } from "../../../components/Progress/Progress";
 import { Loader } from "../../../components/Loader";
 import { PathwayCardProps } from "../../pathways/types";
+import { ExpandableBody } from "../ExpandableBody/ExpandableBody";
 
 /**
  * A single pathway as rendered by the dashboard - the same shape `PathwaySection` already
@@ -63,6 +64,8 @@ export const PathwaysCard = (props: PathwaysCardProps) => {
         <div className="flex gap-1">
           <button
             type="button"
+            aria-label="Grid view"
+            aria-pressed={!list}
             onClick={() => setList(false)}
             className={`flex h-7 w-7 items-center justify-center rounded-md ${
               !list ? "bg-slate-100 text-dark-blue-400" : "text-slate-300 hover:text-slate-400"
@@ -72,6 +75,8 @@ export const PathwaysCard = (props: PathwaysCardProps) => {
           </button>
           <button
             type="button"
+            aria-label="List view"
+            aria-pressed={!!list}
             onClick={() => setList(true)}
             className={`flex h-7 w-7 items-center justify-center rounded-md ${
               list ? "bg-slate-100 text-dark-blue-400" : "text-slate-300 hover:text-slate-400"
@@ -82,7 +87,11 @@ export const PathwaysCard = (props: PathwaysCardProps) => {
         </div>
       </div>
 
-      <div className="relative flex-1 p-4">
+      <ExpandableBody
+        collapsedClassName="max-h-[26rem]"
+        contentKey={`${list}-${props.pathways.length}`}
+        expandLabel={`Show all ${props.pathways.length}`}
+      >
         <Loader isLoading={props.isLoading}>
           {props.pathways.length === 0 && <p className="text-sm text-slate-400">No pathways to display.</p>}
           {props.pathways.length > 0 && (
@@ -93,7 +102,7 @@ export const PathwaysCard = (props: PathwaysCardProps) => {
             </div>
           )}
         </Loader>
-      </div>
+      </ExpandableBody>
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { BadgeProps } from "../../badges/Badge/Badge";
 import { Tab } from "../../../components/Board";
 import { Loader } from "../../../components/Loader";
 import { Pill, PillAccent } from "../Pill/Pill";
+import { ExpandableBody } from "../ExpandableBody/ExpandableBody";
 
 type FilterLabel = "In Progress" | "Completed" | "Available" | "Locked";
 
@@ -27,7 +28,8 @@ export type BadgesCardProps = {
  * progress/completed/available/locked, driven by `finishedAt`/`isLocked`/`startedAt`) and its
  * grid/list toggle, but shows one state at a time via a single-select tab strip
  * (`Board`'s `Tab` `secondary` variant) to match the mockup's tab look, rather than
- * `BadgeSection`'s original multi-select filter pills.
+ * `BadgeSection`'s original multi-select filter pills. The body is capped at about three rows of
+ * tiles with its own scrollbar (see ExpandableBody), so a long tab doesn't stretch the page.
  * @param props
  * @constructor
  */
@@ -64,6 +66,8 @@ export const BadgesCard = (props: BadgesCardProps) => {
         <div className="flex gap-1">
           <button
             type="button"
+            aria-label="Grid view"
+            aria-pressed={!list}
             onClick={() => setList(false)}
             className={`flex h-7 w-7 items-center justify-center rounded-md ${
               !list ? "bg-slate-100 text-dark-blue-400" : "text-slate-300 hover:text-slate-400"
@@ -73,6 +77,8 @@ export const BadgesCard = (props: BadgesCardProps) => {
           </button>
           <button
             type="button"
+            aria-label="List view"
+            aria-pressed={!!list}
             onClick={() => setList(true)}
             className={`flex h-7 w-7 items-center justify-center rounded-md ${
               list ? "bg-slate-100 text-dark-blue-400" : "text-slate-300 hover:text-slate-400"
@@ -89,7 +95,11 @@ export const BadgesCard = (props: BadgesCardProps) => {
         ))}
       </div>
 
-      <div className="relative flex-1 p-4">
+      <ExpandableBody
+        collapsedClassName="max-h-[26rem]"
+        contentKey={`${active}-${list}-${visible.length}`}
+        expandLabel={`Show all ${visible.length}`}
+      >
         <Loader isLoading={props.isLoading}>
           {visible.length === 0 && <p className="text-sm text-slate-400">No badges to display.</p>}
           {visible.length > 0 && (
@@ -100,7 +110,7 @@ export const BadgesCard = (props: BadgesCardProps) => {
             </div>
           )}
         </Loader>
-      </div>
+      </ExpandableBody>
     </div>
   );
 };
@@ -158,7 +168,9 @@ const BadgeTile = (props: BadgeProps) => {
           size="sm"
         />
       </div>
-      <div className="w-full truncate text-xs font-semibold text-dark-blue-400">{props.displayName}</div>
+      <div title={props.displayName} className="w-full line-clamp-2 text-xs font-semibold text-dark-blue-400">
+        {props.displayName}
+      </div>
       <Pill label={status.label} accent={status.accent} />
     </div>
   );

@@ -52,13 +52,14 @@ export const Home = (props: HomeProps) => {
     };
 
     return <div className="flex w-full flex-col gap-5">
-        <div className="flex items-stretch gap-5">
+        {/* Stacks below lg instead of clipping the fixed-width org card on narrow screens. */}
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
             <div className="flex-1">
                 <div className="text-[28px] font-extrabold text-dark-blue-400">{props.name}</div>
                 <div className="mt-1.5 text-[12.5px] text-slate-400">{props.impactStatement}</div>
             </div>
 
-            <div className="flex w-[440px] shrink-0 flex-col justify-between gap-3 rounded-2xl bg-gradient-to-br from-dark-blue-600 via-dark-blue-400 to-sky-blue-400 p-5">
+            <div className="flex w-full shrink-0 flex-col justify-between gap-3 rounded-2xl lg:w-[440px] bg-gradient-to-br from-dark-blue-600 via-dark-blue-400 to-sky-blue-400 p-5">
                 <div>
                     <div className="text-base font-extrabold text-white">{props.organization.name}</div>
                     <div className="mt-1.5 text-[11.5px] leading-relaxed text-white/70">{props.organization.description}</div>

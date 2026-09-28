@@ -33,16 +33,19 @@ export type StudentProps = {
     // caller doesn't supply it, or when no specific pathway is currently selected.
     onViewPathway?: (pathwayId: string) => void
 }
+// An educator is looking at someone else's work here, so no "My".
 const TABS = [
-    {label: "My badges", value: "badges"},
-    {label: "My lessons", value: "lessons"},
+    {label: "Badges", value: "badges"},
+    {label: "Lessons", value: "lessons"},
 ]
 
 type LessonStatusFilter = "all" | "hasResponses" | "submitted"
+// "Has responses" first and the default: the full catalog (every lesson in the org, mostly
+// untouched) buries the handful a student has actually worked on.
 const LESSON_STATUS_FILTERS: {label: string, value: LessonStatusFilter}[] = [
-    {label: "All", value: "all"},
     {label: "Has responses", value: "hasResponses"},
     {label: "Submitted", value: "submitted"},
+    {label: "All", value: "all"},
 ]
 
 // Sentinel for "items with no pathway at all" - distinct from "" (All), which PathwayFilterPills
@@ -55,9 +58,9 @@ export const Student = (props: StudentProps) => {
     // as one "this student's stuff in Pathway X" view, and a per-tab filter would silently reset
     // every time an educator switches tabs.
     const [pathwayFilter, setPathwayFilter] = useState("")
-    // Scoped to the "My lessons" tab only - "has this been submitted" has no equivalent concept on
-    // "My badges" (a badge's own Complete/Incomplete pill already covers that axis there).
-    const [lessonStatusFilter, setLessonStatusFilter] = useState<LessonStatusFilter>("all")
+    // Scoped to the "Lessons" tab only - "has this been submitted" has no equivalent concept on
+    // "Badges" (a badge's own Complete/Incomplete pill already covers that axis there).
+    const [lessonStatusFilter, setLessonStatusFilter] = useState<LessonStatusFilter>("hasResponses")
     const numberOfBadgesCompleted = props.badges.length > 0 ? props.badges.filter(b => b.isComplete).length : 0
     const numberOfLessonsCompleted = props.lessons.filter(l => l.isComplete).length
 
@@ -86,6 +89,13 @@ export const Student = (props: StudentProps) => {
         if (lessonStatusFilter === "submitted") return items.filter((item) => item.isComplete)
         return items
     }
+
+    const pathwayLessons = filterByPathway(props.lessons)
+    const visibleLessons = filterByLessonStatus(pathwayLessons)
+    // The default filter found nothing, but there are lessons: say so and offer the full list,
+    // rather than the generic "No lessons to display".
+    const noResponsesYet = !props.loading && lessonStatusFilter === "hasResponses"
+        && visibleLessons.length === 0 && pathwayLessons.length > 0
 
     const activePathwayName = pathwayFilter && pathwayFilter !== OTHER_FILTER
         ? pathways.find((p) => p.pathwayId === pathwayFilter)?.title
@@ -179,7 +189,20 @@ export const Student = (props: StudentProps) => {
             )}
 
             {tab === "badges" && <BadgeTable loading={props.loading} items={filterByPathway(props.badges)} />}
-            {tab === "lessons" && <AnswerTable loading={props.loading} items={filterByLessonStatus(filterByPathway(props.lessons))} />}
+            {tab === "lessons" && (noResponsesYet ? (
+                <div className="rounded-xl border border-slate-200 bg-white px-5 py-6 text-center text-sm text-slate-500">
+                    No lesson responses yet.{" "}
+                    <button
+                        type="button"
+                        onClick={() => setLessonStatusFilter("all")}
+                        className="font-bold text-dark-blue-400 hover:underline"
+                    >
+                        Show all lessons
+                    </button>
+                </div>
+            ) : (
+                <AnswerTable loading={props.loading} items={visibleLessons} />
+            ))}
         </div>
     )
 }

@@ -10,6 +10,7 @@ import {SubmissionDetail} from "./SubmissionDetail";
 import {AccountPendingModal} from "./AccountPendingModal";
 import {useFilteredStudents} from "./useFilteredStudents"
 import {LeaveCommentModal, LeaveCommentPayload} from "../../components/modals/LeaveCommentModal/LeaveCommentModal";
+import {classOptionLabels} from "../../utils/classOptions";
 
 /**
  * FileLockerUserItem
@@ -23,6 +24,9 @@ export type FileLockerClass = {
     classId: string
     name: string
     active: boolean
+    // Used to tell apart classes that share a name in the class dropdown.
+    description?: string
+    numberOfStudents?: number
 }
 
 /**
@@ -211,10 +215,12 @@ const PathwayGroups = (props: GroupsProps & {pathways: NonNullable<FileLockerPro
             const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
             return {pathway: p, filtered}
         })
-        .filter((g) => !term || g.filtered.length > 0)
+        // Only groups with files. A badge or lesson nobody has uploaded to is just noise here
+        // (a real org has dozens of badges and most take no uploads).
+        .filter((g) => countFiles(g.filtered) > 0)
 
-    if (term && groups.length === 0) {
-        return <p className="text-sm text-slate-400">No matching entries.</p>
+    if (groups.length === 0) {
+        return <p className="text-sm text-slate-400">{term ? "No matching entries." : "No files submitted yet."}</p>
     }
 
     return (
@@ -258,12 +264,14 @@ const BadgeGroups = (props: GroupsProps & {badges: NonNullable<FileLockerProps["
             const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
             return {badge: b, filtered, name: b.displayName, fileCount: countFiles(filtered)}
         })
-        .filter((g) => !term || g.filtered.length > 0)
+        // Only groups with files. A badge or lesson nobody has uploaded to is just noise here
+        // (a real org has dozens of badges and most take no uploads).
+        .filter((g) => countFiles(g.filtered) > 0)
 
     const {items: sortedGroups, requestSort, sortConfig} = useSortableData(groups)
 
-    if (term && groups.length === 0) {
-        return <p className="text-sm text-slate-400">No matching entries.</p>
+    if (groups.length === 0) {
+        return <p className="text-sm text-slate-400">{term ? "No matching entries." : "No files submitted yet."}</p>
     }
 
     return (
@@ -314,12 +322,14 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
             const filtered = ownNameMatches ? base : base.filter((s) => matchesSearch(s, term))
             return {lesson: l, filtered, name: l.lessonName, fileCount: countFiles(filtered)}
         })
-        .filter((g) => !term || g.filtered.length > 0)
+        // Only groups with files. A badge or lesson nobody has uploaded to is just noise here
+        // (a real org has dozens of badges and most take no uploads).
+        .filter((g) => countFiles(g.filtered) > 0)
 
     const {items: sortedGroups, requestSort, sortConfig} = useSortableData(groups)
 
-    if (term && groups.length === 0) {
-        return <p className="text-sm text-slate-400">No matching entries.</p>
+    if (groups.length === 0) {
+        return <p className="text-sm text-slate-400">{term ? "No matching entries." : "No files submitted yet."}</p>
     }
 
     return (
@@ -357,6 +367,7 @@ const LessonGroups = (props: GroupsProps & {lessons: FileLockerProps["lessons"],
  * @constructor
  */
 export const FileLocker = (props: FileLockerProps) => {
+    const classLabels = classOptionLabels(props.classes || [])
     const [internalTab, setInternalTab] = React.useState(props.tab || "students")
     // Optionally-controlled: a caller (hub, reading a ?tab= query param) can drive this directly;
     // every other/Storybook usage falls back to local state, unaffected.
@@ -562,8 +573,8 @@ export const FileLocker = (props: FileLockerProps) => {
                     onChange={(e) => props.onClassChange(e.target.value)}
                     className="w-64 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-dark-blue-400 focus:border-sky-blue-400 focus:outline-none"
                 >
-                    <option value="">Select a class</option>
-                    {props.classes.map((g) => <option key={g.classId} value={g.classId}>{g.name}</option>)}
+                    <option value="">All classes</option>
+                    {props.classes.map((g) => <option key={g.classId} value={g.classId}>{classLabels[g.classId] || g.name}</option>)}
                 </select>
             )}
 

@@ -9,11 +9,11 @@ export type DashboardShellProps = {
   sidebar: React.ReactNode;
   topBar?: React.ReactNode;
   isLoading?: boolean;
-  /** Contextual text shown beneath the loading spinner (e.g. "Loading dashboard activity..."). Omit to keep the original bare-spinner loading state. */
+  /** Text shown beneath the loading spinner (e.g. "Loading dashboard activity..."). Defaults to "Loading…". */
   loadingLabel?: string;
-  /** Spinner width/height in px while loading. Omit to keep the original small (35px) spinner. */
+  /** Spinner width/height in px while loading. Defaults to 40. */
   loadingSize?: number;
-  /** Tailwind stroke color class for the loading spinner. Omit to keep the original low-contrast default. */
+  /** Tailwind stroke color class for the loading spinner. Defaults to "stroke-sky-blue-400". */
   loadingStrokeClassName?: string;
   children?: React.ReactNode;
 };
@@ -39,11 +39,14 @@ export const DashboardShell = (props: DashboardShellProps) => {
       <div className="flex flex-1 flex-col overflow-hidden print:overflow-visible">
         <div className="print:hidden">{props.topBar}</div>
         <div className="flex-1 overflow-y-auto print:overflow-visible">
+          {/* Defaults to a visible, labeled spinner. The old small pale-blue one was easy to miss, so
+              a loading page looked blank. */}
           <Loader
             isLoading={props.isLoading}
-            label={props.loadingLabel}
-            size={props.loadingSize}
-            strokeClassName={props.loadingStrokeClassName}
+            label={props.loadingLabel ?? "Loading…"}
+            size={props.loadingSize ?? 40}
+            strokeClassName={props.loadingStrokeClassName ?? "stroke-sky-blue-400"}
+            anchorTop
           >
             <div className="flex min-h-full flex-col print:min-h-0">
               <div className="flex flex-1 flex-col gap-3.5 p-5 print:p-0">{props.children}</div>

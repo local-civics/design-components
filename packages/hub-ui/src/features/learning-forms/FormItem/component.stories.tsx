@@ -30,3 +30,25 @@ const Template: Story<FormItemProps> = (args) => (
  */
 export const Component: Story<FormItemProps> = Template.bind({});
 Component.args = {};
+
+/**
+ * A file question whose answer is a file already uploaded to the platform: a "File uploaded ·
+ * View" row, with the link box left empty for replacing it, instead of the raw storage address.
+ */
+export const FileUploaded: Story<FormItemProps> = Template.bind({});
+FileUploaded.args = {
+  format: "question",
+  questionType: "file upload",
+  required: true,
+  responses: ["https://cdn.localcivics.io/v1/store/answers/example"],
+};
+
+/**
+ * A file question answered with a pasted link: shown in the box as before.
+ */
+export const LinkPasted: Story<FormItemProps> = Template.bind({});
+LinkPasted.args = {
+  format: "question",
+  questionType: "file upload",
+  responses: ["https://docs.google.com/document/d/example"],
+};
