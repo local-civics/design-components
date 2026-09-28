@@ -26,15 +26,30 @@ export const Tab = (props: TabProps) => {
   withSecondary(config, props.secondary);
 
   const onClick = () => !props.disabled && !props.active && props.onClick && props.onClick();
+  // Keyboard users reach and pick tabs the same way a click does.
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick();
+    }
+  };
   return (
-    <div onClick={onClick} className={classname(config.container)}>
+    <div
+      role="tab"
+      aria-selected={!!props.active}
+      aria-disabled={props.disabled || undefined}
+      tabIndex={props.disabled ? -1 : 0}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      className={classname(config.container)}
+    >
       <div className="m-auto w-max">
         {props.icon && (
           <div className={classname(config.icon)}>
             <Icon name={props.icon} />
           </div>
         )}
-        <h4 className={classname(config.title)}>{props.title}</h4>
+        <div className={classname(config.title)}>{props.title}</div>
       </div>
     </div>
   );
