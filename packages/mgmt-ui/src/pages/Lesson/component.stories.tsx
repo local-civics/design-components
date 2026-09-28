@@ -63,6 +63,13 @@ Mock.args = {
             },{
                 questionName: "A chart example question",
                 answer: ["A. An example response"],
+            },{
+                // Exercises AnswerValue: an uploaded file and a pasted link render as buttons.
+                questionName: "Upload your project file",
+                answer: ["https://cdn.localcivics.io/v1/store/organizations/example/users/example/2oUT5srnypfmNxzPn2KHFz?version=example"],
+            },{
+                questionName: "Or paste a link to your project",
+                answer: ["https://docs.google.com/document/d/example"],
             }]
         },
         {

@@ -169,9 +169,11 @@ export const PathwayTranscript = (props: PathwayCardProps) => {
           </p>
         </div>
         <div>
-          <p className="mb-1 text-[9px] font-black uppercase tracking-widest text-slate-400">Record Status</p>
-          <Pill label="Verified" accent="mint" />
-          <p className="mt-1 text-[10px] text-slate-400">{today}</p>
+          {/* When this copy was made, so a downloaded transcript says how current it is. (It used to
+              show a fixed "Verified" status, which said nothing; the real status is in the Pathway
+              Status tile below.) */}
+          <p className="mb-1 text-[9px] font-black uppercase tracking-widest text-slate-400">Generated</p>
+          <p className="font-bold text-dark-blue-400">{today}</p>
         </div>
       </div>
 

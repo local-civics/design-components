@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/PlaceholderBanner";
 import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
+import {AnswerValue} from "../../components/data/AnswerValue/AnswerValue";
 
 /**
  * Item. One entry per lesson this student has any activity record for - not per question, and not
@@ -95,7 +96,7 @@ export function Table(props: TableProps) {
                                             className={`px-5 py-4 ${i < row.questions.length - 1 || row.reflection ? "border-b border-slate-100" : ""}`}
                                         >
                                             <div className="text-xs font-semibold text-slate-500">{q.questionName}</div>
-                                            <div className="mt-1 text-xs text-slate-600">{q.answer.join(", ")}</div>
+                                            <AnswerValue answer={q.answer} className="mt-1 text-xs text-slate-600" />
                                         </div>
                                     ))}
                                     {row.reflection && (

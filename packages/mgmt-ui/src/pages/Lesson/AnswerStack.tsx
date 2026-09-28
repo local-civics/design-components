@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
+import {AnswerValue} from "../../components/data/AnswerValue/AnswerValue";
 
 /**
  * Item
@@ -32,30 +33,28 @@ export type StackData = {
 export type StackProps = StackData
 
 /**
- * Stack. The whole block is one link to the student's full response - but unlike Badge/LessonStack's
- * short, conventionally-blue lesson-name links, there's no single short label to color here (a
- * question/answer preview reads as prose, not a list row), so nothing about it visually signals
- * "this is clickable" on its own. The trailing "View full response" line exists specifically to fix
- * that - it's the one piece of this block styled like every other link in the app (dark-blue,
- * underline on hover), so the block's own click-through is discoverable rather than accidental.
+ * Stack. A student's recorded answers and reflection on this lesson, with a "View full response"
+ * link to their full response. Only that link navigates - the block used to be one big link, which
+ * meant an uploaded file couldn't be a link of its own and showed as a raw address. Answers go
+ * through AnswerValue, so files and pasted links open directly from here.
  * Also never renders nothing: a student with neither recorded question/answer pairs nor a
  * reflection (e.g. one who's done other work on the lesson but hasn't touched its question-format
  * items or reflection prompt yet) still shows an honest message rather than silently rendering an
  * empty block.
- * @constructor
  * @param props
+ * @constructor
  */
 export function Stack(props: StackProps) {
     const hasAnswers = props.items.length > 0
     const hasReflection = !!props.reflection
 
     return (
-        <Link to={props.href} state={props.state} className="flex flex-col gap-4 no-underline">
+        <div className="flex flex-col gap-4">
             {hasAnswers ? (
                 props.items.map((row) => (
                     <div key={row.questionName}>
                         <div className="text-sm font-bold text-dark-blue-400">{row.questionName}</div>
-                        <div className="mt-1 text-sm text-slate-600">{row.answer.join(", ") || "No answer."}</div>
+                        <AnswerValue answer={row.answer} emptyText="No answer." className="mt-1 text-sm text-slate-600" />
                     </div>
                 ))
             ) : !hasReflection ? (
@@ -76,7 +75,9 @@ export function Stack(props: StackProps) {
                 </div>
             )}
 
-            <div className="text-xs font-bold text-dark-blue-400 hover:underline">View full response →</div>
-        </Link>
+            <Link to={props.href} state={props.state} className="w-fit text-xs font-bold text-dark-blue-400 no-underline hover:underline">
+                View full response →
+            </Link>
+        </div>
     );
 }
