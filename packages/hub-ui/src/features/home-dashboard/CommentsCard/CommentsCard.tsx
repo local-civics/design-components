@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconMessageCircle } from "@tabler/icons";
+import { IconChevronDown, IconChevronUp, IconMessageCircle } from "@tabler/icons";
 import { Loader } from "../../../components/Loader";
 import { Pill } from "../Pill/Pill";
 
@@ -39,6 +39,10 @@ export type CommentsCardProps = {
   onViewAll?: () => void;
   onBadgeClick?: (badgeId: string) => void;
   onLessonClick?: (lessonId: string) => void;
+  // Start as a compact summary (header + the three counts) with the recent comments hidden behind a
+  // "Show recent comments" bar. My Profile uses this so the card can sit near the top of the page
+  // without pushing everything else down. Off by default: the card shows everything.
+  collapsible?: boolean;
 };
 
 const RECENT_COUNT = 4;
@@ -57,6 +61,8 @@ const formatDate = (value?: string) => {
  * Needs submission / Resolved), then the most recent comments themselves, each with a hyperlink
  * straight to the badge/lesson it concerns. "View All" is the same destination the sidebar's own
  * Comments tab already points at - this card is a summary of that page, not a replacement for it.
+ * With `collapsible`, it starts as just the header and counts; expanding shows the full card and
+ * scrolls it into view.
  * @param props
  * @constructor
  */
@@ -73,8 +79,26 @@ export const CommentsCard = (props: CommentsCardProps) => {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, RECENT_COUNT);
 
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = React.useState(!props.collapsible);
+  const collapsed = !!props.collapsible && !expanded;
+  // Nothing to expand into, so the collapsed card says so in one line rather than showing 0 / 0 / 0.
+  const emptySummary = collapsed && !props.isLoading && comments.length === 0;
+
+  const toggle = () => {
+    const next = !expanded;
+    setExpanded(next);
+    if (next) {
+      // After the list renders, bring it into view.
+      window.requestAnimationFrame(() => ref.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
+    }
+  };
+
   return (
-    <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-mint-400/20 bg-white shadow-[0_4px_20px_rgba(88,214,141,0.12)]">
+    <div
+      ref={ref}
+      className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-mint-400/20 bg-white shadow-[0_4px_20px_rgba(88,214,141,0.12)]"
+    >
       <div className="h-1 bg-gradient-to-r from-mint-400 to-sky-blue-400" />
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3.5">
         <div className="flex items-center gap-2.5">
@@ -95,29 +119,47 @@ export const CommentsCard = (props: CommentsCardProps) => {
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-2 border-b border-slate-100 px-4 py-3">
-        <StatCell label="Needs validation" value={needsValidation} />
-        <StatCell label="Needs submission" value={needsSubmission} />
-        <StatCell label="Resolved" value={resolved} />
-      </div>
+      {emptySummary ? (
+        <p className="px-4 py-3 text-sm text-slate-400">No comments from your educators yet.</p>
+      ) : (
+        <div className={`grid grid-cols-3 gap-2 px-4 py-3 ${collapsed ? "" : "border-b border-slate-100"}`}>
+          <StatCell label="Needs validation" value={needsValidation} />
+          <StatCell label="Needs submission" value={needsSubmission} />
+          <StatCell label="Resolved" value={resolved} />
+        </div>
+      )}
 
-      <div className="relative flex-1 p-4">
-        <Loader isLoading={props.isLoading}>
-          {recent.length === 0 && <p className="text-sm text-slate-400">No comments yet.</p>}
-          {recent.length > 0 && (
-            <div className="flex flex-col gap-2.5">
-              {recent.map((c) => (
-                <CommentRow
-                  key={c.commentId}
-                  comment={c}
-                  onBadgeClick={props.onBadgeClick}
-                  onLessonClick={props.onLessonClick}
-                />
-              ))}
-            </div>
-          )}
-        </Loader>
-      </div>
+      {!collapsed && (
+        <div className="relative flex-1 p-4">
+          <Loader isLoading={props.isLoading}>
+            {recent.length === 0 && <p className="text-sm text-slate-400">No comments yet.</p>}
+            {recent.length > 0 && (
+              <div className="flex flex-col gap-2.5">
+                {recent.map((c) => (
+                  <CommentRow
+                    key={c.commentId}
+                    comment={c}
+                    onBadgeClick={props.onBadgeClick}
+                    onLessonClick={props.onLessonClick}
+                  />
+                ))}
+              </div>
+            )}
+          </Loader>
+        </div>
+      )}
+
+      {props.collapsible && comments.length > 0 && (
+        <button
+          type="button"
+          aria-expanded={expanded}
+          onClick={toggle}
+          className="flex w-full items-center justify-center gap-1 border-t border-slate-100 py-2 text-xs font-bold text-sky-blue-400 hover:bg-slate-50"
+        >
+          {expanded ? "Hide recent comments" : `Show recent comments (${recent.length})`}
+          {expanded ? <IconChevronUp size={14} stroke={2} /> : <IconChevronDown size={14} stroke={2} />}
+        </button>
+      )}
     </div>
   );
 };

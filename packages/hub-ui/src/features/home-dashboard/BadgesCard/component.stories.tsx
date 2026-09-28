@@ -33,3 +33,16 @@ Component.args = {
     { badgeId: "6", displayName: "Leadership Lab", isLocked: true },
   ],
 };
+
+/**
+ * A real org's catalog: 20 available badges in one tab. The body caps at about three rows with its
+ * own scrollbar, and "Show all 20" removes the cap.
+ */
+export const ManyBadges: Story<BadgesCardProps> = Template.bind({});
+ManyBadges.args = {
+  badges: Array.from({ length: 20 }, (_, i) => ({
+    badgeId: `many-${i}`,
+    displayName: i % 3 === 0 ? `NYS Seal of Civic Readiness ${i + 1}: A Longer Badge Name` : `Badge ${i + 1}`,
+    level: 0,
+  })),
+};

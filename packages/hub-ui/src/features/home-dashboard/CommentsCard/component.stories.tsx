@@ -86,3 +86,22 @@ Loading.args = {
   comments: [],
   isLoading: true,
 };
+
+/**
+ * My Profile's placement: starts as the header and counts only, with "Show recent comments" to
+ * expand into the full card.
+ */
+export const Collapsible: Story<CommentsCardProps> = Template.bind({});
+Collapsible.args = {
+  ...Component.args,
+  collapsible: true,
+};
+
+/**
+ * Collapsible with no comments: one line in place of the zero counts, and nothing to expand.
+ */
+export const CollapsibleEmpty: Story<CommentsCardProps> = Template.bind({});
+CollapsibleEmpty.args = {
+  comments: [],
+  collapsible: true,
+};
