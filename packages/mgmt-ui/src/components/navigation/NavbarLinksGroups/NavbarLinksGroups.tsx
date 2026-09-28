@@ -92,30 +92,40 @@ export function LinksGroup({ icon: Icon, href, label, accent = "cyan", initially
         </div>
     );
 
+    const rowClassName = `flex items-center gap-2.5 rounded-[10px] border px-3.5 py-2.5 transition-colors ${
+        isActive ? accentClasses.row : "border-transparent hover:bg-slate-50"
+    }`;
+    const notificationPill = !!notifications && (
+        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${accentClasses.pill}`}>
+            {compact(notifications)}
+        </span>
+    );
+
     return (
         <div>
-            <div
-                onClick={() => hasLinks && setOpened((o) => !o)}
-                className={`flex items-center gap-2.5 rounded-[10px] border px-3.5 py-2.5 transition-colors ${
-                    isActive ? accentClasses.row : "border-transparent hover:bg-slate-50"
-                } ${hasLinks ? "cursor-pointer" : ""}`}
-            >
-                {hasLinks ? rowInner : <Link to={href} className="flex flex-1 items-center gap-2.5 no-underline">{rowInner}</Link>}
-
-                {!!notifications && (
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${accentClasses.pill}`}>
-                        {compact(notifications)}
-                    </span>
-                )}
-
-                {hasLinks && (
+            {hasLinks ? (
+                // A group toggles open rather than navigating, so it's a real button: reachable by
+                // keyboard, and it tells screen readers whether it's open.
+                <button
+                    type="button"
+                    aria-expanded={opened}
+                    onClick={() => setOpened((o) => !o)}
+                    className={`${rowClassName} w-full cursor-pointer text-left`}
+                >
+                    {rowInner}
+                    {notificationPill}
                     <IconChevronRight
                         size={13}
                         stroke={2.2}
                         className={`shrink-0 text-slate-300 transition-transform ${opened ? "rotate-90" : ""}`}
                     />
-                )}
-            </div>
+                </button>
+            ) : (
+                <div className={rowClassName}>
+                    <Link to={href} className="flex flex-1 items-center gap-2.5 no-underline">{rowInner}</Link>
+                    {notificationPill}
+                </div>
+            )}
             {hasLinks && opened && (
                 <div className="ml-[29px] mt-0.5 flex flex-col gap-0.5 border-l border-slate-100 pl-2.5">{items}</div>
             )}
