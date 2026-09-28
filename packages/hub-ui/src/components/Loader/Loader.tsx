@@ -19,6 +19,12 @@ export type LoaderProps = {
    * content happens to compute to.
    */
   label?: string;
+  /**
+   * With a label, put the spinner a quarter of the way down the screen instead of centering it in
+   * the content's full height. The content is laid out (invisibly) while loading, so a tall page
+   * would otherwise push a centered spinner below the fold. Used by DashboardShell.
+   */
+  anchorTop?: boolean;
 };
 
 /**
@@ -30,7 +36,9 @@ export const Loader = (props: LoaderProps) => {
 
   const loaderClassName = builder(
     props.label
-      ? "flex absolute top-0 left-0 h-full min-h-[50vh] w-full flex-col items-center justify-center gap-3 transition ease-in-out duration-500"
+      ? `flex absolute top-0 left-0 h-full min-h-[50vh] w-full flex-col items-center gap-3 transition ease-in-out duration-500 ${
+          props.anchorTop ? "justify-start pt-[25vh]" : "justify-center"
+        }`
       : "flex absolute top-0 left-0 h-full w-full m-auto transition ease-in-out duration-500"
   )
     .if(!!props.isLoading, "visible opacity-full")
