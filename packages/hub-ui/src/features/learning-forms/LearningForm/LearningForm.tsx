@@ -206,6 +206,8 @@ export const LearningForm = (props: LearningFormProps) => {
           return <FormItem key={item.itemId} {...item} minText={0} disabled={!!props.preview} />;
         })}
 
+        {/* No prefilled value: FormItem's "Your answer" placeholder shows instead. The old prefill
+            ("My Reflection: ") was saved into every reflection a student typed. */}
         <FormItem
           displayName="Optional: What is one takeaway from this lesson?"
           description=""
@@ -215,7 +217,7 @@ export const LearningForm = (props: LearningFormProps) => {
           onResponseChange={onReflectionChange}
           paragraph
           minText={MIN_REFLECTION_LENGTH}
-          responses={reflection ? [reflection] : ["My Reflection: "]}
+          responses={reflection ? [reflection] : []}
         />
 
         <FormItem>
