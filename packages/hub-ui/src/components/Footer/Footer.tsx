@@ -6,7 +6,7 @@ const LINKS: { label: string; href: string }[] = [
   { label: "About", href: "https://www.localcivics.io" },
   { label: "Terms", href: "https://www.localcivics.io/terms-of-service" },
   { label: "Privacy", href: "https://www.localcivics.io/privacy-policy" },
-  { label: "Help Center", href: "https://localcivics.notion.site/Help-Center-b52300f587b64fc0a61f512686e7626d" },
+  { label: "Help Center", href: "https://app.notion.com/p/localcivics/Help-Centre-3dc9ee47430e8025b038c19064307b2c" },
 ];
 
 const SOCIALS: { label: string; href: string; icon: typeof IconBrandInstagram }[] = [

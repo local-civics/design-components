@@ -183,7 +183,7 @@ export const App = (props: AppProps) => {
                         <Text
                             className={classes.link}
                             component="a"
-                            href="https://localcivics.notion.site/Help-Center-b52300f587b64fc0a61f512686e7626d"
+                            href="https://app.notion.com/p/localcivics/Help-Centre-3dc9ee47430e8025b038c19064307b2c"
                             target="_blank"
                         >
                             Help Center
