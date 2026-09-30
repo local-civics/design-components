@@ -60,6 +60,11 @@ export type PathwayProps = {
     linkState?: any
     // Jumps to a student's own cross-class profile from the "By student" tab - see Pathway/Table.tsx.
     onStudentClick?: (userId: string) => void
+    // Which tab shows. Controlled when given: hub keeps it in ?tab= so Back and reload return to
+    // the tab the educator last used. Otherwise local state. Either way an unknown value falls back
+    // to "students".
+    tab?: string
+    onTabChange?: (tab: string) => void
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -67,9 +72,11 @@ export type PathwayProps = {
     onExportDataClick: () => void;
 }
 
+// "By student" first: it's the grading workflow (status, search, the Prev/Next queue into
+// student previews), and it matches File Locker and Comment Center, which also open on students.
 const TABS = [
-    {label: "By Badge", value: "badges"},
     {label: "By student", value: "students"},
+    {label: "By Badge", value: "badges"},
 ]
 
 /**
@@ -79,7 +86,12 @@ const TABS = [
  */
 export const Pathway = (props: PathwayProps) => {
     const classLabels = classOptionLabels(props.classes || [])
-    const [tab, setTab] = useState("badges")
+    const [localTab, setLocalTab] = useState("students")
+    const tab = TABS.some((t) => t.value === props.tab) ? props.tab as string : localTab
+    const setTab = (next: string) => {
+        setLocalTab(next)
+        props.onTabChange && props.onTabChange(next)
+    }
     const [categoriesOpen, setCategoriesOpen] = useState(false)
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
 

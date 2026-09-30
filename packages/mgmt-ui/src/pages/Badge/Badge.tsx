@@ -64,6 +64,9 @@ export type BadgeProps = {
     onStatusFilterChange?: (filter: BadgeStudentStatusFilter) => void
     // Jumps to a student's own profile from the "By student" tab - see Pathway.tsx's identical field.
     onStudentClick?: (userId: string) => void
+    // Which tab shows - controlled when given, see Pathway.tsx's identical field.
+    tab?: string
+    onTabChange?: (tab: string) => void
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -75,9 +78,10 @@ export type BadgeProps = {
     onFileLockerClick?: () => void;
 }
 
+// "By student" first - see Pathway.tsx's TABS.
 const TABS = [
-    {label: "By lesson", value: "lessons"},
     {label: "By student", value: "students"},
+    {label: "By lesson", value: "lessons"},
 ]
 
 /**
@@ -87,7 +91,12 @@ const TABS = [
  */
 export const Badge = (props: BadgeProps) => {
     const classLabels = classOptionLabels(props.classes || [])
-    const [tab, setTab] = useState("lessons")
+    const [localTab, setLocalTab] = useState("students")
+    const tab = TABS.some((t) => t.value === props.tab) ? props.tab as string : localTab
+    const setTab = (next: string) => {
+        setLocalTab(next)
+        props.onTabChange && props.onTabChange(next)
+    }
     const [search, setSearch] = useState("")
     const statusFilter = props.statusFilter || "all"
     const activityLoading = !!props.activityLoading

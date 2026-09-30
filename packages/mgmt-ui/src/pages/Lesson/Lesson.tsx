@@ -64,12 +64,22 @@ export type LessonProps = {
     onStatusFilterChange?: (filter: LessonStudentStatusFilter) => void
     // Jumps to a student's own profile from the "By student" tab - see Pathway.tsx's identical field.
     onStudentClick?: (userId: string) => void
+    // Which tab shows - controlled when given, see Pathway.tsx's identical field.
+    tab?: string
+    onTabChange?: (tab: string) => void
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
     onCopyLinkClick: () => void;
     onExportDataClick: () => void;
 }
+
+// "By student" first - see Pathway.tsx's TABS. "By question" holds only the multiple-choice
+// charts, a class-wide summary, one click away.
+const TABS = [
+    {label: "By student", value: "students"},
+    {label: "By question", value: "question"},
+]
 
 const initialsFor = (name: string) => name.split(/[ -]/).map((n) => n.charAt(0)).join('').toUpperCase()
 
@@ -80,12 +90,12 @@ const initialsFor = (name: string) => name.split(/[ -]/).map((n) => n.charAt(0))
  */
 export const Lesson = (props: LessonProps) => {
     const classLabels = classOptionLabels(props.classes || [])
-    // null until the educator picks a tab. Until then, open on "By question" only when there's a
-    // multiple-choice chart to show; most lessons are file uploads, where that tab is just an
-    // empty placeholder. Deriving it on each render (rather than seeding state once) follows the
-    // questions when they arrive after the first render.
-    const [pickedTab, setTab] = useState<string | null>(null)
-    const tab = pickedTab ?? ((props.questions || []).some((q) => q.chart) ? "question" : "students")
+    const [localTab, setLocalTab] = useState("students")
+    const tab = TABS.some((t) => t.value === props.tab) ? props.tab as string : localTab
+    const setTab = (next: string) => {
+        setLocalTab(next)
+        props.onTabChange && props.onTabChange(next)
+    }
     const [search, setSearch] = useState("")
     const statusFilter = props.statusFilter || "all"
 
@@ -107,15 +117,6 @@ export const Lesson = (props: LessonProps) => {
         matchesStudentStatus(s, statusFilter) && (!searchLower || (s.name || "").toLowerCase().includes(searchLower))
     )
     const activityLoading = !!props.activityLoading
-
-    // Trial and non-trial modes always showed the same 2 tabs here - "By reflection" was the only
-    // one ever dropped for trial, and it no longer exists at all (reflection/rating now render
-    // inline on each student's own row, see Table.tsx/AnswerStack.tsx), so there's nothing left to
-    // vary by mode.
-    const tabs = [
-        {label: "By question", value: "question"},
-        {label: "By student", value: "students"},
-    ]
 
     return (
         <div className="flex flex-col gap-5 px-4 py-8">
@@ -177,7 +178,7 @@ export const Lesson = (props: LessonProps) => {
 
             <div className="flex flex-col gap-3">
                 <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">
-                    {tabs.map((t) => (
+                    {TABS.map((t) => (
                         <button
                             key={t.value}
                             onClick={() => setTab(t.value)}
