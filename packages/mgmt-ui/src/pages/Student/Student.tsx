@@ -13,8 +13,10 @@ export type StudentProps = {
     loading: boolean
     name: string
     impactStatement: string
+    // Questions answered - the name predates the relabel, kept so hub's prop doesn't change.
     numberOfProblemsSolved: number
-    percentageOfLessonsCompleted: number
+    // Unused; optional so hub can stop sending it.
+    percentageOfLessonsCompleted?: number
     numberOfLessonsCompleted: number
     badges: BadgeItem[],
     // One entry per lesson with any activity record - see AnswerTable.tsx's Item, which now folds
@@ -113,7 +115,9 @@ export const Student = (props: StudentProps) => {
 
             <StatsGroup data={[
                 {
-                    title: "PROBLEMS SOLVED",
+                    // Counted from the student's own lesson records (questions with a non-empty
+                    // answer), not study's problemsSolved counter, which undercounted.
+                    title: "QUESTIONS ANSWERED",
                     value: props.numberOfProblemsSolved,
                 },
                 {
