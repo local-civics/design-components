@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconAlbum, IconCategory2, IconClipboard, IconClipboardCheck, IconMessageCircle, IconRoute} from '@tabler/icons';
+import {IconAlbum, IconCategory2, IconClipboard, IconClipboardCheck, IconEdit, IconMessageCircle, IconRoute} from '@tabler/icons';
 import {showNotification} from '@mantine/notifications';
 import {CardGradient} from "../../components/cards/CardGradient";
 
@@ -20,7 +20,9 @@ export type HomeProps = {
     onFileLockerClick: () => void;
     onCommentsClick: () => void;
     onValidationClick: () => void;
-
+    // Opens the same profile editor students get from My Profile. Optional: the button is hidden
+    // when it isn't passed.
+    onEditProfile?: () => void;
 }
 
 /**
@@ -57,6 +59,14 @@ export const Home = (props: HomeProps) => {
             <div className="flex-1">
                 <div className="text-[28px] font-extrabold text-dark-blue-400">{props.name}</div>
                 <div className="mt-1.5 text-[12.5px] text-slate-400">{props.impactStatement}</div>
+                {props.onEditProfile && <button
+                    type="button"
+                    onClick={props.onEditProfile}
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
+                >
+                    <IconEdit size={14} stroke={2}/>
+                    Edit Profile
+                </button>}
             </div>
 
             <div className="flex w-full shrink-0 flex-col justify-between gap-3 rounded-2xl lg:w-[440px] bg-gradient-to-br from-dark-blue-600 via-dark-blue-400 to-sky-blue-400 p-5">
