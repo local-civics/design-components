@@ -33,3 +33,8 @@ const Template: Story<SettingsCardProps> = (args) => (
  */
 export const Component: Story<SettingsCardProps> = Template.bind({});
 Component.args = {};
+
+export const Educator: Story<SettingsCardProps> = Template.bind({});
+Educator.args = {
+  gradeDescription: "What grade do you teach?",
+};

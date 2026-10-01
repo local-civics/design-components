@@ -15,6 +15,9 @@ export type SettingsCardProps = {
   isLoading?: boolean;
   visible?: boolean;
   hasChanges?: boolean;
+  // The question under "Grade". Defaults to the student wording; the caller passes its own for
+  // other roles (e.g. an educator editing their profile).
+  gradeDescription?: string;
   onClose?: () => void;
   onSave?: (changes?: {
     name?: string;
@@ -152,7 +155,7 @@ export const SettingsCard = (props: SettingsCardProps) => {
 
             <div>
               <p className="mb-2 font-semibold text-slate-500 text-sm">Grade</p>
-              <p className="mb-2 text-slate-500 text-xs">What grade are you in?</p>
+              <p className="mb-2 text-slate-500 text-xs">{props.gradeDescription || "What grade are you in?"}</p>
               <select
                 onChange={(e) => setGrade(parseInt(e.target.value, 10))}
                 defaultValue={grade}
