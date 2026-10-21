@@ -7,6 +7,9 @@ export type PathwayCategory = {
     description?: string
     parentCategoryId?: string
     maxPoints?: number
+    // Which intervention lists this category feeds (e.g. ["CR-02"]); set by platform staff in the
+    // category's config. hub reads it to evaluate the Interventions tab - not shown in the popup.
+    interventionCodes?: string[]
 }
 
 /**

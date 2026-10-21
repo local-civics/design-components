@@ -1,7 +1,73 @@
 import * as React          from "react";
 import {MemoryRouter}      from "react-router-dom";
 import {Pathway, PathwayProps} from "./Pathway";
+import {InterventionList}  from "./Interventions";
 import { Story }           from "@storybook/react";
+
+/**
+ * Intervention lists as hub would evaluate them for this pathway (data, not computed here): a
+ * populated list, a list with a long wrapped "Missing" cell, an empty cohort (count 0), and a
+ * no-progress list covering Stalled, Not started and a roster entry without an account.
+ */
+const interventions: InterventionList[] = [
+    {
+        code: "CR-01",
+        title: "Almost There",
+        purpose: "Students within 1 point of the 6-point requirement. A small push may be all they need.",
+        action: "Reach out with a menu of approved opportunities, such as clubs, service events, or a capstone project.",
+        columns: [
+            {key: "points", label: "Points Earned (out of 6)", numeric: true},
+            {key: "needed", label: "Additional Points Needed", numeric: true},
+        ],
+        rows: [
+            {userId: "1", name: "Jane Doe", email: "jane.doe@localcivics.io", className: "AP History", grade: "11", values: {points: 5.5, needed: 0.5}},
+            {userId: "3", name: "Maria Santos", email: "maria.santos@localcivics.io", className: "Government", grade: "12", values: {points: 5, needed: 1}},
+        ],
+    },
+    {
+        code: "CR-02",
+        title: "Off-track Civic Knowledge",
+        purpose: "Students still below the Civic Knowledge requirement who have no credit in at least one required item.",
+        action: "Check for missing Regents scores or coursework: a retake, make-up work, or a transcript update. Students with an exemption can be credited in the Validation Center.",
+        columns: [
+            {key: "missing", label: "Missing"},
+            {key: "progress", label: "Civic Knowledge", numeric: true},
+            {key: "total", label: "Total Points", numeric: true},
+        ],
+        rows: [
+            {userId: "4", name: "Devon Price", email: "devon.price@localcivics.io", className: "Government", grade: "12",
+                values: {missing: "1b. and 1c. US Regents Scores, 1d. Advanced Social Studies Course", progress: "1 of 2", total: 3}},
+            {userId: "1", name: "Jane Doe", email: "jane.doe@localcivics.io", className: "AP History", grade: "11",
+                values: {missing: "1d. Advanced Social Studies Course", progress: "1 of 2", total: 2.5}},
+        ],
+    },
+    {
+        code: "CR-04",
+        title: "Capstone Push",
+        purpose: "Students without capstone credit who haven't yet completed the pathway, closest to completion first.",
+        action: "Offer submission support, with dedicated time and space to finish.",
+        columns: [
+            {key: "capstone", label: "2f. High School Capstone Project Points", numeric: true},
+            {key: "total", label: "Total Points (out of 6)", numeric: true},
+        ],
+        rows: [],
+    },
+    {
+        code: "CR-07",
+        title: "No Progress (8 weeks)",
+        purpose: "Students with no new points in any category over the last 8 weeks, estimated from badge completion dates. Students with no points at all are labeled Not started.",
+        action: "Check in with the student and find out what is blocking them.",
+        columns: [
+            {key: "status", label: "Status"},
+            {key: "total", label: "Total Points", numeric: true},
+        ],
+        rows: [
+            {userId: "5", name: "Priya Nair", email: "priya.nair@localcivics.io", className: "AP History", grade: "11", values: {status: "Stalled", total: 2}},
+            {userId: "6", name: "Tom Becker", email: "tom.becker@localcivics.io", className: "Government", grade: "12", values: {status: "Not started", total: 0}},
+            {userId: "7", name: "Alex Rivera", email: "alex.rivera@localcivics.io", className: "AP History", grade: "", hasAccount: false, values: {status: "No account yet", total: 0}},
+        ],
+    },
+];
 
 /**
  * Storybook component configuration
@@ -85,6 +151,7 @@ Mock.args = {
     ],
     criteria: {ramapo1category3: 6, ramapo1category1: 2, ramapo1category2: 2},
     displayTags: ["NYS SEAL", "Civic Skills", "High School"],
+    interventions,
     students: [{
         userId: "1",
         avatar: "",
@@ -139,4 +206,26 @@ Mock.args = {
         categories: ["something-else"],
         weight: 1,
     }],
+};
+
+/**
+ * Opens straight on the Interventions tab (controlled via `tab`, the way hub's ?tab= does).
+ */
+export const InterventionsTab: Story<PathwayProps> = Template.bind({});
+InterventionsTab.args = {
+    ...Mock.args,
+    tab: "interventions",
+    onExportIntervention: (code: string) => console.log("export", code),
+};
+
+/**
+ * Activity data still loading after a class switch while the URL names the Interventions tab: the
+ * tab stays put and shows its loading state instead of flipping to "By student".
+ */
+export const InterventionsLoading: Story<PathwayProps> = Template.bind({});
+InterventionsLoading.args = {
+    ...Mock.args,
+    interventions: [],
+    tab: "interventions",
+    activityLoading: true,
 };

@@ -7,6 +7,7 @@ import {SplitButton} from "./SplitButton";
 import {Table, Item} from "./Table";
 import {Table as BadgeTable, Item as BadgeItem} from "./BadgeTable";
 import {CategoriesModal} from "./CategoriesModal";
+import {Interventions, InterventionList} from "./Interventions";
 import {PathwayCategory} from "./buildCategoryTree";
 import {classOptionLabels} from "../../utils/classOptions";
 
@@ -65,6 +66,11 @@ export type PathwayProps = {
     // to "students".
     tab?: string
     onTabChange?: (tab: string) => void
+    // Rule-based lists of students who need attention (see Pathway/Interventions.tsx). hub
+    // evaluates them from the students' points; the tab only appears when there is at least one.
+    interventions?: InterventionList[]
+    // Downloads one intervention list as a CSV.
+    onExportIntervention?: (code: string) => void
 
     onBackClick: () => void;
     onClassChange: (classId: string) => void;
@@ -87,7 +93,18 @@ const TABS = [
 export const Pathway = (props: PathwayProps) => {
     const classLabels = classOptionLabels(props.classes || [])
     const [localTab, setLocalTab] = useState("students")
-    const tab = TABS.some((t) => t.value === props.tab) ? props.tab as string : localTab
+
+    const interventionLists = props.interventions || []
+    // Students on at least one list, counted once each, so the tab can say how many need attention
+    // without opening it.
+    const studentsNeedingAttention = new Set(interventionLists.flatMap((l) => l.rows.map((r) => r.userId))).size
+    // Stays visible while a class switch reloads the activity data (the lists are empty until it
+    // lands) if it's the tab the URL names, so the page doesn't flip to "By student" and back.
+    const showInterventionsTab = !props.trial && (
+        interventionLists.length > 0 || (props.tab === "interventions" && !!props.activityLoading)
+    )
+    const tabs = showInterventionsTab ? [...TABS, {label: "Interventions", value: "interventions"}] : TABS
+    const tab = tabs.some((t) => t.value === props.tab) ? props.tab as string : localTab
     const setTab = (next: string) => {
         setLocalTab(next)
         props.onTabChange && props.onTabChange(next)
@@ -206,13 +223,16 @@ export const Pathway = (props: PathwayProps) => {
             <div className="flex flex-col gap-3">
                 {!props.trial && (
                     <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">
-                        {TABS.map((t) => (
+                        {tabs.map((t) => (
                             <button
                                 key={t.value}
                                 onClick={() => setTab(t.value)}
-                                className={`rounded-lg px-4 py-2 text-xs font-bold ${tab === t.value ? "bg-sky-blue-400/20 text-dark-blue-400" : "text-slate-400 hover:text-slate-600"}`}
+                                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold ${tab === t.value ? "bg-sky-blue-400/20 text-dark-blue-400" : "text-slate-400 hover:text-slate-600"}`}
                             >
                                 {t.label}
+                                {t.value === "interventions" && studentsNeedingAttention > 0 && (
+                                    <span className="rounded-full bg-gold-400/30 px-1.5 py-0.5 text-[10px] text-dark-blue-400">{studentsNeedingAttention}</span>
+                                )}
                             </button>
                         ))}
                     </div>
@@ -220,6 +240,7 @@ export const Pathway = (props: PathwayProps) => {
 
                 {(!!props.trial || tab === "badges") && <BadgeTable loading={props.loading} completionLoading={props.activityLoading} badges={props.badges} categories={badgeGroupCategories} activeCategoryId={selectedCategoryId} activeCategoryLabel={selectedCategoryName} />}
                 {(!props.trial && tab === "students") && <Table loading={props.loading || !!props.activityLoading} items={props.students} categories={props.categories} linkState={props.linkState} onStudentClick={props.onStudentClick} />}
+                {(!props.trial && tab === "interventions") && <Interventions loading={props.loading || !!props.activityLoading} interventions={interventionLists} onStudentClick={props.onStudentClick} onExport={props.onExportIntervention} />}
             </div>
 
             <CategoriesModal
