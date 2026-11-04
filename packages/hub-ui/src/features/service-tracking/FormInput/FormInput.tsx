@@ -1,14 +1,19 @@
 import React from "react";
 
 /**
+ * A dropdown option: a plain string (shown and sent as is), or a value with a different label.
+ */
+export type FormInputOption = string | { value: string; label: string };
+
+/**
  * FormInputProps
  */
 export type FormInputProps = {
   headline?: string;
   summary?: string;
   value?: string;
-  type?: "text" | "number" | "tel" | "email" | "date" | "dropdown";
-  options?: string[];
+  type?: "text" | "number" | "tel" | "email" | "date" | "url" | "dropdown";
+  options?: FormInputOption[];
   placeholder?: string;
   paragraph?: boolean;
   readonly?: boolean;
@@ -74,12 +79,14 @@ const DropDownInput = (props: FormInputProps) => {
       value={props.value || ""}
       onChange={onChange}
     >
-      <option value="">{props.readonly && !props.value ? "N/A" : "Select one"}</option>
+      <option value="">{props.readonly && !props.value ? "N/A" : props.placeholder || "Select one"}</option>
 
       {options.map((option) => {
+        const value = typeof option === "string" ? option : option.value;
+        const label = typeof option === "string" ? option : option.label;
         return (
-          <option key={option} value={option}>
-            {option}
+          <option key={value} value={value}>
+            {label}
           </option>
         );
       })}

@@ -7,6 +7,8 @@ import { Modal } from "../../../components/Modal";
  * FormSubmitDialogProps
  */
 export type FormSubmitDialogProps = {
+  title?: string;
+  message?: string;
   onGoBack?: () => void;
   onContinue?: () => void;
 };
@@ -27,9 +29,9 @@ export const FormSubmitDialog = (props: FormSubmitDialogProps) => {
 
           <div className="text-slate-700 text-center">
             <div className="font-bold text-lg">
-              <span>Your hours are logged!</span>
+              <span>{props.title || "Your hours are logged!"}</span>
             </div>
-            <p className="text-sm max-w-[16rem]">Click continue to go back home.</p>
+            <p className="text-sm max-w-[16rem]">{props.message || "Click continue to go back home."}</p>
           </div>
         </div>
 
