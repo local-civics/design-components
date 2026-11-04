@@ -5,6 +5,7 @@ import {
     IconCategory2,
     IconClipboard,
     IconClipboardCheck,
+    IconHeartHandshake,
     IconHome2,
     IconLambda,
     IconLogout,
@@ -34,7 +35,7 @@ export interface NavbarProps {
     onSwitchAccounts?: () => void;
 }
 
-const data: { label: string; icon: TablerIcon; accent: LinksGroupAccent; links?: { label: string }[] }[] = [
+const data: { label: string; icon: TablerIcon; accent: LinksGroupAccent; optional?: boolean; links?: { label: string }[] }[] = [
     { label: 'Home', icon: IconHome2, accent: "cyan" },
     { label: 'Classes', icon: IconCategory2, accent: "gold" },
     { label: 'Pathways', icon: IconRoute, accent: "cyan" },
@@ -43,6 +44,9 @@ const data: { label: string; icon: TablerIcon; accent: LinksGroupAccent; links?:
     { label: 'File Locker', icon: IconClipboard, accent: "cyan" },
     { label: 'Comments', icon: IconMessageCircle, accent: "mint" },
     { label: 'Validation', icon: IconClipboardCheck, accent: "gold" },
+    // `optional`: only shown once the caller supplies a link for it, so this package can be published
+    // before the app wires the page without leaving a dead row in the nav.
+    { label: 'Service Hours', icon: IconHeartHandshake, accent: "cyan", optional: true },
     { label: 'Organization', icon: IconBuilding, accent: "gold", links: [{ label: 'Overview' }, { label: 'People' }] },
 ]
 
@@ -64,6 +68,10 @@ const TRIAL_PAGES = [
  */
 export function Navbar(props: NavbarProps) {
     const links = data.map((item) => {
+        if(item.optional && !props.links[item.label]){
+            return null
+        }
+
         const context = props.links[item.label] || {notifications: 0, href: ""}
         if(context.hidden || (props.trial && TRIAL_PAGES.indexOf(item.label) === -1)){
             return null

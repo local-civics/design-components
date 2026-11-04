@@ -42,6 +42,23 @@ Component.args = {};
  */
 export const Mock: Story<StudentProps> = Template.bind({});
 Mock.args = {
+    serviceHours: [
+        {
+            entryId: "e1", revision: 1, userId: "u1", studentName: "Jane Doe", status: "pending",
+            serviceDate: "2026-11-02", hostName: "Rose Pantry", serviceType: "Community Service", hours: 4,
+            description: "Sorted and packed donations for the weekend food drive.",
+            contactPerson: "Pat Lee", contactEmail: "pat@example.org",
+            supports: "Civic Readiness · 2b. Service-Learning Project",
+            evidenceUrl: "https://cdn.localcivics.io/v1/store/example/proof.pdf", createdAt: "2026-11-03T14:20:00Z",
+        },
+        {
+            entryId: "e2", revision: 2, userId: "u1", studentName: "Jane Doe", status: "verified",
+            serviceDate: "2026-10-18", hostName: "Riverside Library", serviceType: "Community Service", hours: 3,
+            description: "Ran the reading hour for first graders.", createdAt: "2026-10-19T10:00:00Z",
+        },
+    ],
+    onApproveServiceHour: () => new Promise((resolve) => setTimeout(resolve, 500)),
+    onInvalidateServiceHour: () => new Promise((resolve) => setTimeout(resolve, 500)),
     badges: [{
         badgeId: "unit-1",
         badgeName: "Unit 1 Badge",
