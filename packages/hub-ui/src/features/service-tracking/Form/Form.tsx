@@ -8,6 +8,16 @@ import { FormExitDialog } from "../FormExitDialog/FormExitDialog";
 import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";
 
 /**
+ * A pathway a service entry can support. Categories are optional: the caller may load them only
+ * once a pathway is picked (see onPathwayChange).
+ */
+export type FormPathwayOption = {
+  pathwayId: string;
+  title: string;
+  categories?: { categoryId: string; name: string }[];
+};
+
+/**
  * FormProps
  */
 export type FormProps = {
@@ -16,8 +26,37 @@ export type FormProps = {
   showExitDialogue?: boolean;
   children?: React.ReactNode;
 
+  /** Heading, default "Service Log". Editing an entry says so. */
+  title?: string;
+  /** The line under the heading while filling in (the review step has its own). */
+  subtitle?: string;
+  /** Present when editing: the form opens filled in. Keys are the form's own response keys. */
+  initialValues?: Record<string, string>;
+  /** When given, the form offers the optional pathway (and, once one is picked, category) link. */
+  pathways?: FormPathwayOption[];
+  /** Fires when a pathway is picked, so the caller can load that pathway's categories. */
+  onPathwayChange?: (pathwayId: string) => void;
+  /** Shown in the confirmation dialog. Defaults to the original "Your hours are logged!" text. */
+  successTitle?: string;
+  successMessage?: string;
+
+  /**
+   * Submits the responses. When logging (no initialValues) they include a `clientEntryId`, fixed for
+   * the life of the form so a retry after a failed request cannot log the entry twice.
+   */
   onSubmit?: (responses: any) => Promise<any>;
   onClose?: () => void;
+};
+
+const newClientEntryId = () =>
+  typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function"
+    ? (crypto as any).randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+
+const today = () => {
+  const now = new Date();
+  const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 };
 
 /**
@@ -28,17 +67,27 @@ export type FormProps = {
 export const Form = (props: FormProps) => {
   const [showExitDialogue, setShowExitDialogue] = React.useState(!!props.showExitDialogue);
   const [showSubmitDialogue, setShowSubmitDialogue] = React.useState(!!props.showSubmitDialogue);
-  const [responses, setResponses] = React.useState({} as any);
+  const [responses, setResponses] = React.useState((props.initialValues || {}) as any);
+  const [clientEntryId] = React.useState(newClientEntryId);
   const [inReview, setInReview] = React.useState(!!props.inReview);
   const setResponse = (key: string, value: string) => {
     setResponses({ ...responses, [key]: value });
   };
+  const setPathway = (pathwayId: string) => {
+    // A category belongs to its pathway, so changing the pathway clears it.
+    setResponses({ ...responses, pathwayId, categoryId: "" });
+    if (pathwayId && props.onPathwayChange) {
+      props.onPathwayChange(pathwayId);
+    }
+  };
+  const pathway = (props.pathways || []).find((p) => p.pathwayId === responses["pathwayId"]);
+  const categories = (pathway && pathway.categories) || [];
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inReview) {
       setInReview(true);
     } else if (inReview && props.onSubmit) {
-      props.onSubmit(responses).then((err) => {
+      props.onSubmit(props.initialValues ? responses : { ...responses, clientEntryId }).then((err) => {
         if (!err) {
           setShowSubmitDialogue(true);
         }
@@ -61,9 +110,11 @@ export const Form = (props: FormProps) => {
                   <Icon name="service-tracking" />
                 </div>
                 <div className="text-slate-600">
-                  <p className="font-bold text-xl">Service Log</p>
+                  <p className="font-bold text-xl">{props.title || "Service Log"}</p>
                   <p className="text-sm">
-                    {inReview ? "Please review your submission." : "Tell us about your service below."}
+                    {inReview
+                      ? "Please review your submission."
+                      : props.subtitle || "Tell us about your service below."}
                   </p>
                 </div>
               </div>
@@ -110,6 +161,7 @@ export const Form = (props: FormProps) => {
                           readonly={inReview}
                           headline="Service Date"
                           type="date"
+                          max={today()}
                           value={responses["date"]}
                           onChange={(value) => setResponse("date", value)}
                         />
@@ -118,7 +170,7 @@ export const Form = (props: FormProps) => {
                           required
                           readonly={inReview}
                           headline="Service Hours"
-                          min={0}
+                          min={1}
                           max={24}
                           type="number"
                           value={responses["totalHours"]}
@@ -136,6 +188,32 @@ export const Form = (props: FormProps) => {
                         onChange={(value) => setResponse("type", value)}
                       />
 
+                      {!!props.pathways && props.pathways.length > 0 && (
+                        <FormInput
+                          readonly={inReview}
+                          headline="Pathway (optional)"
+                          summary="The pathway this service supports."
+                          type="dropdown"
+                          placeholder="None"
+                          value={responses["pathwayId"]}
+                          options={props.pathways.map((p) => ({ value: p.pathwayId, label: p.title }))}
+                          onChange={setPathway}
+                        />
+                      )}
+
+                      {!!props.pathways && props.pathways.length > 0 && categories.length > 0 && (
+                        <FormInput
+                          readonly={inReview}
+                          headline="Requirement (optional)"
+                          summary="The part of the pathway it counts toward."
+                          type="dropdown"
+                          placeholder="None"
+                          value={responses["categoryId"]}
+                          options={categories.map((c) => ({ value: c.categoryId, label: c.name }))}
+                          onChange={(value) => setResponse("categoryId", value)}
+                        />
+                      )}
+
                       <div className="lg:col-span-2">
                         <FormInput
                           required
@@ -144,6 +222,18 @@ export const Form = (props: FormProps) => {
                           paragraph
                           value={responses["description"]}
                           onChange={(value) => setResponse("description", value)}
+                        />
+                      </div>
+
+                      <div className="lg:col-span-2">
+                        <FormInput
+                          readonly={inReview}
+                          headline="Evidence link (optional)"
+                          summary="An https link an educator can open, such as a photo, letter or document. Anyone with the link can open it, so don't share another person's ID or home address."
+                          type="url"
+                          placeholder="https://"
+                          value={responses["evidenceUrl"]}
+                          onChange={(value) => setResponse("evidenceUrl", value)}
                         />
                       </div>
                     </div>
@@ -188,7 +278,12 @@ export const Form = (props: FormProps) => {
       {showSubmitDialogue && (
         <div className="fixed top-0 left-0 px-4 md:px-2 w-screen h-screen py-5 transition ease-in-out duration-400 bg-gray-200/75 z-40">
           <div className="flex md:w-max h-screen gap-x-2 justify-items-center content-center m-auto">
-            <FormSubmitDialog onGoBack={() => setShowSubmitDialogue(false)} onContinue={props.onClose} />
+            <FormSubmitDialog
+              title={props.successTitle}
+              message={props.successMessage}
+              onGoBack={() => setShowSubmitDialogue(false)}
+              onContinue={props.onClose}
+            />
           </div>
         </div>
       )}

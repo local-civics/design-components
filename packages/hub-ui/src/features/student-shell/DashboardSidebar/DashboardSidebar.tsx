@@ -4,6 +4,7 @@ import {
   IconAlbum,
   IconBriefcase,
   IconClipboard,
+  IconHeartHandshake,
   IconLogout,
   IconMessageCircle,
   IconRoute,
@@ -27,7 +28,8 @@ export type DashboardSidebarTabName =
   | "badges"
   | "file-locker"
   | "portfolio"
-  | "comments";
+  | "comments"
+  | "service-hours";
 
 /**
  * A tab's live destination. Tabs with no entry here render disabled.
@@ -80,7 +82,10 @@ const TABS: SidebarTab[] = [
   // Sits above Portfolio (moved up from last) - Portfolio itself is untouched here, still rendered
   // disabled until its own `links.portfolio` entry lands separately.
   { name: "comments", label: "Comments", icon: IconMessageCircle, accent: "mint" },
-  { name: "portfolio", label: "Portfolio", icon: IconBriefcase, accent: "gold" },
+  // Placed after Comments so the accents of the tabs above it keep their place in the rotation. It
+  // renders disabled until a page supplies `links["service-hours"]`.
+  { name: "service-hours", label: "Service Hours", icon: IconHeartHandshake, accent: "gold" },
+  { name: "portfolio", label: "Portfolio", icon: IconBriefcase, accent: "cyan" },
 ];
 
 /**

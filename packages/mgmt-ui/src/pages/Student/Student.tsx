@@ -5,6 +5,8 @@ import {PageHeader}                                                       from "
 import {PathwayFilterPills}                                               from "../../components/navigation/PathwayFilterPills/PathwayFilterPills";
 import {Table as BadgeTable, Item as BadgeItem}                           from "./BadgeTable"
 import {Table as AnswerTable, Item as AnswerItem} from "./AnswerTable"
+import {Table as ServiceHoursTable} from "../ServiceHours/Table"
+import {Item as ServiceHourItem} from "../ServiceHours/shared"
 
 /**
  * StudentProps
@@ -34,6 +36,13 @@ export type StudentProps = {
     // list pages: a pathway pill filters, it never also navigates. Omitted entirely when the
     // caller doesn't supply it, or when no specific pathway is currently selected.
     onViewPathway?: (pathwayId: string) => void
+
+    // This student's service hours entries. The "Service hours" tab only appears when this is supplied.
+    // Not filtered by pathway: entries link to a pathway directly rather than through a badge, so
+    // the pathway pills above do not apply to this tab.
+    serviceHours?: ServiceHourItem[]
+    onApproveServiceHour?: (item: ServiceHourItem) => Promise<any>
+    onInvalidateServiceHour?: (item: ServiceHourItem, reason: string) => Promise<any>
 }
 // An educator is looking at someone else's work here, so no "My".
 const TABS = [
@@ -66,7 +75,10 @@ export const Student = (props: StudentProps) => {
     const numberOfBadgesCompleted = props.badges.length > 0 ? props.badges.filter(b => b.isComplete).length : 0
     const numberOfLessonsCompleted = props.lessons.filter(l => l.isComplete).length
 
-    const activeItems: {pathwayId?: string, pathwayName?: string}[] = tab === "badges" ? props.badges : props.lessons
+    const tabs = props.serviceHours ? [...TABS, {label: "Service hours", value: "serviceHours"}] : TABS
+
+    const activeItems: {pathwayId?: string, pathwayName?: string}[] =
+        tab === "badges" ? props.badges : tab === "lessons" ? props.lessons : []
 
     const pathways = useMemo(() => {
         const seen: Record<string, string> = {}
@@ -131,7 +143,7 @@ export const Student = (props: StudentProps) => {
             ]}/>
 
             <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">
-                {TABS.map((t) => (
+                {tabs.map((t) => (
                     <button
                         key={t.value}
                         onClick={() => setTab(t.value)}
@@ -164,7 +176,7 @@ export const Student = (props: StudentProps) => {
             {/* Only rendered once there's an actual pathway to partition by - if nothing in this
                 tab belongs to any named pathway, an "Other"-only filter would just re-show the
                 same items with no real distinction, so the whole row is suppressed instead. */}
-            {pathways.length > 0 && (
+            {tab !== "serviceHours" && pathways.length > 0 && (
                 <div className="flex flex-wrap items-center gap-3">
                     <PathwayFilterPills pathways={pathways} selected={pathwayFilter} onChange={setPathwayFilter} />
                     {hasOther && (
@@ -207,6 +219,15 @@ export const Student = (props: StudentProps) => {
             ) : (
                 <AnswerTable loading={props.loading} items={visibleLessons} />
             ))}
+            {tab === "serviceHours" && (
+                <ServiceHoursTable
+                    loading={props.loading}
+                    items={props.serviceHours || []}
+                    hideStudent
+                    onApprove={props.onApproveServiceHour}
+                    onInvalidate={props.onInvalidateServiceHour}
+                />
+            )}
         </div>
     )
 }
