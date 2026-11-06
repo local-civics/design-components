@@ -21,7 +21,7 @@ export type LogServiceButtonProps = {
  */
 export const LogServiceButton = (props: LogServiceButtonProps) => {
   const [isOpen, setIsOpen] = React.useState(!!props.isOpen);
-  const text = props.text || "Log Service";
+  const text = props.text || "Log Hours";
   const onOpen = () => {
     if (props.onClick) {
       props.onClick();

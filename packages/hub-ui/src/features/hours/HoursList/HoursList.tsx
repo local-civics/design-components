@@ -5,24 +5,25 @@ import { SortableHeader } from "../../../components/SortableHeader";
 import { useSortableData } from "../../../utils/useSortableData";
 import { Pill, PillAccent } from "../../home-dashboard/Pill/Pill";
 import { Form, FormPathwayOption } from "../../service-tracking/Form/Form";
+import { HoursBreakdown } from "./HoursBreakdown";
 
 /**
- * The state of a service hours entry, as the server derives it.
+ * The state of a hours entry, as the server derives it.
  */
-export type ServiceHourStatus = "pending" | "verified" | "invalidated" | "withdrawn";
+export type HourStatus = "pending" | "verified" | "invalidated" | "withdrawn";
 
 /**
- * One logged block of service.
+ * One logged block of hours.
  */
-export type ServiceHourItem = {
+export type HourItem = {
   entryId: string;
   /** The version the student is looking at. Edit and withdraw send it back so a stale change is refused. */
   revision: number;
-  status: ServiceHourStatus;
+  status: HourStatus;
   /** YYYY-MM-DD, or a full timestamp (only the date part is used). */
-  serviceDate: string;
+  activityDate: string;
   hostName: string;
-  serviceType: string;
+  activityType: string;
   hours: number;
   description?: string;
   contactPerson?: string;
@@ -32,18 +33,23 @@ export type ServiceHourItem = {
   categoryId?: string;
   /** What this entry supports, already joined by the caller, e.g. "Civic Readiness · 2b. Service-Learning Project". */
   supports?: string;
+  /** The two halves of `supports`, so the breakdown can group requirements under their pathway. */
+  pathwayTitle?: string;
+  categoryName?: string;
   evidenceUrl?: string;
   /** The educator's reason for invalidating. Kept visible after the student edits and resubmits. */
   reviewNote?: string;
   /** Hours logged before individual entries were tracked. Read-only. */
   isLegacy?: boolean;
+  /** When the entry was submitted (a timestamp). `activityDate` is the day the hours were done. */
+  createdAt?: string;
 };
 
 /**
- * ServiceHoursListProps
+ * HoursListProps
  */
-export type ServiceHoursListProps = {
-  entries: ServiceHourItem[];
+export type HoursListProps = {
+  entries: HourItem[];
   loading?: boolean;
   /** For the edit form's optional pathway and category link. */
   pathways?: FormPathwayOption[];
@@ -53,23 +59,23 @@ export type ServiceHoursListProps = {
    * Saves an edit. `responses` are the form's own keys (organizationName, totalHours, type, date,
    * pathwayId, evidenceUrl, ...). Resolve with nothing on success, or a truthy value to keep the form open.
    */
-  onEdit?: (entry: ServiceHourItem, responses: any) => Promise<any>;
+  onEdit?: (entry: HourItem, responses: any) => Promise<any>;
   /** Withdraws an entry after the student confirms in the row. */
-  onWithdraw?: (entry: ServiceHourItem) => Promise<any>;
+  onWithdraw?: (entry: HourItem) => Promise<any>;
 };
 
 type FilterLabel = "All" | "Pending" | "Approved" | "Needs attention";
 
 const FILTERS: FilterLabel[] = ["All", "Pending", "Approved", "Needs attention"];
 
-const FILTER_STATUS: Record<FilterLabel, ServiceHourStatus | undefined> = {
+const FILTER_STATUS: Record<FilterLabel, HourStatus | undefined> = {
   All: undefined,
   Pending: "pending",
   Approved: "verified",
   "Needs attention": "invalidated",
 };
 
-const STATUS: Record<ServiceHourStatus, { label: string; accent: PillAccent }> = {
+const STATUS: Record<HourStatus, { label: string; accent: PillAccent }> = {
   pending: { label: "Pending", accent: "cyan" },
   verified: { label: "Approved", accent: "mint" },
   invalidated: { label: "Needs attention", accent: "gold" },
@@ -89,14 +95,26 @@ const formatDate = (value: string) => {
   });
 };
 
+// The day an entry was submitted, in the viewer's own time zone (the server sends a UTC timestamp, so
+// slicing the string would show tomorrow's date for an evening submission).
+const formatSubmitted = (value?: string) => {
+  const date = value ? new Date(value) : undefined;
+  if (!date || isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+};
+
 // What the Status column sorts by. Not alphabetical: what needs the student's attention comes first.
-const STATUS_RANK: Record<ServiceHourStatus, number> = { invalidated: 0, pending: 1, verified: 2, withdrawn: 3 };
+const STATUS_RANK: Record<HourStatus, number> = { invalidated: 0, pending: 1, verified: 2, withdrawn: 3 };
 
 // An entry with the values its columns sort by (useSortableData sorts on a plain key of each row).
 type SortRow = {
-  entry: ServiceHourItem;
+  entry: HourItem;
   date: string;
-  service: string;
+  submitted: string;
+  activity: string;
   supports?: string;
   hours: number;
   statusRank: number;
@@ -104,14 +122,14 @@ type SortRow = {
 
 const hoursLabel = (hours: number) => `${hours} hr${hours === 1 ? "" : "s"}`;
 
-const initialValues = (entry: ServiceHourItem): Record<string, string> => ({
+const initialValues = (entry: HourItem): Record<string, string> => ({
   organizationName: entry.hostName || "",
   contactPerson: entry.contactPerson || "",
   contactPhoneNumber: entry.contactPhone || "",
   contactEmail: entry.contactEmail || "",
-  date: (entry.serviceDate || "").slice(0, 10),
+  date: (entry.activityDate || "").slice(0, 10),
   totalHours: String(entry.hours),
-  type: entry.serviceType || "",
+  type: entry.activityType || "",
   description: entry.description || "",
   pathwayId: entry.pathwayId || "",
   categoryId: entry.categoryId || "",
@@ -119,13 +137,13 @@ const initialValues = (entry: ServiceHourItem): Record<string, string> => ({
 });
 
 /**
- * A student's own service hours: totals, a status filter, and each entry with edit and withdraw.
+ * A student's own hours: totals, a status filter, and each entry with edit and withdraw.
  * @param props
  * @constructor
  */
-export const ServiceHoursList = (props: ServiceHoursListProps) => {
+export const HoursList = (props: HoursListProps) => {
   const [active, setActive] = React.useState<FilterLabel>("All");
-  const [editing, setEditing] = React.useState<ServiceHourItem | undefined>(undefined);
+  const [editing, setEditing] = React.useState<HourItem | undefined>(undefined);
   const editingPathwayId = editing && editing.pathwayId;
 
   // Editing an entry already linked to a pathway needs that pathway's categories to show it.
@@ -136,7 +154,7 @@ export const ServiceHoursList = (props: ServiceHoursListProps) => {
   }, [editingPathwayId]);
 
   // The total counts what the server counts: everything not withdrawn or invalidated.
-  const sum = (status: ServiceHourStatus) =>
+  const sum = (status: HourStatus) =>
     props.entries.filter((e) => e.status === status).reduce((total, e) => total + e.hours, 0);
   const approved = sum("verified");
   const pending = sum("pending");
@@ -149,15 +167,16 @@ export const ServiceHoursList = (props: ServiceHoursListProps) => {
     () =>
       visible.map((entry) => ({
         entry,
-        date: (entry.serviceDate || "").slice(0, 10),
-        service: entry.hostName || entry.serviceType,
+        date: (entry.activityDate || "").slice(0, 10),
+        submitted: entry.isLegacy ? "" : entry.createdAt || "",
+        activity: entry.hostName || entry.activityType,
         supports: entry.supports,
         hours: entry.hours,
         statusRank: STATUS_RANK[entry.status],
       })),
     [props.entries, active]
   );
-  // Newest service date first, which is the order the server returns them in.
+  // Newest date first, which is the order the server returns them in.
   const {
     items: sortedRows,
     requestSort,
@@ -171,6 +190,8 @@ export const ServiceHoursList = (props: ServiceHoursListProps) => {
         <StatCell icon={IconCircleCheck} value={approved} label="Approved" accent="mint" />
         <StatCell icon={IconHourglass} value={pending} label="Waiting for review" accent="gold" />
       </div>
+
+      <HoursBreakdown entries={props.entries} />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-xs font-semibold text-slate-400">
@@ -187,18 +208,25 @@ export const ServiceHoursList = (props: ServiceHoursListProps) => {
       {props.loading && <p className="text-sm text-slate-400">Loading…</p>}
 
       {!props.loading && props.entries.length === 0 && (
-        <p className="text-sm text-slate-400">You haven't logged any service hours yet.</p>
+        <p className="text-sm text-slate-400">You haven't logged any hours yet.</p>
       )}
 
       {!props.loading && props.entries.length > 0 && visible.length === 0 && (
-        <p className="text-sm text-slate-400">No service hours to display.</p>
+        <p className="text-sm text-slate-400">No hours to display.</p>
       )}
 
       {!props.loading && visible.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
           <div className="flex items-start gap-3 border-b border-slate-100 bg-slate-50/60 px-3.5 py-2">
-            <SortableHeader label="Date" sortKey="date" sortConfig={sortConfig} onSort={requestSort} className="w-24 shrink-0" />
-            <SortableHeader label="Service" sortKey="service" sortConfig={sortConfig} onSort={requestSort} className="min-w-0 flex-1" />
+            <SortableHeader label="Activity Date" sortKey="date" sortConfig={sortConfig} onSort={requestSort} className="w-28 shrink-0" />
+            <SortableHeader
+              label="Submitted"
+              sortKey="submitted"
+              sortConfig={sortConfig}
+              onSort={requestSort}
+              className="hidden w-24 shrink-0 md:inline-flex"
+            />
+            <SortableHeader label="Activity" sortKey="activity" sortConfig={sortConfig} onSort={requestSort} className="min-w-0 flex-1" />
             <SortableHeader
               label="Supports"
               sortKey="supports"
@@ -217,7 +245,7 @@ export const ServiceHoursList = (props: ServiceHoursListProps) => {
             />
           </div>
           {sortedRows.map(({ entry }) => (
-            <ServiceHourRow
+            <HourRow
               key={entry.entryId}
               entry={entry}
               onEdit={props.onEdit ? () => setEditing(entry) : undefined}
@@ -229,7 +257,7 @@ export const ServiceHoursList = (props: ServiceHoursListProps) => {
 
       {editing && (
         <Form
-          title="Edit Service Entry"
+          title="Edit Entry"
           subtitle="Changing an entry sends it back to your educator for review."
           initialValues={initialValues(editing)}
           pathways={props.pathways}
@@ -244,10 +272,10 @@ export const ServiceHoursList = (props: ServiceHoursListProps) => {
   );
 };
 
-const ServiceHourRow = (props: {
-  entry: ServiceHourItem;
+const HourRow = (props: {
+  entry: HourItem;
   onEdit?: () => void;
-  onWithdraw?: (entry: ServiceHourItem) => Promise<any>;
+  onWithdraw?: (entry: HourItem) => Promise<any>;
 }) => {
   const { entry } = props;
   const [confirming, setConfirming] = React.useState(false);
@@ -288,11 +316,14 @@ const ServiceHourRow = (props: {
         entry.status === "withdrawn" ? "opacity-60" : ""
       }`}
     >
-      <div className="w-24 shrink-0 text-[11px] text-slate-400">{formatDate(entry.serviceDate)}</div>
+      <div className="w-28 shrink-0 text-[11px] text-slate-400">{formatDate(entry.activityDate)}</div>
+      <div className="hidden w-24 shrink-0 text-[11px] text-slate-400 md:block">
+        {entry.isLegacy ? "—" : formatSubmitted(entry.createdAt)}
+      </div>
 
       <div className="min-w-0 flex-1">
-        <div className="text-xs font-semibold text-dark-blue-400">{entry.hostName || entry.serviceType}</div>
-        {entry.hostName && <div className="text-[11px] text-slate-400">{entry.serviceType}</div>}
+        <div className="text-xs font-semibold text-dark-blue-400">{entry.hostName || entry.activityType}</div>
+        {entry.hostName && <div className="text-[11px] text-slate-400">{entry.activityType}</div>}
         {entry.description && (
           <div title={entry.description} className="mt-0.5 line-clamp-2 text-[11px] text-slate-400">
             {entry.description}

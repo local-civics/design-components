@@ -19,7 +19,7 @@ const MAX_REASON = 500
 const inputClass = "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-dark-blue-400 focus:border-sky-blue-400 focus:outline-none"
 
 /**
- * InvalidateModal. Asks for the reason an educator is invalidating a service hours entry. A reason is
+ * InvalidateModal. Asks for the reason an educator is invalidating a hours entry. A reason is
  * required because the student sees it and has to be able to act on it.
  * @param props
  * @constructor
@@ -53,7 +53,7 @@ export function InvalidateModal(props: InvalidateModalProps) {
         <Modal
             opened={!!item}
             onClose={props.onClose}
-            title={<span className="text-base font-extrabold text-dark-blue-400">Invalidate Service Hours</span>}
+            title={<span className="text-base font-extrabold text-dark-blue-400">Invalidate Hours</span>}
             size="md"
             centered
         >
@@ -61,8 +61,8 @@ export function InvalidateModal(props: InvalidateModalProps) {
                 <form onSubmit={onSubmit} className="flex flex-col gap-3.5">
                     <div className="rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2.5 text-xs text-slate-600">
                         <span className="font-bold text-dark-blue-400">{item.studentName || "Student"}</span>
-                        {" · "}{item.hostName || item.serviceType}
-                        {" · "}{formatDate(item.serviceDate)}
+                        {" · "}{item.hostName || item.activityType}
+                        {" · Activity date "}{formatDate(item.activityDate)}
                         {" · "}{item.hours} hr{item.hours === 1 ? "" : "s"}
                     </div>
 

@@ -29,7 +29,7 @@ export type DashboardSidebarTabName =
   | "file-locker"
   | "portfolio"
   | "comments"
-  | "service-hours";
+  | "hours";
 
 /**
  * A tab's live destination. Tabs with no entry here render disabled.
@@ -83,8 +83,8 @@ const TABS: SidebarTab[] = [
   // disabled until its own `links.portfolio` entry lands separately.
   { name: "comments", label: "Comments", icon: IconMessageCircle, accent: "mint" },
   // Placed after Comments so the accents of the tabs above it keep their place in the rotation. It
-  // renders disabled until a page supplies `links["service-hours"]`.
-  { name: "service-hours", label: "Service Hours", icon: IconHeartHandshake, accent: "gold" },
+  // renders disabled until a page supplies `links["hours"]`.
+  { name: "hours", label: "Hours", icon: IconHeartHandshake, accent: "gold" },
   { name: "portfolio", label: "Portfolio", icon: IconBriefcase, accent: "cyan" },
 ];
 

@@ -25,7 +25,7 @@ const Template: Story<DashboardSidebarProps> = (args) => (
             profile: { href: "#" },
             pathways: { href: "#" },
             badges: { href: "#" },
-            "service-hours": { href: "#" },
+            "hours": { href: "#" },
           }
         }
         identity={
