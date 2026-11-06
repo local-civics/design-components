@@ -5,8 +5,9 @@ import {PageHeader}                                                       from "
 import {PathwayFilterPills}                                               from "../../components/navigation/PathwayFilterPills/PathwayFilterPills";
 import {Table as BadgeTable, Item as BadgeItem}                           from "./BadgeTable"
 import {Table as AnswerTable, Item as AnswerItem} from "./AnswerTable"
-import {Table as ServiceHoursTable} from "../ServiceHours/Table"
-import {Item as ServiceHourItem} from "../ServiceHours/shared"
+import {Table as HoursTable} from "../Hours/Table"
+import {Breakdown as HoursBreakdown} from "../Hours/Breakdown"
+import {Item as HourItem} from "../Hours/shared"
 
 /**
  * StudentProps
@@ -37,12 +38,14 @@ export type StudentProps = {
     // caller doesn't supply it, or when no specific pathway is currently selected.
     onViewPathway?: (pathwayId: string) => void
 
-    // This student's service hours entries. The "Service hours" tab only appears when this is supplied.
+    // This student's hours entries. The "Hours" tab only appears when this is supplied.
     // Not filtered by pathway: entries link to a pathway directly rather than through a badge, so
     // the pathway pills above do not apply to this tab.
-    serviceHours?: ServiceHourItem[]
-    onApproveServiceHour?: (item: ServiceHourItem) => Promise<any>
-    onInvalidateServiceHour?: (item: ServiceHourItem, reason: string) => Promise<any>
+    hourEntries?: HourItem[]
+    onApproveHour?: (item: HourItem) => Promise<any>
+    onInvalidateHour?: (item: HourItem, reason: string) => Promise<any>
+    // Approves several of this student's pending entries at once (optional; adds checkboxes to the tab).
+    onBulkApproveHours?: (items: HourItem[]) => Promise<any>
 }
 // An educator is looking at someone else's work here, so no "My".
 const TABS = [
@@ -75,7 +78,7 @@ export const Student = (props: StudentProps) => {
     const numberOfBadgesCompleted = props.badges.length > 0 ? props.badges.filter(b => b.isComplete).length : 0
     const numberOfLessonsCompleted = props.lessons.filter(l => l.isComplete).length
 
-    const tabs = props.serviceHours ? [...TABS, {label: "Service hours", value: "serviceHours"}] : TABS
+    const tabs = props.hourEntries ? [...TABS, {label: "Hours", value: "hourEntries"}] : TABS
 
     const activeItems: {pathwayId?: string, pathwayName?: string}[] =
         tab === "badges" ? props.badges : tab === "lessons" ? props.lessons : []
@@ -176,7 +179,7 @@ export const Student = (props: StudentProps) => {
             {/* Only rendered once there's an actual pathway to partition by - if nothing in this
                 tab belongs to any named pathway, an "Other"-only filter would just re-show the
                 same items with no real distinction, so the whole row is suppressed instead. */}
-            {tab !== "serviceHours" && pathways.length > 0 && (
+            {tab !== "hourEntries" && pathways.length > 0 && (
                 <div className="flex flex-wrap items-center gap-3">
                     <PathwayFilterPills pathways={pathways} selected={pathwayFilter} onChange={setPathwayFilter} />
                     {hasOther && (
@@ -219,14 +222,18 @@ export const Student = (props: StudentProps) => {
             ) : (
                 <AnswerTable loading={props.loading} items={visibleLessons} />
             ))}
-            {tab === "serviceHours" && (
-                <ServiceHoursTable
-                    loading={props.loading}
-                    items={props.serviceHours || []}
-                    hideStudent
-                    onApprove={props.onApproveServiceHour}
-                    onInvalidate={props.onInvalidateServiceHour}
-                />
+            {tab === "hourEntries" && (
+                <>
+                    <HoursBreakdown items={props.hourEntries || []} />
+                    <HoursTable
+                        loading={props.loading}
+                        items={props.hourEntries || []}
+                        hideStudent
+                        onApprove={props.onApproveHour}
+                        onInvalidate={props.onInvalidateHour}
+                        onBulkApprove={props.onBulkApproveHours}
+                    />
+                </>
             )}
         </div>
     )

@@ -46,7 +46,7 @@ const data: { label: string; icon: TablerIcon; accent: LinksGroupAccent; optiona
     { label: 'Validation', icon: IconClipboardCheck, accent: "gold" },
     // `optional`: only shown once the caller supplies a link for it, so this package can be published
     // before the app wires the page without leaving a dead row in the nav.
-    { label: 'Service Hours', icon: IconHeartHandshake, accent: "cyan", optional: true },
+    { label: 'Hours', icon: IconHeartHandshake, accent: "cyan", optional: true },
     { label: 'Organization', icon: IconBuilding, accent: "gold", links: [{ label: 'Overview' }, { label: 'People' }] },
 ]
 

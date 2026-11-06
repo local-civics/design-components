@@ -4,12 +4,12 @@ import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/Plac
 import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 import {InvalidateModal} from "./InvalidateModal";
-import {Item as SharedItem, ServiceHourStatus as SharedStatus, formatDate} from "./shared";
+import {Item as SharedItem, HourStatus as SharedStatus, formatDate, formatTimestamp} from "./shared";
 
 /**
- * ServiceHourStatus, as the server derives it from the entry.
+ * HourStatus, as the server derives it from the entry.
  */
-export type ServiceHourStatus = SharedStatus
+export type HourStatus = SharedStatus
 
 /**
  * Item. One entry a student logged.
@@ -27,10 +27,14 @@ export type TableProps = {
     // Each resolves when the request has finished; the caller replaces the entry with what the server returned.
     onApprove?: (item: Item) => Promise<any>
     onInvalidate?: (item: Item, reason: string) => Promise<any>
+    // Approves several pending entries at once. Resolves when all of them have been tried; the caller
+    // replaces each entry with what the server returned, so rows update as they finish. When given, the
+    // table shows a checkbox on every pending row.
+    onBulkApprove?: (items: Item[]) => Promise<any>
     onStudentClick?: (userId: string) => void
 }
 
-const STATUS: Record<ServiceHourStatus, {label: string, className: string}> = {
+const STATUS: Record<HourStatus, {label: string, className: string}> = {
     pending: {label: "Pending", className: "bg-sky-blue-400/15"},
     verified: {label: "Approved", className: "bg-mint-400/15"},
     invalidated: {label: "Invalidated", className: "bg-gold-400/15"},
@@ -38,14 +42,15 @@ const STATUS: Record<ServiceHourStatus, {label: string, className: string}> = {
 }
 
 // What the Status column sorts by. Not alphabetical: the pending queue comes first.
-const STATUS_RANK: Record<ServiceHourStatus, number> = {pending: 0, invalidated: 1, verified: 2, withdrawn: 3}
+const STATUS_RANK: Record<HourStatus, number> = {pending: 0, invalidated: 1, verified: 2, withdrawn: 3}
 
 // An entry with the values its columns sort by (useSortableData sorts on a plain key of each row).
 type SortRow = {
     item: Item
     studentName: string
-    serviceDate: string
-    service: string
+    activityDate: string
+    submitted: string
+    activity: string
     supports?: string
     hours: number
     statusRank: number
@@ -56,12 +61,14 @@ const staticLabelClass = "text-[10px] font-bold uppercase tracking-wide text-sla
 
 // One column list shared by the header and every row (all tracks are minmax(0, Nfr), so the rows
 // line up with the header however long a cell's text is).
-const columns = (hideStudent?: boolean) => [
+const columns = (hideStudent?: boolean, selectable?: boolean) => [
+    ...(selectable ? ["1.25rem"] : []),   // checkbox
     ...(hideStudent ? [] : ["minmax(0,1.3fr)"]),
-    "minmax(0,0.8fr)",   // date
-    "minmax(0,1.6fr)",   // service
-    "minmax(0,1.3fr)",   // supports
-    "minmax(0,0.5fr)",   // hours
+    "minmax(0,0.9fr)",   // activity date
+    "minmax(0,0.9fr)",   // submitted
+    "minmax(0,1.4fr)",   // activity
+    "minmax(0,1.2fr)",   // supports
+    "minmax(0,0.65fr)",  // hours
     "minmax(0,0.6fr)",   // evidence
     "minmax(0,0.9fr)",   // status
     "minmax(0,1.4fr)",   // actions
@@ -71,7 +78,7 @@ const columns = (hideStudent?: boolean) => [
 const labelClass = "text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400"
 
 /**
- * Table. Service hours entries for review: one row per entry with approve and invalidate, and the
+ * Table. Hours entries for review: one row per entry with approve and invalidate, and the
  * full detail (description, supervisor, edit history, earlier reason) when a row is opened.
  * @param props
  * @constructor
@@ -80,6 +87,9 @@ export const Table = (props: TableProps) => {
     const [expanded, setExpanded] = React.useState<Record<string, boolean>>({})
     const [busy, setBusy] = React.useState<Record<string, boolean>>({})
     const [invalidating, setInvalidating] = React.useState<Item | undefined>(undefined)
+    const [selected, setSelected] = React.useState<Record<string, boolean>>({})
+    const [confirming, setConfirming] = React.useState(false)
+    const [bulkBusy, setBulkBusy] = React.useState(false)
     const mounted = React.useRef(true)
     React.useEffect(() => {
         mounted.current = true
@@ -101,8 +111,9 @@ export const Table = (props: TableProps) => {
     const rows: SortRow[] = React.useMemo(() => props.items.map((item) => ({
         item,
         studentName: item.studentName,
-        serviceDate: (item.serviceDate || "").slice(0, 10),
-        service: item.hostName || item.serviceType,
+        activityDate: (item.activityDate || "").slice(0, 10),
+        submitted: item.createdAt || "",
+        activity: item.hostName || item.activityType,
         supports: item.supports,
         hours: item.hours,
         statusRank: STATUS_RANK[item.status],
@@ -110,25 +121,137 @@ export const Table = (props: TableProps) => {
     // No initial sort: the server's order (newest submitted first) holds until a header is clicked.
     const {items: sortedRows, requestSort, sortConfig} = useSortableData<SortRow>(rows)
 
+    // Only pending entries can be selected, and only the ones showing (the caller filters). An entry that
+    // stopped being pending since it was ticked is quietly dropped from the selection.
+    const selectable = !!props.onBulkApprove
+    const selectableRows = sortedRows.filter(({item}) => selectable && item.status === "pending")
+    const selectedItems = props.items.filter((item) => selected[item.entryId] && item.status === "pending")
+    const allSelected = selectableRows.length > 0 && selectableRows.every(({item}) => selected[item.entryId])
+    const someSelected = selectedItems.length > 0 && !allSelected
+
+    const toggleAll = () => setSelected((current) => {
+        const next = {...current}
+        selectableRows.forEach(({item}) => {
+            if (allSelected) {
+                delete next[item.entryId]
+            } else {
+                next[item.entryId] = true
+            }
+        })
+        return next
+    })
+
+    const approveSelected = () => {
+        const items = selectedItems
+        setBulkBusy(true)
+        setBusy((b) => {
+            const next = {...b}
+            items.forEach((item) => {
+                next[item.entryId] = true
+            })
+            return next
+        })
+        const done = () => {
+            if (mounted.current) {
+                setBulkBusy(false)
+                setConfirming(false)
+                setSelected({})
+                setBusy((b) => {
+                    const next = {...b}
+                    items.forEach((item) => {
+                        next[item.entryId] = false
+                    })
+                    return next
+                })
+            }
+        }
+        Promise.resolve(props.onBulkApprove!(items)).then(done, done)
+    }
+
     if (props.items.length === 0) {
         return (
             <PlaceholderBanner
-                title="No service hours to display"
-                description="Nothing matches here yet. Entries appear when students log service."
+                title="No hours to display"
+                description="Nothing matches here yet. Entries appear when students log hours."
                 loading={props.loading}
                 icon="thinking"
             />
         )
     }
 
-    const template = columns(props.hideStudent)
+    const template = columns(props.hideStudent, selectable)
 
     return (
         <div className="flex flex-col gap-3">
+            {selectedItems.length > 0 && (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sky-blue-400/40 bg-sky-blue-400/10 px-4 py-2.5">
+                    <span className="text-xs font-bold text-dark-blue-400">{selectedItems.length} selected</span>
+                    <div className="flex items-center gap-2">
+                        {confirming ? (
+                            <>
+                                <span className="text-xs text-slate-600">
+                                    Approve {selectedItems.length} {selectedItems.length === 1 ? "entry" : "entries"}?
+                                </span>
+                                <button
+                                    type="button"
+                                    disabled={bulkBusy}
+                                    onClick={approveSelected}
+                                    className="rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400 disabled:opacity-50"
+                                >
+                                    {bulkBusy ? "Approving..." : "Yes, approve"}
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={bulkBusy}
+                                    onClick={() => setConfirming(false)}
+                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold text-slate-500 hover:bg-slate-50 disabled:opacity-50"
+                                >
+                                    Cancel
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => setConfirming(true)}
+                                    className="rounded-lg bg-gradient-to-r from-gold-400 to-[#f5c300] px-3 py-1.5 text-[11px] font-extrabold text-dark-blue-400"
+                                >
+                                    Approve selected
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setSelected({})}
+                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold text-slate-500 hover:bg-slate-50"
+                                >
+                                    Clear
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+
             <div style={{gridTemplateColumns: template}} className="grid items-center gap-3 px-5">
+                {selectable && (
+                    <input
+                        type="checkbox"
+                        aria-label="Select all pending entries"
+                        title="Select all pending entries"
+                        disabled={selectableRows.length === 0 || bulkBusy}
+                        checked={allSelected}
+                        ref={(el) => {
+                            if (el) {
+                                el.indeterminate = someSelected
+                            }
+                        }}
+                        onChange={toggleAll}
+                        className="h-3.5 w-3.5 cursor-pointer accent-sky-blue-400 disabled:cursor-default disabled:opacity-40"
+                    />
+                )}
                 {!props.hideStudent && <SortableHeader label="Student" sortKey="studentName" sortConfig={sortConfig} onSort={requestSort} />}
-                <SortableHeader label="Date" sortKey="serviceDate" sortConfig={sortConfig} onSort={requestSort} />
-                <SortableHeader label="Service" sortKey="service" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader label="Activity Date" sortKey="activityDate" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader label="Submitted" sortKey="submitted" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader label="Activity" sortKey="activity" sortConfig={sortConfig} onSort={requestSort} />
                 <SortableHeader label="Supports" sortKey="supports" sortConfig={sortConfig} onSort={requestSort} />
                 <SortableHeader label="Hours" sortKey="hours" sortConfig={sortConfig} onSort={requestSort} />
                 <div className={staticLabelClass}>Evidence</div>
@@ -154,6 +277,23 @@ export const Table = (props: TableProps) => {
                                 style={{gridTemplateColumns: template}}
                                 className="grid cursor-pointer items-start gap-3 px-5 py-3.5 hover:bg-slate-50"
                             >
+                                {selectable && (
+                                    <div onClick={(e) => e.stopPropagation()} className="pt-0.5">
+                                        {item.status === "pending" && (
+                                            <input
+                                                type="checkbox"
+                                                aria-label={`Select ${item.hostName || item.activityType} for ${item.studentName || "this student"}`}
+                                                disabled={bulkBusy}
+                                                checked={!!selected[item.entryId]}
+                                                onChange={() => {
+                                                    setConfirming(false)
+                                                    setSelected((current) => ({...current, [item.entryId]: !current[item.entryId]}))
+                                                }}
+                                                className="h-3.5 w-3.5 cursor-pointer accent-sky-blue-400 disabled:cursor-default"
+                                            />
+                                        )}
+                                    </div>
+                                )}
                                 {!props.hideStudent && (
                                     <div className="flex min-w-0 items-center gap-2">
                                         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mint-400/20 text-[10px] font-bold text-dark-blue-400">
@@ -178,12 +318,13 @@ export const Table = (props: TableProps) => {
                                         )}
                                     </div>
                                 )}
-                                <div className="text-[11px] text-slate-500">{formatDate(item.serviceDate)}</div>
+                                <div className="text-[11px] text-slate-500">{formatDate(item.activityDate)}</div>
+                                <div className="text-[11px] text-slate-500">{formatTimestamp(item.createdAt)}</div>
                                 <div className="min-w-0">
                                     <div title={item.hostName} className="line-clamp-2 text-xs font-bold text-dark-blue-400">
-                                        {item.hostName || item.serviceType}
+                                        {item.hostName || item.activityType}
                                     </div>
-                                    {item.hostName && <div className="truncate text-[11px] text-slate-400">{item.serviceType}</div>}
+                                    {item.hostName && <div className="truncate text-[11px] text-slate-400">{item.activityType}</div>}
                                 </div>
                                 <div title={item.supports} className="line-clamp-2 text-[11px] text-slate-500">{item.supports || "—"}</div>
                                 <div className="text-xs font-semibold text-dark-blue-400">{item.hours} hr{item.hours === 1 ? "" : "s"}</div>
@@ -256,8 +397,9 @@ export const Table = (props: TableProps) => {
                                     <div>
                                         <div className={labelClass}>History</div>
                                         <div className="mt-1 text-xs text-slate-600">
-                                            <div>Submitted {formatDate(item.createdAt)}</div>
-                                            {item.editedAt && <div>Edited {formatDate(item.editedAt)}</div>}
+                                            <div>Activity date {formatDate(item.activityDate)}</div>
+                                            <div>Submitted {formatTimestamp(item.createdAt)}</div>
+                                            {item.editedAt && <div>Edited {formatTimestamp(item.editedAt)}</div>}
                                         </div>
                                     </div>
                                     {item.reviewNote && (

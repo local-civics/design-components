@@ -4,24 +4,26 @@ import {Table} from "./Table";
 import {Item} from "./shared";
 
 /**
- * ServiceHourReviewItem
+ * HourReviewItem
  */
-export type ServiceHourReviewItem = Item
+export type HourReviewItem = Item
 
 /**
- * ServiceHoursProps
+ * HoursProps
  */
-export type ServiceHoursProps = {
+export type HoursProps = {
     loading: boolean
-    items: ServiceHourReviewItem[]
+    items: HourReviewItem[]
     // More entries exist on the server than were loaded; "Load more" asks for the next page.
     hasMore?: boolean
     loadingMore?: boolean
 
     // Each resolves when the request has finished. The caller replaces the entry with the one the
     // server returned (or reloads it on a conflict), so what shows is always the server's version.
-    onApprove: (item: ServiceHourReviewItem) => Promise<any>
-    onInvalidate: (item: ServiceHourReviewItem, reason: string) => Promise<any>
+    onApprove: (item: HourReviewItem) => Promise<any>
+    onInvalidate: (item: HourReviewItem, reason: string) => Promise<any>
+    // Approves the ticked pending entries in one go (optional; without it the table has no checkboxes).
+    onBulkApprove?: (items: HourReviewItem[]) => Promise<any>
     onStudentClick?: (userId: string) => void
     onLoadMore?: () => void
 }
@@ -38,12 +40,12 @@ const FILTERS: {label: string, value: StatusFilter}[] = [
 ]
 
 /**
- * ServiceHours. Every service hours entry students in the organization have logged, with approve
+ * Hours. Every hours entry students in the organization have logged, with approve
  * and invalidate. Defaults to the pending queue; search narrows by student or host organization.
  * @param props
  * @constructor
  */
-export const ServiceHours = (props: ServiceHoursProps) => {
+export const Hours = (props: HoursProps) => {
     const [filter, setFilter] = React.useState<StatusFilter>("pending")
     const [search, setSearch] = React.useState("")
 
@@ -58,9 +60,9 @@ export const ServiceHours = (props: ServiceHoursProps) => {
     return (
         <div className="flex w-full flex-col gap-5 px-4 py-8">
             <div>
-                <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Service Hours</h1>
+                <h1 className="text-2xl font-extrabold tracking-tight text-dark-blue-400">Hours</h1>
                 <p className="mt-1 text-sm text-slate-500">
-                    Review the service hours your students log. Approve what checks out, and tell students what to fix on the rest.
+                    Review the hours your students log. Approve what checks out, and tell students what to fix on the rest.
                 </p>
             </div>
 
@@ -92,6 +94,7 @@ export const ServiceHours = (props: ServiceHoursProps) => {
                 items={visible}
                 onApprove={props.onApprove}
                 onInvalidate={props.onInvalidate}
+                onBulkApprove={props.onBulkApprove}
                 onStudentClick={props.onStudentClick}
             />
 
