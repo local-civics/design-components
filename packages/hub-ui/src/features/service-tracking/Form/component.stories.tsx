@@ -35,7 +35,7 @@ Component.args = {};
  */
 export const Editing: Story<FormProps> = Template.bind({});
 Editing.args = {
-  title: "Edit Service Entry",
+  title: "Edit Entry",
   subtitle: "Changing an entry sends it back to your educator for review.",
   initialValues: {
     organizationName: "Rose Pantry",

@@ -8,7 +8,7 @@ import { FormExitDialog } from "../FormExitDialog/FormExitDialog";
 import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";
 
 /**
- * A pathway a service entry can support. Categories are optional: the caller may load them only
+ * A pathway an hours entry can count toward. Categories are optional: the caller may load them only
  * once a pathway is picked (see onPathwayChange).
  */
 export type FormPathwayOption = {
@@ -26,12 +26,14 @@ export type FormProps = {
   showExitDialogue?: boolean;
   children?: React.ReactNode;
 
-  /** Heading, default "Service Log". Editing an entry says so. */
+  /** Heading, default "Hours Log". Editing an entry says so. */
   title?: string;
   /** The line under the heading while filling in (the review step has its own). */
   subtitle?: string;
   /** Present when editing: the form opens filled in. Keys are the form's own response keys. */
   initialValues?: Record<string, string>;
+  /** The kinds of hours the Type dropdown offers. Defaults to DEFAULT_HOUR_TYPES. */
+  types?: string[];
   /** When given, the form offers the optional pathway (and, once one is picked, category) link. */
   pathways?: FormPathwayOption[];
   /** Fires when a pathway is picked, so the caller can load that pathway's categories. */
@@ -47,6 +49,20 @@ export type FormProps = {
   onSubmit?: (responses: any) => Promise<any>;
   onClose?: () => void;
 };
+
+/**
+ * The kinds of hours the Type dropdown offers unless the caller passes its own list. "Composition" is a
+ * performance or recital.
+ */
+export const DEFAULT_HOUR_TYPES = [
+  "Community Service",
+  "Composition",
+  "Training",
+  "Capstone",
+  "Internship",
+  "Project",
+  "Other",
+];
 
 const newClientEntryId = () =>
   typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function"
@@ -80,6 +96,11 @@ export const Form = (props: FormProps) => {
       props.onPathwayChange(pathwayId);
     }
   };
+  const baseTypes = props.types || DEFAULT_HOUR_TYPES;
+  // An entry whose stored type is not in the list keeps it, instead of the dropdown showing (and
+  // saving) the first option.
+  const typeOptions =
+    responses["type"] && baseTypes.indexOf(responses["type"]) === -1 ? [...baseTypes, responses["type"]] : baseTypes;
   const pathway = (props.pathways || []).find((p) => p.pathwayId === responses["pathwayId"]);
   const categories = (pathway && pathway.categories) || [];
   const onSubmit = (e: React.FormEvent) => {
@@ -110,11 +131,11 @@ export const Form = (props: FormProps) => {
                   <Icon name="service-tracking" />
                 </div>
                 <div className="text-slate-600">
-                  <p className="font-bold text-xl">{props.title || "Service Log"}</p>
+                  <p className="font-bold text-xl">{props.title || "Hours Log"}</p>
                   <p className="text-sm">
                     {inReview
                       ? "Please review your submission."
-                      : props.subtitle || "Tell us about your service below."}
+                      : props.subtitle || "Tell us about your hours below."}
                   </p>
                 </div>
               </div>
@@ -159,7 +180,7 @@ export const Form = (props: FormProps) => {
                         <FormInput
                           required
                           readonly={inReview}
-                          headline="Service Date"
+                          headline="Activity Date"
                           type="date"
                           max={today()}
                           value={responses["date"]}
@@ -169,7 +190,7 @@ export const Form = (props: FormProps) => {
                         <FormInput
                           required
                           readonly={inReview}
-                          headline="Service Hours"
+                          headline="Hours"
                           min={1}
                           max={24}
                           type="number"
@@ -181,10 +202,10 @@ export const Form = (props: FormProps) => {
                       <FormInput
                         required
                         readonly={inReview}
-                        headline="Service Type"
+                        headline="Type"
                         type="dropdown"
                         value={responses["type"]}
-                        options={["Community Service", "Capstone", "Internship", "Project", "Other"]}
+                        options={typeOptions}
                         onChange={(value) => setResponse("type", value)}
                       />
 
@@ -192,7 +213,7 @@ export const Form = (props: FormProps) => {
                         <FormInput
                           readonly={inReview}
                           headline="Pathway (optional)"
-                          summary="The pathway this service supports."
+                          summary="The pathway these hours count toward."
                           type="dropdown"
                           placeholder="None"
                           value={responses["pathwayId"]}

@@ -2,7 +2,7 @@ export * from "./badges";
 export * from "./pathways";
 export * from "./learning-forms";
 export * from "./service-tracking";
-export * from "./service-hours";
+export * from "./hours";
 export * from "./home-dashboard";
 export * from "./student-shell";
 export * from "./file-locker";
