@@ -45,7 +45,7 @@ Mock.args = {
     hourEntries: [
         {
             entryId: "e1", revision: 1, userId: "u1", studentName: "Jane Doe", status: "pending",
-            activityDate: "2026-11-02", hostName: "Rose Pantry", activityType: "Community Service", hours: 4,
+            activityDate: "2026-11-02", hostName: "Rose Pantry", activityType: "Community Service", minutes: 150,
             description: "Sorted and packed donations for the weekend food drive.",
             contactPerson: "Pat Lee", contactEmail: "pat@example.org",
             supports: "Civic Readiness · 2b. Service-Learning Project", pathwayId: "civic-readiness", categoryId: "2b", pathwayTitle: "Civic Readiness", categoryName: "2b. Service-Learning Project",
@@ -53,25 +53,25 @@ Mock.args = {
         },
         {
             entryId: "e3", revision: 1, userId: "u1", studentName: "Jane Doe", status: "pending",
-            activityDate: "2026-11-01", hostName: "Spring Recital, Jefferson High Auditorium", activityType: "Composition", hours: 3,
+            activityDate: "2026-11-01", hostName: "Spring Recital, Jefferson High Auditorium", activityType: "Composition", minutes: 90,
             description: "Performed my own arrangement of a Gershwin prelude.", createdAt: "2026-11-02T09:30:00Z",
         },
         {
             entryId: "e4", revision: 2, userId: "u1", studentName: "Jane Doe", status: "verified",
-            activityDate: "2026-10-22", hostName: "Red Cross, Riverside Chapter", activityType: "Training", hours: 6,
+            activityDate: "2026-10-22", hostName: "Red Cross, Riverside Chapter", activityType: "Training", minutes: 360,
             description: "First aid and CPR certification course.", supports: "Civic Readiness · 2b. Service-Learning Project",
             pathwayId: "civic-readiness", categoryId: "2b", pathwayTitle: "Civic Readiness", categoryName: "2b. Service-Learning Project", createdAt: "2026-10-23T10:00:00Z",
         },
         {
             entryId: "e5", revision: 2, userId: "u1", studentName: "Jane Doe", status: "verified",
-            activityDate: "2026-10-10", hostName: "Community Garden Co-op", activityType: "Community Service", hours: 4,
+            activityDate: "2026-10-10", hostName: "Community Garden Co-op", activityType: "Community Service", minutes: 240,
             description: "Weekend work-based learning shift.",
             supports: "Civic Readiness · 2d. Extracurricular / Work-based Learning", pathwayId: "civic-readiness", categoryId: "2d",
             pathwayTitle: "Civic Readiness", categoryName: "2d. Extracurricular / Work-based Learning", createdAt: "2026-10-12T10:00:00Z",
         },
         {
             entryId: "e2", revision: 2, userId: "u1", studentName: "Jane Doe", status: "verified",
-            activityDate: "2026-10-18", hostName: "Riverside Library", activityType: "Community Service", hours: 3,
+            activityDate: "2026-10-18", hostName: "Riverside Library", activityType: "Community Service", minutes: 45,
             description: "Ran the reading hour for first graders.", createdAt: "2026-10-19T10:00:00Z",
         },
     ],

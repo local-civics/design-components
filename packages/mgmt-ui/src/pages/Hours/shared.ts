@@ -18,7 +18,8 @@ export type Item = {
     activityDate: string
     hostName: string
     activityType: string
-    hours: number
+    // Whole minutes: 1 hr 30 min is 90.
+    minutes: number
     description?: string
     contactPerson?: string
     contactPhone?: string
@@ -36,6 +37,19 @@ export type Item = {
     reviewNote?: string
     editedAt?: string
     createdAt?: string
+}
+
+// Time is stored and added up as whole minutes, so a total never drifts. The only division by 60 is here,
+// to show "2 hr 45 min", "1 hr", "45 min" or "0 min". Never a decimal like 2.75.
+export const formatMinutes = (minutes: number) => {
+    const total = Math.max(0, Math.round(Number(minutes) || 0))
+    const hours = Math.floor(total / 60)
+    const rest = total % 60
+    if (hours === 0) {
+        return `${rest} min`
+    }
+
+    return rest === 0 ? `${hours} hr` : `${hours} hr ${rest} min`
 }
 
 // The day an entry was submitted, in the viewer's own time zone (the server sends a UTC timestamp, so

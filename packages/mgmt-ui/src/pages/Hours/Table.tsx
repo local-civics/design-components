@@ -4,7 +4,7 @@ import {PlaceholderBanner} from "../../components/banners/PlaceholderBanner/Plac
 import {SortableHeader} from "../../components/data/SortableHeader/SortableHeader";
 import {useSortableData} from "../../utils/useSortableData";
 import {InvalidateModal} from "./InvalidateModal";
-import {Item as SharedItem, HourStatus as SharedStatus, formatDate, formatTimestamp} from "./shared";
+import {Item as SharedItem, HourStatus as SharedStatus, formatDate, formatMinutes, formatTimestamp} from "./shared";
 
 /**
  * HourStatus, as the server derives it from the entry.
@@ -52,7 +52,7 @@ type SortRow = {
     submitted: string
     activity: string
     supports?: string
-    hours: number
+    minutes: number
     statusRank: number
 }
 
@@ -68,7 +68,7 @@ const columns = (hideStudent?: boolean, selectable?: boolean) => [
     "minmax(0,0.9fr)",   // submitted
     "minmax(0,1.4fr)",   // activity
     "minmax(0,1.2fr)",   // supports
-    "minmax(0,0.65fr)",  // hours
+    "minmax(0,0.9fr)",  // time
     "minmax(0,0.6fr)",   // evidence
     "minmax(0,0.9fr)",   // status
     "minmax(0,1.4fr)",   // actions
@@ -115,7 +115,7 @@ export const Table = (props: TableProps) => {
         submitted: item.createdAt || "",
         activity: item.hostName || item.activityType,
         supports: item.supports,
-        hours: item.hours,
+        minutes: item.minutes,
         statusRank: STATUS_RANK[item.status],
     })), [props.items])
     // No initial sort: the server's order (newest submitted first) holds until a header is clicked.
@@ -253,7 +253,7 @@ export const Table = (props: TableProps) => {
                 <SortableHeader label="Submitted" sortKey="submitted" sortConfig={sortConfig} onSort={requestSort} />
                 <SortableHeader label="Activity" sortKey="activity" sortConfig={sortConfig} onSort={requestSort} />
                 <SortableHeader label="Supports" sortKey="supports" sortConfig={sortConfig} onSort={requestSort} />
-                <SortableHeader label="Hours" sortKey="hours" sortConfig={sortConfig} onSort={requestSort} />
+                <SortableHeader label="Time" sortKey="minutes" sortConfig={sortConfig} onSort={requestSort} />
                 <div className={staticLabelClass}>Evidence</div>
                 <SortableHeader label="Status" sortKey="statusRank" sortConfig={sortConfig} onSort={requestSort} align="center" />
                 <div className={`text-center ${staticLabelClass}`}>Review</div>
@@ -327,7 +327,7 @@ export const Table = (props: TableProps) => {
                                     {item.hostName && <div className="truncate text-[11px] text-slate-400">{item.activityType}</div>}
                                 </div>
                                 <div title={item.supports} className="line-clamp-2 text-[11px] text-slate-500">{item.supports || "—"}</div>
-                                <div className="text-xs font-semibold text-dark-blue-400">{item.hours} hr{item.hours === 1 ? "" : "s"}</div>
+                                <div className="whitespace-nowrap text-xs font-semibold text-dark-blue-400">{formatMinutes(item.minutes)}</div>
                                 <div>
                                     {evidence ? (
                                         <a

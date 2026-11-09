@@ -6,6 +6,7 @@ import { useSortableData } from "../../../utils/useSortableData";
 import { Pill, PillAccent } from "../../home-dashboard/Pill/Pill";
 import { Form, FormPathwayOption } from "../../service-tracking/Form/Form";
 import { HoursBreakdown } from "./HoursBreakdown";
+import { formatMinutes, responsesFromMinutes } from "../minutes";
 
 /**
  * The state of a hours entry, as the server derives it.
@@ -13,7 +14,7 @@ import { HoursBreakdown } from "./HoursBreakdown";
 export type HourStatus = "pending" | "verified" | "invalidated" | "withdrawn";
 
 /**
- * One logged block of hours.
+ * One logged block of time, in whole minutes.
  */
 export type HourItem = {
   entryId: string;
@@ -24,7 +25,8 @@ export type HourItem = {
   activityDate: string;
   hostName: string;
   activityType: string;
-  hours: number;
+  /** Whole minutes: 1 hr 30 min is 90. */
+  minutes: number;
   description?: string;
   contactPerson?: string;
   contactPhone?: string;
@@ -56,8 +58,8 @@ export type HoursListProps = {
   onPathwayChange?: (pathwayId: string) => void;
 
   /**
-   * Saves an edit. `responses` are the form's own keys (organizationName, totalHours, type, date,
-   * pathwayId, evidenceUrl, ...). Resolve with nothing on success, or a truthy value to keep the form open.
+   * Saves an edit. `responses` are the form's own keys (organizationName, totalHours, totalMinutes, type,
+   * date, pathwayId, evidenceUrl, ...). Resolve with nothing on success, or a truthy value to keep the form open.
    */
   onEdit?: (entry: HourItem, responses: any) => Promise<any>;
   /** Withdraws an entry after the student confirms in the row. */
@@ -116,11 +118,9 @@ type SortRow = {
   submitted: string;
   activity: string;
   supports?: string;
-  hours: number;
+  minutes: number;
   statusRank: number;
 };
-
-const hoursLabel = (hours: number) => `${hours} hr${hours === 1 ? "" : "s"}`;
 
 const initialValues = (entry: HourItem): Record<string, string> => ({
   organizationName: entry.hostName || "",
@@ -128,7 +128,7 @@ const initialValues = (entry: HourItem): Record<string, string> => ({
   contactPhoneNumber: entry.contactPhone || "",
   contactEmail: entry.contactEmail || "",
   date: (entry.activityDate || "").slice(0, 10),
-  totalHours: String(entry.hours),
+  ...responsesFromMinutes(entry.minutes),
   type: entry.activityType || "",
   description: entry.description || "",
   pathwayId: entry.pathwayId || "",
@@ -155,7 +155,7 @@ export const HoursList = (props: HoursListProps) => {
 
   // The total counts what the server counts: everything not withdrawn or invalidated.
   const sum = (status: HourStatus) =>
-    props.entries.filter((e) => e.status === status).reduce((total, e) => total + e.hours, 0);
+    props.entries.filter((e) => e.status === status).reduce((total, e) => total + e.minutes, 0);
   const approved = sum("verified");
   const pending = sum("pending");
 
@@ -171,7 +171,7 @@ export const HoursList = (props: HoursListProps) => {
         submitted: entry.isLegacy ? "" : entry.createdAt || "",
         activity: entry.hostName || entry.activityType,
         supports: entry.supports,
-        hours: entry.hours,
+        minutes: entry.minutes,
         statusRank: STATUS_RANK[entry.status],
       })),
     [props.entries, active]
@@ -186,9 +186,9 @@ export const HoursList = (props: HoursListProps) => {
   return (
     <div className="flex flex-col gap-3.5">
       <div className="flex gap-2.5">
-        <StatCell icon={IconClockHour4} value={approved + pending} label="Total hours" accent="cyan" />
-        <StatCell icon={IconCircleCheck} value={approved} label="Approved" accent="mint" />
-        <StatCell icon={IconHourglass} value={pending} label="Waiting for review" accent="gold" />
+        <StatCell icon={IconClockHour4} value={formatMinutes(approved + pending)} label="Total hours" accent="cyan" />
+        <StatCell icon={IconCircleCheck} value={formatMinutes(approved)} label="Approved" accent="mint" />
+        <StatCell icon={IconHourglass} value={formatMinutes(pending)} label="Waiting for review" accent="gold" />
       </div>
 
       <HoursBreakdown entries={props.entries} />
@@ -234,7 +234,7 @@ export const HoursList = (props: HoursListProps) => {
               onSort={requestSort}
               className="hidden w-40 shrink-0 md:inline-flex"
             />
-            <SortableHeader label="Hours" sortKey="hours" sortConfig={sortConfig} onSort={requestSort} align="right" className="w-14 shrink-0" />
+            <SortableHeader label="Time" sortKey="minutes" sortConfig={sortConfig} onSort={requestSort} align="right" className="w-24 shrink-0" />
             <SortableHeader
               label="Status"
               sortKey="statusRank"
@@ -381,7 +381,7 @@ const HourRow = (props: {
       <div title={entry.supports} className="hidden w-40 shrink-0 text-[11px] text-slate-400 md:line-clamp-2">
         {entry.supports || "—"}
       </div>
-      <div className="w-14 shrink-0 text-right text-xs font-semibold text-dark-blue-400">{hoursLabel(entry.hours)}</div>
+      <div className="w-24 shrink-0 whitespace-nowrap text-right text-xs font-semibold text-dark-blue-400">{formatMinutes(entry.minutes)}</div>
       <div className="flex w-36 shrink-0 justify-end whitespace-nowrap">
         <Pill label={label} accent={accent} />
       </div>
@@ -399,7 +399,7 @@ const STAT_ACCENT: Record<StatAccent, { chip: string; icon: string; card: string
 
 // Matches the stat tiles on File Locker and Home (same classes and spacing), taking a Tabler icon
 // directly because StatTile's own icon prop is a fixed set of names with nothing suited to hours.
-const StatCell = (props: { icon: React.ComponentType<any>; value: number; label: string; accent: StatAccent }) => {
+const StatCell = (props: { icon: React.ComponentType<any>; value: string; label: string; accent: StatAccent }) => {
   const { chip, icon, card } = STAT_ACCENT[props.accent];
   const Icon = props.icon;
   return (

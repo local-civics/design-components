@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Modal} from "@mantine/core";
-import {Item, formatDate} from "./shared";
+import {Item, formatDate, formatMinutes} from "./shared";
 
 /**
  * InvalidateModalProps
@@ -63,7 +63,7 @@ export function InvalidateModal(props: InvalidateModalProps) {
                         <span className="font-bold text-dark-blue-400">{item.studentName || "Student"}</span>
                         {" · "}{item.hostName || item.activityType}
                         {" · Activity date "}{formatDate(item.activityDate)}
-                        {" · "}{item.hours} hr{item.hours === 1 ? "" : "s"}
+                        {" · "}{formatMinutes(item.minutes)}
                     </div>
 
                     <div>
