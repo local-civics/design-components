@@ -6,6 +6,7 @@ import { Overlay } from "../../../components/Overlay/Overlay";
 import { FormInput } from "../FormInput/FormInput";
 import { FormExitDialog } from "../FormExitDialog/FormExitDialog";
 import { FormSubmitDialog } from "../FormSubmitDialog/FormSubmitDialog";
+import { formatMinutes, minutesFromResponses, timeProblem } from "../../hours/minutes";
 
 /**
  * A pathway an hours entry can count toward. Categories are optional: the caller may load them only
@@ -86,8 +87,12 @@ export const Form = (props: FormProps) => {
   const [responses, setResponses] = React.useState((props.initialValues || {}) as any);
   const [clientEntryId] = React.useState(newClientEntryId);
   const [inReview, setInReview] = React.useState(!!props.inReview);
+  const [timeError, setTimeError] = React.useState("");
   const setResponse = (key: string, value: string) => {
     setResponses({ ...responses, [key]: value });
+    if (key === "totalHours" || key === "totalMinutes") {
+      setTimeError("");
+    }
   };
   const setPathway = (pathwayId: string) => {
     // A category belongs to its pathway, so changing the pathway clears it.
@@ -106,6 +111,12 @@ export const Form = (props: FormProps) => {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inReview) {
+      // The time is two boxes (hours and minutes) that the browser cannot check together.
+      const problem = timeProblem(minutesFromResponses(responses));
+      if (problem) {
+        setTimeError(problem);
+        return;
+      }
       setInReview(true);
     } else if (inReview && props.onSubmit) {
       props.onSubmit(props.initialValues ? responses : { ...responses, clientEntryId }).then((err) => {
@@ -176,28 +187,15 @@ export const Form = (props: FormProps) => {
                         onChange={(value) => setResponse("contactEmail", value)}
                       />
 
-                      <div className="grid lg:grid-cols-2 gap-y-8 gap-x-2">
-                        <FormInput
-                          required
-                          readonly={inReview}
-                          headline="Activity Date"
-                          type="date"
-                          max={today()}
-                          value={responses["date"]}
-                          onChange={(value) => setResponse("date", value)}
-                        />
-
-                        <FormInput
-                          required
-                          readonly={inReview}
-                          headline="Hours"
-                          min={1}
-                          max={24}
-                          type="number"
-                          value={responses["totalHours"]}
-                          onChange={(value) => setResponse("totalHours", value)}
-                        />
-                      </div>
+                      <FormInput
+                        required
+                        readonly={inReview}
+                        headline="Activity Date"
+                        type="date"
+                        max={today()}
+                        value={responses["date"]}
+                        onChange={(value) => setResponse("date", value)}
+                      />
 
                       <FormInput
                         required
@@ -208,6 +206,38 @@ export const Form = (props: FormProps) => {
                         options={typeOptions}
                         onChange={(value) => setResponse("type", value)}
                       />
+
+                      {inReview ? (
+                        <FormInput
+                          readonly
+                          headline="Time Spent"
+                          value={formatMinutes(minutesFromResponses(responses))}
+                        />
+                      ) : (
+                        <div className="grid gap-y-2">
+                          <div className="grid grid-cols-2 gap-x-2">
+                            <FormInput
+                              headline="Hours"
+                              min={0}
+                              max={24}
+                              type="number"
+                              placeholder="0"
+                              value={responses["totalHours"]}
+                              onChange={(value) => setResponse("totalHours", value)}
+                            />
+                            <FormInput
+                              headline="Minutes"
+                              min={0}
+                              max={59}
+                              type="number"
+                              placeholder="0"
+                              value={responses["totalMinutes"]}
+                              onChange={(value) => setResponse("totalMinutes", value)}
+                            />
+                          </div>
+                          {timeError && <p className="text-xs text-rose-600">{timeError}</p>}
+                        </div>
+                      )}
 
                       {!!props.pathways && props.pathways.length > 0 && (
                         <FormInput

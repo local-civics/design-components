@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {IconChevronDown, IconChevronRight} from "@tabler/icons";
-import {Item} from "./shared";
+import {Item, formatMinutes} from "./shared";
 
 /**
- * BreakdownRow. Hours of one kind (a type, a pathway, or one requirement of a pathway) for one student.
+ * BreakdownRow. Time of one kind (a type, a pathway, or one requirement of a pathway) for one student, in whole minutes.
  */
 export type BreakdownRow = {
     key: string
@@ -34,9 +34,9 @@ const byWeightCatchAllLast = (a: BreakdownRow, b: BreakdownRow) => {
 const add = (rows: Record<string, BreakdownRow>, key: string, label: string, item: Item) => {
     const row = rows[key] || (rows[key] = {key, label, approved: 0, pending: 0})
     if (item.status === "verified") {
-        row.approved += item.hours
+        row.approved += item.minutes
     } else {
-        row.pending += item.hours
+        row.pending += item.minutes
     }
 
     return row
@@ -78,9 +78,9 @@ export const summarize = (items: Item[]) => {
             byRequirement: {},
         })
         if (item.status === "verified") {
-            pathway.approved += item.hours
+            pathway.approved += item.minutes
         } else {
-            pathway.pending += item.hours
+            pathway.pending += item.minutes
         }
 
         add(
@@ -103,17 +103,15 @@ export const summarize = (items: Item[]) => {
     }
 }
 
-const hrs = (n: number) => `${n} hr${n === 1 ? "" : "s"}`
-
 const total = (row: BreakdownRow) => row.approved + row.pending
 
 const labelClass = "text-[10.5px] font-extrabold uppercase tracking-wide text-slate-400"
 
 const Metrics = (props: {row: BreakdownRow}) => (
     <span className="shrink-0 whitespace-nowrap text-xs font-semibold text-dark-blue-400">
-        {hrs(props.row.approved)}
+        {formatMinutes(props.row.approved)}
         {props.row.pending > 0 && (
-            <span className="ml-1.5 rounded-full bg-gold-400/15 px-1.5 py-0.5 text-[10px] font-bold">+{props.row.pending} pending</span>
+            <span className="ml-1.5 rounded-full bg-gold-400/15 px-1.5 py-0.5 text-[10px] font-bold">+{formatMinutes(props.row.pending)} pending</span>
         )}
     </span>
 )
