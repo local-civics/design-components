@@ -2,6 +2,7 @@ import * as React              from "react";
 import {MemoryRouter}          from "react-router-dom";
 import {Student, StudentProps} from "./Student";
 import { Story }               from "@storybook/react";
+import {OverviewPathway}   from "./overviewRules";
 
 /**
  * Storybook component configuration
@@ -148,4 +149,152 @@ Mock.args = {
             rating: "",
         },
     ],
+};
+
+// ---------------------------------------------------------------------------------------------------------
+// Overview tab. The data below mirrors the three review mockups (on track, blocked, early and inactive).
+// Dates are written relative to the moment the story loads, so "no activity in N days" reads the same
+// whenever it is opened.
+// ---------------------------------------------------------------------------------------------------------
+
+const daysAgoISO = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+
+const seal = (points: Record<string, number>, over: Partial<OverviewPathway> = {}): OverviewPathway => ({
+    pathwayId: "seal",
+    title: "NYS Seal of Civic Readiness",
+    badgesCompleted: 0,
+    badgesTotal: 12,
+    started: true,
+    criteria: {total: 6, knowledge: 2, participation: 2},
+    points,
+    categoryNames: {total: "Total points", knowledge: "Civic Knowledge", participation: "Civic Participation"},
+    categoryParents: {total: null, knowledge: "total", participation: "total"},
+    ...over,
+})
+
+const optics = (over: Partial<OverviewPathway> = {}): OverviewPathway => ({
+    pathwayId: "optics",
+    title: "Optics & Photonics Career Pathway",
+    badgesCompleted: 3,
+    badgesTotal: 8,
+    started: true,
+    criteria: {total: 20, certificates: 3},
+    points: {total: 10, certificates: 2},
+    categoryNames: {total: "College credits", certificates: "Certificates"},
+    categoryParents: {total: null, certificates: "total"},
+    ...over,
+})
+
+const overviewBadges = [
+    {badgeId: "b1", badgeName: "Optics Lab Internship", isComplete: true, completedAt: daysAgoISO(5), pathwayId: "optics", pathwayName: "Optics & Photonics Career Pathway", href: ""},
+    {badgeId: "b2", badgeName: "Polishing & Metrology", isComplete: true, completedAt: daysAgoISO(30), pathwayId: "optics", pathwayName: "Optics & Photonics Career Pathway", href: ""},
+    {badgeId: "b3", badgeName: "Civic Leadership", isComplete: false, pathwayId: "seal", pathwayName: "NYS Seal of Civic Readiness", href: ""},
+]
+
+const overviewLessons = [
+    {lessonId: "l1", lessonName: "OPT 210 Module", badgeName: "Polishing & Metrology", pathwayId: "optics", pathwayName: "Optics & Photonics Career Pathway", href: "", isComplete: true, finishedAt: daysAgoISO(11), hasResponses: true, questions: [], reflection: "", rating: ""},
+    {lessonId: "l2", lessonName: "Co-op Placement Application", badgeName: "Optics Lab Internship", href: "", isComplete: false, updatedAt: daysAgoISO(2), answeredQuestions: 3, hasResponses: true, questions: [], reflection: "", rating: ""},
+]
+
+const overviewHours = [
+    {entryId: "o1", revision: 1, userId: "u1", studentName: "Aminat Sule", status: "verified" as const, activityDate: "2026-09-10", hostName: "Photonics Lab", activityType: "Internship", minutes: 3600, createdAt: daysAgoISO(60)},
+    {entryId: "o2", revision: 1, userId: "u1", studentName: "Aminat Sule", status: "pending" as const, activityDate: "2026-11-05", hostName: "Photonics Lab", activityType: "Internship", minutes: 180, createdAt: daysAgoISO(14)},
+    {entryId: "o3", revision: 1, userId: "u1", studentName: "Aminat Sule", status: "pending" as const, activityDate: "2026-11-12", hostName: "Photonics Lab", activityType: "Internship", minutes: 120, createdAt: daysAgoISO(7)},
+]
+
+// Defaults a story can override; typed loosely because Storybook's args are always a full StudentProps.
+const overviewDefaults: Partial<StudentProps> = {
+    numberOfProblemsSolved: 24,
+    numberOfLessonsCompleted: 1,
+    badges: [],
+    lessons: [],
+    onBackClick: () => {},
+    onViewPathway: () => {},
+}
+
+const OverviewTemplate: Story<StudentProps> = (args) => (
+  <div className="h-full w-full overscroll-none font-proxima">
+      <MemoryRouter>
+        <Student {...({...overviewDefaults, ...args} as StudentProps)} />
+      </MemoryRouter>
+  </div>
+);
+
+/**
+ * On track: two pathways under way, hours waiting for approval, recent activity.
+ */
+export const OverviewOnTrack: Story<StudentProps> = OverviewTemplate.bind({});
+OverviewOnTrack.args = {
+    loading: false,
+    name: "Aminat Sule",
+    impactStatement: "Optics & Photonics dual-enrollment student, Grade 12.",
+    badges: overviewBadges,
+    lessons: overviewLessons,
+    hourEntries: overviewHours,
+    overview: {loading: false, pathways: [optics(), seal({total: 0, knowledge: 0, participation: 0}, {started: false, badgesCompleted: 0})]},
+};
+
+/**
+ * Blocked: one requirement of the Seal has no points while another is met, and hours are waiting.
+ */
+export const OverviewBlocked: Story<StudentProps> = OverviewTemplate.bind({});
+OverviewBlocked.args = {
+    ...OverviewOnTrack.args,
+    name: "Adrian Lopez",
+    overview: {loading: false, pathways: [seal({total: 4, knowledge: 2, participation: 0}, {badgesCompleted: 4})]},
+};
+
+/**
+ * Early and inactive: nothing done in a month.
+ */
+export const OverviewEarlyAndInactive: Story<StudentProps> = OverviewTemplate.bind({});
+OverviewEarlyAndInactive.args = {
+    loading: false,
+    name: "Jane Drew",
+    impactStatement: "",
+    badges: [{badgeId: "b9", badgeName: "Digital Citizenship", isComplete: true, completedAt: daysAgoISO(40), pathwayId: "seal", pathwayName: "NYS Seal of Civic Readiness", href: ""}],
+    lessons: [],
+    hourEntries: [],
+    overview: {loading: false, pathways: [seal({total: 1, knowledge: 1, participation: 0}, {badgesCompleted: 1})]},
+};
+
+/**
+ * Nothing finished in six weeks, but a lesson was worked on two days ago: shown as recent activity, and the student is
+ * not flagged as inactive. A lesson that was only opened (no answers saved) does not count.
+ */
+export const OverviewWorkInProgress: Story<StudentProps> = OverviewTemplate.bind({});
+OverviewWorkInProgress.args = {
+    loading: false,
+    name: "Noor Haddad",
+    impactStatement: "",
+    badges: [{badgeId: "b9", badgeName: "Digital Citizenship", isComplete: true, completedAt: daysAgoISO(42), pathwayId: "seal", pathwayName: "NYS Seal of Civic Readiness", href: ""}],
+    lessons: [
+        {lessonId: "l7", lessonName: "Community Mapping", badgeName: "Civic Leadership", href: "", isComplete: false, updatedAt: daysAgoISO(2), answeredQuestions: 4, hasResponses: true, questions: [], reflection: "", rating: ""},
+        {lessonId: "l8", lessonName: "Only Opened", badgeName: "Civic Leadership", href: "", isComplete: false, updatedAt: daysAgoISO(1), answeredQuestions: 0, hasResponses: false, questions: [], reflection: "", rating: ""},
+    ],
+    hourEntries: [],
+    overview: {loading: false, pathways: [seal({total: 1, knowledge: 1, participation: 0}, {badgesCompleted: 1})]},
+};
+
+/**
+ * A student who has done nothing yet.
+ */
+export const OverviewNoActivity: Story<StudentProps> = OverviewTemplate.bind({});
+OverviewNoActivity.args = {
+    loading: false,
+    name: "New Student",
+    impactStatement: "",
+    badges: [],
+    lessons: [],
+    hourEntries: [],
+    overview: {loading: false, pathways: []},
+};
+
+/**
+ * Pathways still being fetched.
+ */
+export const OverviewLoading: Story<StudentProps> = OverviewTemplate.bind({});
+OverviewLoading.args = {
+    ...OverviewOnTrack.args,
+    overview: {loading: true, pathways: []},
 };

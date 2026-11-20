@@ -7,7 +7,9 @@ import {Table as BadgeTable, Item as BadgeItem}                           from "
 import {Table as AnswerTable, Item as AnswerItem} from "./AnswerTable"
 import {Table as HoursTable} from "../Hours/Table"
 import {Breakdown as HoursBreakdown} from "../Hours/Breakdown"
-import {Item as HourItem} from "../Hours/shared"
+import {Item as HourItem, formatMinutes} from "../Hours/shared"
+import {Overview} from "./Overview"
+import {OverviewPathway} from "./overviewRules"
 
 /**
  * StudentProps
@@ -46,6 +48,11 @@ export type StudentProps = {
     onInvalidateHour?: (item: HourItem, reason: string) => Promise<any>
     // Approves several of this student's pending entries at once (optional; adds checkboxes to the tab).
     onBulkApproveHours?: (items: HourItem[]) => Promise<any>
+
+    // The pathways this student has touched, for the "Overview" tab. The tab (and its place as the first,
+    // default tab) only appears when this is supplied, so a caller that does not send it sees the page as
+    // before. `loading` is for the pathways alone; the rest of the tab is built from the props above.
+    overview?: { loading: boolean, pathways: OverviewPathway[] }
 }
 // An educator is looking at someone else's work here, so no "My".
 const TABS = [
@@ -67,7 +74,7 @@ const LESSON_STATUS_FILTERS: {label: string, value: LessonStatusFilter}[] = [
 const OTHER_FILTER = "__other__"
 
 export const Student = (props: StudentProps) => {
-    const [tab, setTab] = useState("badges")
+    const [tab, setTab] = useState(props.overview ? "overview" : "badges")
     // One filter shared across both tabs, not two independent per-tab filters - these tabs read
     // as one "this student's stuff in Pathway X" view, and a per-tab filter would silently reset
     // every time an educator switches tabs.
@@ -78,7 +85,12 @@ export const Student = (props: StudentProps) => {
     const numberOfBadgesCompleted = props.badges.length > 0 ? props.badges.filter(b => b.isComplete).length : 0
     const numberOfLessonsCompleted = props.lessons.filter(l => l.isComplete).length
 
-    const tabs = props.hourEntries ? [...TABS, {label: "Hours", value: "hourEntries"}] : TABS
+    const baseTabs = props.overview ? [{label: "Overview", value: "overview"}, ...TABS] : TABS
+    const tabs = props.hourEntries ? [...baseTabs, {label: "Hours", value: "hourEntries"}] : baseTabs
+
+    // Approved and still-pending hours are shown apart: pending hours are not counted until approved.
+    const approvedMinutes = (props.hourEntries || []).filter(h => h.status === "verified").reduce((sum, h) => sum + (Number(h.minutes) || 0), 0)
+    const pendingMinutes = (props.hourEntries || []).filter(h => h.status === "pending").reduce((sum, h) => sum + (Number(h.minutes) || 0), 0)
 
     const activeItems: {pathwayId?: string, pathwayName?: string}[] =
         tab === "badges" ? props.badges : tab === "lessons" ? props.lessons : []
@@ -143,6 +155,11 @@ export const Student = (props: StudentProps) => {
                     title: "BADGE COMPLETION",
                     value: numberOfBadgesCompleted,
                 },
+                // Only when this student's hours have loaded (the Hours tab uses the same condition).
+                ...(props.hourEntries ? [
+                    {title: "HOURS LOGGED", value: approvedMinutes, text: formatMinutes(approvedMinutes)},
+                    {title: "HOURS PENDING", value: pendingMinutes, text: formatMinutes(pendingMinutes)},
+                ] : []),
             ]}/>
 
             <div className="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1">
@@ -207,6 +224,17 @@ export const Student = (props: StudentProps) => {
                 </div>
             )}
 
+            {tab === "overview" && props.overview && (
+                <Overview
+                    loading={props.loading || props.overview.loading}
+                    pathways={props.overview.pathways}
+                    badges={props.badges}
+                    lessons={props.lessons}
+                    hours={props.hourEntries}
+                    onViewPathway={props.onViewPathway}
+                    onOpenHours={props.hourEntries ? () => setTab("hourEntries") : undefined}
+                />
+            )}
             {tab === "badges" && <BadgeTable loading={props.loading} items={filterByPathway(props.badges)} />}
             {tab === "lessons" && (noResponsesYet ? (
                 <div className="rounded-xl border border-slate-200 bg-white px-5 py-6 text-center text-sm text-slate-500">

@@ -3,7 +3,8 @@ import * as React from 'react';
 interface StatsGroupProps {
     // `loading` swaps the number for a pulse bar - for a stat whose value comes from a later fetch
     // than the page itself, so it doesn't read as a real "0" in the meantime.
-    data: { title: string; value: number, unit?: string, loading?: boolean}[];
+    // `text` replaces the number when a plain count does not fit the value (for example "2 hr 15 min").
+    data: { title: string; value: number, unit?: string, loading?: boolean, text?: string}[];
     footer?: React.ReactNode
 }
 
@@ -38,10 +39,12 @@ export const StatsGroup = ({ data, footer }: StatsGroupProps) => {
                             <span className="sr-only">Loading</span>
                         </span>
                     ) : (
-                        <>
-                            {safeValue.toLocaleString()}
-                            {stat.unit}
-                        </>
+                        stat.text !== undefined ? stat.text : (
+                            <>
+                                {safeValue.toLocaleString()}
+                                {stat.unit}
+                            </>
+                        )
                     )}
                 </div>
                 <div className="mt-1.5 text-[11px] font-bold uppercase tracking-wide text-white/70">{stat.title}</div>

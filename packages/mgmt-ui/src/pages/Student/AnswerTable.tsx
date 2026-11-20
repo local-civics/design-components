@@ -21,6 +21,12 @@ export interface Item {
     pathwayName?: string
     href: string
     isComplete: boolean
+    // When the student submitted it (ISO). Used for the Overview's recent activity.
+    finishedAt?: string
+    // When the student last saved work on this lesson, and how many questions they have answered (non-empty answers).
+    // Used by the Overview to tell a lesson being worked on from one that was only opened.
+    updatedAt?: string
+    answeredQuestions?: number
     // At least one answered question, or a non-empty reflection - independent of isComplete, since
     // a lesson can be submitted with nothing recorded (rare) or have real in-progress work without
     // ever being formally submitted.

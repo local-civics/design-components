@@ -11,6 +11,8 @@ export interface Item {
     badgeId: string
     badgeName: string
     isComplete?: boolean
+    // When the student finished it (ISO). Used for the Overview's recent activity; absent for work not finished.
+    completedAt?: string
     // Joined by getStudent() via the same findPathwayForBadge() prefix-match getBadge() already
     // uses - undefined when this badge doesn't belong to any pathway.
     pathwayId?: string
